@@ -1,8 +1,4 @@
-package net.eugenpaul.jlexi.model;
-
-import net.eugenpaul.jlexi.data.Drawable;
-import net.eugenpaul.jlexi.data.Point;
-import net.eugenpaul.jlexi.data.Bounds;
+package net.eugenpaul.jlexi.data;
 
 public interface Glyph {
 

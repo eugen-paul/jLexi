@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
+import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 
 public class Rectangle implements Glyph {
@@ -51,18 +52,19 @@ public class Rectangle implements Glyph {
 
     @Override
     public void remove(Glyph glyph) {
-        // TODO Auto-generated method stub
-
+        children.remove(glyph);
     }
 
     @Override
     public Glyph child(int position) {
+        if (0 <= position && position < children.size() - 1) {
+            return child(position);
+        }
         return null;
     }
 
     @Override
     public Glyph parent() {
-        // TODO Auto-generated method stub
         return parent;
     }
 
