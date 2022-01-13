@@ -5,11 +5,12 @@ import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.design.Button;
+import net.eugenpaul.jlexi.data.window.Window;
 
 public class BrightButton extends Button {
 
     @Override
-    public Drawable draw() {
+    public Drawable draw(Window window) {
         // TODO Auto-generated method stub
         return null;
     }

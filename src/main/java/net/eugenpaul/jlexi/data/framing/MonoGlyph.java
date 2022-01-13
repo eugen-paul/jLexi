@@ -4,6 +4,7 @@ import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
+import net.eugenpaul.jlexi.data.window.Window;
 
 /**
  * Abstract Class for Glyph that cann have just one child
@@ -18,8 +19,8 @@ public abstract class MonoGlyph implements Glyph {
     }
 
     @Override
-    public Drawable draw() {
-        return component.draw();
+    public Drawable draw(Window window) {
+        return component.draw(window);
     }
 
     @Override

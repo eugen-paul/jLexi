@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.data;
 
+import net.eugenpaul.jlexi.data.window.Window;
+
 public interface Glyph {
 
     /**
@@ -7,7 +9,7 @@ public interface Glyph {
      * 
      * @return drawable data
      */
-    public Drawable draw();
+    public Drawable draw(Window window);
 
     /**
      * Get size and position of this Element.

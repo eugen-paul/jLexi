@@ -1,13 +1,22 @@
-package net.eugenpaul.jlexi.data.design.dark;
+package net.eugenpaul.jlexi.data.stucture;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
-import net.eugenpaul.jlexi.data.design.Button;
 import net.eugenpaul.jlexi.data.window.Window;
 
-public class DarkButton extends Button {
+public class Row implements Glyph {
+
+    @Getter
+    @Setter
+    private int maxWidth;
+
+    public Row(int maxWidth) {
+        this.maxWidth = maxWidth;
+    }
 
     @Override
     public Drawable draw(Window window) {
@@ -49,12 +58,6 @@ public class DarkButton extends Button {
     public Glyph parent() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public void press() {
-        // TODO Auto-generated method stub
-
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.data.window.Window;
 
 /**
  * Glyph with a boarder.
@@ -23,44 +24,45 @@ public class Border extends MonoGlyph {
     }
 
     @Override
-    public Drawable draw() {
-        Drawable childDraw = super.draw();
-        int[][] componentPixels = childDraw.getPixels();
-        int[][] borderPixels = new int[componentPixels.length + 2][componentPixels[0].length + 2];
+    public Drawable draw(Window window) {
+        return null;
+        // Drawable childDraw = super.draw();
+        // int[][] componentPixels = childDraw.getPixels();
+        // int[][] borderPixels = new int[componentPixels.length + 2][componentPixels[0].length + 2];
 
-        Arrays.fill(borderPixels[0], BORDER_BLACK);
+        // Arrays.fill(borderPixels[0], BORDER_BLACK);
 
-        for (int i = 0; i < componentPixels.length; i++) {
-            int[] childLine = componentPixels[i];
-            int[] borderLine = borderPixels[i + 1];
-            borderLine[0] = BORDER_BLACK;
+        // for (int i = 0; i < componentPixels.length; i++) {
+        //     int[] childLine = componentPixels[i];
+        //     int[] borderLine = borderPixels[i + 1];
+        //     borderLine[0] = BORDER_BLACK;
 
-            System.arraycopy(childLine, 0, borderLine, 1, childLine.length);
+        //     System.arraycopy(childLine, 0, borderLine, 1, childLine.length);
 
-            borderLine[borderLine.length - 1] = BORDER_BLACK;
-        }
+        //     borderLine[borderLine.length - 1] = BORDER_BLACK;
+        // }
 
-        Arrays.fill(borderPixels[borderPixels.length - 1], BORDER_BLACK);
+        // Arrays.fill(borderPixels[borderPixels.length - 1], BORDER_BLACK);
 
-        return new Drawable() {
+        // return new Drawable() {
 
-            @Override
-            public int[][] getPixels() {
-                return borderPixels;
-            }
+        //     @Override
+        //     public int[][] getPixels() {
+        //         return borderPixels;
+        //     }
 
-            @Override
-            public Bounds getBounds() {
-                Bounds childBounds = childDraw.getBounds();
-                return new Bounds(//
-                        childBounds.getP1X() - 1, //
-                        childBounds.getP1Y() - 1, //
-                        childBounds.getP2X() - 1, //
-                        childBounds.getP2Y() - 1//
-                );
+        //     @Override
+        //     public Bounds getBounds() {
+        //         Bounds childBounds = childDraw.getBounds();
+        //         return new Bounds(//
+        //                 childBounds.getP1X() - 1, //
+        //                 childBounds.getP1Y() - 1, //
+        //                 childBounds.getP2X() - 1, //
+        //                 childBounds.getP2Y() - 1//
+        //         );
 
-            }
+        //     }
 
-        };
+        // };
     }
 }

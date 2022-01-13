@@ -7,6 +7,7 @@ import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
+import net.eugenpaul.jlexi.data.window.Window;
 
 public class Rectangle implements Glyph {
 
@@ -21,7 +22,7 @@ public class Rectangle implements Glyph {
     }
 
     @Override
-    public Drawable draw() {
+    public Drawable draw(Window window) {
         return null;
     }
 
