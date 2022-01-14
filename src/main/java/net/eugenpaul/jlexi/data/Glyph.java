@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.data;
 
+import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
+import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.data.window.Window;
 
 public interface Glyph {
@@ -49,9 +51,18 @@ public interface Glyph {
     public Glyph child(int position);
 
     /**
+     * get a Iterator to iterate over children
+     * 
+     * @return Iterator
+     */
+    public GlyphIterator createIterator();
+
+    /**
      * Get Parant of this Glyph
      * 
      * @return
      */
     public Glyph parent();
+
+    public void visit(Visitor checker);
 }

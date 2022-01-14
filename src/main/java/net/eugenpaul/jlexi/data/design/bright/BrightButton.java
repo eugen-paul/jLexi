@@ -5,6 +5,8 @@ import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.design.Button;
+import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
+import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.data.window.Window;
 
 public class BrightButton extends Button {
@@ -53,6 +55,18 @@ public class BrightButton extends Button {
 
     @Override
     public void press() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public GlyphIterator createIterator() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void visit(Visitor checker) {
         // TODO Auto-generated method stub
 
     }

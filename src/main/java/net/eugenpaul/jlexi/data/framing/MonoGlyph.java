@@ -4,6 +4,7 @@ import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
+import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.data.window.Window;
 
 /**
@@ -51,5 +52,10 @@ public abstract class MonoGlyph implements Glyph {
     @Override
     public Glyph parent() {
         return parent;
+    }
+
+    @Override
+    public void visit(Visitor checker) {
+        component.visit(checker);
     }
 }

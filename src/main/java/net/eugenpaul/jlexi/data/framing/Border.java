@@ -5,6 +5,8 @@ import java.util.Arrays;
 import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
+import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.data.window.Window;
 
 /**
@@ -64,5 +66,11 @@ public class Border extends MonoGlyph {
         //     }
 
         // };
+    }
+
+    @Override
+    public GlyphIterator createIterator() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

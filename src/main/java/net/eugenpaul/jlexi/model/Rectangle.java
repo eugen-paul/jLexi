@@ -7,6 +7,8 @@ import net.eugenpaul.jlexi.data.Bounds;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
+import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
+import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.data.window.Window;
 
 public class Rectangle implements Glyph {
@@ -67,6 +69,18 @@ public class Rectangle implements Glyph {
     @Override
     public Glyph parent() {
         return parent;
+    }
+
+    @Override
+    public GlyphIterator createIterator() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void visit(Visitor checker) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
