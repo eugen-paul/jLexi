@@ -29,6 +29,7 @@ public class ImagePanel extends JPanel {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
                 this.img = createImage(img);
+                repaint();
             }
         });
     }
