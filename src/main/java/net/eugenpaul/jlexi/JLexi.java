@@ -15,8 +15,9 @@ public class JLexi {
 
         Window windowAbstraction = new Window(new SwingWindowImpl(controller));
 
-        Panel ePanel = new Panel(800, 560);
-        MenuBar menubar = new MenuBar(ePanel, 800, 600);
+        Panel ePanel = new Panel();
+        MenuBar menubar = new MenuBar(ePanel, 800, 600, controller);
+        controller.addModel(menubar);
 
         windowAbstraction.createMainWindow(menubar);
 

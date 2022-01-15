@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.image.MemoryImageSource;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.controller.AbstractController;
+import net.eugenpaul.jlexi.controller.DefaultController;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
@@ -15,7 +15,7 @@ public class DocumentPanel extends AbstractPanel {
     @Getter
     private ImagePanel panel;
 
-    public DocumentPanel(Glyph glyph, AbstractController controller) {
+    public DocumentPanel(Glyph glyph, DefaultController controller) {
         super(controller);
         this.glyph = glyph;
         this.panel = new ImagePanel();

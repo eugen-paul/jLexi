@@ -13,7 +13,7 @@ import net.eugenpaul.jlexi.data.visitor.Visitor;
 public abstract class MonoGlyph implements Glyph {
 
     private Glyph parent;
-    private Glyph component;
+    protected Glyph component;
 
     protected MonoGlyph(Glyph component) {
         this.component = component;

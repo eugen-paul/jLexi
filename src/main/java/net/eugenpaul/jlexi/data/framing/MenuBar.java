@@ -1,15 +1,18 @@
 package net.eugenpaul.jlexi.data.framing;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 
+import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.model.InterfaceModel;
 
 /**
  * Add Menubar to Glyph
  */
-public class MenuBar extends MonoGlyph {
+public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
 
     private static final int MENUBAR_HIGHT = 40;
     private static final int MENUBAR_BACKGROUND = 0xFF00FF00;
@@ -20,16 +23,23 @@ public class MenuBar extends MonoGlyph {
     private int hight;
 
     private int[][] menuBackground;
+    private AbstractController controller;
 
     /**
      * C'tor
      * 
      * @param component component that will be bordered.
      */
-    public MenuBar(Glyph component, int width, int hight) {
+    public MenuBar(Glyph component, int width, int hight, AbstractController controller) {
         super(component);
         this.width = width;
         this.hight = hight;
+        this.controller = controller;
+
+        if (component instanceof Resizeable) {
+            Resizeable child = (Resizeable) component;
+            child.setSize(width, hight - MENUBAR_HIGHT);
+        }
 
         this.menuBackground = generateMenuBackground(width, MENUBAR_HIGHT);
     }
@@ -62,6 +72,26 @@ public class MenuBar extends MonoGlyph {
     @Override
     public Size getSize() {
         return new Size(width, hight);
+    }
+
+    @Override
+    public void setSize(int width, int hight) {
+        this.width = width;
+        this.hight = hight;
+
+        if (component instanceof Resizeable) {
+            Resizeable child = (Resizeable) component;
+            child.setSize(width, hight - MENUBAR_HIGHT);
+        }
+
+        this.menuBackground = generateMenuBackground(width, MENUBAR_HIGHT);
+    }
+
+    @Override
+    public void setSize(Size size) {
+        setSize(size.getWidth(), size.getHight());
+
+        controller.propertyChange(new PropertyChangeEvent(this, "UPDATE", null, size));
     }
 
 }

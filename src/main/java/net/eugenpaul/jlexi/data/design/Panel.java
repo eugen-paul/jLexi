@@ -6,49 +6,39 @@ import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.data.framing.Resizeable;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.NullIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 
-public class Panel implements Glyph {
+public class Panel implements Glyph, Resizeable {
 
-    /** width of the window */
     private int width;
-    /** hight of the window */
     private int hight;
 
     private static final int COLOR_BACKGROUND = 0xFFFF0000;
 
     private int[][] pixels;
 
-    public Panel(int width, int hight) {
-        this.width = width;
-        this.hight = hight;
+    public Panel() {
+        this.width = -1;
+        this.hight = -1;
 
-        pixels = new int[hight][width];
-        for (int[] line : pixels) {
-            Arrays.fill(line, COLOR_BACKGROUND);
-        }
+        pixels = null;
     }
 
     @Override
     public Drawable getPixels() {
+        pixels = new int[hight][width];
+        for (int[] line : pixels) {
+            Arrays.fill(line, COLOR_BACKGROUND);
+        }
         return () -> pixels;
     }
 
     @Override
     public Size getSize() {
         return new Size(width, hight);
-    }
-
-    public void updateSize(int width, int hight) {
-        this.width = width;
-        this.hight = hight;
-
-        pixels = new int[hight][width];
-        for (int[] line : pixels) {
-            Arrays.fill(line, COLOR_BACKGROUND);
-        }
     }
 
     @Override
@@ -84,6 +74,12 @@ public class Panel implements Glyph {
     @Override
     public void visit(Visitor checker) {
         // Nothig to do
+    }
+
+    @Override
+    public void setSize(int width, int hight) {
+        this.width = width;
+        this.hight = hight;
     }
 
 }
