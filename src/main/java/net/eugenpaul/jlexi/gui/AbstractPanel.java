@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.gui.window;
+package net.eugenpaul.jlexi.gui;
 
 import java.beans.PropertyChangeEvent;
 

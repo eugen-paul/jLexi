@@ -3,14 +3,13 @@ package net.eugenpaul.jlexi.data.stucture;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.eugenpaul.jlexi.data.Bounds;
+import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.ListIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
-import net.eugenpaul.jlexi.data.window.Window;
 
 public class Row implements Glyph {
 
@@ -21,13 +20,13 @@ public class Row implements Glyph {
     }
 
     @Override
-    public Drawable draw(Window window) {
+    public Drawable getPixels() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Bounds getSize() {
+    public Size getSize() {
         // TODO Auto-generated method stub
         return null;
     }

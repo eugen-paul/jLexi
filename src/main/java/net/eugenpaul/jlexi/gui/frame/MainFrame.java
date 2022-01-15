@@ -1,37 +1,53 @@
-package net.eugenpaul.jlexi.gui.window;
+package net.eugenpaul.jlexi.gui.frame;
 
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import net.eugenpaul.jlexi.controller.AbstractController;
+import net.eugenpaul.jlexi.gui.AbstractPanel;
 
 public class MainFrame extends AbstractPanel {
     private static final String TITLE_SUFFIX = "jLexi by Eugen Paul";
 
     private JFrame frame;
-    private JPanel mainPanel;
+    private DocumentPanel mainPanel;
 
     public MainFrame(AbstractController controller) {
         super(controller);
         frame = new JFrame(TITLE_SUFFIX);
+        mainPanel = null;
     }
 
     @Override
     public boolean init() {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 300));
-        frame.setMinimumSize(new Dimension(400, 300));
+        frame.setPreferredSize(new Dimension(800, 600));
+        frame.setMinimumSize(new Dimension(800, 600));
         frame.setLocation(100, 100);
         frame.setTitle(TITLE_SUFFIX);
-
-        mainPanel = new JPanel();
-        frame.add(mainPanel);
         return true;
+    }
+
+    /**
+     * Add/set main panel to frame
+     * 
+     * @param panel
+     */
+    public void setMainPanel(DocumentPanel panel) {
+        if (null != this.mainPanel) {
+            frame.remove(this.mainPanel.getPanel());
+        }
+        this.mainPanel = panel;
+
+        if (null == panel) {
+            return;
+        }
+
+        frame.add(mainPanel.getPanel());
     }
 
     @Override

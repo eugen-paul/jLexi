@@ -1,11 +1,11 @@
 package net.eugenpaul.jlexi.data.framing;
 
-import net.eugenpaul.jlexi.data.Bounds;
+import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
+import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
-import net.eugenpaul.jlexi.data.window.Window;
 
 /**
  * Abstract Class for Glyph that cann have just one child
@@ -20,12 +20,12 @@ public abstract class MonoGlyph implements Glyph {
     }
 
     @Override
-    public Drawable draw(Window window) {
-        return component.draw(window);
+    public Drawable getPixels() {
+        return component.getPixels();
     }
 
     @Override
-    public Bounds getSize() {
+    public Size getSize() {
         return component.getSize();
     }
 
@@ -57,5 +57,10 @@ public abstract class MonoGlyph implements Glyph {
     @Override
     public void visit(Visitor checker) {
         component.visit(checker);
+    }
+
+    @Override
+    public GlyphIterator createIterator() {
+        return component.createIterator();
     }
 }

@@ -2,14 +2,13 @@ package net.eugenpaul.jlexi.data.stucture;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.data.Bounds;
+import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.NullIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
-import net.eugenpaul.jlexi.data.window.Window;
 
 public class CharGlyph implements Glyph {
 
@@ -22,12 +21,12 @@ public class CharGlyph implements Glyph {
     }
 
     @Override
-    public Drawable draw(Window window) {
+    public Drawable getPixels() {
         return null;
     }
 
     @Override
-    public Bounds getSize() {
+    public Size getSize() {
         return null;
     }
 

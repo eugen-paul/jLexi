@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.eugenpaul.jlexi.gui.window.AbstractPanel;
+import net.eugenpaul.jlexi.gui.AbstractPanel;
 
 /**
  * AbstractController to control data transfer between View and Model. It translates user's interactions with the view

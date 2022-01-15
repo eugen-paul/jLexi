@@ -1,24 +1,23 @@
 package net.eugenpaul.jlexi.data.design.dark;
 
-import net.eugenpaul.jlexi.data.Bounds;
+import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.design.Button;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
-import net.eugenpaul.jlexi.data.window.Window;
 
 public class DarkButton extends Button {
 
     @Override
-    public Drawable draw(Window window) {
+    public Drawable getPixels() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Bounds getSize() {
+    public Size getSize() {
         // TODO Auto-generated method stub
         return null;
     }

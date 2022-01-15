@@ -2,12 +2,11 @@ package net.eugenpaul.jlexi.data.framing;
 
 import java.util.Arrays;
 
-import net.eugenpaul.jlexi.data.Bounds;
+import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
-import net.eugenpaul.jlexi.data.window.Window;
 
 /**
  * Glyph with a boarder.
@@ -26,7 +25,7 @@ public class Border extends MonoGlyph {
     }
 
     @Override
-    public Drawable draw(Window window) {
+    public Drawable getPixels() {
         return null;
         // Drawable childDraw = super.draw();
         // int[][] componentPixels = childDraw.getPixels();
@@ -66,11 +65,5 @@ public class Border extends MonoGlyph {
         //     }
 
         // };
-    }
-
-    @Override
-    public GlyphIterator createIterator() {
-        // TODO Auto-generated method stub
-        return null;
     }
 }
