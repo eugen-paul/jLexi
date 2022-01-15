@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.data.Size;
 
 /**
  * Add Menubar to Glyph
@@ -56,6 +57,11 @@ public class MenuBar extends MonoGlyph {
             Arrays.fill(line, MENUBAR_BACKGROUND);
         }
         return responsePixels;
+    }
+
+    @Override
+    public Size getSize() {
+        return new Size(width, hight);
     }
 
 }

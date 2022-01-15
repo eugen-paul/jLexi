@@ -10,7 +10,7 @@ import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.NullIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 
-public class EmptyPanel implements Glyph {
+public class Panel implements Glyph {
 
     /** width of the window */
     private int width;
@@ -21,7 +21,7 @@ public class EmptyPanel implements Glyph {
 
     private int[][] pixels;
 
-    public EmptyPanel(int width, int hight) {
+    public Panel(int width, int hight) {
         this.width = width;
         this.hight = hight;
 

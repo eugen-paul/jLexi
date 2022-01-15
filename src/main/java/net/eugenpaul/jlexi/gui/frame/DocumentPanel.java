@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.gui.frame;
 
 import java.beans.PropertyChangeEvent;
-
+import java.awt.Dimension;
 import java.awt.image.MemoryImageSource;
 
 import lombok.Getter;
@@ -19,6 +19,8 @@ public class DocumentPanel extends AbstractPanel {
         super(controller);
         this.glyph = glyph;
         this.panel = new ImagePanel();
+        this.panel.addComponentListener(new ResizeListner(controller));
+        this.panel.setPreferredSize(new Dimension(glyph.getSize().getWidth(), glyph.getSize().getHight()));
     }
 
     @Override

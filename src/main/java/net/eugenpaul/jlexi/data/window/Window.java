@@ -1,24 +1,20 @@
 package net.eugenpaul.jlexi.data.window;
 
+import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.gui.AbstractPanel;
+
 /**
- * Interface for the system-dependent implementation of a window.
+ * Abstraction of a Window.
  */
-public interface Window {
-    public void redraw();
+public class Window {
 
-    public void raise();
+    private Windowlmp windowlmp;
 
-    public void lower();
+    public Window(Windowlmp windowlmp) {
+        this.windowlmp = windowlmp;
+    }
 
-    public void iconify();
-
-    public void deiconify();
-
-    public void drawLine();
-
-    public void drawRect();
-
-    public void drawPolygon();
-
-    public void drawText();
+    public AbstractPanel createMainWindow(Glyph mGlyph) {
+        return windowlmp.deviceCreateMainWindow(mGlyph);
+    }
 }

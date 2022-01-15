@@ -25,8 +25,8 @@ public class MainFrame extends AbstractPanel {
     @Override
     public boolean init() {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(800, 600));
-        frame.setMinimumSize(new Dimension(800, 600));
+        // frame.setPreferredSize(new Dimension(800, 600));
+        // frame.setMinimumSize(new Dimension(800, 600));
         frame.setLocation(100, 100);
         frame.setTitle(TITLE_SUFFIX);
         return true;
@@ -48,6 +48,7 @@ public class MainFrame extends AbstractPanel {
         }
 
         frame.add(mainPanel.getPanel());
+        frame.pack();
     }
 
     @Override
