@@ -36,10 +36,10 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
         this.size = size;
         this.controller = controller;
 
-        computeBackground(component, size);
+        computePixels();
     }
 
-    private void computeBackground(Glyph component, Size size) {
+    private void computePixels() {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
             child.setSize(size.getWidth(), Math.max(0, size.getHight() - MENUBAR_HIGHT));
@@ -47,7 +47,7 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
 
         this.menuBackground = generateMenuBackground(//
                 size.getWidth(), //
-                Math.min(size.getHight() - MENUBAR_HIGHT, MENUBAR_HIGHT)//
+                Math.min(size.getHight(), MENUBAR_HIGHT)//
         );
     }
 
@@ -66,8 +66,13 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
         }
 
         for (int i = 0; i < componentPixels.getPixels().length; i++) {
-            System.arraycopy(componentPixels.getPixels()[i], 0, responsePixels[i + menuBackground.length], 0,
-                    size.getWidth());
+            System.arraycopy(//
+                    componentPixels.getPixels()[i], //
+                    0, //
+                    responsePixels[i + menuBackground.length], //
+                    0, //
+                    size.getWidth()//
+            );
         }
 
         return () -> responsePixels;
@@ -91,16 +96,6 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
     }
 
     @Override
-    public void setSize(int width, int hight) {
-        if (size.getWidth() == width //
-                && size.getHight() == hight //
-        ) {
-            return;
-        }
-        setSize(new Size(width, hight));
-    }
-
-    @Override
     public void setSize(Size newSize) {
         if (this.size.equals(newSize)) {
             return;
@@ -108,7 +103,7 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
         Size oldSize = this.size;
         this.size = newSize;
 
-        computeBackground(component, newSize);
+        computePixels();
 
         controller.propertyChange(new PropertyChangeEvent(//
                 this, //

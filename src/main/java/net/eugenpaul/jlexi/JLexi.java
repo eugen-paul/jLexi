@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 import net.eugenpaul.jlexi.controller.DefaultController;
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.design.Panel;
+import net.eugenpaul.jlexi.data.framing.Border;
 import net.eugenpaul.jlexi.data.framing.MenuBar;
 import net.eugenpaul.jlexi.data.window.Window;
 import net.eugenpaul.jlexi.gui.window.SwingWindowImpl;
@@ -17,8 +18,9 @@ public class JLexi {
         Window windowAbstraction = new Window(new SwingWindowImpl(controller));
 
         Panel ePanel = new Panel();
+        Border border = new Border(ePanel);
         Size defaultSize = new Size(800, 600);
-        MenuBar menubar = new MenuBar(ePanel, defaultSize, controller);
+        MenuBar menubar = new MenuBar(border, defaultSize, controller);
         controller.addModel(menubar);
 
         windowAbstraction.createMainWindow(menubar);

@@ -6,6 +6,8 @@ public interface Resizeable {
 
     public void setSize(Size size);
 
-    public void setSize(int width, int hight);
+    public default void setSize(int width, int hight) {
+        setSize(new Size(width, hight));
+    }
 
 }

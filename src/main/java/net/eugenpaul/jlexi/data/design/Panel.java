@@ -13,23 +13,26 @@ import net.eugenpaul.jlexi.data.visitor.Visitor;
 
 public class Panel implements Glyph, Resizeable {
 
-    private int width;
-    private int hight;
-
     private static final int COLOR_BACKGROUND = 0xFFFF0000;
+    private static final int[][] EMPTY_PANEL = new int[0][0];
+    private static final Drawable EMPTY_DRAWABLE = () -> EMPTY_PANEL;
+
+    private Size size;
 
     private int[][] pixels;
 
     public Panel() {
-        this.width = -1;
-        this.hight = -1;
-
-        pixels = null;
+        this.size = Size.ZERO_SIZE;
+        this.pixels = EMPTY_PANEL;
     }
 
     @Override
     public Drawable getPixels() {
-        pixels = new int[hight][width];
+        if (size.isZero()) {
+            return EMPTY_DRAWABLE;
+        }
+
+        pixels = new int[size.getHight()][size.getWidth()];
         for (int[] line : pixels) {
             Arrays.fill(line, COLOR_BACKGROUND);
         }
@@ -38,7 +41,7 @@ public class Panel implements Glyph, Resizeable {
 
     @Override
     public Size getSize() {
-        return new Size(width, hight);
+        return size;
     }
 
     @Override
@@ -77,15 +80,13 @@ public class Panel implements Glyph, Resizeable {
     }
 
     @Override
-    public void setSize(int width, int hight) {
-        this.width = width;
-        this.hight = hight;
-    }
-
-    @Override
     public void setSize(Size size) {
-        this.width = size.getWidth();
-        this.hight = size.getHight();
+        if (size.isZero()) {
+            this.pixels = EMPTY_PANEL;
+            this.size = Size.ZERO_SIZE;
+        } else {
+            this.size = size;
+        }
     }
 
 }
