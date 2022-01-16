@@ -32,9 +32,9 @@ class PreOrderIteratorTest {
 
         // Generate branch A
         Row a = new Row();
-        CharGlyph a1 = new CharGlyph('1');
-        CharGlyph a2 = new CharGlyph('2');
-        CharGlyph a3 = new CharGlyph('3');
+        CharGlyph a1 = new CharGlyph('1', null);
+        CharGlyph a2 = new CharGlyph('2', null);
+        CharGlyph a3 = new CharGlyph('3', null);
         a.insert(a1, 0);
         a.insert(a2, 1);
         a.insert(a3, 2);
@@ -43,8 +43,8 @@ class PreOrderIteratorTest {
 
         // Generate branch B
         Row b = new Row();
-        CharGlyph b1 = new CharGlyph('4');
-        CharGlyph b2 = new CharGlyph('5');
+        CharGlyph b1 = new CharGlyph('4', null);
+        CharGlyph b2 = new CharGlyph('5', null);
         b.insert(b1, 0);
         b.insert(b2, 1);
 
@@ -54,11 +54,11 @@ class PreOrderIteratorTest {
         Row c = new Row();
 
         Row cd = new Row();
-        CharGlyph cd1 = new CharGlyph('8');
+        CharGlyph cd1 = new CharGlyph('8', null);
         cd.insert(cd1, 0);
 
-        CharGlyph c1 = new CharGlyph('6');
-        CharGlyph c2 = new CharGlyph('7');
+        CharGlyph c1 = new CharGlyph('6', null);
+        CharGlyph c2 = new CharGlyph('7', null);
         c.insert(c1, 0);
         c.insert(c2, 1);
         c.insert(cd, 2);

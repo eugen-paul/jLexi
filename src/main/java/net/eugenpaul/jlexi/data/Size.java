@@ -23,8 +23,7 @@ public class Size {
     }
 
     public Size(Size a) {
-        this.width = Math.max(0, a.width);
-        this.hight = Math.max(0, a.hight);
+        this(a.width, a.hight);
     }
 
     /**

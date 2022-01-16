@@ -2,32 +2,54 @@ package net.eugenpaul.jlexi.data.stucture;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
+import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.NullIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
 public class CharGlyph implements Glyph {
 
     @Getter
     @Setter
     private char c;
+    private FontStorage fontStorage;
 
-    public CharGlyph(char c) {
+    private String fontName;
+    private int style;
+    private int size;
+
+    private Drawable drawable = null;
+
+    public CharGlyph(char c, FontStorage fontStorage) {
         this.c = c;
+        this.fontStorage = fontStorage;
+
+        fontName = FontStorage.DEFAULT_FONT_NAME;
+        style = FontStorage.DEFAULT_STYLE;
+        size = FontStorage.DEFAULT_FONT_SIZE;
     }
 
     @Override
     public Drawable getPixels() {
-        return null;
+        drawable = fontStorage.ofChar(//
+                c, //
+                fontName, //
+                style, //
+                size//
+        );
+        return drawable;
     }
 
     @Override
     public Size getSize() {
-        return null;
+        if (null == drawable) {
+            return Size.ZERO_SIZE;
+        }
+        return drawable.getPixelSize();
     }
 
     @Override

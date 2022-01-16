@@ -6,6 +6,7 @@ import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.utils.ImageArrays;
 
 /**
  * Glyph with a boarder.
@@ -56,27 +57,23 @@ public class Border extends MonoGlyph implements Resizeable {
         }
 
         int targetPosition = size.getWidth() * borderSize;
-        int sourcePosition = 0;
-        for (int i = 0; i < childDraw.getPixelSize().getHight(); i++) {
-            if (borderSize > 0) {
+        if (borderSize > 0) {
+            for (int i = 0; i < childDraw.getPixelSize().getHight(); i++) {
                 Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize, BORDER_BLACK);
-                targetPosition += borderSize;
-            }
-
-            System.arraycopy(//
-                    componentPixels, //
-                    sourcePosition, //
-                    borderPixels, //
-                    targetPosition, //
-                    size.getWidth() - borderSize * 2//
-            );
-            targetPosition += childDraw.getPixelSize().getWidth();
-
-            if (borderSize > 0) {
+                targetPosition += borderSize + childDraw.getPixelSize().getWidth();
                 Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize, BORDER_BLACK);
                 targetPosition += borderSize;
             }
         }
+
+        ImageArrays.copyRectangle(//
+                componentPixels, //
+                childDraw.getPixelSize(), //
+                borderPixels, //
+                size, //
+                borderSize, //
+                borderSize //
+        );
 
         if (borderSize > 0) {
             Arrays.fill(//
