@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.data.framing;
 import java.util.Arrays;
 
 import net.eugenpaul.jlexi.data.Drawable;
+import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Size;
 
@@ -15,6 +16,7 @@ public class Border extends MonoGlyph implements Resizeable {
     private static final int BORDER_SIZE = 2;
 
     private Size size;
+    private int borderSize = BORDER_SIZE;
 
     /**
      * C'tor
@@ -30,54 +32,67 @@ public class Border extends MonoGlyph implements Resizeable {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
             child.setSize(//
-                    Math.max(0, size.getWidth() - BORDER_SIZE * 2), //
-                    Math.max(0, size.getHight() - BORDER_SIZE * 2)//
+                    Math.max(0, size.getWidth() - borderSize * 2), //
+                    Math.max(0, size.getHight() - borderSize * 2)//
             );
         }
     }
 
     @Override
     public Drawable getPixels() {
-        if (size.getHight() <= BORDER_SIZE * 2 //
-                || size.getWidth() <= BORDER_SIZE * 2 //
+        if (size.getHight() <= borderSize * 2 //
+                || size.getWidth() <= borderSize * 2 //
         ) {
-            return this::generateBlackBorder;
+            return new DrawableImpl(generateBlackBorder(), size);
         }
 
         Drawable childDraw = super.getPixels();
 
-        int[][] componentPixels = childDraw.getPixels();
-        int[][] borderPixels = new int[size.getHight()][size.getWidth()];
+        int[] componentPixels = childDraw.getPixels();
+        int[] borderPixels = new int[size.getHight() * size.getWidth()];
 
-        for (int i = 0; i < BORDER_SIZE; i++) {
-            Arrays.fill(borderPixels[i], BORDER_BLACK);
+        if (borderSize > 0) {
+            Arrays.fill(borderPixels, 0, size.getWidth() * borderSize, BORDER_BLACK);
         }
 
-        for (int i = 0; i < componentPixels.length; i++) {
-            int[] childLine = componentPixels[i];
-
-            int[] borderLine = borderPixels[i + BORDER_SIZE];
-            for (int j = 0; j < BORDER_SIZE; j++) {
-                borderLine[j] = BORDER_BLACK;
-
-                borderLine[borderLine.length - 1 - j] = BORDER_BLACK;
+        int targetPosition = size.getWidth() * borderSize;
+        int sourcePosition = 0;
+        for (int i = 0; i < childDraw.getPixelSize().getHight(); i++) {
+            if (borderSize > 0) {
+                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize, BORDER_BLACK);
+                targetPosition += borderSize;
             }
 
-            System.arraycopy(childLine, 0, borderLine, BORDER_SIZE, childLine.length);
+            System.arraycopy(//
+                    componentPixels, //
+                    sourcePosition, //
+                    borderPixels, //
+                    targetPosition, //
+                    size.getWidth() - borderSize * 2//
+            );
+            targetPosition += childDraw.getPixelSize().getWidth();
+
+            if (borderSize > 0) {
+                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize, BORDER_BLACK);
+                targetPosition += borderSize;
+            }
         }
 
-        for (int i = 0; i < BORDER_SIZE; i++) {
-            Arrays.fill(borderPixels[borderPixels.length - 1 - i], BORDER_BLACK);
+        if (borderSize > 0) {
+            Arrays.fill(//
+                    borderPixels, //
+                    borderPixels.length - 1 - size.getWidth() * borderSize, //
+                    borderPixels.length, //
+                    BORDER_BLACK//
+            );
         }
 
-        return () -> borderPixels;
+        return new DrawableImpl(borderPixels, size);
     }
 
-    private int[][] generateBlackBorder() {
-        int[][] responsePixels = new int[size.getHight()][size.getWidth()];
-        for (int[] line : responsePixels) {
-            Arrays.fill(line, BORDER_BLACK);
-        }
+    private int[] generateBlackBorder() {
+        int[] responsePixels = new int[size.getHight() * size.getWidth()];
+        Arrays.fill(responsePixels, BORDER_BLACK);
         return responsePixels;
     }
 

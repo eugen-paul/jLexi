@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.data.design;
 import java.util.Arrays;
 
 import net.eugenpaul.jlexi.data.Drawable;
+import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.Size;
@@ -14,12 +15,12 @@ import net.eugenpaul.jlexi.data.visitor.Visitor;
 public class Panel implements Glyph, Resizeable {
 
     private static final int COLOR_BACKGROUND = 0xFFFF0000;
-    private static final int[][] EMPTY_PANEL = new int[0][0];
-    private static final Drawable EMPTY_DRAWABLE = () -> EMPTY_PANEL;
+    private static final int[] EMPTY_PANEL = new int[0];
+    private static final Drawable EMPTY_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
 
     private Size size;
 
-    private int[][] pixels;
+    private int[] pixels;
 
     public Panel() {
         this.size = Size.ZERO_SIZE;
@@ -32,11 +33,10 @@ public class Panel implements Glyph, Resizeable {
             return EMPTY_DRAWABLE;
         }
 
-        pixels = new int[size.getHight()][size.getWidth()];
-        for (int[] line : pixels) {
-            Arrays.fill(line, COLOR_BACKGROUND);
-        }
-        return () -> pixels;
+        pixels = new int[size.getHight() * size.getWidth()];
+        Arrays.fill(pixels, COLOR_BACKGROUND);
+
+        return new DrawableImpl(pixels, size);
     }
 
     @Override

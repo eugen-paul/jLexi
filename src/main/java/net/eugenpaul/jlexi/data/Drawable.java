@@ -10,5 +10,12 @@ public interface Drawable {
      * 
      * @return RBG Data
      */
-    public int[][] getPixels();
+    public int[] getPixels();
+
+    /**
+     * get Bounts of the Element
+     * 
+     * @return
+     */
+    public Size getPixelSize();
 }
