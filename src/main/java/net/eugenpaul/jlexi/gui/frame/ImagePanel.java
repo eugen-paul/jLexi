@@ -16,16 +16,12 @@ public class ImagePanel extends JPanel {
     public void paint(Graphics g) {
         synchronized (imgSynch) {
             if (this.img != null) {
-                System.out.println("paint");
                 g.drawImage(img, 0, 0, this);
-            } else {
-                System.out.println("not paint");
             }
         }
     }
 
     public void update(MemoryImageSource img) {
-        System.out.println("update");
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
                 this.img = createImage(img);

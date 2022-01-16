@@ -16,10 +16,11 @@ public class ResizeListner extends ComponentAdapter {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        System.out.print(((JPanel) e.getSource()).getWidth() + " ");
-        System.out.println(((JPanel) e.getSource()).getHeight());
+        Size size = new Size(//
+                ((JPanel) e.getSource()).getWidth(), //
+                ((JPanel) e.getSource()).getHeight()//
+        );
 
-        controller
-                .resizeMainWindow(new Size(((JPanel) e.getSource()).getWidth(), ((JPanel) e.getSource()).getHeight()));
+        controller.resizeMainWindow(size);
     }
 }

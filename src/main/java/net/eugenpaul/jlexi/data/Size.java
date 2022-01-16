@@ -18,4 +18,12 @@ public class Size {
         this.width = a.width;
         this.hight = a.hight;
     }
+
+    /**
+     * 
+     * @return true if width or hight is 0
+     */
+    public boolean isZero() {
+        return 0 == width || 0 == hight;
+    }
 }

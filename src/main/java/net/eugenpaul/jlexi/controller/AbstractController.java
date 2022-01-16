@@ -59,19 +59,21 @@ public abstract class AbstractController implements PropertyChangeListener {
      * method uses reflection to inspect each of the model classes to determine whether it is the owner of the property
      * in question. If it isn't, a NoSuchMethodException is thrown, which the method ignores.
      *
-     * @param propertyName = The name of the property.
+     * @param propertyType = The name of the property.
      * @param newValue     = An object that represents the new value of the property.
      */
-    protected void setModelProperty(String propertyName, Object newValue) {
-
-        for (InterfaceModel model : registeredModels) {
-            try {
-                Method method = model.getClass().getMethod("set" + propertyName, newValue.getClass());
-                method.invoke(model, newValue);
-
-            } catch (Exception ex) {
-                // Handle exception.
-            }
-        }
+    protected void setModelProperty(ModelPropertyChangeType propertyType, Object newValue) {
+        registeredModels.stream()//
+                .filter(v -> {
+                    return ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass());
+                })//
+                .forEach(v -> {
+                    try {
+                        Method method = v.getClass().getDeclaredMethod(propertyType.getMethode(), newValue.getClass());
+                        method.invoke(v, newValue);
+                    } catch (Exception ex) {
+                        // Handle exception.
+                    }
+                });
     }
 }

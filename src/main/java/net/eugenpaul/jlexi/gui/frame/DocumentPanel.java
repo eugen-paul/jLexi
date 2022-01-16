@@ -25,14 +25,12 @@ public class DocumentPanel extends AbstractPanel {
 
     @Override
     public boolean init() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public void setVisible(boolean status) {
-        // TODO Auto-generated method stub
-
+        // Nothing to do
     }
 
     @Override

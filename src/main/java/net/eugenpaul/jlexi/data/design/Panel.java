@@ -82,4 +82,10 @@ public class Panel implements Glyph, Resizeable {
         this.hight = hight;
     }
 
+    @Override
+    public void setSize(Size size) {
+        this.width = size.getWidth();
+        this.hight = size.getHight();
+    }
+
 }

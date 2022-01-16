@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.gui.frame;
 
-import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.JFrame;
@@ -25,8 +24,6 @@ public class MainFrame extends AbstractPanel {
     @Override
     public boolean init() {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // frame.setPreferredSize(new Dimension(800, 600));
-        // frame.setMinimumSize(new Dimension(800, 600));
         frame.setLocation(100, 100);
         frame.setTitle(TITLE_SUFFIX);
         return true;
