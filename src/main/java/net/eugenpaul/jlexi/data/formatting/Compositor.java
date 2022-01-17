@@ -19,5 +19,5 @@ public interface Compositor<T> {
     /**
      * Do format
      */
-    public T compose(List<T> data);
+    public List<T> compose(List<T> data, final int width);
 }

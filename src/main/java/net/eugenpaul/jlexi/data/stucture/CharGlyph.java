@@ -28,25 +28,26 @@ public class CharGlyph implements Glyph {
         this.c = c;
         this.fontStorage = fontStorage;
 
-        fontName = FontStorage.DEFAULT_FONT_NAME;
-        style = FontStorage.DEFAULT_STYLE;
-        size = FontStorage.DEFAULT_FONT_SIZE;
-    }
+        this.fontName = FontStorage.DEFAULT_FONT_NAME;
+        this.style = FontStorage.DEFAULT_STYLE;
+        this.size = FontStorage.DEFAULT_FONT_SIZE;
 
-    @Override
-    public Drawable getPixels() {
-        drawable = fontStorage.ofChar(//
+        this.drawable = fontStorage.ofChar(//
                 c, //
                 fontName, //
                 style, //
                 size//
         );
-        return drawable;
+    }
+
+    @Override
+    public Drawable getPixels() {
+        return this.drawable;
     }
 
     @Override
     public Size getSize() {
-        if (null == drawable) {
+        if (null == this.drawable) {
             return Size.ZERO_SIZE;
         }
         return drawable.getPixelSize();

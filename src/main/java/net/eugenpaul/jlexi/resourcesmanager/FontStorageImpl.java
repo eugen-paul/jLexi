@@ -22,6 +22,7 @@ public class FontStorageImpl extends FontStorage {
     public FontStorageImpl(FontPixelsGenerator fontGenerator) {
         this.fontGenerator = fontGenerator;
         charToArray = new HashMap<>();
+        fontToSize = new HashMap<>();
 
         init();
     }
@@ -34,11 +35,17 @@ public class FontStorageImpl extends FontStorage {
         int maxAscent = fontGenerator.getMaxAscent(DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
         fontToSize.put(DEFAULT_FONT_NAME, maxAscent);
 
-        for (char c = 0x27; c < 0x7E; c++) {
+        // All printable Chars from ! to ~
+        for (char c = 0x21; c < 0x7E; c++) {
             int[] pixels = fontGenerator.ofChar(c, DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
             Drawable dr = new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
             charToArray.put(c, dr);
         }
+
+        // Space
+        int[] pixels = fontGenerator.ofChar(' ', DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
+        Drawable dr = new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
+        charToArray.put(' ', dr);
     }
 
     @Override
