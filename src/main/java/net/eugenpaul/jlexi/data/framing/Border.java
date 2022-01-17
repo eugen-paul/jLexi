@@ -56,16 +56,6 @@ public class Border extends MonoGlyph implements Resizeable {
             Arrays.fill(borderPixels, 0, size.getWidth() * borderSize, BORDER_BLACK);
         }
 
-        int targetPosition = size.getWidth() * borderSize;
-        if (borderSize > 0) {
-            for (int i = 0; i < childDraw.getPixelSize().getHight(); i++) {
-                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize, BORDER_BLACK);
-                targetPosition += borderSize + childDraw.getPixelSize().getWidth();
-                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize, BORDER_BLACK);
-                targetPosition += borderSize;
-            }
-        }
-
         ImageArrays.copyRectangle(//
                 componentPixels, //
                 childDraw.getPixelSize(), //
@@ -74,6 +64,14 @@ public class Border extends MonoGlyph implements Resizeable {
                 borderSize, //
                 borderSize //
         );
+
+        if (borderSize > 0) {
+            int targetPosition = size.getWidth() * borderSize - borderSize;
+            for (int i = borderSize; i < size.getHight() - borderSize + 1; i++) {
+                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize * 2, BORDER_BLACK);
+                targetPosition += size.getWidth();
+            }
+        }
 
         if (borderSize > 0) {
             Arrays.fill(//

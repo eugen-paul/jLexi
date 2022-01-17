@@ -20,7 +20,6 @@ import net.eugenpaul.jlexi.utils.ImageArrays;
  */
 public class TextPane extends Composition<Glyph> implements Resizeable {
 
-    private static final int BACKGROUND_COLOR = 0xFF000000;
     private List<Glyph> children;
 
     private Size size;
