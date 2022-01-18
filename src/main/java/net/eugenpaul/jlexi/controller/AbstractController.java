@@ -5,6 +5,8 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.model.InterfaceModel;
@@ -62,14 +64,18 @@ public abstract class AbstractController implements PropertyChangeListener {
      * @param propertyType = The name of the property.
      * @param newValue     = An object that represents the new value of the property.
      */
-    protected void setModelProperty(ModelPropertyChangeType propertyType, Object newValue) {
+    protected void setModelProperty(ModelPropertyChangeType propertyType, Object... newValue) {
+
+        Class<?>[] methodParameter = Stream.of(newValue) //
+                .map(Object::getClass) //
+                .collect(Collectors.toList()) //
+                .toArray(new Class[0]);
+
         registeredModels.stream()//
-                .filter(v -> {
-                    return ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass());
-                })//
+                .filter(v -> ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass()))//
                 .forEach(v -> {
                     try {
-                        Method method = v.getClass().getDeclaredMethod(propertyType.getMethode(), newValue.getClass());
+                        Method method = v.getClass().getDeclaredMethod(propertyType.getMethode(), methodParameter);
                         method.invoke(v, newValue);
                     } catch (Exception ex) {
                         // Handle exception.

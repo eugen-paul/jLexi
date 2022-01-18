@@ -14,7 +14,7 @@ import net.eugenpaul.jlexi.model.InterfaceModel;
 /**
  * Add Menubar to Glyph
  */
-public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
+public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, MouseClickable {
 
     private static final int MENUBAR_HIGHT = 40;
     private static final int MENUBAR_BACKGROUND = 0xFF00FF00;
@@ -106,6 +106,15 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel {
                 oldSize, //
                 newSize//
         ));
+    }
+
+    @Override
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+        if (mouseY > MENUBAR_HIGHT) {
+            System.out.println("Click not on Menu with " + button.toString());
+        } else {
+            System.out.println("Click on Menu with " + button.toString());
+        }
     }
 
 }
