@@ -45,6 +45,9 @@ public class Row implements Glyph {
             ImageArrays.copyRectangle(//
                     drawable.getPixels(), //
                     drawable.getPixelSize(), //
+                    0, //
+                    0, //
+                    drawable.getPixelSize(), //
                     pixels, //
                     pixelsSize, //
                     positionX, //

@@ -56,6 +56,9 @@ public class TextPane extends Composition<Glyph> implements Resizeable {
             ImageArrays.copyRectangle(//
                     drawable.getPixels(), //
                     drawable.getPixelSize(), //
+                    0, //
+                    0, //
+                    drawable.getPixelSize(), //
                     pixels, //
                     pixelsSize, //
                     positionX, //

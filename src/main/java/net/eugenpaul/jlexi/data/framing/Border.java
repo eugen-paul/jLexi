@@ -59,6 +59,9 @@ public class Border extends MonoGlyph implements Resizeable {
         ImageArrays.copyRectangle(//
                 componentPixels, //
                 childDraw.getPixelSize(), //
+                0, //
+                0, //
+                childDraw.getPixelSize(), //
                 borderPixels, //
                 size, //
                 borderSize, //

@@ -16,6 +16,7 @@ public class ImagePanel extends JPanel {
     public void paint(Graphics g) {
         synchronized (imgSynch) {
             if (this.img != null) {
+                g.clearRect(0, 0, getWidth(), getHeight());
                 g.drawImage(img, 0, 0, this);
             }
         }
