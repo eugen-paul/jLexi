@@ -11,7 +11,7 @@ import net.eugenpaul.jlexi.data.iterator.NullIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
-public class CharGlyph implements Glyph {
+public class CharGlyph implements TextPaneElement {
 
     @Getter
     @Setter
@@ -91,6 +91,11 @@ public class CharGlyph implements Glyph {
     @Override
     public void visit(Visitor checker) {
         checker.visit(this);
+    }
+
+    @Override
+    public boolean isCursorHoldable() {
+        return false;
     }
 
 }

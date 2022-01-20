@@ -9,6 +9,7 @@ import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.data.design.GuiComponent;
 import net.eugenpaul.jlexi.data.formatting.Composition;
 import net.eugenpaul.jlexi.data.formatting.text.RowCompositor;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
@@ -18,7 +19,7 @@ import net.eugenpaul.jlexi.utils.ImageArrays;
 /**
  * Display Rows.
  */
-public class TextPane extends Composition<Glyph> implements Resizeable {
+public class TextPane extends Composition<Glyph> implements GuiComponent {
 
     private List<Glyph> children;
 
@@ -113,6 +114,11 @@ public class TextPane extends Composition<Glyph> implements Resizeable {
     @Override
     public void insert(Glyph glyph, int position) {
         children.add(position, glyph);
+    }
+
+    @Override
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+        // TODO Auto-generated method stub
     }
 
 }

@@ -3,7 +3,7 @@ package net.eugenpaul.jlexi.data.framing;
 import net.eugenpaul.jlexi.data.Size;
 
 /**
- * Interface for Objects that can be resized.
+ * Object that can receive resize notification from gui.
  */
 public interface Resizeable {
 
