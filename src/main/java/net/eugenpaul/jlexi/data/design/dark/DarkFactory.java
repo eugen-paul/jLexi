@@ -7,7 +7,8 @@ public class DarkFactory extends GuiFactory {
 
     @Override
     public Button createButton() {
-        return new DarkButton();
+        // return new DarkButton();
+        return null;
     }
 
 }

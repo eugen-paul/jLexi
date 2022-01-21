@@ -6,7 +6,7 @@ public class NullIterator implements GlyphIterator {
 
     private static final NullIterator ITERATOR = new NullIterator();
 
-    public static NullIterator getNullIterator(){
+    public static NullIterator getNullIterator() {
         return ITERATOR;
     }
 
@@ -23,6 +23,16 @@ public class NullIterator implements GlyphIterator {
     @Override
     public boolean hasNext() {
         return false;
+    }
+
+    @Override
+    public void insertAfter() {
+        // nothing to do
+    }
+
+    @Override
+    public void insertBefor() {
+        // nothing to do
     }
 
 }

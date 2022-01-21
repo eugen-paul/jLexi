@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.eugenpaul.jlexi.data.Glyph;
-import net.eugenpaul.jlexi.data.formatting.Composition;
 import net.eugenpaul.jlexi.data.formatting.Compositor;
+import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.stucture.Row;
 
 /**
@@ -13,40 +13,69 @@ import net.eugenpaul.jlexi.data.stucture.Row;
  */
 public class RowCompositor implements Compositor<Glyph> {
 
-    private Composition<Glyph> composition;
+    private Glyph parent;
 
-    public RowCompositor() {
-        composition = null;
-    }
-
-    @Override
-    public void setComposition(Composition<Glyph> composition) {
-        this.composition = composition;
+    public RowCompositor(Glyph parent) {
+        this.parent = parent;
     }
 
     @Override
     public List<Glyph> compose(List<Glyph> data, final int width) {
         List<Glyph> responseList = new LinkedList<>();
-        Row row = new Row();
+
+        List<Glyph> childrenList = new LinkedList<>();
+
         int currentWidth = 0;
-        int position = 0;
         for (Glyph glyph : data) {
-            int glyphWidth = glyph.getSize().getWidth();
+            int glyphWidth = glyph.getPreferredSize().getWidth();
             if (glyphWidth + currentWidth < width) {
                 // add Glyph to current Row
-                row.insert(glyph, position);
+                childrenList.add(glyph);
                 currentWidth += glyphWidth;
-                position++;
             } else {
-                // save currwnt Row
+                // save current Row
+                Row row = new Row(parent, childrenList);
                 responseList.add(row);
+
                 // add Glyph to new Row
-                row = new Row();
-                row.insert(glyph, 0);
+                childrenList = new LinkedList<>();
+                childrenList.add(glyph);
                 currentWidth = glyphWidth;
-                position = 1;
             }
         }
+        Row row = new Row(parent, childrenList);
+        responseList.add(row);
+
+        return responseList;
+    }
+
+    @Override
+    public List<Glyph> compose(GlyphIterator iterator, int width) {
+        List<Glyph> responseList = new LinkedList<>();
+
+        List<Glyph> childrenList = new LinkedList<>();
+
+        iterator.first();
+        int currentWidth = 0;
+        while (iterator.hasNext()) {
+            Glyph glyph = iterator.next();
+            int glyphWidth = glyph.getPreferredSize().getWidth();
+            if (glyphWidth + currentWidth < width) {
+                // add Glyph to current Row
+                childrenList.add(glyph);
+                currentWidth += glyphWidth;
+            } else {
+                // save current Row
+                Row row = new Row(parent, childrenList);
+                responseList.add(row);
+
+                // add Glyph to new Row
+                childrenList = new LinkedList<>();
+                childrenList.add(glyph);
+                currentWidth = glyphWidth;
+            }
+        }
+        Row row = new Row(parent, childrenList);
         responseList.add(row);
 
         return responseList;

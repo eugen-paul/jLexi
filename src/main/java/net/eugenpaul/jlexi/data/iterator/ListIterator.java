@@ -29,4 +29,16 @@ public class ListIterator implements GlyphIterator {
         return iterator.hasNext();
     }
 
+    @Override
+    public void insertAfter() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void insertBefor() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

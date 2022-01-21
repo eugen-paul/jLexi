@@ -4,17 +4,14 @@ import java.beans.PropertyChangeEvent;
 
 import net.eugenpaul.jlexi.controller.DefaultController;
 import net.eugenpaul.jlexi.data.Size;
-import net.eugenpaul.jlexi.data.design.Panel;
 import net.eugenpaul.jlexi.data.framing.Border;
 import net.eugenpaul.jlexi.data.framing.MenuBar;
 import net.eugenpaul.jlexi.data.framing.TextPane;
-import net.eugenpaul.jlexi.data.stucture.CharGlyph;
 import net.eugenpaul.jlexi.data.window.Window;
 import net.eugenpaul.jlexi.gui.window.SwingWindowImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontGenerator;
-import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontPixelsGenerator;
 
 public class JLexi {
 
@@ -27,26 +24,18 @@ public class JLexi {
         // Panel ePanel = new Panel();
         // Border border = new Border(ePanel);
 
-        TextPane textPane = new TextPane();
-        Border border = new Border(textPane);
-        addStringToTextPane(
+        TextPane textPane = new TextPane(null, fontStorage);
+        Border border = new Border(null, textPane);
+        textPane.setText(
                 "A \"Hello, World!\" program is generally a computer program that outputs or displays the message \"Hello, World!\". "
-                        + "This program is very simple to write in many programming languages, and is often used to illustrate a language's basic syntax.",
-                textPane, fontStorage);
+                        + "This program is very simple to write in many programming languages, and is often used to illustrate a language's basic syntax.");
 
         Size defaultSize = new Size(800, 600);
-        MenuBar menubar = new MenuBar(border, defaultSize, controller);
+        MenuBar menubar = new MenuBar(null, border, defaultSize, controller);
         controller.addModel(menubar);
 
         windowAbstraction.createMainWindow(menubar);
 
         controller.propertyChange(new PropertyChangeEvent(menubar, "UPDATE", null, defaultSize));
-    }
-
-    private static void addStringToTextPane(String text, TextPane textPane, FontStorage fontStorage) {
-        for (int i = 0; i < text.length(); i++) {
-            CharGlyph glyph = new CharGlyph(text.charAt(i), fontStorage);
-            textPane.insert(glyph, i);
-        }
     }
 }

@@ -16,7 +16,6 @@ public class Border extends MonoGlyph implements Resizeable {
     private static final int BORDER_BLACK = 0xFF000000;
     private static final int BORDER_SIZE = 2;
 
-    private Size size;
     private int borderSize = BORDER_SIZE;
 
     /**
@@ -24,36 +23,37 @@ public class Border extends MonoGlyph implements Resizeable {
      * 
      * @param component component that will be bordered.
      */
-    public Border(Glyph component) {
-        super(component);
-        size = Size.ZERO_SIZE;
+    public Border(Glyph parent, Glyph component) {
+        super(parent, component);
+        component.setParent(this);
+        setPreferredSize(Size.ZERO_SIZE);
     }
 
     private void computePixels() {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
             child.setSize(//
-                    Math.max(0, size.getWidth() - borderSize * 2), //
-                    Math.max(0, size.getHight() - borderSize * 2)//
+                    Math.max(0, getPreferredSize().getWidth() - borderSize * 2), //
+                    Math.max(0, getPreferredSize().getHight() - borderSize * 2)//
             );
         }
     }
 
     @Override
     public Drawable getPixels() {
-        if (size.getHight() <= borderSize * 2 //
-                || size.getWidth() <= borderSize * 2 //
+        if (getPreferredSize().getHight() <= borderSize * 2 //
+                || getPreferredSize().getWidth() <= borderSize * 2 //
         ) {
-            return new DrawableImpl(generateBlackBorder(), size);
+            return new DrawableImpl(generateBlackBorder(), getPreferredSize());
         }
 
         Drawable childDraw = super.getPixels();
 
         int[] componentPixels = childDraw.getPixels();
-        int[] borderPixels = new int[size.getHight() * size.getWidth()];
+        int[] borderPixels = new int[getPreferredSize().getHight() * getPreferredSize().getWidth()];
 
         if (borderSize > 0) {
-            Arrays.fill(borderPixels, 0, size.getWidth() * borderSize, BORDER_BLACK);
+            Arrays.fill(borderPixels, 0, getPreferredSize().getWidth() * borderSize, BORDER_BLACK);
         }
 
         ImageArrays.copyRectangle(//
@@ -63,40 +63,41 @@ public class Border extends MonoGlyph implements Resizeable {
                 0, //
                 childDraw.getPixelSize(), //
                 borderPixels, //
-                size, //
+                getPreferredSize(), //
                 borderSize, //
                 borderSize //
         );
 
         if (borderSize > 0) {
-            int targetPosition = size.getWidth() * borderSize - borderSize;
-            for (int i = borderSize; i < size.getHight() - borderSize + 1; i++) {
+            int targetPosition = getPreferredSize().getWidth() * borderSize - borderSize;
+            for (int i = borderSize; i < getPreferredSize().getHight() - borderSize + 1; i++) {
                 Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize * 2, BORDER_BLACK);
-                targetPosition += size.getWidth();
+                targetPosition += getPreferredSize().getWidth();
             }
         }
 
         if (borderSize > 0) {
             Arrays.fill(//
                     borderPixels, //
-                    borderPixels.length - 1 - size.getWidth() * borderSize, //
+                    borderPixels.length - 1 - getPreferredSize().getWidth() * borderSize, //
                     borderPixels.length, //
                     BORDER_BLACK//
             );
         }
 
-        return new DrawableImpl(borderPixels, size);
+        return new DrawableImpl(borderPixels, getPreferredSize());
     }
 
     private int[] generateBlackBorder() {
-        int[] responsePixels = new int[size.getHight() * size.getWidth()];
+        int[] responsePixels = new int[getPreferredSize().getHight() * getPreferredSize().getWidth()];
         Arrays.fill(responsePixels, BORDER_BLACK);
         return responsePixels;
     }
 
     @Override
     public void setSize(Size size) {
-        this.size = size;
+        setPreferredSize(size);
         computePixels();
     }
+
 }

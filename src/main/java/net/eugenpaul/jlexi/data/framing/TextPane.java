@@ -1,19 +1,20 @@
 package net.eugenpaul.jlexi.data.framing;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
-import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.design.GuiComponent;
 import net.eugenpaul.jlexi.data.formatting.Composition;
 import net.eugenpaul.jlexi.data.formatting.text.RowCompositor;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
+import net.eugenpaul.jlexi.data.stucture.CharGlyph;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.GlyphNodeList;
 import net.eugenpaul.jlexi.utils.ImageArrays;
 
 /**
@@ -21,20 +22,21 @@ import net.eugenpaul.jlexi.utils.ImageArrays;
  */
 public class TextPane extends Composition<Glyph> implements GuiComponent {
 
-    private List<Glyph> children;
+    private GlyphNodeList nodeList;
 
-    private Size size;
+    private FontStorage fontStorage;
 
-    public TextPane() {
-        super(new RowCompositor());
-        size = Size.ZERO_SIZE;
-        children = new ArrayList<>();
-        compositor.setComposition(this);
+    public TextPane(Glyph parent, FontStorage fontStorage) {
+        super(parent);
+        setCompositor(new RowCompositor(this));
+        this.fontStorage = fontStorage;
+        setPreferredSize(Size.ZERO_SIZE);
+        nodeList = new GlyphNodeList();
     }
 
     @Override
     public Drawable getPixels() {
-        List<Glyph> textField = compositor.compose(children, size.getWidth());
+        List<Glyph> textField = compositor.compose(nodeList.iterator(), getPreferredSize().getWidth());
 
         List<Drawable> childDrawable = textField.stream()//
                 .map(Glyph::getPixels)//
@@ -72,32 +74,7 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
     }
 
     @Override
-    public Size getSize() {
-        return size;
-    }
-
-    @Override
-    public boolean isIntersects(Point point) {
-        return false;
-    }
-
-    @Override
-    public void remove(Glyph glyph) {
-        // Nothing to do
-    }
-
-    @Override
-    public Glyph child(int position) {
-        return null;
-    }
-
-    @Override
     public GlyphIterator createIterator() {
-        return null;
-    }
-
-    @Override
-    public Glyph parent() {
         return null;
     }
 
@@ -108,12 +85,7 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
 
     @Override
     public void setSize(Size size) {
-        this.size = size;
-    }
-
-    @Override
-    public void insert(Glyph glyph, int position) {
-        children.add(position, glyph);
+        setPreferredSize(size);
     }
 
     @Override
@@ -121,4 +93,10 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
         // TODO Auto-generated method stub
     }
 
+    public void setText(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            CharGlyph glyph = new CharGlyph(this, text.charAt(i), fontStorage);
+            nodeList.addLast(glyph);
+        }
+    }
 }

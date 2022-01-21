@@ -8,4 +8,8 @@ public interface GlyphIterator {
     public Glyph next();
 
     public boolean hasNext();
+
+    public void insertAfter();
+
+    public void insertBefor();
 }

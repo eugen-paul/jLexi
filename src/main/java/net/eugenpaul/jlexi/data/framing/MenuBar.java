@@ -22,8 +22,6 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
     private static final int[] EMPTY_MENUBAR = new int[0];
     private static final Drawable EMPTY_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
 
-    private Size size;
-
     private int[] menuBackground;
     private AbstractController controller;
 
@@ -32,9 +30,10 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
      * 
      * @param component
      */
-    public MenuBar(Glyph component, Size size, AbstractController controller) {
-        super(component);
-        this.size = size;
+    public MenuBar(Glyph parent, Glyph component, Size size, AbstractController controller) {
+        super(parent, component);
+        component.setParent(this);
+        setPreferredSize(size);
         this.controller = controller;
 
         computePixels();
@@ -43,24 +42,24 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
     private void computePixels() {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
-            child.setSize(size.getWidth(), Math.max(0, size.getHight() - MENUBAR_HIGHT));
+            child.setSize(getPreferredSize().getWidth(), Math.max(0, getPreferredSize().getHight() - MENUBAR_HIGHT));
         }
 
         this.menuBackground = generateMenuBackground(//
-                size.getWidth(), //
-                Math.min(size.getHight(), MENUBAR_HIGHT)//
+                getPreferredSize().getWidth(), //
+                Math.min(getPreferredSize().getHight(), MENUBAR_HIGHT)//
         );
     }
 
     @Override
     public Drawable getPixels() {
-        if (size.isZero()) {
+        if (getPreferredSize().isZero()) {
             return EMPTY_DRAWABLE;
         }
 
         Drawable componentPixels = super.getPixels();
 
-        int[] responsePixels = new int[size.getHight() * size.getWidth()];
+        int[] responsePixels = new int[getPreferredSize().getHight() * getPreferredSize().getWidth()];
 
         System.arraycopy(menuBackground, 0, responsePixels, 0, menuBackground.length);
 
@@ -72,7 +71,7 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
                 componentPixels.getPixels().length//
         );
 
-        return new DrawableImpl(responsePixels, size);
+        return new DrawableImpl(responsePixels, getPreferredSize());
     }
 
     private static int[] generateMenuBackground(int w, int h) {
@@ -86,17 +85,12 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
     }
 
     @Override
-    public Size getSize() {
-        return new Size(size);
-    }
-
-    @Override
     public void setSize(Size newSize) {
-        if (this.size.equals(newSize)) {
+        if (getPreferredSize().equals(newSize)) {
             return;
         }
-        Size oldSize = this.size;
-        this.size = newSize;
+        Size oldSize = this.getPreferredSize();
+        setPreferredSize(newSize);
 
         computePixels();
 

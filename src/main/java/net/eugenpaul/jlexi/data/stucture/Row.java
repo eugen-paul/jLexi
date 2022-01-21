@@ -8,18 +8,24 @@ import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
-import net.eugenpaul.jlexi.data.Point;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.ListIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.utils.ImageArrays;
 
-public class Row implements Glyph {
+public class Row extends Glyph {
 
     private List<Glyph> children;
 
-    public Row() {
+    public Row(Glyph parent) {
+        super(parent);
         children = new ArrayList<>();
+    }
+
+    public Row(Glyph parent, List<Glyph> children) {
+        super(parent);
+        this.children = children;
+        this.children.forEach(v -> v.setParent(this));
     }
 
     @Override
@@ -57,36 +63,6 @@ public class Row implements Glyph {
         }
 
         return new DrawableImpl(pixels, pixelsSize);
-    }
-
-    @Override
-    public Size getSize() {
-        return null;
-    }
-
-    @Override
-    public boolean isIntersects(Point point) {
-        return false;
-    }
-
-    @Override
-    public void insert(Glyph glyph, int position) {
-        children.add(position, glyph);
-    }
-
-    @Override
-    public void remove(Glyph glyph) {
-
-    }
-
-    @Override
-    public Glyph child(int position) {
-        return null;
-    }
-
-    @Override
-    public Glyph parent() {
-        return null;
     }
 
     @Override

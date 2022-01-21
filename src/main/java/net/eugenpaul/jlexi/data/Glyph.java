@@ -1,67 +1,39 @@
 package net.eugenpaul.jlexi.data;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 
-public interface Glyph {
+@Getter
+@Setter
+public abstract class Glyph {
+
+    private Glyph parent;
+    private Position relativPosition;
+
+    @Setter(lombok.AccessLevel.PROTECTED)
+    private Size preferredSize;
+
+    protected Glyph(Glyph parent) {
+        this.parent = parent;
+        this.relativPosition = new Position(0, 0);
+        this.preferredSize = Size.ZERO_SIZE;
+    }
 
     /**
      * Get drawable data of this element.
      * 
      * @return drawable data
      */
-    public Drawable getPixels();
-
-    /**
-     * Get size of this Element.
-     * 
-     * @return size
-     */
-    public Size getSize();
-
-    /**
-     * Check whether the point lies on the element.
-     * 
-     * @return true - the Point is on Element.
-     */
-    public boolean isIntersects(Point point);
-
-    /**
-     * Insert a Glyph to this Glyph on given position
-     * 
-     * @param glyph    Glyph that will be added.
-     * @param position Position where the glyph is added.
-     */
-    public void insert(Glyph glyph, int position);
-
-    /**
-     * Remove Glyph to this Glyph
-     * 
-     * @param glyph Glyph that will be removed
-     */
-    public void remove(Glyph glyph);
-
-    /**
-     * Get Glyph on position
-     * 
-     * @param position position of the glyph
-     * @return Glyph
-     */
-    public Glyph child(int position);
+    public abstract Drawable getPixels();
 
     /**
      * get a Iterator to iterate over children
      * 
      * @return Iterator
      */
-    public GlyphIterator createIterator();
+    public abstract GlyphIterator createIterator();
 
-    /**
-     * Get Parant of this Glyph
-     * 
-     * @return
-     */
-    public Glyph parent();
-
-    public void visit(Visitor checker);
+    public abstract void visit(Visitor checker);
 }

@@ -11,17 +11,18 @@ public class NodeList<E> {
         @Getter
         private E data;
 
-        @Getter(lombok.AccessLevel.PRIVATE)
+        @Getter
+        @Setter(lombok.AccessLevel.PRIVATE)
+        private NodeListElement<E> prev;
+
+        @Getter
         @Setter(lombok.AccessLevel.PRIVATE)
         private NodeListElement<E> next;
 
-        @Getter(lombok.AccessLevel.PRIVATE)
-        @Setter(lombok.AccessLevel.PRIVATE)
-        private NodeListElement<E> prev;
         private NodeList<E> list;
 
         public void insertAfter(E data) {
-            NodeListElement<E> node = new NodeListElement<>(data, this.getNext(), this, list);
+            NodeListElement<E> node = new NodeListElement<>(data, this, this.getNext(), list);
             if (null != next) {
                 next.setPrev(node);
             } else {
@@ -83,5 +84,35 @@ public class NodeList<E> {
             return last.data;
         }
         return null;
+    }
+
+    public NodeListElement<E> addFirst(E data) {
+        NodeListElement<E> node = new NodeListElement<>(data, null, first, this);
+        if (size == 0) {
+            last = node;
+        }
+        if (first != null) {
+            first.setPrev(node);
+        }
+        first = node;
+        size++;
+        return node;
+    }
+
+    public NodeListElement<E> addLast(E data) {
+        NodeListElement<E> node = new NodeListElement<>(data, last, null, this);
+        if (size == 0) {
+            first = node;
+        }
+        if (last != null) {
+            last.setNext(node);
+        }
+        last = node;
+        size++;
+        return node;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
     }
 }
