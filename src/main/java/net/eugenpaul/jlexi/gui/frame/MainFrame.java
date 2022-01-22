@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import net.eugenpaul.jlexi.controller.AbstractController;
+import net.eugenpaul.jlexi.controller.DefaultController;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 
 public class MainFrame extends AbstractPanel {
@@ -15,7 +15,7 @@ public class MainFrame extends AbstractPanel {
     private JFrame frame;
     private DocumentPanel mainPanel;
 
-    public MainFrame(AbstractController controller) {
+    public MainFrame(DefaultController controller) {
         super(controller);
         frame = new JFrame(TITLE_SUFFIX);
         mainPanel = null;
@@ -26,6 +26,7 @@ public class MainFrame extends AbstractPanel {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocation(100, 100);
         frame.setTitle(TITLE_SUFFIX);
+        frame.addKeyListener(new KeyListener((DefaultController) controller));
         return true;
     }
 

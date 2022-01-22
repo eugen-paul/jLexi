@@ -32,6 +32,18 @@ public class NodeList<E> {
             this.next = node;
             list.size++;
         }
+
+        public void insertBefore(E data) {
+            NodeListElement<E> node = new NodeListElement<>(data, this.getPrev(), this, list);
+            if (null != prev) {
+                prev.setNext(node);
+            } else {
+                list.first = node;
+            }
+
+            this.prev = node;
+            list.size++;
+        }
     }
 
     private NodeListElement<E> first;

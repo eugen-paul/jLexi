@@ -15,7 +15,7 @@ import net.eugenpaul.jlexi.data.Position;
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.design.GuiComponent;
 import net.eugenpaul.jlexi.data.effect.CursorEffect;
-import net.eugenpaul.jlexi.data.effect.EffectWorker;
+import net.eugenpaul.jlexi.data.effect.EffectHandler;
 import net.eugenpaul.jlexi.data.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.data.formatting.Composition;
 import net.eugenpaul.jlexi.data.formatting.text.RowCompositor;
@@ -41,13 +41,13 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
     private List<Glyph> textField;
 
     private FontStorage fontStorage;
-    private EffectWorker effectWorker;
+    private EffectHandler effectHandler;
 
     private TextPaneEffect currectCursorEffect;
 
-    public TextPane(Glyph parent, FontStorage fontStorage, EffectWorker effectWorker) {
+    public TextPane(Glyph parent, FontStorage fontStorage, EffectHandler effectWorker) {
         super(parent);
-        this.effectWorker = effectWorker;
+        this.effectHandler = effectWorker;
         this.fontStorage = fontStorage;
         this.currectCursorEffect = null;
         setCompositor(new RowCompositor(this));
@@ -129,11 +129,11 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
                     );
 
                     if (currectCursorEffect != null) {
-                        effectWorker.removeEffect(currectCursorEffect);
+                        effectHandler.removeEffect(currectCursorEffect);
                     }
                     currectCursorEffect = new CursorEffect(elem.getData());
                     elem.getData().addEffect(currectCursorEffect);
-                    effectWorker.addEffect(currectCursorEffect);
+                    effectHandler.addEffect(currectCursorEffect);
                 }
                 break;
             }
@@ -158,6 +158,15 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
     @Override
     public void notifyUpdate(Glyph child) {
         LOGGER.trace("textPane notifyUpdate to parent");
+        getParent().notifyUpdate(this);
+    }
+
+    @Override
+    public void onKeyPressed(Character key) {
+        if (currectCursorEffect != null) {
+            CharGlyph glyph = new CharGlyph(this, key.charValue(), fontStorage, null);
+            currectCursorEffect.getGlyph().getTextPaneListElement().insertBefore(glyph);
+        }
         getParent().notifyUpdate(this);
     }
 }

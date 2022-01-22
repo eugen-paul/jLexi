@@ -33,25 +33,38 @@ public class DefaultController extends AbstractController {
     /**
      * Mouse was clicked
      * 
-     * @param mouseX Returns the horizontal x position of the event relative to the window component.
-     * @param mouseY Returns the horizontal y position of the event relative to the window component.
-     * @param button Returns which, if any, of the mouse buttons has changed state.
+     * @param mouseX the horizontal x position of the event relative to the window component.
+     * @param mouseY the horizontal y position of the event relative to the window component.
+     * @param button which, if any, of the mouse buttons has changed state.
      */
     public void clickOnWindow(int mouseX, int mouseY, MouseButton button) {
         setModelProperty(ModelPropertyChangeType.MOUSE_CLICK, mouseX, mouseY, button);
     }
 
+    public void keyPressed(Character key) {
+        setModelProperty(ModelPropertyChangeType.KEY_PRESSED, key);
+    }
+
     @Override
     public void addEffect(Effect effect) {
-        Disposable disp = Mono.fromRunnable(effect::doEffect)//
-                .delaySubscription(effect.timeToNextExecute())//
-                .publishOn(modelScheduler)//
-                .repeatWhen(v -> v)//
-                .doOnSubscribe(v -> effect.doEffect())//
-                .doOnCancel(effect::terminate)//
+        // I don't use "repeate" function because each repetition can have its own delay.
+        Disposable disp = effectToMono(effect)//
+                .doOnSuccess(v -> addEffect(effect))//
                 .subscribe();
 
         effectMap.put(effect, disp);
+    }
+
+    private Mono<Object> effectToMono(Effect effect) {
+        return Mono.empty()//
+                .publishOn(modelScheduler)//
+                .delaySubscription(effect.timeToNextExecute())//
+                .doOnSubscribe(v -> effect.doEffect())//
+                .doOnCancel(() -> {
+                    effect.terminate();
+                    effectMap.remove(effect);
+                })//
+        ;
     }
 
     @Override

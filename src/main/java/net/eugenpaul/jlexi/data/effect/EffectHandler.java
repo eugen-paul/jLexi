@@ -1,6 +1,6 @@
 package net.eugenpaul.jlexi.data.effect;
 
-public interface EffectWorker {
+public interface EffectHandler {
 
     public void addEffect(Effect effect);
 

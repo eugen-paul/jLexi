@@ -6,7 +6,7 @@ import net.eugenpaul.jlexi.data.stucture.TextPaneElement;
 
 public abstract class TextPaneEffect implements Effect {
 
-    @Getter(lombok.AccessLevel.PROTECTED)
+    @Getter
     private TextPaneElement glyph;
 
     protected TextPaneEffect(TextPaneElement glyph) {

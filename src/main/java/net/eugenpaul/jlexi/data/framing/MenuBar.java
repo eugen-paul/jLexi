@@ -133,4 +133,12 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
         ));
     }
 
+    @Override
+    public void onKeyPressed(Character key) {
+        if (component instanceof KeyPressable) {
+            KeyPressable comp = (KeyPressable) component;
+            comp.onKeyPressed(key);
+        }
+    }
+
 }

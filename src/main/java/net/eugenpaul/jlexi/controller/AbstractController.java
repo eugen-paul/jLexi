@@ -3,7 +3,6 @@ package net.eugenpaul.jlexi.controller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -15,7 +14,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.eugenpaul.jlexi.data.effect.EffectWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.eugenpaul.jlexi.data.effect.EffectHandler;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import reactor.core.Disposable;
@@ -29,7 +31,10 @@ import reactor.core.scheduler.Schedulers;
  * <p>
  * This is a View of MVC
  */
-public abstract class AbstractController implements PropertyChangeListener, EffectWorker {
+public abstract class AbstractController implements PropertyChangeListener, EffectHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
+
     private List<AbstractPanel> registeredViews;
     private List<InterfaceModel> registeredModels;
 
@@ -108,8 +113,9 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
                         }
                     });
         })//
-                .delaySubscription(Duration.ofMillis(50))//
                 .publishOn(modelScheduler)//
+                .delaySubscription(propertyType.getDelay())//
+                .doOnSuccess(v -> LOGGER.trace("setModelProperty done"))//
                 .subscribe();
 
         modelPropChangeMap.put(propertyType, disp);
