@@ -36,4 +36,8 @@ public abstract class Glyph {
     public abstract GlyphIterator createIterator();
 
     public abstract void visit(Visitor checker);
+
+    public void notifyUpdate(Glyph child) {
+
+    }
 }

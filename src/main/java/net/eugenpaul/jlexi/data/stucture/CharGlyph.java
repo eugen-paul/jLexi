@@ -6,12 +6,14 @@ import org.slf4j.LoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.data.Drawable;
+import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.framing.MouseButton;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.NullIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 
 public class CharGlyph extends TextPaneElement {
 
@@ -27,8 +29,9 @@ public class CharGlyph extends TextPaneElement {
     private int fontSize;
     private Drawable drawable = null;
 
-    public CharGlyph(Glyph parent, char c, FontStorage fontStorage) {
-        super(parent);
+    public CharGlyph(Glyph parent, char c, FontStorage fontStorage,
+            NodeListElement<TextPaneElement> textPaneListElement) {
+        super(parent, textPaneListElement);
         this.c = c;
         this.fontStorage = fontStorage;
 
@@ -42,12 +45,17 @@ public class CharGlyph extends TextPaneElement {
                 style, //
                 fontSize//
         );
+
         setSize(this.drawable.getPixelSize());
     }
 
     @Override
     public Drawable getPixels() {
-        return this.drawable;
+        Drawable respoDrawable = new DrawableImpl(drawable.getPixels().clone(), drawable.getPixelSize());
+
+        effectsList.stream().forEach(v -> v.editDrawable(respoDrawable));
+
+        return respoDrawable;
     }
 
     @Override
@@ -66,7 +74,14 @@ public class CharGlyph extends TextPaneElement {
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("Click on {}", c);
+    public NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Click on \"{}\"", c);
+        return this.getTextPaneListElement();
+    }
+
+    @Override
+    public void notifyUpdate(Glyph child) {
+        LOGGER.trace("\"{}\" notifyUpdate to parent", c);
+        getParent().notifyUpdate(this);
     }
 }

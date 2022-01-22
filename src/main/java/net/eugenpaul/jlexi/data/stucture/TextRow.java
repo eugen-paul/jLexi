@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.framing.MouseButton;
-import net.eugenpaul.jlexi.data.framing.MouseClickable;
+import net.eugenpaul.jlexi.data.framing.TextElementClickable;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
@@ -15,18 +18,21 @@ import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.ListIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.utils.ImageArrays;
+import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 
-public class Row extends Glyph implements MouseClickable {
+public class TextRow extends TextPaneElement {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextRow.class);
 
     private List<Glyph> children;
 
-    public Row(Glyph parent) {
-        super(parent);
+    public TextRow(Glyph parent) {
+        super(parent, null);
         children = new ArrayList<>();
     }
 
-    public Row(Glyph parent, List<Glyph> children) {
-        super(parent);
+    public TextRow(Glyph parent, List<Glyph> children) {
+        super(parent, null);
         this.children = children;
         this.children.forEach(v -> v.setParent(this));
 
@@ -90,19 +96,31 @@ public class Row extends Glyph implements MouseClickable {
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+    public NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button) {
         int x = 0;
         for (Glyph glyph : children) {
             if (x + glyph.getSize().getWidth() > mouseX) {
-                if (glyph instanceof MouseClickable) {
-                    MouseClickable g = (MouseClickable) glyph;
-                    g.onMouseClick(mouseX - x, mouseY, button);
+                if (glyph instanceof TextElementClickable) {
+                    TextElementClickable g = (TextElementClickable) glyph;
+                    return g.onMouseClickTE(mouseX - x, mouseY, button);
                 }
                 break;
             }
 
             x += glyph.getSize().getWidth();
         }
+        return null;
+    }
+
+    @Override
+    public boolean isCursorHoldable() {
+        return true;
+    }
+
+    @Override
+    public void notifyUpdate(Glyph child) {
+        LOGGER.trace("row notifyUpdate to parent");
+        getParent().notifyUpdate(this);
     }
 
 }

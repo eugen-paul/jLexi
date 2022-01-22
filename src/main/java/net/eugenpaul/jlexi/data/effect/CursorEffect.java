@@ -1,0 +1,87 @@
+package net.eugenpaul.jlexi.data.effect;
+
+import java.time.Duration;
+import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.eugenpaul.jlexi.data.Drawable;
+import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.data.stucture.CharGlyph;
+import net.eugenpaul.jlexi.data.stucture.TextPaneElement;
+import net.eugenpaul.jlexi.utils.ImageArrays;
+
+public class CursorEffect extends TextPaneEffect {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CursorEffect.class);
+
+    private static final int CURSOR_COLOR = 0xFF0000FF;
+
+    private boolean showCursor;
+
+    public CursorEffect(TextPaneElement glyph) {
+        super(glyph);
+        showCursor = false;
+    }
+
+    @Override
+    public boolean isDone() {
+        return false;
+    }
+
+    @Override
+    public Duration timeToNextExecute() {
+        return Duration.ofSeconds(1);
+    }
+
+    @Override
+    public Effect doEffect() {
+        if (showCursor) {
+            if (getGlyph() instanceof CharGlyph) {
+                CharGlyph c = (CharGlyph) getGlyph();
+                LOGGER.trace("show Cursor on char {}.", c.getC());
+            } else {
+                LOGGER.trace("show Cursor on {}.", getGlyph().getClass().getName());
+            }
+            showCursor = false;
+        } else {
+            LOGGER.trace("hide Cursor.");
+            showCursor = true;
+        }
+
+        getGlyph().notifyUpdate(null);
+        return this;
+    }
+
+    @Override
+    public void editDrawable(Drawable pixels) {
+        if (showCursor) {
+            int[] cursorsPixels = new int[pixels.getPixelSize().getHight()];
+            Arrays.fill(cursorsPixels, CURSOR_COLOR);
+
+            ImageArrays.copyRectangle(cursorsPixels, //
+                    new Size(1, pixels.getPixelSize().getHight()), //
+                    0, //
+                    0, //
+                    new Size(1, pixels.getPixelSize().getHight()), //
+                    pixels.getPixels(), //
+                    pixels.getPixelSize(), //
+                    0, //
+                    0 //
+            );
+        }
+    }
+
+    @Override
+    public void terminate() {
+        if (getGlyph() instanceof CharGlyph) {
+            CharGlyph c = (CharGlyph) getGlyph();
+            LOGGER.trace("terminate Cursor on char {}.", c.getC());
+        } else {
+            LOGGER.trace("terminate Cursor on {}.", getGlyph().getClass().getName());
+        }
+        getGlyph().removeEffect(this);
+    }
+
+}

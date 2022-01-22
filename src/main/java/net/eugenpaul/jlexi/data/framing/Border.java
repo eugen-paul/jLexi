@@ -124,4 +124,10 @@ public class Border extends MonoGlyph implements GuiComponent {
         }
     }
 
+    @Override
+    public void notifyUpdate(Glyph child) {
+        LOGGER.trace("Border notifyUpdate to parent");
+        getParent().notifyUpdate(this);
+    }
+
 }

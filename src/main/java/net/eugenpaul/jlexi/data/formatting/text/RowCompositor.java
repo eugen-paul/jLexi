@@ -6,7 +6,7 @@ import java.util.List;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.formatting.Compositor;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
-import net.eugenpaul.jlexi.data.stucture.Row;
+import net.eugenpaul.jlexi.data.stucture.TextRow;
 
 /**
  * Add character to rows
@@ -34,7 +34,7 @@ public class RowCompositor implements Compositor<Glyph> {
                 currentWidth += glyphWidth;
             } else {
                 // save current Row
-                Row row = new Row(parent, childrenList);
+                TextRow row = new TextRow(parent, childrenList);
                 responseList.add(row);
 
                 // add Glyph to new Row
@@ -43,7 +43,7 @@ public class RowCompositor implements Compositor<Glyph> {
                 currentWidth = glyphWidth;
             }
         }
-        Row row = new Row(parent, childrenList);
+        TextRow row = new TextRow(parent, childrenList);
         responseList.add(row);
 
         return responseList;
@@ -66,7 +66,7 @@ public class RowCompositor implements Compositor<Glyph> {
                 currentWidth += glyphWidth;
             } else {
                 // save current Row
-                Row row = new Row(parent, childrenList);
+                TextRow row = new TextRow(parent, childrenList);
                 responseList.add(row);
 
                 // add Glyph to new Row
@@ -75,7 +75,7 @@ public class RowCompositor implements Compositor<Glyph> {
                 currentWidth = glyphWidth;
             }
         }
-        Row row = new Row(parent, childrenList);
+        TextRow row = new TextRow(parent, childrenList);
         responseList.add(row);
 
         return responseList;

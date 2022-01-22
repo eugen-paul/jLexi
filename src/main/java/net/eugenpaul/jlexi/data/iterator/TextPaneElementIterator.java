@@ -1,15 +1,16 @@
 package net.eugenpaul.jlexi.data.iterator;
 
 import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.data.stucture.TextPaneElement;
 import net.eugenpaul.jlexi.utils.NodeList;
 import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 
-public class NodeListIterator implements GlyphIterator {
+public class TextPaneElementIterator implements GlyphIterator {
 
-    NodeList<Glyph> list;
-    NodeListElement<Glyph> elem;
+    NodeList<TextPaneElement> list;
+    NodeListElement<TextPaneElement> elem;
 
-    public NodeListIterator(NodeList<Glyph> list) {
+    public TextPaneElementIterator(NodeList<TextPaneElement> list) {
         this.list = list;
         if (!list.isEmpty()) {
             elem = new NodeListElement<>(null, null, list.getNode(0), list);

@@ -122,4 +122,15 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
         }
     }
 
+    @Override
+    public void notifyUpdate(Glyph child) {
+        LOGGER.trace("Menubar send Update to window");
+        controller.propertyChange(new PropertyChangeEvent(//
+                this, //
+                ViewPropertyChangeType.UPDATE.getTypeName(), //
+                1, //
+                2 //
+        ));
+    }
+
 }

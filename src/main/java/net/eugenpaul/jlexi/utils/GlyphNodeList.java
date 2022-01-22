@@ -1,13 +1,13 @@
 package net.eugenpaul.jlexi.utils;
 
-import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
-import net.eugenpaul.jlexi.data.iterator.NodeListIterator;
+import net.eugenpaul.jlexi.data.iterator.TextPaneElementIterator;
+import net.eugenpaul.jlexi.data.stucture.TextPaneElement;
 
-public class GlyphNodeList extends NodeList<Glyph> {
+public class GlyphNodeList extends NodeList<TextPaneElement> {
 
     public GlyphIterator iterator() {
         // Just testing. Do it better.
-        return new NodeListIterator(this);
+        return new TextPaneElementIterator(this);
     }
 }

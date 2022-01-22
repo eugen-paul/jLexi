@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.eugenpaul.jlexi.data.effect.EffectWorker;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import reactor.core.Disposable;
@@ -28,12 +29,12 @@ import reactor.core.scheduler.Schedulers;
  * <p>
  * This is a View of MVC
  */
-public abstract class AbstractController implements PropertyChangeListener {
+public abstract class AbstractController implements PropertyChangeListener, EffectWorker {
     private List<AbstractPanel> registeredViews;
     private List<InterfaceModel> registeredModels;
 
     private ThreadPoolExecutor pool;
-    private Scheduler modelScheduler;
+    protected Scheduler modelScheduler;
 
     private Map<ModelPropertyChangeType, Disposable> modelPropChangeMap;
 

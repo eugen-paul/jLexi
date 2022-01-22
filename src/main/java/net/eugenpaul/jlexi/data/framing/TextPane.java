@@ -14,15 +14,20 @@ import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Position;
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.design.GuiComponent;
+import net.eugenpaul.jlexi.data.effect.CursorEffect;
+import net.eugenpaul.jlexi.data.effect.EffectWorker;
+import net.eugenpaul.jlexi.data.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.data.formatting.Composition;
 import net.eugenpaul.jlexi.data.formatting.text.RowCompositor;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.stucture.CharGlyph;
+import net.eugenpaul.jlexi.data.stucture.TextPaneElement;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Collisions;
 import net.eugenpaul.jlexi.utils.GlyphNodeList;
 import net.eugenpaul.jlexi.utils.ImageArrays;
+import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 
 /**
  * Display Rows.
@@ -36,11 +41,16 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
     private List<Glyph> textField;
 
     private FontStorage fontStorage;
+    private EffectWorker effectWorker;
 
-    public TextPane(Glyph parent, FontStorage fontStorage) {
+    private TextPaneEffect currectCursorEffect;
+
+    public TextPane(Glyph parent, FontStorage fontStorage, EffectWorker effectWorker) {
         super(parent);
-        setCompositor(new RowCompositor(this));
+        this.effectWorker = effectWorker;
         this.fontStorage = fontStorage;
+        this.currectCursorEffect = null;
+        setCompositor(new RowCompositor(this));
         resizeTo(Size.ZERO_SIZE);
         nodeList = new GlyphNodeList();
         childDrawable = Collections.emptyList();
@@ -110,13 +120,20 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
         for (Glyph row : textField) {
             if (Collisions.isPointOnArea(new Position(mouseX, mouseY), row.getRelativPosition(), row.getSize())) {
                 LOGGER.trace("Click on row {}", i);
-                if (row instanceof MouseClickable) {
-                    MouseClickable g = (MouseClickable) row;
-                    g.onMouseClick(//
+                if (row instanceof TextElementClickable) {
+                    TextElementClickable g = (TextElementClickable) row;
+                    NodeListElement<TextPaneElement> elem = g.onMouseClickTE(//
                             mouseX - row.getRelativPosition().getPosW(), //
                             mouseY - row.getRelativPosition().getPosH(), //
                             button //
                     );
+
+                    if (currectCursorEffect != null) {
+                        effectWorker.removeEffect(currectCursorEffect);
+                    }
+                    currectCursorEffect = new CursorEffect(elem.getData());
+                    elem.getData().addEffect(currectCursorEffect);
+                    effectWorker.addEffect(currectCursorEffect);
                 }
                 break;
             }
@@ -127,13 +144,20 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
 
     public void setText(String text) {
         for (int i = 0; i < text.length(); i++) {
-            CharGlyph glyph = new CharGlyph(this, text.charAt(i), fontStorage);
-            nodeList.addLast(glyph);
+            CharGlyph glyph = new CharGlyph(this, text.charAt(i), fontStorage, null);
+            NodeListElement<TextPaneElement> textPaneListElement = nodeList.addLast(glyph);
+            glyph.setTextPaneListElement(textPaneListElement);
         }
     }
 
     @Override
     public void resizeTo(Size size) {
         setSize(size);
+    }
+
+    @Override
+    public void notifyUpdate(Glyph child) {
+        LOGGER.trace("textPane notifyUpdate to parent");
+        getParent().notifyUpdate(this);
     }
 }

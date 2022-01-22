@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.data.visitor;
 
 import net.eugenpaul.jlexi.data.stucture.CharGlyph;
-import net.eugenpaul.jlexi.data.stucture.Row;
+import net.eugenpaul.jlexi.data.stucture.TextRow;
 
 public class SpellingVisitor implements Visitor {
 
@@ -11,7 +11,7 @@ public class SpellingVisitor implements Visitor {
     }
 
     @Override
-    public void visit(Row glaph) {
+    public void visit(TextRow glaph) {
         // todo
     }
 }

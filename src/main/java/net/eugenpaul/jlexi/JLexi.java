@@ -21,10 +21,7 @@ public class JLexi {
         FontStorage fontStorage = new FontStorageImpl(new FontGenerator());
         Window windowAbstraction = new Window(new SwingWindowImpl(controller));
 
-        // Panel ePanel = new Panel();
-        // Border border = new Border(ePanel);
-
-        TextPane textPane = new TextPane(null, fontStorage);
+        TextPane textPane = new TextPane(null, fontStorage, controller);
         Border border = new Border(null, textPane);
         textPane.setText(
                 "A \"Hello, World!\" program is generally a computer program that outputs or displays the message \"Hello, World!\". "
