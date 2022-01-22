@@ -2,9 +2,12 @@ package net.eugenpaul.jlexi.data.stucture;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.data.framing.MouseButton;
+import net.eugenpaul.jlexi.data.framing.MouseClickable;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
@@ -13,7 +16,7 @@ import net.eugenpaul.jlexi.data.iterator.ListIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.utils.ImageArrays;
 
-public class Row extends Glyph {
+public class Row extends Glyph implements MouseClickable {
 
     private List<Glyph> children;
 
@@ -26,6 +29,18 @@ public class Row extends Glyph {
         super(parent);
         this.children = children;
         this.children.forEach(v -> v.setParent(this));
+
+        AtomicInteger sizeX = new AtomicInteger();
+        AtomicInteger sizeY = new AtomicInteger();
+
+        children.stream().forEach(v -> {
+            sizeX.addAndGet(v.getSize().getWidth());
+            if (sizeY.get() < v.getSize().getHight()) {
+                sizeY.set(v.getSize().getHight());
+            }
+        });
+
+        setSize(new Size(sizeX.get(), sizeY.get()));
     }
 
     @Override
@@ -46,7 +61,6 @@ public class Row extends Glyph {
         Size pixelsSize = new Size(width, hight);
 
         int positionX = 0;
-        int positionY = 0;
         for (Drawable drawable : childDrawable) {
             ImageArrays.copyRectangle(//
                     drawable.getPixels(), //
@@ -57,7 +71,7 @@ public class Row extends Glyph {
                     pixels, //
                     pixelsSize, //
                     positionX, //
-                    positionY//
+                    hight - drawable.getPixelSize().getHight()//
             );
             positionX += drawable.getPixelSize().getWidth();
         }
@@ -73,6 +87,22 @@ public class Row extends Glyph {
     @Override
     public void visit(Visitor checker) {
         checker.visit(this);
+    }
+
+    @Override
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+        int x = 0;
+        for (Glyph glyph : children) {
+            if (x + glyph.getSize().getWidth() > mouseX) {
+                if (glyph instanceof MouseClickable) {
+                    MouseClickable g = (MouseClickable) glyph;
+                    g.onMouseClick(mouseX - x, mouseY, button);
+                }
+                break;
+            }
+
+            x += glyph.getSize().getWidth();
+        }
     }
 
 }

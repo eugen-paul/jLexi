@@ -12,7 +12,7 @@ public interface Resizeable {
      * 
      * @param size - new size
      */
-    public void setSize(Size size);
+    public void resizeTo(Size size);
 
     /**
      * Set new width und hight
@@ -20,8 +20,8 @@ public interface Resizeable {
      * @param width - new width
      * @param hight - new hight
      */
-    public default void setSize(int width, int hight) {
-        setSize(new Size(width, hight));
+    public default void resizeTo(int width, int hight) {
+        resizeTo(new Size(width, hight));
     }
 
 }

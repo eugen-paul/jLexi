@@ -1,12 +1,13 @@
 package net.eugenpaul.jlexi.data.stucture;
 
 import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.data.framing.MouseClickable;
 
 /**
  * Interface for all elements (CharGlyph, TableGlyph, ImageGlyph) that could be added to Text-Gui-Components (TaxtPane,
  * Label, ...)
  */
-public abstract class TextPaneElement extends Glyph {
+public abstract class TextPaneElement extends Glyph implements MouseClickable {
 
     protected TextPaneElement(Glyph parent) {
         super(parent);

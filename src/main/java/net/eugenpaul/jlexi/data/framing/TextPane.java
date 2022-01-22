@@ -1,11 +1,17 @@
 package net.eugenpaul.jlexi.data.framing;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.data.Position;
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.design.GuiComponent;
 import net.eugenpaul.jlexi.data.formatting.Composition;
@@ -14,6 +20,7 @@ import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.stucture.CharGlyph;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.Collisions;
 import net.eugenpaul.jlexi.utils.GlyphNodeList;
 import net.eugenpaul.jlexi.utils.ImageArrays;
 
@@ -22,7 +29,11 @@ import net.eugenpaul.jlexi.utils.ImageArrays;
  */
 public class TextPane extends Composition<Glyph> implements GuiComponent {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
     private GlyphNodeList nodeList;
+
+    private List<Drawable> childDrawable;
+    private List<Glyph> textField;
 
     private FontStorage fontStorage;
 
@@ -30,15 +41,17 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
         super(parent);
         setCompositor(new RowCompositor(this));
         this.fontStorage = fontStorage;
-        setPreferredSize(Size.ZERO_SIZE);
+        resizeTo(Size.ZERO_SIZE);
         nodeList = new GlyphNodeList();
+        childDrawable = Collections.emptyList();
+        textField = Collections.emptyList();
     }
 
     @Override
     public Drawable getPixels() {
-        List<Glyph> textField = compositor.compose(nodeList.iterator(), getPreferredSize().getWidth());
+        textField = compositor.compose(nodeList.iterator(), getSize().getWidth());
 
-        List<Drawable> childDrawable = textField.stream()//
+        childDrawable = textField.stream()//
                 .map(Glyph::getPixels)//
                 .collect(Collectors.toList());
 
@@ -55,7 +68,13 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
 
         int positionX = 0;
         int positionY = 0;
+        Iterator<Glyph> textFieldIterator = textField.iterator();
         for (Drawable drawable : childDrawable) {
+            if (textFieldIterator.hasNext()) {
+                Glyph currentRow = textFieldIterator.next();
+                currentRow.getRelativPosition().setPosW(positionX);
+                currentRow.getRelativPosition().setPosH(positionY);
+            }
             ImageArrays.copyRectangle(//
                     drawable.getPixels(), //
                     drawable.getPixelSize(), //
@@ -84,13 +103,26 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
     }
 
     @Override
-    public void setSize(Size size) {
-        setPreferredSize(size);
-    }
-
-    @Override
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
+        LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
+
+        int i = 0;
+        for (Glyph row : textField) {
+            if (Collisions.isPointOnArea(new Position(mouseX, mouseY), row.getRelativPosition(), row.getSize())) {
+                LOGGER.trace("Click on row {}", i);
+                if (row instanceof MouseClickable) {
+                    MouseClickable g = (MouseClickable) row;
+                    g.onMouseClick(//
+                            mouseX - row.getRelativPosition().getPosW(), //
+                            mouseY - row.getRelativPosition().getPosH(), //
+                            button //
+                    );
+                }
+                break;
+            }
+            i++;
+        }
+
     }
 
     public void setText(String text) {
@@ -98,5 +130,10 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
             CharGlyph glyph = new CharGlyph(this, text.charAt(i), fontStorage);
             nodeList.addLast(glyph);
         }
+    }
+
+    @Override
+    public void resizeTo(Size size) {
+        setSize(size);
     }
 }

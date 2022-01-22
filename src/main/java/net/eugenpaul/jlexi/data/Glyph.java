@@ -13,12 +13,12 @@ public abstract class Glyph {
     private Position relativPosition;
 
     @Setter(lombok.AccessLevel.PROTECTED)
-    private Size preferredSize;
+    private Size size;
 
     protected Glyph(Glyph parent) {
         this.parent = parent;
         this.relativPosition = new Position(0, 0);
-        this.preferredSize = Size.ZERO_SIZE;
+        this.size = Size.ZERO_SIZE;
     }
 
     /**

@@ -18,12 +18,18 @@ test {
 }
 
 dependencies {
-	compileOnly             commonDependencies.lombok
-	annotationProcessor     commonDependencies.lombok
-	
+    compileOnly             commonDependencies.lombok
+    annotationProcessor     commonDependencies.lombok
+
+    implementation          commonDependencies.reactor_core
+
+    implementation          commonDependencies.logback_core
+    implementation          commonDependencies.logback_classic
+    implementation          commonDependencies.slf4j_api
+
     //Tests
-	testCompileOnly         commonDependencies.lombok
-	testAnnotationProcessor commonDependencies.lombok
+    testCompileOnly         commonDependencies.lombok
+    testAnnotationProcessor commonDependencies.lombok
 
     testImplementation      commonDependencies.junit_api
     testRuntimeOnly         commonDependencies.junit_engine

@@ -27,7 +27,7 @@ public class RowCompositor implements Compositor<Glyph> {
 
         int currentWidth = 0;
         for (Glyph glyph : data) {
-            int glyphWidth = glyph.getPreferredSize().getWidth();
+            int glyphWidth = glyph.getSize().getWidth();
             if (glyphWidth + currentWidth < width) {
                 // add Glyph to current Row
                 childrenList.add(glyph);
@@ -59,7 +59,7 @@ public class RowCompositor implements Compositor<Glyph> {
         int currentWidth = 0;
         while (iterator.hasNext()) {
             Glyph glyph = iterator.next();
-            int glyphWidth = glyph.getPreferredSize().getWidth();
+            int glyphWidth = glyph.getSize().getWidth();
             if (glyphWidth + currentWidth < width) {
                 // add Glyph to current Row
                 childrenList.add(glyph);

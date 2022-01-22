@@ -24,7 +24,7 @@ public class DocumentPanel extends AbstractPanel {
         this.panel.addComponentListener(new ResizeListner(controller));
         this.panel.addMouseListener(new MouseListner(controller));
         this.panel.setPreferredSize(
-                new Dimension(glyph.getPreferredSize().getWidth(), glyph.getPreferredSize().getHight()));
+                new Dimension(glyph.getSize().getWidth(), glyph.getSize().getHight()));
     }
 
     @Override

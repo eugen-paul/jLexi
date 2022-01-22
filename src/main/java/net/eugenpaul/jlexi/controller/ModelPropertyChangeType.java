@@ -5,7 +5,7 @@ import net.eugenpaul.jlexi.data.framing.MouseClickable;
 import net.eugenpaul.jlexi.data.framing.Resizeable;
 
 public enum ModelPropertyChangeType {
-    FORM_RESIZE(Resizeable.class, "setSize"), //
+    FORM_RESIZE(Resizeable.class, "resizeTo"), //
     MOUSE_CLICK(MouseClickable.class, "onMouseClick");
 
     @Getter

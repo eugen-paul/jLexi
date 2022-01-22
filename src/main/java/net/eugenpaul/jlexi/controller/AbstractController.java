@@ -3,13 +3,24 @@ package net.eugenpaul.jlexi.controller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.model.InterfaceModel;
+import reactor.core.Disposable;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * AbstractController to control data transfer between View and Model. It translates user's interactions with the view
@@ -21,12 +32,21 @@ public abstract class AbstractController implements PropertyChangeListener {
     private List<AbstractPanel> registeredViews;
     private List<InterfaceModel> registeredModels;
 
+    private ThreadPoolExecutor pool;
+    private Scheduler modelScheduler;
+
+    private Map<ModelPropertyChangeType, Disposable> modelPropChangeMap;
+
     /**
      * C*tor
      */
     protected AbstractController() {
         registeredViews = new ArrayList<>();
         registeredModels = new ArrayList<>();
+
+        pool = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        modelScheduler = Schedulers.fromExecutorService(pool);
+        modelPropChangeMap = Collections.synchronizedMap(new EnumMap<>(ModelPropertyChangeType.class));
     }
 
     /**
@@ -65,21 +85,32 @@ public abstract class AbstractController implements PropertyChangeListener {
      * @param newValue     = An object that represents the new value of the property.
      */
     protected void setModelProperty(ModelPropertyChangeType propertyType, Object... newValue) {
+        Disposable oldChange = modelPropChangeMap.remove(propertyType);
+        if (oldChange != null) {
+            oldChange.dispose();
+        }
 
-        Class<?>[] methodParameter = Stream.of(newValue) //
-                .map(Object::getClass) //
-                .collect(Collectors.toList()) //
-                .toArray(new Class[0]);
+        Disposable disp = Mono.fromRunnable(() -> {
+            Class<?>[] methodParameter = Stream.of(newValue) //
+                    .map(Object::getClass) //
+                    .collect(Collectors.toList()) //
+                    .toArray(new Class[0]);
 
-        registeredModels.stream()//
-                .filter(v -> ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass()))//
-                .forEach(v -> {
-                    try {
-                        Method method = v.getClass().getDeclaredMethod(propertyType.getMethode(), methodParameter);
-                        method.invoke(v, newValue);
-                    } catch (Exception ex) {
-                        // Handle exception.
-                    }
-                });
+            registeredModels.stream()//
+                    .filter(v -> ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass()))//
+                    .forEach(v -> {
+                        try {
+                            Method method = v.getClass().getDeclaredMethod(propertyType.getMethode(), methodParameter);
+                            method.invoke(v, newValue);
+                        } catch (Exception ex) {
+                            // Handle exception.
+                        }
+                    });
+        })//
+                .delaySubscription(Duration.ofMillis(50))//
+                .publishOn(modelScheduler)//
+                .subscribe();
+
+        modelPropChangeMap.put(propertyType, disp);
     }
 }

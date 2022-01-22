@@ -1,16 +1,21 @@
 package net.eugenpaul.jlexi.data.stucture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.Glyph;
-import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.data.framing.MouseButton;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.NullIterator;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
 public class CharGlyph extends TextPaneElement {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CharGlyph.class);
 
     @Getter
     @Setter
@@ -37,19 +42,12 @@ public class CharGlyph extends TextPaneElement {
                 style, //
                 fontSize//
         );
+        setSize(this.drawable.getPixelSize());
     }
 
     @Override
     public Drawable getPixels() {
         return this.drawable;
-    }
-
-    @Override
-    public Size getPreferredSize() {
-        if (null == this.drawable) {
-            return Size.ZERO_SIZE;
-        }
-        return drawable.getPixelSize();
     }
 
     @Override
@@ -65,5 +63,10 @@ public class CharGlyph extends TextPaneElement {
     @Override
     public boolean isCursorHoldable() {
         return false;
+    }
+
+    @Override
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Click on {}", c);
     }
 }

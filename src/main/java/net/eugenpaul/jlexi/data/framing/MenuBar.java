@@ -3,18 +3,24 @@ package net.eugenpaul.jlexi.data.framing;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.data.design.GuiComponent;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 
 /**
  * Add Menubar to Glyph
  */
-public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, MouseClickable {
+public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
     private static final int MENUBAR_HIGHT = 40;
     private static final int MENUBAR_BACKGROUND = 0xFF00FF00;
@@ -33,7 +39,7 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
     public MenuBar(Glyph parent, Glyph component, Size size, AbstractController controller) {
         super(parent, component);
         component.setParent(this);
-        setPreferredSize(size);
+        setSize(size);
         this.controller = controller;
 
         computePixels();
@@ -42,24 +48,24 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
     private void computePixels() {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
-            child.setSize(getPreferredSize().getWidth(), Math.max(0, getPreferredSize().getHight() - MENUBAR_HIGHT));
+            child.resizeTo(getSize().getWidth(), Math.max(0, getSize().getHight() - MENUBAR_HIGHT));
         }
 
         this.menuBackground = generateMenuBackground(//
-                getPreferredSize().getWidth(), //
-                Math.min(getPreferredSize().getHight(), MENUBAR_HIGHT)//
+                getSize().getWidth(), //
+                Math.min(getSize().getHight(), MENUBAR_HIGHT)//
         );
     }
 
     @Override
     public Drawable getPixels() {
-        if (getPreferredSize().isZero()) {
+        if (getSize().isZero()) {
             return EMPTY_DRAWABLE;
         }
 
         Drawable componentPixels = super.getPixels();
 
-        int[] responsePixels = new int[getPreferredSize().getHight() * getPreferredSize().getWidth()];
+        int[] responsePixels = new int[getSize().getHight() * getSize().getWidth()];
 
         System.arraycopy(menuBackground, 0, responsePixels, 0, menuBackground.length);
 
@@ -71,7 +77,7 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
                 componentPixels.getPixels().length//
         );
 
-        return new DrawableImpl(responsePixels, getPreferredSize());
+        return new DrawableImpl(responsePixels, getSize());
     }
 
     private static int[] generateMenuBackground(int w, int h) {
@@ -85,12 +91,12 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
     }
 
     @Override
-    public void setSize(Size newSize) {
-        if (getPreferredSize().equals(newSize)) {
+    public void resizeTo(Size newSize) {
+        if (getSize().equals(newSize)) {
             return;
         }
-        Size oldSize = this.getPreferredSize();
-        setPreferredSize(newSize);
+        Size oldSize = this.getSize();
+        setSize(newSize);
 
         computePixels();
 
@@ -104,10 +110,15 @@ public class MenuBar extends MonoGlyph implements Resizeable, InterfaceModel, Mo
 
     @Override
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (mouseY > MENUBAR_HIGHT) {
-            System.out.println("Click not on Menu with " + button.toString());
+        if (mouseY <= MENUBAR_HIGHT) {
+            LOGGER.trace("Click on Menu. Position ({},{}).", mouseX, mouseY);
         } else {
-            System.out.println("Click on Menu with " + button.toString());
+            LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY, mouseX,
+                    mouseY - MENUBAR_HIGHT);
+            if (component instanceof MouseClickable) {
+                MouseClickable comp = (MouseClickable) component;
+                comp.onMouseClick(mouseX, mouseY - MENUBAR_HIGHT, button);
+            }
         }
     }
 

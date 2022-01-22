@@ -2,13 +2,26 @@ ext {
     lombok_version = "1.18.22"
     junit_version = "5.8.1"
     mockito_version = "4.2.0"
+    reactor_core_version = "3.4.14"
+    logback_version = "1.2.10"
+    slf4j_api_version = "1.7.33"
 
     commonDependencies = [
             lombok                 : "org.projectlombok:lombok:$lombok_version",
 
+            reactor_core           : "io.projectreactor:reactor-core:$reactor_core_version",
+
+            //Logger
+            logback_core           : "ch.qos.logback:logback-core:$logback_version",
+            logback_classic        : "ch.qos.logback:logback-classic:$logback_version",
+            slf4j_api              : "org.slf4j:slf4j-api:$slf4j_api_version",
+
+
+            //Tests
             junit_api              : "org.junit.jupiter:junit-jupiter-api:$junit_version",
             junit_engine           : "org.junit.jupiter:junit-jupiter-engine:$junit_version",
 
             mockito                : "org.mockito:mockito-core:$mockito_version"
+
     ]
 }
