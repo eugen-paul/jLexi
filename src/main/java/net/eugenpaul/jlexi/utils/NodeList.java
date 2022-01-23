@@ -21,7 +21,7 @@ public class NodeList<E> {
 
         private NodeList<E> list;
 
-        public void insertAfter(E data) {
+        public NodeListElement<E> insertAfter(E data) {
             NodeListElement<E> node = new NodeListElement<>(data, this, this.getNext(), list);
             if (null != next) {
                 next.setPrev(node);
@@ -31,9 +31,10 @@ public class NodeList<E> {
 
             this.next = node;
             list.size++;
+            return node;
         }
 
-        public void insertBefore(E data) {
+        public NodeListElement<E> insertBefore(E data) {
             NodeListElement<E> node = new NodeListElement<>(data, this.getPrev(), this, list);
             if (null != prev) {
                 prev.setNext(node);
@@ -43,6 +44,22 @@ public class NodeList<E> {
 
             this.prev = node;
             list.size++;
+            return node;
+        }
+
+        public void remove() {
+            if (null != prev) {
+                prev.setNext(next);
+            } else {
+                list.first = next;
+            }
+
+            if (null != next) {
+                next.setPrev(prev);
+            } else {
+                list.last = prev;
+            }
+            list.size--;
         }
     }
 
@@ -126,5 +143,11 @@ public class NodeList<E> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
     }
 }

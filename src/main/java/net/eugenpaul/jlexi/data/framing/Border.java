@@ -131,10 +131,26 @@ public class Border extends MonoGlyph implements GuiComponent {
     }
 
     @Override
-    public void onKeyPressed(Character key) {
+    public void onKeyTyped(Character key) {
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
-            comp.onKeyPressed(key);
+            comp.onKeyTyped(key);
+        }
+    }
+
+    @Override
+    public void onKeyPressed(KeyCode keyCode) {
+        if (component instanceof KeyPressable) {
+            KeyPressable comp = (KeyPressable) component;
+            comp.onKeyPressed(keyCode);
+        }
+    }
+
+    @Override
+    public void onKeyReleased(KeyCode keyCode) {
+        if (component instanceof KeyPressable) {
+            KeyPressable comp = (KeyPressable) component;
+            comp.onKeyReleased(keyCode);
         }
     }
 

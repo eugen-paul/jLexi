@@ -44,4 +44,13 @@ public abstract class TextPaneElement extends Glyph implements TextElementClicka
      * @return true if the element can hold the mouse cursor.
      */
     public abstract boolean isCursorHoldable();
+
+    public boolean isEndOfLine(){
+        return false;
+    }
+    
+    public boolean isPlaceHolder(){
+        return false;
+    }
+
 }

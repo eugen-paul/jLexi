@@ -10,7 +10,9 @@ import net.eugenpaul.jlexi.data.framing.Resizeable;
 public enum ModelPropertyChangeType {
     FORM_RESIZE(Resizeable.class, "resizeTo", Duration.ofMillis(50)), //
     MOUSE_CLICK(MouseClickable.class, "onMouseClick", Duration.ZERO), //
+    KEY_TYPED(KeyPressable.class, "onKeyTyped", Duration.ZERO), //
     KEY_PRESSED(KeyPressable.class, "onKeyPressed", Duration.ZERO), //
+    KEY_RELEASED(KeyPressable.class, "onKeyReleased", Duration.ZERO), //
     ;
 
     @Getter

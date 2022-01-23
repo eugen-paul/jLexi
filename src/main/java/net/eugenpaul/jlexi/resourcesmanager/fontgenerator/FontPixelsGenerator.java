@@ -14,7 +14,7 @@ public interface FontPixelsGenerator {
      * @param size     - size of character
      * @return Pixel-Array
      */
-    public int[] ofChar(char c, String fontName, int style, int size);
+    public int[] ofChar(Character c, String fontName, int style, int size);
 
     /**
      * Get max Size of char

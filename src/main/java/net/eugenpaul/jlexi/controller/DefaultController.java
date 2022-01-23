@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.effect.Effect;
+import net.eugenpaul.jlexi.data.framing.KeyCode;
 import net.eugenpaul.jlexi.data.framing.MouseButton;
 import reactor.core.publisher.Mono;
 import reactor.core.Disposable;
@@ -41,8 +42,16 @@ public class DefaultController extends AbstractController {
         setModelProperty(ModelPropertyChangeType.MOUSE_CLICK, mouseX, mouseY, button);
     }
 
-    public void keyPressed(Character key) {
-        setModelProperty(ModelPropertyChangeType.KEY_PRESSED, key);
+    public void keyTyped(Character key) {
+        setModelProperty(ModelPropertyChangeType.KEY_TYPED, key);
+    }
+
+    public void keyPressed(KeyCode code) {
+        setModelProperty(ModelPropertyChangeType.KEY_PRESSED, code);
+    }
+
+    public void keyReleased(KeyCode code) {
+        setModelProperty(ModelPropertyChangeType.KEY_RELEASED, code);
     }
 
     @Override

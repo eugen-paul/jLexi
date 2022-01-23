@@ -36,6 +36,7 @@ public class TextRow extends TextPaneElement {
         this.children = children;
         this.children.forEach(v -> v.setParent(this));
 
+        //compute size if the row
         AtomicInteger sizeX = new AtomicInteger();
         AtomicInteger sizeY = new AtomicInteger();
 

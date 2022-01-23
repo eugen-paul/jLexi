@@ -3,11 +3,10 @@ package net.eugenpaul.jlexi.data.stucture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
+import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.data.framing.MouseButton;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.iterator.NullIterator;
@@ -15,38 +14,35 @@ import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 
-public class CharGlyph extends TextPaneElement {
+public class EndOfLine extends TextPaneElement {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CharGlyph.class);
-
-    @Getter
-    @Setter
-    private Character c;
-    private FontStorage fontStorage;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndOfLine.class);
 
     private String fontName;
-    private int style;
     private int fontSize;
-    private Drawable drawable;
+    private Drawable drawable = null;
 
-    public CharGlyph(Glyph parent, Character c, FontStorage fontStorage,
+    public EndOfLine(Glyph parent, FontStorage fontStorage,
             NodeListElement<TextPaneElement> textPaneListElement) {
         super(parent, textPaneListElement);
-        this.c = c;
-        this.fontStorage = fontStorage;
 
         this.fontName = FontStorage.DEFAULT_FONT_NAME;
-        this.style = FontStorage.DEFAULT_STYLE;
         this.fontSize = FontStorage.DEFAULT_FONT_SIZE;
 
-        this.drawable = this.fontStorage.ofChar(//
-                c, //
-                fontName, //
-                style, //
-                fontSize//
-        );
+        int[] pixels = new int[fontStorage.getMaxAscent(fontName, fontSize)];
+        setSize(new Size(1, pixels.length));
+        drawable = new DrawableImpl(pixels, getSize());
+    }
 
-        setSize(this.drawable.getPixelSize());
+    @Override
+    public NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Click on Text place holder");
+        return this.getTextPaneListElement();
+    }
+
+    @Override
+    public boolean isCursorHoldable() {
+        return false;
     }
 
     @Override
@@ -65,23 +61,18 @@ public class CharGlyph extends TextPaneElement {
 
     @Override
     public void visit(Visitor checker) {
-        checker.visit(this);
-    }
-
-    @Override
-    public boolean isCursorHoldable() {
-        return false;
-    }
-
-    @Override
-    public NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("Click on \"{}\"", c);
-        return this.getTextPaneListElement();
+        // Nothing to do
     }
 
     @Override
     public void notifyUpdate(Glyph child) {
-        LOGGER.trace("\"{}\" notifyUpdate to parent", c);
+        LOGGER.trace("Text place holder notifyUpdate to parent");
         getParent().notifyUpdate(this);
     }
+
+    @Override
+    public boolean isPlaceHolder() {
+        return true;
+    }
+
 }

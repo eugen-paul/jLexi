@@ -11,8 +11,8 @@ public class Collisions {
         return (//
         point.getPosW() >= areaPosiion.getPosW() //
                 && point.getPosH() >= areaPosiion.getPosH() //
-                && point.getPosW() <= areaPosiion.getPosW() + areaSize.getWidth() //
-                && point.getPosH() <= areaPosiion.getPosH() + areaSize.getHight() //
+                && point.getPosW() < areaPosiion.getPosW() + areaSize.getWidth() //
+                && point.getPosH() < areaPosiion.getPosH() + areaSize.getHight() //
         );
 
     }

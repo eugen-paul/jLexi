@@ -8,6 +8,7 @@ import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Size;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontPixelsGenerator;
+import net.eugenpaul.jlexi.utils.CharacterHelper;
 
 /**
  * Storage for chars as PixelArray generated from FontGenerator
@@ -24,33 +25,31 @@ public class FontStorageImpl extends FontStorage {
         charToArray = new HashMap<>();
         fontToSize = new HashMap<>();
 
-        init();
+        int maxAscent = fontGenerator.getMaxAscent(DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
+        fontToSize.put(DEFAULT_FONT_NAME, maxAscent);
     }
 
     public FontStorageImpl() {
         this(new FontGenerator());
     }
 
-    private void init() {
-        int maxAscent = fontGenerator.getMaxAscent(DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
-        fontToSize.put(DEFAULT_FONT_NAME, maxAscent);
-
-        // All printable Chars from ! to ~
-        for (char c = 0x21; c < 0x7E; c++) {
-            int[] pixels = fontGenerator.ofChar(c, DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
-            Drawable dr = new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
-            charToArray.put(c, dr);
+    @Override
+    public Drawable ofChar(Character c, String fontName, int style, int size) {
+        if (!CharacterHelper.isPrintable(c)) {
+            return DEFAULT_DRAWABLE;
         }
 
-        // Space
-        int[] pixels = fontGenerator.ofChar(' ', DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
-        Drawable dr = new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
-        charToArray.put(' ', dr);
+        int maxAscent = fontToSize.get(DEFAULT_FONT_NAME);
+
+        return charToArray.computeIfAbsent(c, key -> {
+            int[] pixels = fontGenerator.ofChar(c, DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
+            return new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
+        });
     }
 
     @Override
-    public Drawable ofChar(char c, String fontName, int style, int size) {
-        return charToArray.getOrDefault(c, DEFAULT_DRAWABLE);
+    public int getMaxAscent(String fontName, int size) {
+        return fontToSize.getOrDefault(DEFAULT_FONT_NAME, DEFAULT_MAX_ASCENT);
     }
 
 }

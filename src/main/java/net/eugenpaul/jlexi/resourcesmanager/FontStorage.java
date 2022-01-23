@@ -15,6 +15,7 @@ public abstract class FontStorage {
     public static final String DEFAULT_FONT_NAME = "Monospaced";
     public static final int DEFAULT_STYLE = Font.PLAIN;
     public static final int DEFAULT_FONT_SIZE = 12;
+    public static final int DEFAULT_MAX_ASCENT = 7;
 
     protected static final Drawable DEFAULT_DRAWABLE = new DrawableImpl(EMPTY_CHAR, Size.ZERO_SIZE);
 
@@ -27,5 +28,14 @@ public abstract class FontStorage {
      * @param size     - size of character
      * @return Pixel-Array of the char
      */
-    public abstract Drawable ofChar(char c, String fontName, int style, int size);
+    public abstract Drawable ofChar(Character c, String fontName, int style, int size);
+
+    /**
+     * Return max Pixel Ascent of font of given size
+     * 
+     * @param fontName - name of font
+     * @param size     - size of font
+     * @return max Pixel Ascent
+     */
+    public abstract int getMaxAscent(String fontName, int size);
 }

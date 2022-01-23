@@ -21,9 +21,12 @@ import net.eugenpaul.jlexi.data.formatting.Composition;
 import net.eugenpaul.jlexi.data.formatting.text.RowCompositor;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.data.stucture.CharGlyph;
+import net.eugenpaul.jlexi.data.stucture.EndOfLine;
 import net.eugenpaul.jlexi.data.stucture.TextPaneElement;
+import net.eugenpaul.jlexi.data.stucture.TextPlaceHolder;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.CharacterHelper;
 import net.eugenpaul.jlexi.utils.Collisions;
 import net.eugenpaul.jlexi.utils.GlyphNodeList;
 import net.eugenpaul.jlexi.utils.ImageArrays;
@@ -55,6 +58,8 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
         nodeList = new GlyphNodeList();
         childDrawable = Collections.emptyList();
         textField = Collections.emptyList();
+
+        addPlaceHolder();
     }
 
     @Override
@@ -143,11 +148,23 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
     }
 
     public void setText(String text) {
+
+        nodeList.clear();
+
         for (int i = 0; i < text.length(); i++) {
             CharGlyph glyph = new CharGlyph(this, text.charAt(i), fontStorage, null);
             NodeListElement<TextPaneElement> textPaneListElement = nodeList.addLast(glyph);
             glyph.setTextPaneListElement(textPaneListElement);
         }
+
+        addPlaceHolder();
+    }
+
+    private void addPlaceHolder() {
+        // Last charakter is always a Place-Holder
+        TextPlaceHolder placeHolder = new TextPlaceHolder(this, fontStorage, null);
+        NodeListElement<TextPaneElement> textPaneListElement = nodeList.addLast(placeHolder);
+        placeHolder.setTextPaneListElement(textPaneListElement);
     }
 
     @Override
@@ -162,11 +179,90 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
     }
 
     @Override
-    public void onKeyPressed(Character key) {
+    public void onKeyTyped(Character key) {
+        if (!CharacterHelper.isPrintable(key)) {
+            return;
+        }
         if (currectCursorEffect != null) {
             CharGlyph glyph = new CharGlyph(this, key.charValue(), fontStorage, null);
-            currectCursorEffect.getGlyph().getTextPaneListElement().insertBefore(glyph);
+            NodeListElement<TextPaneElement> node = currectCursorEffect.getGlyph().getTextPaneListElement()
+                    .insertBefore(glyph);
+            glyph.setTextPaneListElement(node);
         }
         getParent().notifyUpdate(this);
+    }
+
+    @Override
+    public void onKeyPressed(KeyCode keyCode) {
+
+        if (KeyCode.ENTER == keyCode) {
+            if (currectCursorEffect != null) {
+                EndOfLine glyph = new EndOfLine(this, fontStorage, null);
+                NodeListElement<TextPaneElement> node = currectCursorEffect.getGlyph().getTextPaneListElement()
+                        .insertBefore(glyph);
+                glyph.setTextPaneListElement(node);
+                getParent().notifyUpdate(this);
+            }
+        }
+
+        if (KeyCode.RIGHT == keyCode) {
+            if (currectCursorEffect != null) {
+                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement()
+                        .getNext();
+                if (elem != null) {
+                    effectHandler.removeEffect(currectCursorEffect);
+                    currectCursorEffect = new CursorEffect(elem.getData());
+                    elem.getData().addEffect(currectCursorEffect);
+                    effectHandler.addEffect(currectCursorEffect);
+                }
+            }
+        }
+
+        if (KeyCode.LEFT == keyCode) {
+            if (currectCursorEffect != null) {
+                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement()
+                        .getPrev();
+                if (elem != null) {
+                    effectHandler.removeEffect(currectCursorEffect);
+                    currectCursorEffect = new CursorEffect(elem.getData());
+                    elem.getData().addEffect(currectCursorEffect);
+                    effectHandler.addEffect(currectCursorEffect);
+                }
+            }
+        }
+
+        if (KeyCode.DELETE == keyCode) {
+            if (currectCursorEffect != null) {
+                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement();
+                if (elem != null && !(elem.getData() instanceof EndOfLine)) {
+                    effectHandler.removeEffect(currectCursorEffect);
+                    if (elem.getNext() != null) {
+                        currectCursorEffect = new CursorEffect(elem.getNext().getData());
+                        elem.getNext().getData().addEffect(currectCursorEffect);
+                    } else if (elem.getPrev() != null) {
+                        currectCursorEffect = new CursorEffect(elem.getPrev().getData());
+                        elem.getPrev().getData().addEffect(currectCursorEffect);
+                    }
+                    elem.remove();
+                    effectHandler.addEffect(currectCursorEffect);
+                    getParent().notifyUpdate(this);
+                }
+            }
+        }
+
+        if (KeyCode.BACK_SPACE == keyCode) {
+            if (currectCursorEffect != null) {
+                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement()
+                        .getPrev();
+                if (elem != null) {
+                    elem.remove();
+                    getParent().notifyUpdate(this);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onKeyReleased(KeyCode keyCode) {
     }
 }
