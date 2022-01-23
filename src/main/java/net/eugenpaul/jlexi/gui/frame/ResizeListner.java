@@ -6,13 +6,13 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JPanel;
 
 import lombok.AllArgsConstructor;
-import net.eugenpaul.jlexi.controller.DefaultController;
-import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.utils.Size;
 
 @AllArgsConstructor
 public class ResizeListner extends ComponentAdapter {
 
-    private DefaultController controller;
+    private ModelController controller;
 
     @Override
     public void componentResized(ComponentEvent e) {

@@ -3,9 +3,9 @@ package net.eugenpaul.jlexi.controller;
 import java.time.Duration;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.data.framing.KeyPressable;
-import net.eugenpaul.jlexi.data.framing.MouseClickable;
-import net.eugenpaul.jlexi.data.framing.Resizeable;
+import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
+import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
+import net.eugenpaul.jlexi.component.interfaces.Resizeable;
 
 public enum ModelPropertyChangeType {
     FORM_RESIZE(Resizeable.class, "resizeTo", Duration.ofMillis(50)), //

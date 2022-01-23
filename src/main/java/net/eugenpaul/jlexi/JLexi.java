@@ -2,21 +2,21 @@ package net.eugenpaul.jlexi;
 
 import java.beans.PropertyChangeEvent;
 
-import net.eugenpaul.jlexi.controller.DefaultController;
-import net.eugenpaul.jlexi.data.Size;
-import net.eugenpaul.jlexi.data.framing.Border;
-import net.eugenpaul.jlexi.data.framing.MenuBar;
-import net.eugenpaul.jlexi.data.framing.TextPane;
-import net.eugenpaul.jlexi.data.window.Window;
+import net.eugenpaul.jlexi.component.framing.Border;
+import net.eugenpaul.jlexi.component.framing.MenuBar;
+import net.eugenpaul.jlexi.component.text.TextPane;
+import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.window.Window;
 import net.eugenpaul.jlexi.gui.window.SwingWindowImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontGenerator;
+import net.eugenpaul.jlexi.utils.Size;
 
 public class JLexi {
 
     public static void main(String[] args) {
-        DefaultController controller = new DefaultController();
+        ModelController controller = new ModelController();
 
         FontStorage fontStorage = new FontStorageImpl(new FontGenerator());
         Window windowAbstraction = new Window(new SwingWindowImpl(controller));

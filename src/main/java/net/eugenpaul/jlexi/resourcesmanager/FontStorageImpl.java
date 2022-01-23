@@ -3,12 +3,12 @@ package net.eugenpaul.jlexi.resourcesmanager;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.eugenpaul.jlexi.data.Drawable;
-import net.eugenpaul.jlexi.data.DrawableImpl;
-import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontPixelsGenerator;
-import net.eugenpaul.jlexi.utils.CharacterHelper;
+import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 
 /**
  * Storage for chars as PixelArray generated from FontGenerator

@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.eugenpaul.jlexi.data.stucture.CharGlyph;
-import net.eugenpaul.jlexi.data.stucture.TextRow;
+import net.eugenpaul.jlexi.component.text.TextRow;
 
 class PreOrderIteratorTest {
 

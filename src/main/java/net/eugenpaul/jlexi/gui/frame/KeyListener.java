@@ -4,13 +4,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import lombok.AllArgsConstructor;
-import net.eugenpaul.jlexi.controller.DefaultController;
-import net.eugenpaul.jlexi.data.framing.KeyCode;
+import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.utils.event.KeyCode;
 
 @AllArgsConstructor
 public class KeyListener extends KeyAdapter {
 
-    private DefaultController controller;
+    private ModelController controller;
 
     @Override
     public void keyPressed(KeyEvent e) {

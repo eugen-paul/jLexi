@@ -1,15 +1,15 @@
 package net.eugenpaul.jlexi.gui.window;
 
-import net.eugenpaul.jlexi.controller.DefaultController;
-import net.eugenpaul.jlexi.data.Glyph;
-import net.eugenpaul.jlexi.data.window.Windowlmp;
+import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.window.Windowlmp;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.gui.frame.DocumentPanel;
 import net.eugenpaul.jlexi.gui.frame.MainFrame;
 
 public class SwingWindowImpl extends Windowlmp {
 
-    public SwingWindowImpl(DefaultController controller) {
+    public SwingWindowImpl(ModelController controller) {
         super(controller);
     }
 

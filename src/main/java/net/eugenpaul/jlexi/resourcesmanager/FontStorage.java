@@ -2,9 +2,9 @@ package net.eugenpaul.jlexi.resourcesmanager;
 
 import java.awt.Font;
 
-import net.eugenpaul.jlexi.data.Drawable;
-import net.eugenpaul.jlexi.data.DrawableImpl;
-import net.eugenpaul.jlexi.data.Size;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.utils.Size;
 
 /**
  * Abstract Storage for chars as PixelArray
