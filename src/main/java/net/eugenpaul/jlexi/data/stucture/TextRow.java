@@ -15,28 +15,28 @@ import net.eugenpaul.jlexi.data.Drawable;
 import net.eugenpaul.jlexi.data.DrawableImpl;
 import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
-import net.eugenpaul.jlexi.data.iterator.ListIterator;
+import net.eugenpaul.jlexi.data.iterator.ListIteratorGen;
 import net.eugenpaul.jlexi.data.visitor.Visitor;
 import net.eugenpaul.jlexi.utils.ImageArrays;
 import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 
-public class TextRow extends TextPaneElement {
+public class TextRow<T extends Glyph> extends TextPaneElement {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextRow.class);
 
-    private List<Glyph> children;
+    private List<T> children;
 
     public TextRow(Glyph parent) {
         super(parent, null);
         children = new ArrayList<>();
     }
 
-    public TextRow(Glyph parent, List<Glyph> children) {
+    public TextRow(Glyph parent, List<T> children) {
         super(parent, null);
         this.children = children;
         this.children.forEach(v -> v.setParent(this));
 
-        //compute size if the row
+        // compute size if the row
         AtomicInteger sizeX = new AtomicInteger();
         AtomicInteger sizeY = new AtomicInteger();
 
@@ -88,7 +88,7 @@ public class TextRow extends TextPaneElement {
 
     @Override
     public GlyphIterator createIterator() {
-        return new ListIterator(children);
+        return new ListIteratorGen<>(children);
     }
 
     @Override

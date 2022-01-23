@@ -22,7 +22,8 @@ public class TextPlaceHolder extends TextPaneElement {
     private int fontSize;
     private Drawable drawable = null;
 
-    public TextPlaceHolder(Glyph parent, FontStorage fontStorage, NodeListElement<TextPaneElement> textPaneListElement) {
+    public TextPlaceHolder(Glyph parent, FontStorage fontStorage,
+            NodeListElement<TextPaneElement> textPaneListElement) {
         super(parent, textPaneListElement);
 
         this.fontName = FontStorage.DEFAULT_FONT_NAME;
@@ -70,7 +71,7 @@ public class TextPlaceHolder extends TextPaneElement {
     }
 
     @Override
-    public boolean isEndOfLine() {
+    public boolean isPlaceHolder() {
         return true;
     }
 

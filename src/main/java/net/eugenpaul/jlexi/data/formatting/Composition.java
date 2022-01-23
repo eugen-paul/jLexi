@@ -6,7 +6,7 @@ import net.eugenpaul.jlexi.data.Glyph;
 /**
  * Abstract Class for Objects that cann be formatet with Compositor
  */
-public abstract class Composition<T> extends Glyph {
+public abstract class Composition<T extends Glyph> extends Glyph {
 
     @Setter(lombok.AccessLevel.PROTECTED)
     protected Compositor<T> compositor;
@@ -20,9 +20,4 @@ public abstract class Composition<T> extends Glyph {
         super(parent);
         this.compositor = null;
     }
-
-    // @Override
-    // public void insert(Glyph glyph, int position) {
-    // compositor.compose();
-    // }
 }

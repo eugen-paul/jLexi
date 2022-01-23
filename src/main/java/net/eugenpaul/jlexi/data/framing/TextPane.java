@@ -35,13 +35,13 @@ import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 /**
  * Display Rows.
  */
-public class TextPane extends Composition<Glyph> implements GuiComponent {
+public class TextPane extends Composition<TextPaneElement> implements GuiComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
     private GlyphNodeList nodeList;
 
     private List<Drawable> childDrawable;
-    private List<Glyph> textField;
+    private List<TextPaneElement> textField;
 
     private FontStorage fontStorage;
     private EffectHandler effectHandler;
@@ -83,7 +83,7 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
 
         int positionX = 0;
         int positionY = 0;
-        Iterator<Glyph> textFieldIterator = textField.iterator();
+        Iterator<TextPaneElement> textFieldIterator = textField.iterator();
         for (Drawable drawable : childDrawable) {
             if (textFieldIterator.hasNext()) {
                 Glyph currentRow = textFieldIterator.next();
@@ -234,7 +234,7 @@ public class TextPane extends Composition<Glyph> implements GuiComponent {
         if (KeyCode.DELETE == keyCode) {
             if (currectCursorEffect != null) {
                 NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement();
-                if (elem != null && !(elem.getData() instanceof EndOfLine)) {
+                if (elem != null && !(elem.getData().isPlaceHolder())) {
                     effectHandler.removeEffect(currectCursorEffect);
                     if (elem.getNext() != null) {
                         currectCursorEffect = new CursorEffect(elem.getNext().getData());

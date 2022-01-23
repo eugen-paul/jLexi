@@ -2,7 +2,7 @@ package net.eugenpaul.jlexi.data.formatting;
 
 import java.util.List;
 
-import net.eugenpaul.jlexi.data.iterator.GlyphIterator;
+import net.eugenpaul.jlexi.data.iterator.GlyphIteratorGen;
 
 /**
  * Interface for Document formater
@@ -19,5 +19,5 @@ public interface Compositor<T> {
     /**
      * Do format
      */
-    public List<T> compose(GlyphIterator iterator, final int width);
+    public List<T> compose(GlyphIteratorGen<T> iterator, final int width);
 }

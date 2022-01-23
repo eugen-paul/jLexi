@@ -1,11 +1,10 @@
 package net.eugenpaul.jlexi.data.iterator;
 
-import net.eugenpaul.jlexi.data.Glyph;
 import net.eugenpaul.jlexi.data.stucture.TextPaneElement;
 import net.eugenpaul.jlexi.utils.NodeList;
 import net.eugenpaul.jlexi.utils.NodeList.NodeListElement;
 
-public class TextPaneElementIterator implements GlyphIterator {
+public class TextPaneElementIterator implements GlyphIteratorGen<TextPaneElement> {
 
     NodeList<TextPaneElement> list;
     NodeListElement<TextPaneElement> elem;
@@ -25,7 +24,7 @@ public class TextPaneElementIterator implements GlyphIterator {
     }
 
     @Override
-    public Glyph next() {
+    public TextPaneElement next() {
         elem = elem.getNext();
         return elem.getData();
     }

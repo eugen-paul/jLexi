@@ -22,8 +22,7 @@ public class EndOfLine extends TextPaneElement {
     private int fontSize;
     private Drawable drawable = null;
 
-    public EndOfLine(Glyph parent, FontStorage fontStorage,
-            NodeListElement<TextPaneElement> textPaneListElement) {
+    public EndOfLine(Glyph parent, FontStorage fontStorage, NodeListElement<TextPaneElement> textPaneListElement) {
         super(parent, textPaneListElement);
 
         this.fontName = FontStorage.DEFAULT_FONT_NAME;
@@ -71,7 +70,7 @@ public class EndOfLine extends TextPaneElement {
     }
 
     @Override
-    public boolean isPlaceHolder() {
+    public boolean isEndOfLine() {
         return true;
     }
 
