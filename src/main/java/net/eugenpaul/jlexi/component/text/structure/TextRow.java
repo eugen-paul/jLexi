@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text;
+package net.eugenpaul.jlexi.component.text.structure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.component.iterator.ListIteratorGen;
+import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -19,7 +20,7 @@ import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class TextRow<T extends Glyph> extends TextPaneElement {
+public class TextRow<T extends TextPaneElement> extends TextPaneElement {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextRow.class);
 
@@ -35,7 +36,7 @@ public class TextRow<T extends Glyph> extends TextPaneElement {
         this.children = children;
         this.children.forEach(v -> v.setParent(this));
 
-        // compute size if the row
+        // compute size of the row
         AtomicInteger sizeX = new AtomicInteger();
         AtomicInteger sizeY = new AtomicInteger();
 
@@ -98,11 +99,10 @@ public class TextRow<T extends Glyph> extends TextPaneElement {
     @Override
     public NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button) {
         int x = 0;
-        for (Glyph glyph : children) {
+        for (TextPaneElement glyph : children) {
             if (x + glyph.getSize().getWidth() > mouseX) {
-                if (glyph instanceof TextElementClickable) {
-                    TextElementClickable g = (TextElementClickable) glyph;
-                    return g.onMouseClickTE(mouseX - x, mouseY, button);
+                if (glyph.isCursorHoldable()) {
+                    return glyph.onMouseClickTE(mouseX - x, mouseY, button);
                 }
                 break;
             }

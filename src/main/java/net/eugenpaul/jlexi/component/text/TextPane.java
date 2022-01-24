@@ -8,34 +8,36 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.formatting.Composition;
 import net.eugenpaul.jlexi.component.formatting.text.RowCompositor;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.iterator.GlyphIterator;
+import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
+import net.eugenpaul.jlexi.component.text.keyhandler.TestPaneKeyHandler;
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
-import net.eugenpaul.jlexi.component.text.structure.EndOfLine;
 import net.eugenpaul.jlexi.component.text.structure.TextPlaceHolder;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.CursorEffect;
 import net.eugenpaul.jlexi.effect.EffectHandler;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
-import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Verctor2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
-import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
+import net.eugenpaul.jlexi.visitor.Visitor;
 
 /**
  * Display Rows.
  */
-public class TextPane extends Composition<TextPaneElement> implements GuiComponent {
+public class TextPane extends Composition<TextPaneElement> implements GuiComponent, KeyHandlerable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
     private GlyphNodeList nodeList;
@@ -43,16 +45,23 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
     private List<Drawable> childDrawable;
     private List<TextPaneElement> textField;
 
+    @Getter
     private FontStorage fontStorage;
+
+    @Getter
     private EffectHandler effectHandler;
 
-    private TextPaneEffect currectCursorEffect;
+    @Getter
+    @Setter
+    private TextPaneEffect cursor;
+
+    private TestPaneKeyHandler keyHanlder;
 
     public TextPane(Glyph parent, FontStorage fontStorage, EffectHandler effectWorker) {
         super(parent);
         this.effectHandler = effectWorker;
         this.fontStorage = fontStorage;
-        this.currectCursorEffect = null;
+        this.cursor = null;
         setCompositor(new RowCompositor(this));
         resizeTo(Size.ZERO_SIZE);
         nodeList = new GlyphNodeList();
@@ -60,6 +69,8 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
         textField = Collections.emptyList();
 
         addPlaceHolder();
+
+        keyHanlder = new TestPaneKeyHandler(this);
     }
 
     @Override
@@ -122,23 +133,25 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
 
         int i = 0;
-        for (Glyph row : textField) {
-            if (CollisionHelper.isPointOnArea(new Verctor2d(mouseX, mouseY), row.getRelativPosition(), row.getSize())) {
+        for (TextPaneElement textElement : textField) {
+            if (CollisionHelper.isPointOnArea(//
+                    new Verctor2d(mouseX, mouseY), textElement.getRelativPosition(), //
+                    textElement.getSize())//
+            ) {
                 LOGGER.trace("Click on row {}", i);
-                if (row instanceof TextElementClickable) {
-                    TextElementClickable g = (TextElementClickable) row;
-                    NodeListElement<TextPaneElement> elem = g.onMouseClickTE(//
-                            mouseX - row.getRelativPosition().getX(), //
-                            mouseY - row.getRelativPosition().getY(), //
+                if (textElement.isCursorHoldable()) {
+                    NodeListElement<TextPaneElement> elem = textElement.onMouseClickTE(//
+                            mouseX - textElement.getRelativPosition().getX(), //
+                            mouseY - textElement.getRelativPosition().getY(), //
                             button //
                     );
 
-                    if (currectCursorEffect != null) {
-                        effectHandler.removeEffect(currectCursorEffect);
+                    if (cursor != null) {
+                        effectHandler.removeEffect(cursor);
                     }
-                    currectCursorEffect = new CursorEffect(elem.getData());
-                    elem.getData().addEffect(currectCursorEffect);
-                    effectHandler.addEffect(currectCursorEffect);
+                    cursor = new CursorEffect(elem.getData());
+                    elem.getData().addEffect(cursor);
+                    effectHandler.addEffect(cursor);
                 }
                 break;
             }
@@ -180,89 +193,21 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
 
     @Override
     public void onKeyTyped(Character key) {
-        if (!CharacterHelper.isPrintable(key)) {
-            return;
-        }
-        if (currectCursorEffect != null) {
-            CharGlyph glyph = new CharGlyph(this, key.charValue(), fontStorage, null);
-            NodeListElement<TextPaneElement> node = currectCursorEffect.getGlyph().getTextPaneListElement()
-                    .insertBefore(glyph);
-            glyph.setTextPaneListElement(node);
-        }
-        getParent().notifyUpdate(this);
+        keyHanlder.onKeyTyped(key);
     }
 
     @Override
     public void onKeyPressed(KeyCode keyCode) {
-
-        if (KeyCode.ENTER == keyCode) {
-            if (currectCursorEffect != null) {
-                EndOfLine glyph = new EndOfLine(this, fontStorage, null);
-                NodeListElement<TextPaneElement> node = currectCursorEffect.getGlyph().getTextPaneListElement()
-                        .insertBefore(glyph);
-                glyph.setTextPaneListElement(node);
-                getParent().notifyUpdate(this);
-            }
-        }
-
-        if (KeyCode.RIGHT == keyCode) {
-            if (currectCursorEffect != null) {
-                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement()
-                        .getNext();
-                if (elem != null) {
-                    effectHandler.removeEffect(currectCursorEffect);
-                    currectCursorEffect = new CursorEffect(elem.getData());
-                    elem.getData().addEffect(currectCursorEffect);
-                    effectHandler.addEffect(currectCursorEffect);
-                }
-            }
-        }
-
-        if (KeyCode.LEFT == keyCode) {
-            if (currectCursorEffect != null) {
-                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement()
-                        .getPrev();
-                if (elem != null) {
-                    effectHandler.removeEffect(currectCursorEffect);
-                    currectCursorEffect = new CursorEffect(elem.getData());
-                    elem.getData().addEffect(currectCursorEffect);
-                    effectHandler.addEffect(currectCursorEffect);
-                }
-            }
-        }
-
-        if (KeyCode.DELETE == keyCode) {
-            if (currectCursorEffect != null) {
-                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement();
-                if (elem != null && !(elem.getData().isPlaceHolder())) {
-                    effectHandler.removeEffect(currectCursorEffect);
-                    if (elem.getNext() != null) {
-                        currectCursorEffect = new CursorEffect(elem.getNext().getData());
-                        elem.getNext().getData().addEffect(currectCursorEffect);
-                    } else if (elem.getPrev() != null) {
-                        currectCursorEffect = new CursorEffect(elem.getPrev().getData());
-                        elem.getPrev().getData().addEffect(currectCursorEffect);
-                    }
-                    elem.remove();
-                    effectHandler.addEffect(currectCursorEffect);
-                    getParent().notifyUpdate(this);
-                }
-            }
-        }
-
-        if (KeyCode.BACK_SPACE == keyCode) {
-            if (currectCursorEffect != null) {
-                NodeListElement<TextPaneElement> elem = currectCursorEffect.getGlyph().getTextPaneListElement()
-                        .getPrev();
-                if (elem != null) {
-                    elem.remove();
-                    getParent().notifyUpdate(this);
-                }
-            }
-        }
+        keyHanlder.onKeyPressed(keyCode);
     }
 
     @Override
     public void onKeyReleased(KeyCode keyCode) {
+        keyHanlder.onKeyReleased(keyCode);
+    }
+
+    @Override
+    public Glyph getThis() {
+        return this;
     }
 }

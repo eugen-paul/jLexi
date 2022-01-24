@@ -8,7 +8,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.formatting.Compositor;
 import net.eugenpaul.jlexi.component.iterator.GlyphIteratorGen;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
-import net.eugenpaul.jlexi.component.text.TextRow;
+import net.eugenpaul.jlexi.component.text.structure.TextRow;
 
 /**
  * Add character to rows

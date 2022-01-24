@@ -8,12 +8,13 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
+import net.eugenpaul.jlexi.utils.event.MouseButton;
 
 /**
- * Interface for all elements (CharGlyph, TableGlyph, ImageGlyph) that could be added to Text-Gui-Components (TaxtPane,
- * Label, ...)
+ * Abstract class for all TextPaneElements (CharGlyph, TableGlyph, ImageGlyph) that could be added to
+ * Text-Gui-Components (TaxtPane, Label, ...)
  */
-public abstract class TextPaneElement extends Glyph implements TextElementClickable {
+public abstract class TextPaneElement extends Glyph {
 
     protected List<TextPaneEffect> effectsList;
 
@@ -35,6 +36,8 @@ public abstract class TextPaneElement extends Glyph implements TextElementClicka
         effectsList.remove(effect);
     }
 
+    public abstract NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button);
+
     /**
      * The function checks if the element can hold the mouse cursor. For example, a table can contain the cursor, so a
      * keyboard event can be handled by the table. An image element, on the other hand, cannot contain a cursor. In this
@@ -44,11 +47,11 @@ public abstract class TextPaneElement extends Glyph implements TextElementClicka
      */
     public abstract boolean isCursorHoldable();
 
-    public boolean isEndOfLine(){
+    public boolean isEndOfLine() {
         return false;
     }
-    
-    public boolean isPlaceHolder(){
+
+    public boolean isPlaceHolder() {
         return false;
     }
 

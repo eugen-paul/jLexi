@@ -4,12 +4,12 @@ import java.util.LinkedList;
 
 import net.eugenpaul.jlexi.component.Glyph;
 
-public class PreOrderLeefIterator implements GlyphIterator {
+public class PreOrderLeafIterator implements GlyphIterator {
 
     private Glyph root;
     private LinkedList<GlyphIterator> iterators;
 
-    public PreOrderLeefIterator(Glyph root) {
+    public PreOrderLeafIterator(Glyph root) {
         this.root = root;
         iterators = new LinkedList<>();
     }
