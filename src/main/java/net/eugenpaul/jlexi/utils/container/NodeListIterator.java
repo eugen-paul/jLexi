@@ -1,15 +1,14 @@
-package net.eugenpaul.jlexi.component.text;
+package net.eugenpaul.jlexi.utils.container;
 
 import net.eugenpaul.jlexi.component.iterator.GlyphIteratorGen;
-import net.eugenpaul.jlexi.utils.container.NodeList;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 
-public class TextPaneElementIterator implements GlyphIteratorGen<TextPaneElement> {
+public class NodeListIterator<E> implements GlyphIteratorGen<E> {
 
-    NodeList<TextPaneElement> list;
-    NodeListElement<TextPaneElement> elem;
+    NodeList<E> list;
+    NodeListElement<E> elem;
 
-    public TextPaneElementIterator(NodeList<TextPaneElement> list) {
+    public NodeListIterator(NodeList<E> list) {
         this.list = list;
         if (!list.isEmpty()) {
             elem = new NodeListElement<>(null, null, list.getNode(0), list);
@@ -24,7 +23,7 @@ public class TextPaneElementIterator implements GlyphIteratorGen<TextPaneElement
     }
 
     @Override
-    public TextPaneElement next() {
+    public E next() {
         elem = elem.getNext();
         return elem.getData();
     }

@@ -27,6 +27,7 @@ import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Verctor2d;
+import net.eugenpaul.jlexi.utils.container.NodeList;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
@@ -40,10 +41,10 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 public class TextPane extends Composition<TextPaneElement> implements GuiComponent, KeyHandlerable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
-    private GlyphNodeList nodeList;
 
-    private List<Drawable> childDrawable;
-    private List<TextPaneElement> textField;
+    private NodeList<TextPaneElement> nodeList;
+
+    private List<TextPaneElement> formattedChildren;
 
     @Getter
     private FontStorage fontStorage;
@@ -64,9 +65,8 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
         this.cursor = null;
         setCompositor(new RowCompositor(this));
         resizeTo(Size.ZERO_SIZE);
-        nodeList = new GlyphNodeList();
-        childDrawable = Collections.emptyList();
-        textField = Collections.emptyList();
+        nodeList = new NodeList<>();
+        formattedChildren = Collections.emptyList();
 
         addPlaceHolder();
 
@@ -75,9 +75,9 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
 
     @Override
     public Drawable getPixels() {
-        textField = compositor.compose(nodeList.iterator(), getSize().getWidth());
+        formattedChildren = compositor.compose(nodeList.iterator(), getSize().getWidth());
 
-        childDrawable = textField.stream()//
+        List<Drawable> childDrawable = formattedChildren.stream()//
                 .map(Glyph::getPixels)//
                 .collect(Collectors.toList());
 
@@ -94,7 +94,7 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
 
         int positionX = 0;
         int positionY = 0;
-        Iterator<TextPaneElement> textFieldIterator = textField.iterator();
+        Iterator<TextPaneElement> textFieldIterator = formattedChildren.iterator();
         for (Drawable drawable : childDrawable) {
             if (textFieldIterator.hasNext()) {
                 Glyph currentRow = textFieldIterator.next();
@@ -133,26 +133,31 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
 
         int i = 0;
-        for (TextPaneElement textElement : textField) {
+        for (TextPaneElement textElement : formattedChildren) {
             if (CollisionHelper.isPointOnArea(//
                     new Verctor2d(mouseX, mouseY), textElement.getRelativPosition(), //
                     textElement.getSize())//
             ) {
                 LOGGER.trace("Click on row {}", i);
+                var nodeElement = textElement.getTextPaneListElement();
+
                 if (textElement.isCursorHoldable()) {
-                    NodeListElement<TextPaneElement> elem = textElement.onMouseClickTE(//
+                    var clickNodeElem = textElement.onMouseClickTE(//
                             mouseX - textElement.getRelativPosition().getX(), //
                             mouseY - textElement.getRelativPosition().getY(), //
                             button //
                     );
-
-                    if (cursor != null) {
-                        effectHandler.removeEffect(cursor);
+                    if (clickNodeElem != null) {
+                        nodeElement = clickNodeElem;
                     }
-                    cursor = new CursorEffect(elem.getData());
-                    elem.getData().addEffect(cursor);
-                    effectHandler.addEffect(cursor);
                 }
+
+                if (cursor != null) {
+                    effectHandler.removeEffect(cursor);
+                }
+                cursor = new CursorEffect(nodeElement.getData());
+                nodeElement.getData().addEffect(cursor);
+                effectHandler.addEffect(cursor);
                 break;
             }
             i++;

@@ -104,9 +104,8 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement {
                 if (glyph.isCursorHoldable()) {
                     return glyph.onMouseClickTE(mouseX - x, mouseY, button);
                 }
-                break;
+                return glyph.getTextPaneListElement();
             }
-
             x += glyph.getSize().getWidth();
         }
         return null;

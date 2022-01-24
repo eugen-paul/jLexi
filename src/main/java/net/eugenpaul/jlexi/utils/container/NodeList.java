@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.utils.container;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import net.eugenpaul.jlexi.component.iterator.GlyphIteratorGen;
 
 public class NodeList<E> {
 
@@ -149,6 +150,10 @@ public class NodeList<E> {
         first = null;
         last = null;
         size = 0;
+    }
+
+    public GlyphIteratorGen<E> iterator() {
+        return new NodeListIterator<>(this);
     }
 
 }
