@@ -1,7 +1,8 @@
 package net.eugenpaul.jlexi.component.framing;
 
+import java.util.Iterator;
+
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 
@@ -28,7 +29,7 @@ public abstract class MonoGlyph extends Glyph {
     }
 
     @Override
-    public GlyphIterator createIterator() {
-        return component.createIterator();
+    public Iterator<Glyph> iterator() {
+        return component.iterator();
     }
 }

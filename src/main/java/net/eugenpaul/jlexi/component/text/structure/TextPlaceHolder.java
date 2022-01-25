@@ -1,11 +1,11 @@
 package net.eugenpaul.jlexi.component.text.structure;
 
+import java.util.Iterator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.iterator.GlyphIterator;
-import net.eugenpaul.jlexi.component.iterator.NullIterator;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -56,8 +56,8 @@ public class TextPlaceHolder extends TextPaneElement {
     }
 
     @Override
-    public GlyphIterator createIterator() {
-        return NullIterator.getNullIterator();
+    public Iterator<Glyph> iterator() {
+        return NULLITERATOR;
     }
 
     @Override

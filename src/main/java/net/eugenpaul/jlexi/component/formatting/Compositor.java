@@ -1,8 +1,9 @@
 package net.eugenpaul.jlexi.component.formatting;
 
+import java.util.Iterator;
 import java.util.List;
 
-import net.eugenpaul.jlexi.component.iterator.GlyphIteratorGen;
+import net.eugenpaul.jlexi.utils.container.NodeList;
 
 /**
  * Interface for Document formater
@@ -19,5 +20,10 @@ public interface Compositor<T> {
     /**
      * Do format
      */
-    public List<T> compose(GlyphIteratorGen<T> iterator, final int width);
+    public List<T> compose(Iterator<T> iterator, final int width);
+
+    /**
+     * Do format
+     */
+    public NodeList<T> composeToNodeList(Iterator<T> iterator, final int width);
 }

@@ -1,9 +1,11 @@
 package net.eugenpaul.jlexi.component;
 
+import java.util.Iterator;
+
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.component.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.visitor.Visitor;
+import net.eugenpaul.jlexi.component.iterator.NullIterator;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Verctor2d;
@@ -11,6 +13,8 @@ import net.eugenpaul.jlexi.utils.Verctor2d;
 @Getter
 @Setter
 public abstract class Glyph {
+
+    protected static final NullIterator<Glyph> NULLITERATOR = new NullIterator<>();
 
     private Glyph parent;
     private Verctor2d relativPosition;
@@ -36,7 +40,7 @@ public abstract class Glyph {
      * 
      * @return Iterator
      */
-    public abstract GlyphIterator createIterator();
+    public abstract Iterator<Glyph> iterator();
 
     public abstract void visit(Visitor checker);
 

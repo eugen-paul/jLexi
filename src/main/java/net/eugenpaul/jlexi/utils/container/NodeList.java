@@ -1,11 +1,12 @@
 package net.eugenpaul.jlexi.utils.container;
 
+import java.util.ListIterator;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.component.iterator.GlyphIteratorGen;
 
-public class NodeList<E> {
+public class NodeList<E> implements Iterable<E> {
 
     @AllArgsConstructor
     public static class NodeListElement<E> {
@@ -60,6 +61,9 @@ public class NodeList<E> {
             } else {
                 list.last = prev;
             }
+
+            prev = null;
+            next = null;
             list.size--;
         }
     }
@@ -109,9 +113,23 @@ public class NodeList<E> {
         return null;
     }
 
+    public NodeListElement<E> getFirstNode() {
+        if (null != first) {
+            return first;
+        }
+        return null;
+    }
+
     public E getLast() {
         if (null != last) {
             return last.data;
+        }
+        return null;
+    }
+
+    public NodeListElement<E> getLastNode() {
+        if (null != last) {
+            return last;
         }
         return null;
     }
@@ -152,7 +170,8 @@ public class NodeList<E> {
         size = 0;
     }
 
-    public GlyphIteratorGen<E> iterator() {
+    @Override
+    public ListIterator<E> iterator() {
         return new NodeListIterator<>(this);
     }
 

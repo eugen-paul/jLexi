@@ -1,48 +1,101 @@
 package net.eugenpaul.jlexi.utils.container;
 
-import net.eugenpaul.jlexi.component.iterator.GlyphIteratorGen;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
+
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 
-public class NodeListIterator<E> implements GlyphIteratorGen<E> {
+public class NodeListIterator<E> implements ListIterator<E> {
 
-    NodeList<E> list;
-    NodeListElement<E> elem;
+    private NodeList<E> list;
+    private NodeListElement<E> next;
+    private NodeListElement<E> prev;
+    private NodeListElement<E> currentElement;
+    private int cursorIndex;
 
     public NodeListIterator(NodeList<E> list) {
         this.list = list;
-        if (!list.isEmpty()) {
-            elem = new NodeListElement<>(null, null, list.getNode(0), list);
-        } else {
-            elem = new NodeListElement<>(null, null, null, list);
-        }
-    }
+        this.next = list.getFirstNode();
+        this.currentElement = null;
+        this.prev = null;
 
-    @Override
-    public void first() {
-        // nothing to do
-    }
-
-    @Override
-    public E next() {
-        elem = elem.getNext();
-        return elem.getData();
+        this.cursorIndex = 0;
     }
 
     @Override
     public boolean hasNext() {
-        return elem.getNext() != null;
+        return next != null;
     }
 
     @Override
-    public void insertAfter() {
-        // TODO Auto-generated method stub
-
+    public E next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        currentElement = next;
+        next = next.getNext();
+        prev = currentElement;
+        cursorIndex++;
+        return currentElement.getData();
     }
 
     @Override
-    public void insertBefor() {
-        // TODO Auto-generated method stub
+    public boolean hasPrevious() {
+        return prev != null;
+    }
 
+    @Override
+    public E previous() {
+        if (!hasPrevious()) {
+            throw new NoSuchElementException();
+        }
+        next = currentElement;
+        currentElement = prev;
+        prev = prev.getPrev();
+        cursorIndex--;
+        return currentElement.getData();
+    }
+
+    @Override
+    public int nextIndex() {
+        return cursorIndex + 1;
+    }
+
+    @Override
+    public int previousIndex() {
+        return cursorIndex - 1;
+    }
+
+    @Override
+    public void remove() {
+        if (currentElement == null) {
+            throw new NoSuchElementException();
+        }
+        cursorIndex--;
+        currentElement.remove();
+        currentElement = null;
+    }
+
+    @Override
+    public void set(E e) {
+        if (currentElement == null) {
+            throw new NoSuchElementException();
+        }
+        currentElement.remove();
+        if (prev == null) {
+            list.addFirst(e);
+        } else {
+            prev.insertAfter(e);
+        }
+    }
+
+    @Override
+    public void add(E e) {
+        if (currentElement == null) {
+            list.addFirst(e);
+        } else {
+            currentElement.insertAfter(e);
+        }
     }
 
 }

@@ -14,7 +14,6 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.formatting.Composition;
 import net.eugenpaul.jlexi.component.formatting.text.RowCompositor;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
-import net.eugenpaul.jlexi.component.iterator.GlyphIterator;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TestPaneKeyHandler;
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
@@ -119,8 +118,8 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
     }
 
     @Override
-    public GlyphIterator createIterator() {
-        return null;
+    public Iterator<Glyph> iterator() {
+        return NULLITERATOR;
     }
 
     @Override

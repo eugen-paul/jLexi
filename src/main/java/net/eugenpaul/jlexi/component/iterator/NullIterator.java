@@ -1,39 +1,14 @@
 package net.eugenpaul.jlexi.component.iterator;
 
-import net.eugenpaul.jlexi.component.Glyph;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator for all Leaf-Classes (without child elements)
+ * 
+ * @param <T>
  */
-public class NullIterator implements GlyphIterator {
-
-    private static final NullIterator ITERATOR = new NullIterator();
-
-    /**
-     * hidden C'tor
-     */
-    private NullIterator() {
-
-    }
-
-    /**
-     * Default Null-Iterator
-     * 
-     * @return Null-Iterator
-     */
-    public static NullIterator getNullIterator() {
-        return ITERATOR;
-    }
-
-    @Override
-    public void first() {
-        // nothing to do
-    }
-
-    @Override
-    public Glyph next() {
-        return null;
-    }
+public class NullIterator<T> implements ListIterator<T> {
 
     @Override
     public boolean hasNext() {
@@ -41,13 +16,43 @@ public class NullIterator implements GlyphIterator {
     }
 
     @Override
-    public void insertAfter() {
-        // nothing to do
+    public T next() {
+        throw new NoSuchElementException();
     }
 
     @Override
-    public void insertBefor() {
-        // nothing to do
+    public boolean hasPrevious() {
+        return false;
+    }
+
+    @Override
+    public T previous() {
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public int nextIndex() {
+        return 0;
+    }
+
+    @Override
+    public int previousIndex() {
+        return 0;
+    }
+
+    @Override
+    public void remove() {
+        // Nothing to do
+    }
+
+    @Override
+    public void set(T e) {
+        // Nothing to do
+    }
+
+    @Override
+    public void add(T e) {
+        // Nothing to do
     }
 
 }

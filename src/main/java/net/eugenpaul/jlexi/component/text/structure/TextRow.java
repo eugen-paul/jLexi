@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.component.text.structure;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -9,8 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.iterator.GlyphIterator;
-import net.eugenpaul.jlexi.component.iterator.ListIteratorGen;
+import net.eugenpaul.jlexi.component.iterator.TextPaneElementToGlyphIterator;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -87,8 +87,8 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement {
     }
 
     @Override
-    public GlyphIterator createIterator() {
-        return new ListIteratorGen<>(children);
+    public Iterator<Glyph> iterator() {
+        return new TextPaneElementToGlyphIterator<>(children);
     }
 
     @Override

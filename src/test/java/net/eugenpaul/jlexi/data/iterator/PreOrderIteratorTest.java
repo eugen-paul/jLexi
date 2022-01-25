@@ -2,84 +2,93 @@ package net.eugenpaul.jlexi.data.iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.eugenpaul.jlexi.component.text.structure.TextRow;
+import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.iterator.NullIterator;
+import net.eugenpaul.jlexi.component.iterator.PreOrderLeafIterator;
 
 class PreOrderIteratorTest {
 
-    // private Row rootGlyph;
+    private static abstract class DataGlyph extends Glyph {
+        protected DataGlyph(Glyph parent) {
+            super(parent);
+        }
 
-    // /**
-    //  * create following Tree:
-    //  * 
-    //  * <pre>
-    //  *          root
-    //  *       /   |     \
-    //  *    a      b        c
-    //  *  / | \   / \      /| \
-    //  * 1  2  3  4  5   6  7  d
-    //  *                       |
-    //  *                       8
-    //  * </pre>
-    //  */
-    // @BeforeEach
-    // void init() {
-    //     rootGlyph = new Row();
+        public abstract Character getData();
+    }
 
-    //     // Generate branch A
-    //     Row a = new Row();
-    //     CharGlyph a1 = new CharGlyph('1', null);
-    //     CharGlyph a2 = new CharGlyph('2', null);
-    //     CharGlyph a3 = new CharGlyph('3', null);
-    //     a.insert(a1, 0);
-    //     a.insert(a2, 1);
-    //     a.insert(a3, 2);
+    private Glyph rootGlyph;
 
-    //     rootGlyph.insert(a, 0);
+    /**
+     * create following Tree:
+     * 
+     * <pre>
+     *          root
+     *       /   |     \
+     *    a      b        c
+     *  / | \   / \      /| \
+     * 1  2  3  4  5   6  7  d
+     *                       |
+     *                       8
+     * </pre>
+     */
+    @BeforeEach
+    void init() {
+        // Generate branch A
+        Glyph a1 = generateLeaf('1');
+        Glyph a2 = generateLeaf('2');
+        Glyph a3 = generateLeaf('3');
+        Glyph aRoot = generateContainer(List.of(a1, a2, a3));
 
-    //     // Generate branch B
-    //     Row b = new Row();
-    //     CharGlyph b1 = new CharGlyph('4', null);
-    //     CharGlyph b2 = new CharGlyph('5', null);
-    //     b.insert(b1, 0);
-    //     b.insert(b2, 1);
+        // Generate branch B
+        Glyph b1 = generateLeaf('4');
+        Glyph b2 = generateLeaf('5');
+        Glyph bRoot = generateContainer(List.of(b1, b2));
 
-    //     rootGlyph.insert(b, 1);
+        // Generate branch C
+        Glyph cd1 = generateLeaf('8');
+        Glyph cdRoot = generateContainer(List.of(cd1));
 
-    //     // Generate branch C
-    //     Row c = new Row();
+        Glyph c1 = generateLeaf('6');
+        Glyph c2 = generateLeaf('7');
+        Glyph cRoot = generateContainer(List.of(c1, c2, cdRoot));
 
-    //     Row cd = new Row();
-    //     CharGlyph cd1 = new CharGlyph('8', null);
-    //     cd.insert(cd1, 0);
+        rootGlyph = generateContainer(List.of(aRoot, bRoot, cRoot));
+    }
 
-    //     CharGlyph c1 = new CharGlyph('6', null);
-    //     CharGlyph c2 = new CharGlyph('7', null);
-    //     c.insert(c1, 0);
-    //     c.insert(c2, 1);
-    //     c.insert(cd, 2);
+    private Glyph generateLeaf(Character leafData) {
+        DataGlyph leaf = mock(DataGlyph.class);
+        when(leaf.iterator()).thenReturn(new NullIterator<>());
+        when(leaf.getData()).thenReturn(leafData);
+        return leaf;
+    }
 
-    //     rootGlyph.insert(c, 2);
-    // }
+    private Glyph generateContainer(List<Glyph> children) {
+        Glyph container = mock(Glyph.class);
+        when(container.iterator()).thenReturn(children.iterator());
+        return container;
+    }
 
-    // @Test
-    // void testIterator() {
-    //     PreOrderLeefIterator iterator = new PreOrderLeefIterator(rootGlyph);
+    @Test
+    void testIterator() {
+        PreOrderLeafIterator iterator = new PreOrderLeafIterator(rootGlyph);
 
-    //     iterator.first();
-
-    //     assertTrue(iterator.hasNext());
-    //     assertEquals('1', ((CharGlyph) iterator.next()).getC());
-    //     assertEquals('2', ((CharGlyph) iterator.next()).getC());
-    //     assertEquals('3', ((CharGlyph) iterator.next()).getC());
-    //     assertEquals('4', ((CharGlyph) iterator.next()).getC());
-    //     assertEquals('5', ((CharGlyph) iterator.next()).getC());
-    //     assertEquals('6', ((CharGlyph) iterator.next()).getC());
-    //     assertEquals('7', ((CharGlyph) iterator.next()).getC());
-    //     assertEquals('8', ((CharGlyph) iterator.next()).getC());
-    // }
+        assertTrue(iterator.hasNext());
+        assertEquals('1', ((DataGlyph) iterator.next()).getData());
+        assertEquals('2', ((DataGlyph) iterator.next()).getData());
+        assertEquals('3', ((DataGlyph) iterator.next()).getData());
+        assertEquals('4', ((DataGlyph) iterator.next()).getData());
+        assertEquals('5', ((DataGlyph) iterator.next()).getData());
+        assertEquals('6', ((DataGlyph) iterator.next()).getData());
+        assertEquals('7', ((DataGlyph) iterator.next()).getData());
+        assertEquals('8', ((DataGlyph) iterator.next()).getData());
+    }
 
 }
