@@ -16,6 +16,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Verctor2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
@@ -72,13 +73,11 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement {
             ImageArrayHelper.copyRectangle(//
                     drawable.getPixels(), //
                     drawable.getPixelSize(), //
-                    0, //
-                    0, //
+                    new Verctor2d(0, 0), //
                     drawable.getPixelSize(), //
                     pixels, //
                     pixelsSize, //
-                    positionX, //
-                    hight - drawable.getPixelSize().getHight()//
+                    new Verctor2d(positionX, hight - drawable.getPixelSize().getHight()) //
             );
             positionX += drawable.getPixelSize().getWidth();
         }

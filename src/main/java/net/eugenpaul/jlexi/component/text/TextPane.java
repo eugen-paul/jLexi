@@ -103,13 +103,11 @@ public class TextPane extends Composition<TextPaneElement> implements GuiCompone
             ImageArrayHelper.copyRectangle(//
                     drawable.getPixels(), //
                     drawable.getPixelSize(), //
-                    0, //
-                    0, //
+                    new Verctor2d(0, 0), //
                     drawable.getPixelSize(), //
                     pixels, //
                     pixelsSize, //
-                    positionX, //
-                    positionY//
+                    new Verctor2d(positionX, positionY)//
             );
             positionY += drawable.getPixelSize().getHight();
         }

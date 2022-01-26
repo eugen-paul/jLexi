@@ -10,6 +10,7 @@ import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Verctor2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class CursorEffect extends TextPaneEffect {
@@ -62,13 +63,11 @@ public class CursorEffect extends TextPaneEffect {
 
             ImageArrayHelper.copyRectangle(cursorsPixels, //
                     new Size(1, pixels.getPixelSize().getHight()), //
-                    0, //
-                    0, //
+                    new Verctor2d(0, 0), //
                     new Size(1, pixels.getPixelSize().getHight()), //
                     pixels.getPixels(), //
                     pixels.getPixelSize(), //
-                    0, //
-                    0 //
+                    new Verctor2d(0, 0) //
             );
         }
     }

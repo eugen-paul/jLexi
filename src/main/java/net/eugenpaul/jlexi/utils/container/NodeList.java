@@ -1,15 +1,17 @@
 package net.eugenpaul.jlexi.utils.container;
 
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 public class NodeList<E> implements Iterable<E> {
 
-    @AllArgsConstructor
     public static class NodeListElement<E> {
+        @Getter
+        private boolean removed;
+
         @Getter
         private E data;
 
@@ -23,7 +25,20 @@ public class NodeList<E> implements Iterable<E> {
 
         private NodeList<E> list;
 
+        public NodeListElement(E data, NodeListElement<E> prev, NodeListElement<E> next, NodeList<E> list) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+            this.list = list;
+
+            removed = false;
+        }
+
         public NodeListElement<E> insertAfter(E data) {
+            if (removed) {
+                throw new NoSuchElementException("\"insertAfter\" is not possible. Element is removed from list.");
+            }
+
             NodeListElement<E> node = new NodeListElement<>(data, this, this.getNext(), list);
             if (null != next) {
                 next.setPrev(node);
@@ -37,6 +52,10 @@ public class NodeList<E> implements Iterable<E> {
         }
 
         public NodeListElement<E> insertBefore(E data) {
+            if (removed) {
+                throw new NoSuchElementException("\"insertBefore\" is not possible. Element is removed from list.");
+            }
+
             NodeListElement<E> node = new NodeListElement<>(data, this.getPrev(), this, list);
             if (null != prev) {
                 prev.setNext(node);
@@ -64,6 +83,7 @@ public class NodeList<E> implements Iterable<E> {
 
             prev = null;
             next = null;
+            removed = true;
             list.size--;
         }
     }
@@ -79,7 +99,7 @@ public class NodeList<E> implements Iterable<E> {
     }
 
     public E get(int position) {
-        if (position > size) {
+        if (position >= size || position < 0) {
             throw new IndexOutOfBoundsException(
                     "Cann't get element on position " + position + ". List has only " + size + " elements.");
         }
@@ -93,7 +113,7 @@ public class NodeList<E> implements Iterable<E> {
     }
 
     public NodeListElement<E> getNode(int position) {
-        if (position > size) {
+        if (position >= size || position < 0) {
             throw new IndexOutOfBoundsException(
                     "Cann't get element on position " + position + ". List has only " + size + " elements.");
         }
@@ -165,14 +185,21 @@ public class NodeList<E> implements Iterable<E> {
     }
 
     public void clear() {
+        while (size > 0) {
+            first.remove();
+        }
+
         first = null;
         last = null;
-        size = 0;
     }
 
     @Override
     public ListIterator<E> iterator() {
         return new NodeListIterator<>(this);
+    }
+
+    public int size() {
+        return size;
     }
 
 }

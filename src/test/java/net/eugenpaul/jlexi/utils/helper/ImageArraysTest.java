@@ -1,13 +1,14 @@
-package net.eugenpaul.jlexi.utils;
+package net.eugenpaul.jlexi.utils.helper;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
+import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Verctor2d;
 
-public class ImageArraysTest {
+class ImageArraysTest {
 
     private int[] srcBlock;
     private Size srcSize;
@@ -44,7 +45,8 @@ public class ImageArraysTest {
                 41, 42, 43, 44, 45, 46, 47, 48, 49, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 0, 0, destSize, destBlock, destSize, 0, 0);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(0, 0), destSize, destBlock, destSize,
+                new Verctor2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -58,7 +60,8 @@ public class ImageArraysTest {
                 42, 43, 44, 45, 46, 47, 48, 49, 0, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 1, 0, destSize, destBlock, destSize, 0, 0);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(1, 0), destSize, destBlock, destSize,
+                new Verctor2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -72,7 +75,8 @@ public class ImageArraysTest {
                 51, 52, 53, 54, 55, 56, 57, 58, 59, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 0, 1, destSize, destBlock, destSize, 0, 0);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(0, 1), destSize, destBlock, destSize,
+                new Verctor2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -86,7 +90,8 @@ public class ImageArraysTest {
                 52, 53, 54, 55, 56, 57, 58, 59, 0, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 1, 1, destSize, destBlock, destSize, 0, 0);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(1, 1), destSize, destBlock, destSize,
+                new Verctor2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -100,7 +105,8 @@ public class ImageArraysTest {
                 0, 41, 42, 43, 44, 45, 46, 47, 48, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 0, 0, destSize, destBlock, destSize, 1, 0);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(0, 0), destSize, destBlock, destSize,
+                new Verctor2d(1, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -114,7 +120,8 @@ public class ImageArraysTest {
                 31, 32, 33, 34, 35, 36, 37, 38, 39, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 0, 0, destSize, destBlock, destSize, 0, 1);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(0, 0), destSize, destBlock, destSize,
+                new Verctor2d(0, 1));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -128,7 +135,8 @@ public class ImageArraysTest {
                 0, 31, 32, 33, 34, 35, 36, 37, 38, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 0, 0, destSize, destBlock, destSize, 1, 1);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(0, 0), destSize, destBlock, destSize,
+                new Verctor2d(1, 1));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -142,7 +150,8 @@ public class ImageArraysTest {
                 0, 42, 43, 44, 45, 46, 47, 48, 49, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 1, 1, destSize, destBlock, destSize, 1, 1);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(1, 1), destSize, destBlock, destSize,
+                new Verctor2d(1, 1));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -156,7 +165,8 @@ public class ImageArraysTest {
                 0, 42, 43, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 1, 1, new Size(2, 3), destBlock, destSize, 1, 1);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(1, 1), new Size(2, 3), destBlock, destSize,
+                new Verctor2d(1, 1));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -170,7 +180,8 @@ public class ImageArraysTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.copyRectangle(new int[] {}, Size.ZERO_SIZE, 0, 0, destSize, destBlock, destSize, 0, 0);
+        ImageArrayHelper.copyRectangle(new int[] {}, Size.ZERO_SIZE, new Verctor2d(0, 0), destSize, destBlock, destSize,
+                new Verctor2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -180,7 +191,8 @@ public class ImageArraysTest {
         int[] expectedArray = new int[] {};
         int[] emtyDest = new int[] {};
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 0, 0, destSize, emtyDest, Size.ZERO_SIZE, 0, 0);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(0, 0), destSize, emtyDest, Size.ZERO_SIZE,
+                new Verctor2d(0, 0));
 
         assertArrayEquals(expectedArray, emtyDest);
     }
@@ -189,7 +201,8 @@ public class ImageArraysTest {
     void testCopyRectangle_EmptyBlock() {
         int[] expectedArray = destBlock.clone();
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, 0, 0, Size.ZERO_SIZE, destBlock, destSize, 0, 0);
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Verctor2d(0, 0), Size.ZERO_SIZE, destBlock, destSize,
+                new Verctor2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }

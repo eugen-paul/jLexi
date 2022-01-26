@@ -49,8 +49,8 @@ public class NodeListIterator<E> implements ListIterator<E> {
         if (!hasPrevious()) {
             throw new NoSuchElementException();
         }
-        next = currentElement;
         currentElement = prev;
+        next = currentElement;
         prev = prev.getPrev();
         cursorIndex--;
         return currentElement.getData();
@@ -58,7 +58,7 @@ public class NodeListIterator<E> implements ListIterator<E> {
 
     @Override
     public int nextIndex() {
-        return cursorIndex + 1;
+        return cursorIndex;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class NodeListIterator<E> implements ListIterator<E> {
     @Override
     public void remove() {
         if (currentElement == null) {
-            throw new NoSuchElementException();
+            throw new IllegalStateException();
         }
         cursorIndex--;
         currentElement.remove();
@@ -79,13 +79,16 @@ public class NodeListIterator<E> implements ListIterator<E> {
     @Override
     public void set(E e) {
         if (currentElement == null) {
-            throw new NoSuchElementException();
+            throw new IllegalStateException();
         }
+        next = currentElement.getNext();
+        prev = currentElement.getPrev();
+
         currentElement.remove();
         if (prev == null) {
-            list.addFirst(e);
+            currentElement = list.addFirst(e);
         } else {
-            prev.insertAfter(e);
+            currentElement = prev.insertAfter(e);
         }
     }
 

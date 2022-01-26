@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.data.iterator;
+package net.eugenpaul.jlexi.component.iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,11 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.iterator.NullIterator;
-import net.eugenpaul.jlexi.component.iterator.PreOrderLeafIterator;
 
-class PreOrderIteratorTest {
-
+class PreOrderLeafIteratorTest {
     private static abstract class DataGlyph extends Glyph {
         protected DataGlyph(Glyph parent) {
             super(parent);
@@ -90,5 +87,4 @@ class PreOrderIteratorTest {
         assertEquals('7', ((DataGlyph) iterator.next()).getData());
         assertEquals('8', ((DataGlyph) iterator.next()).getData());
     }
-
 }
