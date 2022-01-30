@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
+import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -22,11 +24,13 @@ public class CharGlyph extends TextPaneElement {
     @Getter
     @Setter
     private Character c;
+
     private FontStorage fontStorage;
 
     private String fontName;
     private int style;
     private int fontSize;
+
     private Drawable drawable;
 
     public CharGlyph(Glyph parent, Character c, FontStorage fontStorage,
@@ -83,5 +87,10 @@ public class CharGlyph extends TextPaneElement {
     public void notifyUpdate(Glyph child) {
         LOGGER.trace("\"{}\" notifyUpdate to parent", c);
         getParent().notifyUpdate(this);
+    }
+
+    @Override
+    public boolean moveCursor(CursorMove move, Cursor cursor) {
+        return false;
     }
 }

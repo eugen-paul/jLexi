@@ -1,8 +1,9 @@
 package net.eugenpaul.jlexi.component.text.structure;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -10,8 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.iterator.TextPaneElementToGlyphIterator;
+import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.component.text.formatting.TextCompositor;
+import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -24,7 +27,7 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement implemen
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextRow.class);
 
-    private List<T> children;
+    private LinkedList<T> children;
 
     private Size maxSize;
 
@@ -32,7 +35,7 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement implemen
         super(parent, null);
         this.maxSize = maxSize;
         setSize(Size.ZERO_SIZE);
-        children = new ArrayList<>();
+        children = new LinkedList<>();
     }
 
     @Override
@@ -124,6 +127,10 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement implemen
             return false;
         }
         children.add(element);
+        element.setParent(this);
+        element.getRelativPosition().setX(currentWidth);
+        element.getRelativPosition().setY(0);
+
         setSize(new Size(//
                 currentWidth + element.getSize().getWidth(), //
                 Math.max(getSize().getHight(), element.getSize().getHight())//
@@ -136,6 +143,46 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement implemen
     public void updateSize(Size size) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public boolean moveCursor(CursorMove move, Cursor cursor) {
+
+        ListIterator<T> iterator = children.listIterator();
+        T lastChild = null;
+        while (iterator.hasNext()) {
+            T child = iterator.next();
+            if (child == cursor.getCurrentGlyph().getData()) {
+                if (child.moveCursor(move, cursor)) {
+                    return true;
+                }
+                return moveCursor(move, cursor, iterator, lastChild);
+            }
+            lastChild = child;
+        }
+
+        return false;
+    }
+
+    private boolean moveCursor(CursorMove move, Cursor cursor, ListIterator<T> iterator, T lastChild) {
+        boolean moved = false;
+        switch (move) {
+        case LEFT:
+            if (null != lastChild) {
+                cursor.moveCursorTo(lastChild.getTextPaneListElement());
+                moved = true;
+            }
+            break;
+        case RIGHT:
+            if (iterator.hasNext()) {
+                cursor.moveCursorTo(iterator.next().getTextPaneListElement());
+                moved = true;
+            }
+            break;
+        default:
+            break;
+        }
+        return moved;
     }
 
 }

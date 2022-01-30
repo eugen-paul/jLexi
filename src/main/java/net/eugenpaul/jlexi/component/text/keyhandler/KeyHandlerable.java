@@ -1,8 +1,8 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.effect.EffectHandler;
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
 /**
@@ -12,13 +12,14 @@ public interface KeyHandlerable {
 
     public FontStorage getFontStorage();
 
-    public TextPaneEffect getCursor();
-
-    public void setCursor(TextPaneEffect cursor);
-
     public EffectHandler getEffectHandler();
 
     public Glyph getParent();
 
     public Glyph getThis();
+
+    public Cursor getMouseCursor();
+    public void setMouseCursor(Cursor cursor);
+
+    public void doCursorMove(CursorMove cursorMove);
 }

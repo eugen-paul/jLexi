@@ -11,15 +11,14 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.text.formatting.RowCompositor;
 import net.eugenpaul.jlexi.component.text.formatting.TextCompositor;
+import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
-import net.eugenpaul.jlexi.component.text.keyhandler.TestPaneKeyHandler;
+import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneKeyHandler;
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
 import net.eugenpaul.jlexi.component.text.structure.TextPlaceHolder;
 import net.eugenpaul.jlexi.component.text.structure.TextRow;
 import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.effect.CursorEffect;
 import net.eugenpaul.jlexi.effect.EffectHandler;
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -48,22 +47,23 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
 
     @Getter
     @Setter
-    private TextPaneEffect cursor;
+    private Cursor mouseCursor;
 
-    private TestPaneKeyHandler keyHanlder;
+    private TextPaneKeyHandler keyHanlder;
 
     public TextPane(Glyph parent, FontStorage fontStorage, EffectHandler effectWorker) {
         super(parent);
         this.effectHandler = effectWorker;
         this.fontStorage = fontStorage;
-        this.cursor = null;
         compositor = new RowCompositor<>(this, new Size(getSize().getWidth(), Integer.MAX_VALUE), TextRow::new);
         nodeList = new NodeList<>();
+
+        mouseCursor = new Cursor(null, null, effectHandler);
 
         resizeTo(Size.ZERO_SIZE);
         addPlaceHolder();
 
-        keyHanlder = new TestPaneKeyHandler(this);
+        keyHanlder = new TextPaneKeyHandler(this);
     }
 
     @Override
@@ -88,12 +88,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
 
         TextPaneElement element = compositor.getElementOnPosition(new Vector2d(mouseX, mouseY));
         if (element != null) {
-            if (cursor != null) {
-                effectHandler.removeEffect(cursor);
-            }
-            cursor = new CursorEffect(element);
-            element.addEffect(cursor);
-            effectHandler.addEffect(cursor);
+            mouseCursor.moveCursorTo(element.textPaneListElement);
         }
     }
 
@@ -108,6 +103,8 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         }
 
         addPlaceHolder();
+
+        mouseCursor.moveCursorTo(nodeList.getFirstNode());
     }
 
     private void addPlaceHolder() {
@@ -148,4 +145,10 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
     public Glyph getThis() {
         return this;
     }
+
+    @Override
+    public void doCursorMove(CursorMove cursorMove) {
+        compositor.moveCursor(cursorMove, mouseCursor);
+    }
+
 }

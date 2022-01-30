@@ -16,11 +16,11 @@ public abstract class Glyph {
 
     protected static final NullIterator<Glyph> NULLITERATOR = new NullIterator<>();
 
-    private Glyph parent;
-    private Vector2d relativPosition;
+    protected Glyph parent;
+    protected Vector2d relativPosition;
 
     @Setter(lombok.AccessLevel.PROTECTED)
-    private Size size;
+    protected Size size;
 
     protected Glyph(Glyph parent) {
         this.parent = parent;
@@ -41,6 +41,24 @@ public abstract class Glyph {
      * @return Iterator
      */
     public abstract Iterator<Glyph> iterator();
+
+    public Vector2d getRelativPositionTo(Glyph glyph) {
+        Glyph parentGlyph = parent;
+        Vector2d responsePosition = new Vector2d(relativPosition);
+        while (null != parentGlyph) {
+            if (parentGlyph == glyph) {
+                break;
+            }
+            responsePosition.add(parentGlyph.getRelativPosition());
+            // responsePosition
+            parentGlyph = parentGlyph.getParent();
+        }
+
+        if (null == parentGlyph) {
+            return null;
+        }
+        return responsePosition;
+    }
 
     public abstract void visit(Visitor checker);
 

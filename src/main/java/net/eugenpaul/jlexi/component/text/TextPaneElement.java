@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.keyhandler.CursorControl;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 
@@ -13,7 +14,7 @@ import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
  * Abstract class for all TextPaneElements (CharGlyph, TableGlyph, ImageGlyph) that could be added to
  * Text-Gui-Components (TaxtPane, Label, ...)
  */
-public abstract class TextPaneElement extends Glyph {
+public abstract class TextPaneElement extends Glyph implements CursorControl{
 
     protected List<TextPaneEffect> effectsList;
 

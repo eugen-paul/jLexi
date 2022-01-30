@@ -2,7 +2,6 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
 import net.eugenpaul.jlexi.component.text.structure.EndOfLine;
-import net.eugenpaul.jlexi.effect.CursorEffect;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 
@@ -18,9 +17,9 @@ public class AbstractKeyHandler {
         if (!CharacterHelper.isPrintable(key)) {
             return;
         }
-        if (component.getCursor() != null) {
+        if (component.getMouseCursor() != null) {
             CharGlyph glyph = new CharGlyph(component.getThis(), key.charValue(), component.getFontStorage(), null);
-            var node = component.getCursor().getGlyph().getTextPaneListElement().insertBefore(glyph);
+            var node = component.getMouseCursor().getCurrentGlyph().insertBefore(glyph);
             glyph.setTextPaneListElement(node);
         }
         component.getParent().notifyUpdate(component.getThis());
@@ -31,11 +30,8 @@ public class AbstractKeyHandler {
         case ENTER:
             keyPressedEnter();
             break;
-        case RIGHT:
-            keyPressedRight();
-            break;
-        case LEFT:
-            keyPressedLeft();
+        case RIGHT, LEFT, UP, DOWN:
+            keyPressedRight(keyCode);
             break;
         case DELETE:
             keyPressedDelete();
@@ -48,13 +44,13 @@ public class AbstractKeyHandler {
         }
     }
 
-    public void onKeyReleased(KeyCode keyCode){
-        //Nothing to do
+    public void onKeyReleased(KeyCode keyCode) {
+        // Nothing to do
     }
 
     private void keyPressedBackSpace() {
-        if (component.getCursor() != null) {
-            var elem = component.getCursor().getGlyph().getTextPaneListElement().getPrev();
+        if (component.getMouseCursor() != null) {
+            var elem = component.getMouseCursor().getCurrentGlyph().getPrev();
             if (elem != null) {
                 elem.remove();
                 component.getParent().notifyUpdate(component.getThis());
@@ -63,52 +59,25 @@ public class AbstractKeyHandler {
     }
 
     private void keyPressedDelete() {
-        if (component.getCursor() != null) {
-            var elem = component.getCursor().getGlyph().getTextPaneListElement();
+        if (component.getMouseCursor() != null) {
+            var elem = component.getMouseCursor().getCurrentGlyph();
+
             if (elem != null && !(elem.getData().isPlaceHolder())) {
-                component.getEffectHandler().removeEffect(component.getCursor());
-                if (elem.getNext() != null) {
-                    component.setCursor(new CursorEffect(elem.getNext().getData()));
-                    elem.getNext().getData().addEffect(component.getCursor());
-                } else if (elem.getPrev() != null) {
-                    component.setCursor(new CursorEffect(elem.getPrev().getData()));
-                    elem.getPrev().getData().addEffect(component.getCursor());
-                }
+                component.doCursorMove(CursorMove.RIGHT);
                 elem.remove();
-                component.getEffectHandler().addEffect(component.getCursor());
                 component.getParent().notifyUpdate(component.getThis());
             }
         }
     }
 
-    private void keyPressedLeft() {
-        if (component.getCursor() != null) {
-            var elem = component.getCursor().getGlyph().getTextPaneListElement().getPrev();
-            if (elem != null) {
-                component.getEffectHandler().removeEffect(component.getCursor());
-                component.setCursor(new CursorEffect(elem.getData()));
-                elem.getData().addEffect(component.getCursor());
-                component.getEffectHandler().addEffect(component.getCursor());
-            }
-        }
-    }
-
-    private void keyPressedRight() {
-        if (component.getCursor() != null) {
-            var elem = component.getCursor().getGlyph().getTextPaneListElement().getNext();
-            if (elem != null) {
-                component.getEffectHandler().removeEffect(component.getCursor());
-                component.setCursor(new CursorEffect(elem.getData()));
-                elem.getData().addEffect(component.getCursor());
-                component.getEffectHandler().addEffect(component.getCursor());
-            }
-        }
+    private void keyPressedRight(KeyCode keyCode) {
+        component.doCursorMove(CursorMove.fromKeyCode(keyCode));
     }
 
     private void keyPressedEnter() {
-        if (component.getCursor() != null) {
+        if (component.getMouseCursor() != null) {
             EndOfLine glyph = new EndOfLine(component.getThis(), component.getFontStorage(), null);
-            var node = component.getCursor().getGlyph().getTextPaneListElement().insertBefore(glyph);
+            var node = component.getMouseCursor().getCurrentGlyph().insertBefore(glyph);
             glyph.setTextPaneListElement(node);
             component.getParent().notifyUpdate(component.getThis());
         }

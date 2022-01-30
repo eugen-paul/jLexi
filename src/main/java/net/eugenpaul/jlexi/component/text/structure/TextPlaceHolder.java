@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
+import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -73,6 +75,11 @@ public class TextPlaceHolder extends TextPaneElement {
     @Override
     public boolean isPlaceHolder() {
         return true;
+    }
+
+    @Override
+    public boolean moveCursor(CursorMove move, Cursor cursor) {
+        return false;
     }
 
 }

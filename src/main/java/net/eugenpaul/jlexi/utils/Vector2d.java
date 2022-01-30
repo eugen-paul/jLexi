@@ -12,6 +12,11 @@ public class Vector2d {
     private int x;
     private int y;
 
+    public Vector2d(Vector2d vector) {
+        this.x = vector.getX();
+        this.y = vector.getY();
+    }
+
     @Override
     public String toString() {
         StringBuilder response = new StringBuilder();
@@ -22,7 +27,13 @@ public class Vector2d {
         return response.toString();
     }
 
-    public Vector2d subNew(Vector2d subVector){
-        return new Vector2d(x - subVector.getX(), y- subVector.getY());
+    public Vector2d subNew(Vector2d subVector) {
+        return new Vector2d(x - subVector.getX(), y - subVector.getY());
+    }
+
+    public Vector2d add(Vector2d addVector) {
+        x += addVector.getX();
+        y += addVector.getY();
+        return this;
     }
 }

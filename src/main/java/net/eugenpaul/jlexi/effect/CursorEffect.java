@@ -24,6 +24,7 @@ public class CursorEffect extends TextPaneEffect {
     public CursorEffect(TextPaneElement glyph) {
         super(glyph);
         showCursor = false;
+        glyph.addEffect(this);
     }
 
     @Override
