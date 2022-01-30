@@ -13,7 +13,7 @@ import net.eugenpaul.jlexi.component.interfaces.Resizeable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Verctor2d;
+import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
@@ -71,11 +71,11 @@ public class Border extends MonoGlyph implements GuiComponent {
         ImageArrayHelper.copyRectangle(//
                 componentPixels, //
                 childDraw.getPixelSize(), //
-                new Verctor2d(0, 0), //
+                new Vector2d(0, 0), //
                 childDraw.getPixelSize(), //
                 borderPixels, //
                 getSize(), //
-                new Verctor2d(borderSize, borderSize) //
+                new Vector2d(borderSize, borderSize) //
         );
 
         if (borderSize > 0) {

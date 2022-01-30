@@ -8,7 +8,6 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
-import net.eugenpaul.jlexi.utils.event.MouseButton;
 
 /**
  * Abstract class for all TextPaneElements (CharGlyph, TableGlyph, ImageGlyph) that could be added to
@@ -36,7 +35,7 @@ public abstract class TextPaneElement extends Glyph {
         effectsList.remove(effect);
     }
 
-    public abstract NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button);
+    public abstract NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY);
 
     /**
      * The function checks if the element can hold the mouse cursor. For example, a table can contain the cursor, so a

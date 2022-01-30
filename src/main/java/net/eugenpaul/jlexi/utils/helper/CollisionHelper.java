@@ -1,13 +1,13 @@
 package net.eugenpaul.jlexi.utils.helper;
 
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Verctor2d;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class CollisionHelper {
     private CollisionHelper() {
     }
 
-    public static boolean isPointOnArea(Verctor2d point, Verctor2d areaPosiion, Size areaSize) {
+    public static boolean isPointOnArea(Vector2d point, Vector2d areaPosiion, Size areaSize) {
         return (//
         point.getX() >= areaPosiion.getX() //
                 && point.getY() >= areaPosiion.getY() //

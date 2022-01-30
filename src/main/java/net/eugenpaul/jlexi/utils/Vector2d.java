@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @AllArgsConstructor
 @Data
-public class Verctor2d {
+public class Vector2d {
     private int x;
     private int y;
 
@@ -20,5 +20,9 @@ public class Verctor2d {
         response.append(" [y]=");
         response.append(y);
         return response.toString();
+    }
+
+    public Vector2d subNew(Vector2d subVector){
+        return new Vector2d(x - subVector.getX(), y- subVector.getY());
     }
 }

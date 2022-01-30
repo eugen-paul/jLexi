@@ -13,7 +13,6 @@ import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
-import net.eugenpaul.jlexi.utils.event.MouseButton;
 
 public class EndOfLine extends TextPaneElement {
 
@@ -35,7 +34,7 @@ public class EndOfLine extends TextPaneElement {
     }
 
     @Override
-    public NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button) {
+    public NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY) {
         LOGGER.trace("Click on Text place holder");
         return this.getTextPaneListElement();
     }

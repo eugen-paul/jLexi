@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.utils.helper;
 
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Verctor2d;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 /**
  * Helper functions for ImageArrays
@@ -25,8 +25,8 @@ public class ImageArrayHelper {
      * @param destPosition.getX()
      * @param destPosition.getY()
      */
-    public static void copyRectangle(int[] src, Size srcSize, Verctor2d srcPosition, Size copySize, int[] dest,
-            Size destSize, Verctor2d destPosition) {
+    public static void copyRectangle(int[] src, Size srcSize, Vector2d srcPosition, Size copySize, int[] dest,
+            Size destSize, Vector2d destPosition) {
         if (srcSize.isZero() // src is Empty
                 || copySize.isZero() // copyblock is Empty
                 || destSize.isZero() // dest is Empty

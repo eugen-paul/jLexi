@@ -3,7 +3,6 @@ package net.eugenpaul.jlexi.component.text.structure;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -12,43 +11,28 @@ import org.slf4j.LoggerFactory;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.iterator.TextPaneElementToGlyphIterator;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
+import net.eugenpaul.jlexi.component.text.formatting.TextCompositor;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Verctor2d;
+import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
-import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class TextRow<T extends TextPaneElement> extends TextPaneElement {
+public class TextRow<T extends TextPaneElement> extends TextPaneElement implements TextCompositor<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextRow.class);
 
     private List<T> children;
 
-    public TextRow(Glyph parent) {
+    private Size maxSize;
+
+    public TextRow(Glyph parent, Size maxSize) {
         super(parent, null);
+        this.maxSize = maxSize;
+        setSize(Size.ZERO_SIZE);
         children = new ArrayList<>();
-    }
-
-    public TextRow(Glyph parent, List<T> children) {
-        super(parent, null);
-        this.children = children;
-        this.children.forEach(v -> v.setParent(this));
-
-        // compute size of the row
-        AtomicInteger sizeX = new AtomicInteger();
-        AtomicInteger sizeY = new AtomicInteger();
-
-        children.stream().forEach(v -> {
-            sizeX.addAndGet(v.getSize().getWidth());
-            if (sizeY.get() < v.getSize().getHight()) {
-                sizeY.set(v.getSize().getHight());
-            }
-        });
-
-        setSize(new Size(sizeX.get(), sizeY.get()));
     }
 
     @Override
@@ -57,13 +41,8 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement {
                 .map(Glyph::getPixels)//
                 .collect(Collectors.toList());
 
-        int width = 0;
-        int hight = 0;
-
-        for (Drawable drawable : childDrawable) {
-            width += drawable.getPixelSize().getWidth();
-            hight = Math.max(hight, drawable.getPixelSize().getHight());
-        }
+        int width = getSize().getWidth();
+        int hight = getSize().getHight();
 
         int[] pixels = new int[width * hight];
         Size pixelsSize = new Size(width, hight);
@@ -73,11 +52,11 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement {
             ImageArrayHelper.copyRectangle(//
                     drawable.getPixels(), //
                     drawable.getPixelSize(), //
-                    new Verctor2d(0, 0), //
+                    new Vector2d(0, 0), //
                     drawable.getPixelSize(), //
                     pixels, //
                     pixelsSize, //
-                    new Verctor2d(positionX, hight - drawable.getPixelSize().getHight()) //
+                    new Vector2d(positionX, hight - drawable.getPixelSize().getHight()) //
             );
             positionX += drawable.getPixelSize().getWidth();
         }
@@ -96,12 +75,12 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement {
     }
 
     @Override
-    public NodeListElement<TextPaneElement> onMouseClickTE(Integer mouseX, Integer mouseY, MouseButton button) {
+    public NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY) {
         int x = 0;
         for (TextPaneElement glyph : children) {
             if (x + glyph.getSize().getWidth() > mouseX) {
                 if (glyph.isCursorHoldable()) {
-                    return glyph.onMouseClickTE(mouseX - x, mouseY, button);
+                    return glyph.getChildOn(mouseX - x, mouseY);
                 }
                 return glyph.getTextPaneListElement();
             }
@@ -119,6 +98,44 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement {
     public void notifyUpdate(Glyph child) {
         LOGGER.trace("row notifyUpdate to parent");
         getParent().notifyUpdate(this);
+    }
+
+    @Override
+    public TextPaneElement getElementOnPosition(Vector2d position) {
+        return getChildOn(position.getX(), position.getY()).getData();
+    }
+
+    @Override
+    public void compose(Iterator<T> iterator) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Drawable getPixels(Vector2d position, Size size) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean addIfPossible(T element) {
+        int currentWidth = getSize().getWidth();
+        if (element.getSize().getWidth() + currentWidth > maxSize.getWidth()) {
+            return false;
+        }
+        children.add(element);
+        setSize(new Size(//
+                currentWidth + element.getSize().getWidth(), //
+                Math.max(getSize().getHight(), element.getSize().getHight())//
+        ) //
+        );
+        return true;
+    }
+
+    @Override
+    public void updateSize(Size size) {
+        // TODO Auto-generated method stub
+
     }
 
 }
