@@ -16,7 +16,6 @@ import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneKeyHandler;
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
 import net.eugenpaul.jlexi.component.text.structure.TextPlaceHolder;
-import net.eugenpaul.jlexi.component.text.structure.TextRow;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.EffectHandler;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
@@ -55,7 +54,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         super(parent);
         this.effectHandler = effectWorker;
         this.fontStorage = fontStorage;
-        compositor = new RowCompositor<>(this, new Size(getSize().getWidth(), Integer.MAX_VALUE), TextRow::new);
+        compositor = new RowCompositor<>(this, new Size(getSize().getWidth(), Integer.MAX_VALUE));
         nodeList = new NodeList<>();
 
         mouseCursor = new Cursor(null, null, effectHandler);

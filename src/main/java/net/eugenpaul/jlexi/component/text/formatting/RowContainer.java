@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.structure;
+package net.eugenpaul.jlexi.component.text.formatting;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,7 +13,6 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.iterator.TextPaneElementToGlyphIterator;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
-import net.eugenpaul.jlexi.component.text.formatting.TextCompositor;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -23,15 +22,15 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class TextRow<T extends TextPaneElement> extends TextPaneElement implements TextCompositor<T> {
+public class RowContainer<T extends TextPaneElement> extends TextPaneElement implements TextContainer<T> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextRow.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RowContainer.class);
 
     private LinkedList<T> children;
 
     private Size maxSize;
 
-    public TextRow(Glyph parent, Size maxSize) {
+    public RowContainer(Glyph parent, Size maxSize) {
         super(parent, null);
         this.maxSize = maxSize;
         setSize(Size.ZERO_SIZE);
@@ -105,13 +104,11 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement implemen
 
     @Override
     public TextPaneElement getElementOnPosition(Vector2d position) {
-        return getChildOn(position.getX(), position.getY()).getData();
-    }
-
-    @Override
-    public void compose(Iterator<T> iterator) {
-        // TODO Auto-generated method stub
-
+        var child = getChildOn(position.getX(), position.getY());
+        if (child == null) {
+            return null;
+        }
+        return child.getData();
     }
 
     @Override
@@ -183,6 +180,11 @@ public class TextRow<T extends TextPaneElement> extends TextPaneElement implemen
             break;
         }
         return moved;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return children.isEmpty();
     }
 
 }

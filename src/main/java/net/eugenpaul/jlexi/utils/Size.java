@@ -11,6 +11,7 @@ import lombok.Getter;
 public class Size {
 
     public static final Size ZERO_SIZE = new Size(0, 0);
+    public static final Size ZERO_MAX = new Size(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     /** width of the element */
     private int width;

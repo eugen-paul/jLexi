@@ -22,16 +22,16 @@ import net.eugenpaul.jlexi.visitor.Visitor;
  * Compose elements to rows
  */
 public class RowCompositor<T extends TextPaneElement> extends Glyph implements TextCompositor<T> {
-    private ConcurrentSkipListMap<Integer, TextCompositor<T>> yToRowMap;
+    private ConcurrentSkipListMap<Integer, TextContainer<T>> yToRowMap;
 
-    private BiFunction<Glyph, Size, TextCompositor<T>> rowConstructor;
+    private BiFunction<Glyph, Size, TextContainer<T>> rowConstructor;
 
     private Size maxSize;
 
-    public RowCompositor(Glyph parent, Size maxSize, BiFunction<Glyph, Size, TextCompositor<T>> rowConstructor) {
+    public RowCompositor(Glyph parent, Size maxSize) {
         super(parent);
         this.maxSize = maxSize;
-        this.rowConstructor = rowConstructor;
+        this.rowConstructor = RowContainer::new;
         this.yToRowMap = new ConcurrentSkipListMap<>();
     }
 
@@ -41,13 +41,26 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
         int maxWidth = 0;
         yToRowMap.clear();
 
-        TextCompositor<T> row = rowConstructor.apply(parent, maxSize);
+        TextContainer<T> row = rowConstructor.apply(parent, maxSize);
         row.setParent(this);
         while (iterator.hasNext()) {
             T glyph = iterator.next();
 
-            if (!row.addIfPossible(glyph) || glyph.isEndOfLine() || glyph.isPlaceHolder()) {
+            if (!row.addIfPossible(glyph)) {
                 // current row is full. Create new row.
+                yToRowMap.putIfAbsent(currentY, row);
+                row.getRelativPosition().setX(0);
+                row.getRelativPosition().setY(currentY);
+
+                currentY += row.getSize().getHight();
+                maxWidth = Math.max(maxWidth, row.getSize().getHight());
+
+                row = rowConstructor.apply(parent, maxSize);
+                row.setParent(this);
+            }
+
+            if (glyph.isEndOfLine() || glyph.isPlaceHolder()) {
+                // line break. Create new row.
                 yToRowMap.putIfAbsent(currentY, row);
                 row.getRelativPosition().setX(0);
                 row.getRelativPosition().setY(currentY);
@@ -60,13 +73,23 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
             }
         }
 
+        if (!row.isEmpty()) {
+            // Add last row to map.
+            yToRowMap.putIfAbsent(currentY, row);
+            row.getRelativPosition().setX(0);
+            row.getRelativPosition().setY(currentY);
+
+            currentY += row.getSize().getHight();
+            maxWidth = Math.max(maxWidth, row.getSize().getHight());
+        }
+
         size = new Size(maxWidth, currentY);
     }
 
     @Override
     public Drawable getPixels() {
         List<Drawable> childDrawable = yToRowMap.values().stream()//
-                .map(TextCompositor::getPixels)//
+                .map(TextContainer::getPixels)//
                 .collect(Collectors.toList());
 
         int width = 0;
@@ -115,11 +138,6 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
     }
 
     @Override
-    public boolean addIfPossible(T element) {
-        return false;
-    }
-
-    @Override
     public void updateSize(Size size) {
         this.maxSize = size;
     }
@@ -140,7 +158,7 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
             return false;
         }
 
-        Entry<Integer, TextCompositor<T>> childsRowEntry = getEntryOfGlyph(cursor);
+        Entry<Integer, TextContainer<T>> childsRowEntry = getEntryOfGlyph(cursor);
         if (null == childsRowEntry) {
             return false;
         }
@@ -152,10 +170,16 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
         boolean moved = false;
         switch (move) {
         case UP:
-            moved = moveCursorUp(cursor, childsRowEntry);
+            moved = moveCursorPreviousRow(cursor, childsRowEntry, false);
             break;
         case DOWN:
-            moved = moveCursorDown(cursor, childsRowEntry);
+            moved = moveCursorToNextRow(cursor, childsRowEntry, false);
+            break;
+        case LEFT:
+            moved = moveCursorPreviousRow(cursor, childsRowEntry, true);
+            break;
+        case RIGHT:
+            moved = moveCursorToNextRow(cursor, childsRowEntry, true);
             break;
         default:
             break;
@@ -164,37 +188,57 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
         return moved;
     }
 
-    private boolean moveCursorDown(Cursor cursor, Entry<Integer, TextCompositor<T>> childsRowEntry) {
+    private boolean moveCursorToNextRow(Cursor cursor, Entry<Integer, TextContainer<T>> childsRowEntry,
+            boolean setCursorToBegin) {
         boolean moved = false;
-        TextCompositor<T> child = yToRowMap.higherEntry(childsRowEntry.getKey()).getValue();
-        if (null != child) {
-            Vector2d cursorPosition = cursor.getCurrentGlyph().getData().getRelativPositionTo(this);
-            if (null != cursorPosition) {
-                cursorPosition.setY(cursorPosition.getY() + childsRowEntry.getKey());
-                var element = child.getElementOnPosition(cursorPosition);
+        TextContainer<T> child = yToRowMap.higherEntry(childsRowEntry.getKey()).getValue();
+        if (null == child) {
+            // it is the last row. Move cursor down is not possible.
+            return moved;
+        }
+
+        Vector2d cursorPosition = cursor.getCurrentGlyph().getData().getRelativPositionTo(this);
+        if (null != cursorPosition) {
+            if (setCursorToBegin) {
+                cursorPosition.setX(0);
+            }
+            cursorPosition.setY(0);
+            var element = child.getElementOnPosition(cursorPosition);
+            if (element != null) {
                 cursor.moveCursorTo(element.getTextPaneListElement());
                 moved = true;
             }
         }
+
         return moved;
     }
 
-    private boolean moveCursorUp(Cursor cursor, Entry<Integer, TextCompositor<T>> childsRowEntry) {
+    private boolean moveCursorPreviousRow(Cursor cursor, Entry<Integer, TextContainer<T>> childsRowEntry,
+            boolean setCursorToEnd) {
         boolean moved = false;
-        TextCompositor<T> child = yToRowMap.lowerEntry(childsRowEntry.getKey()).getValue();
-        if (null != child) {
-            Vector2d cursorPosition = cursor.getCurrentGlyph().getData().getRelativPositionTo(this);
-            if (null != cursorPosition) {
-                cursorPosition.setY(cursorPosition.getY() - childsRowEntry.getKey());
-                var element = child.getElementOnPosition(cursorPosition);
+        TextContainer<T> child = yToRowMap.lowerEntry(childsRowEntry.getKey()).getValue();
+        if (null == child) {
+            // it is the first row. Move cursor up is not possible.
+            return moved;
+        }
+
+        Vector2d cursorPosition = cursor.getCurrentGlyph().getData().getRelativPositionTo(this);
+        if (null != cursorPosition) {
+            if (setCursorToEnd) {
+                cursorPosition.setX(child.getSize().getWidth() - 1);
+            }
+            cursorPosition.setY(child.getSize().getHight() - 1);
+            var element = child.getElementOnPosition(cursorPosition);
+            if (element != null) {
                 cursor.moveCursorTo(element.getTextPaneListElement());
                 moved = true;
             }
         }
+
         return moved;
     }
 
-    private Entry<Integer, TextCompositor<T>> getEntryOfGlyph(Cursor cursor) {
+    private Entry<Integer, TextContainer<T>> getEntryOfGlyph(Cursor cursor) {
         Glyph child = cursor.getCurrentGlyph().getData();
         while (null != child) {
             if (this == child.getParent()) {
@@ -207,8 +251,8 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
             return null;
         }
 
-        Entry<Integer, TextCompositor<T>> childsRowEntry = null;
-        for (Entry<Integer, TextCompositor<T>> rowEntry : yToRowMap.entrySet()) {
+        Entry<Integer, TextContainer<T>> childsRowEntry = null;
+        for (Entry<Integer, TextContainer<T>> rowEntry : yToRowMap.entrySet()) {
             if (rowEntry.getValue() == child) {
                 childsRowEntry = rowEntry;
                 break;
@@ -235,6 +279,12 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
         if (null != parent) {
             parent.notifyUpdate(this);
         }
+    }
+
+    @Override
+    public boolean addIfPossible(T element) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
