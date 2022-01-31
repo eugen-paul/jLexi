@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.iterator;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,6 +12,10 @@ public class TextPaneElementToGlyphIterator<T extends TextPaneElement> implement
     private Iterator<T> iterator;
 
     public TextPaneElementToGlyphIterator(List<T> list) {
+        this.iterator = list.iterator();
+    }
+
+    public TextPaneElementToGlyphIterator(Collection<T> list) {
         this.iterator = list.iterator();
     }
 

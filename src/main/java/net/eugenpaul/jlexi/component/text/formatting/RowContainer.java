@@ -22,7 +22,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class RowContainer<T extends TextPaneElement> extends TextPaneElement implements TextContainer<T> {
+public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RowContainer.class);
 
@@ -89,11 +89,6 @@ public class RowContainer<T extends TextPaneElement> extends TextPaneElement imp
             x += glyph.getSize().getWidth();
         }
         return null;
-    }
-
-    @Override
-    public boolean isCursorHoldable() {
-        return true;
     }
 
     @Override

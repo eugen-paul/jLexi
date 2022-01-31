@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.component.text.formatting;
 
 import java.util.Iterator;
+import java.util.function.BiFunction;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
@@ -9,23 +10,44 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public interface TextCompositor<T extends TextPaneElement> extends CursorControl {
+/**
+ * Assembles the component into a container.
+ */
+public abstract class TextCompositor<T extends TextPaneElement> extends Glyph implements CursorControl {
 
-    public void compose(Iterator<T> iterator);
+    protected BiFunction<Glyph, Size, TextContainer<T>> containerConstructor;
 
-    public boolean addIfPossible(T element);
+    protected Size maxSize;
 
-    public Drawable getPixels();
+    protected TextCompositor(Glyph parent) {
+        super(parent);
+    }
 
-    public Drawable getPixels(Vector2d position, Size size);
+    public abstract void compose(Iterator<T> iterator);
 
-    public void updateSize(Size size);
+    public abstract Drawable getPixels(Vector2d position, Size size);
 
-    public Vector2d getRelativPosition();
+    public abstract TextPaneElement getElementOnPosition(Vector2d position);
 
-    public Size getSize();
+    @Override
+    public void notifyUpdate(Glyph child) {
+        if (null != parent) {
+            parent.notifyUpdate(this);
+        }
+    }
 
-    public TextPaneElement getElementOnPosition(Vector2d position);
+    public void updateSize(Size size) {
+        this.maxSize = size;
+    }
 
-    public void setParent(Glyph parent);
+    @Override
+    public Vector2d getRelativPosition() {
+        return relativPosition;
+    }
+
+    @Override
+    public Size getSize() {
+        return size;
+    }
+
 }

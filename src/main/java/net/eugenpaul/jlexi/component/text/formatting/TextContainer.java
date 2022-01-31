@@ -2,28 +2,35 @@ package net.eugenpaul.jlexi.component.text.formatting;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
-import net.eugenpaul.jlexi.component.text.keyhandler.CursorControl;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 
-public interface TextContainer<T extends TextPaneElement> extends CursorControl {
+public abstract class TextContainer<T extends TextPaneElement> extends TextPaneElement {
 
-    public boolean isEmpty();
+    protected TextContainer(Glyph parent, NodeListElement<TextPaneElement> textPaneListElement) {
+        super(parent, textPaneListElement);
+    }
 
-    public Drawable getPixels();
+    public abstract boolean isEmpty();
 
-    public Drawable getPixels(Vector2d position, Size size);
+    public abstract Drawable getPixels(Vector2d position, Size size);
 
-    public boolean addIfPossible(T element);
+    public abstract boolean addIfPossible(T element);
 
-    public void updateSize(Size size);
+    public abstract void updateSize(Size size);
 
-    public Vector2d getRelativPosition();
+    public abstract TextPaneElement getElementOnPosition(Vector2d position);
 
-    public Size getSize();
+    @Override
+    public boolean isEndOfLine() {
+        return true;
+    }
 
-    public TextPaneElement getElementOnPosition(Vector2d position);
+    @Override
+    public boolean isCursorHoldable() {
+        return true;
+    }
 
-    public void setParent(Glyph parent);
 }

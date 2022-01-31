@@ -4,10 +4,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.iterator.TextPaneElementToGlyphIterator;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
@@ -21,17 +21,13 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 /**
  * Compose elements to rows
  */
-public class RowCompositor<T extends TextPaneElement> extends Glyph implements TextCompositor<T> {
+public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> {
     private ConcurrentSkipListMap<Integer, TextContainer<T>> yToRowMap;
-
-    private BiFunction<Glyph, Size, TextContainer<T>> rowConstructor;
-
-    private Size maxSize;
 
     public RowCompositor(Glyph parent, Size maxSize) {
         super(parent);
         this.maxSize = maxSize;
-        this.rowConstructor = RowContainer::new;
+        this.containerConstructor = RowContainer::new;
         this.yToRowMap = new ConcurrentSkipListMap<>();
     }
 
@@ -41,7 +37,7 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
         int maxWidth = 0;
         yToRowMap.clear();
 
-        TextContainer<T> row = rowConstructor.apply(parent, maxSize);
+        TextContainer<T> row = containerConstructor.apply(parent, maxSize);
         row.setParent(this);
         while (iterator.hasNext()) {
             T glyph = iterator.next();
@@ -55,7 +51,7 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
                 currentY += row.getSize().getHight();
                 maxWidth = Math.max(maxWidth, row.getSize().getHight());
 
-                row = rowConstructor.apply(parent, maxSize);
+                row = containerConstructor.apply(parent, maxSize);
                 row.setParent(this);
             }
 
@@ -68,7 +64,7 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
                 currentY += row.getSize().getHight();
                 maxWidth = Math.max(maxWidth, row.getSize().getHight());
 
-                row = rowConstructor.apply(parent, maxSize);
+                row = containerConstructor.apply(parent, maxSize);
                 row.setParent(this);
             }
         }
@@ -135,21 +131,6 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
         }
 
         return row.getValue().getElementOnPosition(position.subNew(row.getValue().getRelativPosition()));
-    }
-
-    @Override
-    public void updateSize(Size size) {
-        this.maxSize = size;
-    }
-
-    @Override
-    public Vector2d getRelativPosition() {
-        return relativPosition;
-    }
-
-    @Override
-    public Size getSize() {
-        return size;
     }
 
     @Override
@@ -264,27 +245,12 @@ public class RowCompositor<T extends TextPaneElement> extends Glyph implements T
 
     @Override
     public Iterator<Glyph> iterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return new TextPaneElementToGlyphIterator<>(yToRowMap.values());
     }
 
     @Override
     public void visit(Visitor checker) {
         // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void notifyUpdate(Glyph child) {
-        if (null != parent) {
-            parent.notifyUpdate(this);
-        }
-    }
-
-    @Override
-    public boolean addIfPossible(T element) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
 }
