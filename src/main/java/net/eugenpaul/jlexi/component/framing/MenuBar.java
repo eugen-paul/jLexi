@@ -16,7 +16,9 @@ import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.model.InterfaceModel;
+import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 
@@ -44,6 +46,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
     public MenuBar(Glyph parent, Glyph component, Size size, AbstractController controller) {
         super(parent, component);
         component.setParent(this);
+        component.setRelativPosition(new Vector2d(0, MENUBAR_HIGHT));
         setSize(size);
         this.controller = controller;
 
@@ -160,6 +163,25 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
             KeyPressable comp = (KeyPressable) component;
             comp.onKeyReleased(keyCode);
         }
+    }
+
+    @Override
+    public Drawable getPixels(Vector2d position, Size size) {
+        return component.getPixels(new Vector2d(position.getX(), position.getY() - MENUBAR_HIGHT), size);
+    }
+
+    @Override
+    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
+        if (parent != null) {
+            parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
+        }
+        LOGGER.trace("Menubar send notifyRedraw to window");
+        controller.propertyChange(new PropertyChangeEvent(//
+                this, //
+                ViewPropertyChangeType.REDRAW.getTypeName(), //
+                null, //
+                new Area(child.getRelativPosition().addNew(position), size) //
+        ));
     }
 
 }

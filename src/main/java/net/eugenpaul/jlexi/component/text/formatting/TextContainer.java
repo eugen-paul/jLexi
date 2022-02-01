@@ -2,7 +2,6 @@ package net.eugenpaul.jlexi.component.text.formatting;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
-import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
@@ -14,8 +13,6 @@ public abstract class TextContainer<T extends TextPaneElement> extends TextPaneE
     }
 
     public abstract boolean isEmpty();
-
-    public abstract Drawable getPixels(Vector2d position, Size size);
 
     public abstract boolean addIfPossible(T element);
 

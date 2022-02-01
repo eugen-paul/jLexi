@@ -14,7 +14,7 @@ public interface KeyHandlerable {
 
     public EffectHandler getEffectHandler();
 
-    public Glyph getParent();
+    public void keyUpdate();
 
     public Glyph getThis();
 

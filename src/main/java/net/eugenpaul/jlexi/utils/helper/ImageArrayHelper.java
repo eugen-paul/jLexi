@@ -12,18 +12,16 @@ public class ImageArrayHelper {
     }
 
     /**
-     * Copy rectangle of size copySize from src on position (srcPosition.getX(), srxPosY) of size srcSize to dest to position
-     * (destPosition.getX(), destPosition.getY()).
+     * Copy rectangle of size copySize from src on position (srcPosition.getX(), srxPosY) of size srcSize to dest to
+     * position (destPosition.getX(), destPosition.getY()).
      * 
      * @param src
      * @param srcSize
-     * @param srcPosition.getX()
-     * @param srcPosition.getY()
+     * @param srcPosition
      * @param copySize
      * @param dest
      * @param destSize
-     * @param destPosition.getX()
-     * @param destPosition.getY()
+     * @param destPosition
      */
     public static void copyRectangle(int[] src, Size srcSize, Vector2d srcPosition, Size copySize, int[] dest,
             Size destSize, Vector2d destPosition) {

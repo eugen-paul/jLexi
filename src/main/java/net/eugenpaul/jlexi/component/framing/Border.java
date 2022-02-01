@@ -38,6 +38,7 @@ public class Border extends MonoGlyph implements GuiComponent {
     public Border(Glyph parent, Glyph component) {
         super(parent, component);
         component.setParent(this);
+        component.setRelativPosition(new Vector2d(borderSize, borderSize));
         resizeTo(Size.ZERO_SIZE);
     }
 
@@ -157,6 +158,18 @@ public class Border extends MonoGlyph implements GuiComponent {
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
             comp.onKeyReleased(keyCode);
+        }
+    }
+
+    @Override
+    public Drawable getPixels(Vector2d position, Size size) {
+        return component.getPixels(new Vector2d(position.getX() - borderSize, position.getY() - borderSize), size);
+    }
+
+    @Override
+    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
+        if (parent != null) {
+            parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
         }
     }
 

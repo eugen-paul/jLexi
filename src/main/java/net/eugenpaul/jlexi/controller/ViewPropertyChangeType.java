@@ -3,7 +3,8 @@ package net.eugenpaul.jlexi.controller;
 import lombok.Getter;
 
 public enum ViewPropertyChangeType {
-    UPDATE("UPDATE");
+    UPDATE("UPDATE"), //
+    REDRAW("REDRAW");
 
     @Getter
     private String typeName;

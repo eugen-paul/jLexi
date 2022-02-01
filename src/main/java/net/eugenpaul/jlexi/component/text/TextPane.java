@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.component.text;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +18,17 @@ import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneKeyHandler;
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
 import net.eugenpaul.jlexi.component.text.structure.TextPlaceHolder;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectHandler;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 /**
@@ -48,6 +52,13 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
     @Setter
     private Cursor mouseCursor;
 
+    private boolean recompose;
+
+    private boolean cached;
+    private Drawable cachedDrawable;
+    private LinkedList<Glyph> updatedChildren;
+    private LinkedList<Area> updatedAreas;
+
     private TextPaneKeyHandler keyHanlder;
 
     public TextPane(Glyph parent, FontStorage fontStorage, EffectHandler effectWorker) {
@@ -58,6 +69,11 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         nodeList = new NodeList<>();
 
         mouseCursor = new Cursor(null, null, effectHandler);
+        recompose = true;
+        cached = false;
+
+        updatedChildren = new LinkedList<>();
+        updatedAreas = new LinkedList<>();
 
         resizeTo(Size.ZERO_SIZE);
         addPlaceHolder();
@@ -67,8 +83,19 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
 
     @Override
     public Drawable getPixels() {
+        if (cached && !recompose) {
+            return cachedDrawable;
+        }
+
         compositor.compose(nodeList.iterator());
-        return compositor.getPixels();
+
+        cachedDrawable = compositor.getPixels();
+        cached = true;
+        recompose = false;
+        updatedChildren.clear();
+        updatedAreas.clear();
+
+        return cachedDrawable;
     }
 
     @Override
@@ -117,11 +144,21 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
     public void resizeTo(Size size) {
         compositor.updateSize(new Size(size.getWidth(), Integer.MAX_VALUE));
         setSize(size);
+
+        cached = false;
+        recompose = true;
+        updatedChildren.clear();
+        updatedAreas.clear();
+
     }
 
     @Override
     public void notifyUpdate(Glyph child) {
         LOGGER.trace("textPane notifyUpdate to parent");
+        cached = false;
+        recompose = true;
+        updatedChildren.clear();
+        updatedAreas.clear();
         getParent().notifyUpdate(this);
     }
 
@@ -148,6 +185,94 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
     @Override
     public void doCursorMove(CursorMove cursorMove) {
         compositor.moveCursor(cursorMove, mouseCursor);
+    }
+
+    @Override
+    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
+        cached = false;
+        recompose = false;
+        updatedChildren.add(child);
+        updatedAreas.add(new Area(position, size));
+
+        parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
+    }
+
+    @Override
+    public Drawable getPixels(Vector2d position, Size size) {
+        if (recompose) {
+            getPixels();
+        }
+
+        if (!cached) {
+            return updateAndGetPixels(position, size);
+        }
+
+        if (position.getX() == 0 && position.getY() == 0 //
+                && this.size.equals(size)) {
+            return getPixels();
+        }
+
+        int[] pixels = new int[size.getWidth() * size.getHight()];
+
+        ImageArrayHelper.copyRectangle(//
+                cachedDrawable.getPixels(), //
+                cachedDrawable.getPixelSize(), //
+                position, //
+                size, //
+                pixels, //
+                size, //
+                Vector2d.zero() //
+        );
+
+        return new DrawableImpl(pixels, size);
+    }
+
+    private Drawable updateAndGetPixels(Vector2d position, Size size) {
+        Iterator<Glyph> updatedChildrenIterator = updatedChildren.iterator();
+        Iterator<Area> updatedAreaIterator = updatedAreas.iterator();
+
+        while (updatedChildrenIterator.hasNext() && updatedAreaIterator.hasNext()) {
+            var child = updatedChildrenIterator.next();
+            var area = updatedAreaIterator.next();
+
+            var childDrawable = child.getPixels(area.getPosition(), area.getSize());
+
+            ImageArrayHelper.copyRectangle(//
+                    childDrawable.getPixels(), //
+                    childDrawable.getPixelSize(), //
+                    Vector2d.zero(), //
+                    childDrawable.getPixelSize(), //
+                    cachedDrawable.getPixels(), //
+                    cachedDrawable.getPixelSize(), //
+                    child.getRelativPosition() //
+            );
+        }
+
+        updatedChildren.clear();
+        updatedAreas.clear();
+        cached = true;
+
+        int[] t = new int[size.getWidth() * size.getHight()];
+        ImageArrayHelper.copyRectangle(//
+                cachedDrawable.getPixels(), //
+                cachedDrawable.getPixelSize(), //
+                position, //
+                size, //
+                t, //
+                size, //
+                Vector2d.zero() //
+        );
+
+        return new DrawableImpl(t, size);
+    }
+
+    @Override
+    public void keyUpdate() {
+        cached = false;
+        recompose = true;
+        updatedChildren.clear();
+        updatedAreas.clear();
+        parent.notifyUpdate(this);
     }
 
 }

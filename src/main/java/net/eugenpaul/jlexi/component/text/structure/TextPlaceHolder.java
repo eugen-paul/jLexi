@@ -14,7 +14,9 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class TextPlaceHolder extends TextPaneElement {
 
@@ -22,7 +24,7 @@ public class TextPlaceHolder extends TextPaneElement {
 
     private String fontName;
     private int fontSize;
-    private Drawable drawable = null;
+    private Drawable drawableWithoutEffects;
 
     public TextPlaceHolder(Glyph parent, FontStorage fontStorage,
             NodeListElement<TextPaneElement> textPaneListElement) {
@@ -33,7 +35,56 @@ public class TextPlaceHolder extends TextPaneElement {
 
         int[] pixels = new int[fontStorage.getMaxAscent(fontName, fontSize)];
         setSize(new Size(1, pixels.length));
-        drawable = new DrawableImpl(pixels, getSize());
+        drawableWithoutEffects = new DrawableImpl(pixels, getSize());
+    }
+
+    @Override
+    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
+        parent.notifyRedraw(this, Vector2d.zero(), this.size);
+        cached = false;
+    }
+
+    @Override
+    public Drawable getPixels() {
+        if (cached) {
+            return cachedDrawable;
+        }
+
+        Drawable respoDrawable = new DrawableImpl(drawableWithoutEffects.getPixels().clone(),
+                drawableWithoutEffects.getPixelSize());
+
+        effectsList.stream().forEach(v -> v.editDrawable(respoDrawable));
+
+        cachedDrawable = respoDrawable;
+        cached = true;
+
+        return respoDrawable;
+    }
+
+    @Override
+    public Drawable getPixels(Vector2d position, Size size) {
+        if (!cached) {
+            getPixels();
+        }
+
+        if (position.getX() == 0 && position.getY() == 0 //
+                && this.size.equals(size)) {
+            return getPixels();
+        }
+
+        int[] pixels = new int[size.getWidth() * size.getHight()];
+
+        ImageArrayHelper.copyRectangle(//
+                cachedDrawable.getPixels(), //
+                cachedDrawable.getPixelSize(), //
+                position, //
+                size, //
+                pixels, //
+                size, //
+                Vector2d.zero() //
+        );
+
+        return new DrawableImpl(pixels, size);
     }
 
     @Override
@@ -45,15 +96,6 @@ public class TextPlaceHolder extends TextPaneElement {
     @Override
     public boolean isCursorHoldable() {
         return false;
-    }
-
-    @Override
-    public Drawable getPixels() {
-        Drawable respoDrawable = new DrawableImpl(drawable.getPixels().clone(), drawable.getPixelSize());
-
-        effectsList.stream().forEach(v -> v.editDrawable(respoDrawable));
-
-        return respoDrawable;
     }
 
     @Override
@@ -69,6 +111,7 @@ public class TextPlaceHolder extends TextPaneElement {
     @Override
     public void notifyUpdate(Glyph child) {
         LOGGER.trace("End-Of-File notifyUpdate to parent");
+        cached = false;
         getParent().notifyUpdate(this);
     }
 

@@ -36,6 +36,15 @@ public abstract class Glyph {
     public abstract Drawable getPixels();
 
     /**
+     * Get drawable data of this element on given area.
+     * 
+     * @param position
+     * @param size
+     * @return
+     */
+    public abstract Drawable getPixels(Vector2d position, Size size);
+
+    /**
      * get a Iterator to iterate over children
      * 
      * @return Iterator
@@ -62,7 +71,19 @@ public abstract class Glyph {
 
     public abstract void visit(Visitor checker);
 
-    public void notifyUpdate(Glyph child) {
+    /**
+     * Size or content of child has changed. All children must be needs to be recomputed.
+     * 
+     * @param child
+     */
+    public abstract void notifyUpdate(Glyph child);
 
-    }
+    /**
+     * Element needs to be redrawn on the given area.
+     * 
+     * @param child
+     * @param position
+     * @param size
+     */
+    public abstract void notifyRedraw(Glyph child, Vector2d position, Size size);
 }

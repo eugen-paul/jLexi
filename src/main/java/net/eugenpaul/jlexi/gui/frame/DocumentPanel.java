@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.gui.frame;
 
 import java.beans.PropertyChangeEvent;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.image.MemoryImageSource;
 
 import lombok.Getter;
@@ -10,6 +11,7 @@ import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
+import net.eugenpaul.jlexi.utils.Area;
 
 public class DocumentPanel extends AbstractPanel {
     private Glyph glyph;
@@ -41,6 +43,8 @@ public class DocumentPanel extends AbstractPanel {
     public void modelPropertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equalsIgnoreCase(ViewPropertyChangeType.UPDATE.toString())) {
             draw();
+        } else if (evt.getPropertyName().equalsIgnoreCase(ViewPropertyChangeType.REDRAW.toString())) {
+            redraw((Area) evt.getNewValue());
         }
     }
 
@@ -54,6 +58,21 @@ public class DocumentPanel extends AbstractPanel {
                 drawable.getPixelSize().getWidth()//
         )//
         ));
+    }
+
+    private void redraw(Area area) {
+        Drawable drawable = glyph.getPixels(area.getPosition(), area.getSize());
+
+        panel.updateArea(//
+                Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
+                        drawable.getPixelSize().getWidth(), //
+                        drawable.getPixelSize().getHight(), //
+                        drawable.getPixels(), //
+                        0, //
+                        drawable.getPixelSize().getWidth()//
+                )), //
+                area//
+        );
     }
 
 }

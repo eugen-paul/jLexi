@@ -22,7 +22,7 @@ public class AbstractKeyHandler {
             var node = component.getMouseCursor().getCurrentGlyph().insertBefore(glyph);
             glyph.setTextPaneListElement(node);
         }
-        component.getParent().notifyUpdate(component.getThis());
+        component.keyUpdate();
     }
 
     public void onKeyPressed(KeyCode keyCode) {
@@ -53,7 +53,7 @@ public class AbstractKeyHandler {
             var elem = component.getMouseCursor().getCurrentGlyph().getPrev();
             if (elem != null) {
                 elem.remove();
-                component.getParent().notifyUpdate(component.getThis());
+                component.keyUpdate();
             }
         }
     }
@@ -65,7 +65,7 @@ public class AbstractKeyHandler {
             if (elem != null && !(elem.getData().isPlaceHolder())) {
                 component.doCursorMove(CursorMove.RIGHT);
                 elem.remove();
-                component.getParent().notifyUpdate(component.getThis());
+                component.keyUpdate();
             }
         }
     }
@@ -79,7 +79,7 @@ public class AbstractKeyHandler {
             EndOfLine glyph = new EndOfLine(component.getThis(), component.getFontStorage(), null);
             var node = component.getMouseCursor().getCurrentGlyph().insertBefore(glyph);
             glyph.setTextPaneListElement(node);
-            component.getParent().notifyUpdate(component.getThis());
+            component.keyUpdate();
         }
     }
 }

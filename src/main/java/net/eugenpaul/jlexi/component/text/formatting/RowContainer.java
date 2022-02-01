@@ -17,6 +17,7 @@ import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
@@ -27,6 +28,8 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RowContainer.class);
 
     private LinkedList<T> children;
+    private LinkedList<Glyph> updatedChildren;
+    private LinkedList<Area> updatedAreas;
 
     private Size maxSize;
 
@@ -35,10 +38,16 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
         this.maxSize = maxSize;
         setSize(Size.ZERO_SIZE);
         children = new LinkedList<>();
+        updatedChildren = new LinkedList<>();
+        updatedAreas = new LinkedList<>();
     }
 
     @Override
     public Drawable getPixels() {
+        if (cached) {
+            return cachedDrawable;
+        }
+
         List<Drawable> childDrawable = children.stream()//
                 .map(Glyph::getPixels)//
                 .collect(Collectors.toList());
@@ -63,7 +72,77 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
             positionX += drawable.getPixelSize().getWidth();
         }
 
-        return new DrawableImpl(pixels, pixelsSize);
+        cachedDrawable = new DrawableImpl(pixels, pixelsSize);
+        cached = true;
+        updatedChildren.clear();
+        updatedAreas.clear();
+
+        return cachedDrawable;
+    }
+
+    @Override
+    public Drawable getPixels(Vector2d position, Size size) {
+        if (!cached) {
+            return updateAndGetPixels(position, size);
+        }
+
+        if (position.getX() == 0 && position.getY() == 0 //
+                && this.size.equals(size)) {
+            return getPixels();
+        }
+
+        int[] pixels = new int[size.getWidth() * size.getHight()];
+
+        ImageArrayHelper.copyRectangle(//
+                cachedDrawable.getPixels(), //
+                cachedDrawable.getPixelSize(), //
+                position, //
+                size, //
+                pixels, //
+                size, //
+                Vector2d.zero() //
+        );
+
+        return new DrawableImpl(pixels, size);
+    }
+
+    private Drawable updateAndGetPixels(Vector2d position, Size size) {
+        Iterator<Glyph> updatedChildrenIterator = updatedChildren.iterator();
+        Iterator<Area> updatedAreaIterator = updatedAreas.iterator();
+
+        while (updatedChildrenIterator.hasNext() && updatedAreaIterator.hasNext()) {
+            var child = updatedChildrenIterator.next();
+            var area = updatedAreaIterator.next();
+
+            var childDrawable = child.getPixels(area.getPosition(), area.getSize());
+
+            ImageArrayHelper.copyRectangle(//
+                    childDrawable.getPixels(), //
+                    childDrawable.getPixelSize(), //
+                    Vector2d.zero(), //
+                    childDrawable.getPixelSize(), //
+                    cachedDrawable.getPixels(), //
+                    cachedDrawable.getPixelSize(), //
+                    child.getRelativPosition() //
+            );
+        }
+
+        updatedChildren.clear();
+        updatedAreas.clear();
+        cached = true;
+
+        int[] t = new int[size.getWidth() * size.getHight()];
+        ImageArrayHelper.copyRectangle(//
+                cachedDrawable.getPixels(), //
+                cachedDrawable.getPixelSize(), //
+                position, //
+                size, //
+                t, //
+                size, //
+                Vector2d.zero() //
+        );
+
+        return new DrawableImpl(t, size);
     }
 
     @Override
@@ -88,13 +167,23 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
             }
             x += glyph.getSize().getWidth();
         }
-        return null;
+        // if nothing found, return last element
+        return children.getLast().getTextPaneListElement();
     }
 
     @Override
     public void notifyUpdate(Glyph child) {
         LOGGER.trace("row notifyUpdate to parent");
+        cached = false;
         getParent().notifyUpdate(this);
+    }
+
+    @Override
+    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
+        parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
+        cached = false;
+        updatedChildren.add(child);
+        updatedAreas.add(new Area(position, size));
     }
 
     @Override
@@ -104,12 +193,6 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
             return null;
         }
         return child.getData();
-    }
-
-    @Override
-    public Drawable getPixels(Vector2d position, Size size) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override

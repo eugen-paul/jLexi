@@ -29,6 +29,7 @@ public class JLexi {
 
         Size defaultSize = new Size(800, 600);
         MenuBar menubar = new MenuBar(null, border, defaultSize, controller);
+        border.setParent(menubar);
         controller.addModel(menubar);
 
         windowAbstraction.createMainWindow(menubar);
