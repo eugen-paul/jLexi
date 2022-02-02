@@ -26,7 +26,7 @@ public class DocumentPanel extends AbstractPanel {
         this.panel.addComponentListener(new ResizeListner(controller));
         this.panel.addMouseListener(new MouseListner(controller));
         this.panel.addKeyListener(new KeyListener(controller));
-        this.panel.setPreferredSize(new Dimension(glyph.getSize().getWidth(), glyph.getSize().getHight()));
+        this.panel.setPreferredSize(new Dimension(glyph.getSize().getWidth(), glyph.getSize().getHeight()));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class DocumentPanel extends AbstractPanel {
         panel.update(//
         Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
                 drawable.getPixelSize().getWidth(), //
-                drawable.getPixelSize().getHight(), //
+                drawable.getPixelSize().getHeight(), //
                 drawable.getPixels(), //
                 0, //
                 drawable.getPixelSize().getWidth()//
@@ -67,7 +67,7 @@ public class DocumentPanel extends AbstractPanel {
         panel.updateArea(//
                 Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
                         drawable.getPixelSize().getWidth(), //
-                        drawable.getPixelSize().getHight(), //
+                        drawable.getPixelSize().getHeight(), //
                         drawable.getPixels(), //
                         0, //
                         drawable.getPixelSize().getWidth()//

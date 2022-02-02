@@ -15,13 +15,13 @@ public interface Resizeable {
     public void resizeTo(Size size);
 
     /**
-     * Set new width und hight
+     * Set new width und height
      * 
      * @param width - new width
-     * @param hight - new hight
+     * @param height - new height
      */
-    public default void resizeTo(int width, int hight) {
-        resizeTo(new Size(width, hight));
+    public default void resizeTo(int width, int height) {
+        resizeTo(new Size(width, height));
     }
 
 }

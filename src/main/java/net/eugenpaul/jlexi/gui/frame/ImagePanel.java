@@ -49,7 +49,7 @@ public class ImagePanel extends JPanel {
                             imageToDraw.getArea().getPosition().getX(), //
                             imageToDraw.getArea().getPosition().getY(), //
                             imageToDraw.getArea().getSize().getWidth(), //
-                            imageToDraw.getArea().getSize().getHight() //
+                            imageToDraw.getArea().getSize().getHeight() //
                     );
                     g.drawImage(//
                             imageToDraw.getImg(), //

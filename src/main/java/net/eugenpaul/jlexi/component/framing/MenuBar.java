@@ -29,7 +29,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
-    private static final int MENUBAR_HIGHT = 40;
+    private static final int MENUBAR_HEIGHT = 40;
     private static final int MENUBAR_BACKGROUND = 0xFF00FF00;
 
     private static final int[] EMPTY_MENUBAR = new int[0];
@@ -46,7 +46,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
     public MenuBar(Glyph parent, Glyph component, Size size, AbstractController controller) {
         super(parent, component);
         component.setParent(this);
-        component.setRelativPosition(new Vector2d(0, MENUBAR_HIGHT));
+        component.setRelativPosition(new Vector2d(0, MENUBAR_HEIGHT));
         setSize(size);
         this.controller = controller;
 
@@ -56,12 +56,12 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
     private void computePixels() {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
-            child.resizeTo(getSize().getWidth(), Math.max(0, getSize().getHight() - MENUBAR_HIGHT));
+            child.resizeTo(getSize().getWidth(), Math.max(0, getSize().getHeight() - MENUBAR_HEIGHT));
         }
 
         this.menuBackground = generateMenuBackground(//
                 getSize().getWidth(), //
-                Math.min(getSize().getHight(), MENUBAR_HIGHT)//
+                Math.min(getSize().getHeight(), MENUBAR_HEIGHT)//
         );
     }
 
@@ -73,7 +73,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
 
         Drawable componentPixels = super.getPixels();
 
-        int[] responsePixels = new int[getSize().getHight() * getSize().getWidth()];
+        int[] responsePixels = new int[getSize().getHeight() * getSize().getWidth()];
 
         System.arraycopy(menuBackground, 0, responsePixels, 0, menuBackground.length);
 
@@ -118,14 +118,14 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
 
     @Override
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (mouseY <= MENUBAR_HIGHT) {
+        if (mouseY <= MENUBAR_HEIGHT) {
             LOGGER.trace("Click on Menu. Position ({},{}).", mouseX, mouseY);
         } else {
             LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY, mouseX,
-                    mouseY - MENUBAR_HIGHT);
+                    mouseY - MENUBAR_HEIGHT);
             if (component instanceof MouseClickable) {
                 MouseClickable comp = (MouseClickable) component;
-                comp.onMouseClick(mouseX, mouseY - MENUBAR_HIGHT, button);
+                comp.onMouseClick(mouseX, mouseY - MENUBAR_HEIGHT, button);
             }
         }
     }
@@ -167,7 +167,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
 
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
-        return component.getPixels(new Vector2d(position.getX(), position.getY() - MENUBAR_HIGHT), size);
+        return component.getPixels(new Vector2d(position.getX(), position.getY() - MENUBAR_HEIGHT), size);
     }
 
     @Override

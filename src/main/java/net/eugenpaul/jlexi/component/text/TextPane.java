@@ -214,7 +214,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
             return getPixels();
         }
 
-        int[] pixels = new int[size.getWidth() * size.getHight()];
+        int[] pixels = new int[size.getWidth() * size.getHeight()];
 
         ImageArrayHelper.copyRectangle(//
                 cachedDrawable.getPixels(), //
@@ -252,7 +252,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         updatedAreas.clear();
         cached = true;
 
-        int[] t = new int[size.getWidth() * size.getHight()];
+        int[] t = new int[size.getWidth() * size.getHeight()];
         ImageArrayHelper.copyRectangle(//
                 cachedDrawable.getPixels(), //
                 cachedDrawable.getPixelSize(), //

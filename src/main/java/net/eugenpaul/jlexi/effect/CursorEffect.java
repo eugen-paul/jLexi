@@ -64,13 +64,13 @@ public class CursorEffect extends TextPaneEffect {
     @Override
     public void editDrawable(Drawable pixels) {
         if (showCursor) {
-            int[] cursorsPixels = new int[pixels.getPixelSize().getHight()];
+            int[] cursorsPixels = new int[pixels.getPixelSize().getHeight()];
             Arrays.fill(cursorsPixels, CURSOR_COLOR);
 
             ImageArrayHelper.copyRectangle(cursorsPixels, //
-                    new Size(1, pixels.getPixelSize().getHight()), //
+                    new Size(1, pixels.getPixelSize().getHeight()), //
                     new Vector2d(0, 0), //
-                    new Size(1, pixels.getPixelSize().getHight()), //
+                    new Size(1, pixels.getPixelSize().getHeight()), //
                     pixels.getPixels(), //
                     pixels.getPixelSize(), //
                     new Vector2d(0, 0) //

@@ -12,7 +12,7 @@ public class CollisionHelper {
         point.getX() >= areaPosiion.getX() //
                 && point.getY() >= areaPosiion.getY() //
                 && point.getX() < areaPosiion.getX() + areaSize.getWidth() //
-                && point.getY() < areaPosiion.getY() + areaSize.getHight() //
+                && point.getY() < areaPosiion.getY() + areaSize.getHeight() //
         );
 
     }

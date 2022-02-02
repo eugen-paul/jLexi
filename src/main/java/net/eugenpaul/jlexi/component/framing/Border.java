@@ -47,14 +47,14 @@ public class Border extends MonoGlyph implements GuiComponent {
             Resizeable child = (Resizeable) component;
             child.resizeTo(//
                     Math.max(0, getSize().getWidth() - borderSize * 2), //
-                    Math.max(0, getSize().getHight() - borderSize * 2)//
+                    Math.max(0, getSize().getHeight() - borderSize * 2)//
             );
         }
     }
 
     @Override
     public Drawable getPixels() {
-        if (getSize().getHight() <= borderSize * 2 //
+        if (getSize().getHeight() <= borderSize * 2 //
                 || getSize().getWidth() <= borderSize * 2 //
         ) {
             return new DrawableImpl(generateBlackBorder(), getSize());
@@ -63,7 +63,7 @@ public class Border extends MonoGlyph implements GuiComponent {
         Drawable childDraw = super.getPixels();
 
         int[] componentPixels = childDraw.getPixels();
-        int[] borderPixels = new int[getSize().getHight() * getSize().getWidth()];
+        int[] borderPixels = new int[getSize().getHeight() * getSize().getWidth()];
 
         if (borderSize > 0) {
             Arrays.fill(borderPixels, 0, getSize().getWidth() * borderSize, BORDER_BLACK);
@@ -81,7 +81,7 @@ public class Border extends MonoGlyph implements GuiComponent {
 
         if (borderSize > 0) {
             int targetPosition = getSize().getWidth() * borderSize - borderSize;
-            for (int i = borderSize; i < getSize().getHight() - borderSize + 1; i++) {
+            for (int i = borderSize; i < getSize().getHeight() - borderSize + 1; i++) {
                 Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize * 2, BORDER_BLACK);
                 targetPosition += getSize().getWidth();
             }
@@ -100,7 +100,7 @@ public class Border extends MonoGlyph implements GuiComponent {
     }
 
     private int[] generateBlackBorder() {
-        int[] responsePixels = new int[getSize().getHight() * getSize().getWidth()];
+        int[] responsePixels = new int[getSize().getHeight() * getSize().getWidth()];
         Arrays.fill(responsePixels, BORDER_BLACK);
         return responsePixels;
     }
@@ -116,7 +116,7 @@ public class Border extends MonoGlyph implements GuiComponent {
         if (mouseX < BORDER_SIZE //
                 || mouseX > getSize().getWidth() - BORDER_SIZE //
                 || mouseY < BORDER_SIZE //
-                || mouseY > getSize().getHight() - BORDER_SIZE //
+                || mouseY > getSize().getHeight() - BORDER_SIZE //
         ) {
             LOGGER.trace("Click on Border. Position ({},{}).", mouseX, mouseY);
         } else {

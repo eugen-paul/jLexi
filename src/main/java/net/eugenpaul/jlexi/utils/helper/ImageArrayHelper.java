@@ -30,7 +30,7 @@ public class ImageArrayHelper {
                 || copySize.isZero() // copyblock is Empty
                 || destSize.isZero() // dest is Empty
                 || destSize.getWidth() < destPosition.getX() // destination Position is out of range
-                || destSize.getHight() < destPosition.getY() // destination Position is out of range
+                || destSize.getHeight() < destPosition.getY() // destination Position is out of range
                 || srcPosition.getX() < 0 //
                 || srcPosition.getY() < 0 //
                 || destPosition.getX() < 0 //
@@ -46,12 +46,12 @@ public class ImageArrayHelper {
                 Math.min(copySize.getWidth(), srcSize.getWidth() - srcPosition.getX()), //
                 destSize.getWidth() - destPosition.getX()//
         );
-        int realCopyHight = Math.min(//
-                Math.min(copySize.getHight(), srcSize.getHight() - srcPosition.getY()), //
-                destSize.getHight() - destPosition.getY()//
+        int realCopyHeight = Math.min(//
+                Math.min(copySize.getHeight(), srcSize.getHeight() - srcPosition.getY()), //
+                destSize.getHeight() - destPosition.getY()//
         );
 
-        for (int i = 0; i < realCopyHight; i++) {
+        for (int i = 0; i < realCopyHeight; i++) {
             System.arraycopy(//
                     src, //
                     sourcePosition, //
@@ -64,6 +64,16 @@ public class ImageArrayHelper {
         }
     }
 
+    /**
+     * Copy rectangle of size copySize from src on position (srcPosition.getX(), srxPosY) of size srcSize to dest to
+     * position (destPosition.getX(), destPosition.getY()).
+     * 
+     * @param src
+     * @param srcPosition
+     * @param copySize
+     * @param dest
+     * @param destPosition
+     */
     public static void copyRectangle(Drawable src, Vector2d srcPosition, Size copySize, Drawable dest,
             Vector2d destPosition) {
         copyRectangle(//

@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- * Immutable size of the Element. width or hight cann't be negative. Negative value will be sets to 0;
+ * Immutable size of the Element. width or height cann't be negative. Negative value will be sets to 0;
  */
 @Getter
 @EqualsAndHashCode
@@ -15,24 +15,24 @@ public class Size {
 
     /** width of the element */
     private int width;
-    /** hight of the element */
-    private int hight;
+    /** height of the element */
+    private int height;
 
-    public Size(int width, int hight) {
+    public Size(int width, int height) {
         this.width = Math.max(0, width);
-        this.hight = Math.max(0, hight);
+        this.height = Math.max(0, height);
     }
 
     public Size(Size a) {
-        this(a.width, a.hight);
+        this(a.width, a.height);
     }
 
     /**
      * 
-     * @return true if width or hight is 0
+     * @return true if width or height is 0
      */
     public boolean isZero() {
-        return 0 == width || 0 == hight;
+        return 0 == width || 0 == height;
     }
 
     @Override
@@ -40,8 +40,8 @@ public class Size {
         StringBuilder response = new StringBuilder();
         response.append("[width]=");
         response.append(width);
-        response.append(" [hight]=");
-        response.append(hight);
+        response.append(" [height]=");
+        response.append(height);
         return response.toString();
     }
 }

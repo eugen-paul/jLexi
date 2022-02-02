@@ -6,6 +6,9 @@ import java.util.stream.Stream;
 
 import lombok.Getter;
 
+/**
+ * List of KeyCodes that can be handled by application
+ */
 public enum KeyCode {
     SHIFT(1), //
     ALT(2), //

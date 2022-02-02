@@ -71,7 +71,7 @@ public class EndOfLine extends TextPaneElement {
             return getPixels();
         }
 
-        int[] pixels = new int[size.getWidth() * size.getHight()];
+        int[] pixels = new int[size.getWidth() * size.getHeight()];
 
         ImageArrayHelper.copyRectangle(//
                 cachedDrawable.getPixels(), //

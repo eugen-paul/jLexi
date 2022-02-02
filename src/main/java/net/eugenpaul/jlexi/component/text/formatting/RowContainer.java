@@ -53,10 +53,10 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
                 .collect(Collectors.toList());
 
         int width = getSize().getWidth();
-        int hight = getSize().getHight();
+        int height = getSize().getHeight();
 
-        int[] pixels = new int[width * hight];
-        Size pixelsSize = new Size(width, hight);
+        int[] pixels = new int[width * height];
+        Size pixelsSize = new Size(width, height);
 
         int positionX = 0;
         for (Drawable drawable : childDrawable) {
@@ -67,7 +67,7 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
                     drawable.getPixelSize(), //
                     pixels, //
                     pixelsSize, //
-                    new Vector2d(positionX, hight - drawable.getPixelSize().getHight()) //
+                    new Vector2d(positionX, height - drawable.getPixelSize().getHeight()) //
             );
             positionX += drawable.getPixelSize().getWidth();
         }
@@ -91,7 +91,7 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
             return getPixels();
         }
 
-        int[] pixels = new int[size.getWidth() * size.getHight()];
+        int[] pixels = new int[size.getWidth() * size.getHeight()];
 
         ImageArrayHelper.copyRectangle(//
                 cachedDrawable.getPixels(), //
@@ -129,7 +129,7 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
         updatedAreas.clear();
         cached = true;
 
-        int[] t = new int[size.getWidth() * size.getHight()];
+        int[] t = new int[size.getWidth() * size.getHeight()];
         ImageArrayHelper.copyRectangle(//
                 cachedDrawable.getPixels(), //
                 cachedDrawable.getPixelSize(), //
@@ -207,7 +207,7 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
 
         setSize(new Size(//
                 currentWidth + element.getSize().getWidth(), //
-                Math.max(getSize().getHight(), element.getSize().getHight())//
+                Math.max(getSize().getHeight(), element.getSize().getHeight())//
         ) //
         );
         return true;

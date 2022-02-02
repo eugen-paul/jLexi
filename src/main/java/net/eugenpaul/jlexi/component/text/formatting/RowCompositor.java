@@ -49,8 +49,8 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
                 row.getRelativPosition().setX(0);
                 row.getRelativPosition().setY(currentY);
 
-                currentY += row.getSize().getHight();
-                maxWidth = Math.max(maxWidth, row.getSize().getHight());
+                currentY += row.getSize().getHeight();
+                maxWidth = Math.max(maxWidth, row.getSize().getHeight());
 
                 row = containerConstructor.apply(parent, maxSize);
                 row.setParent(this);
@@ -62,8 +62,8 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
                 row.getRelativPosition().setX(0);
                 row.getRelativPosition().setY(currentY);
 
-                currentY += row.getSize().getHight();
-                maxWidth = Math.max(maxWidth, row.getSize().getHight());
+                currentY += row.getSize().getHeight();
+                maxWidth = Math.max(maxWidth, row.getSize().getHeight());
 
                 row = containerConstructor.apply(parent, maxSize);
                 row.setParent(this);
@@ -76,8 +76,8 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
             row.getRelativPosition().setX(0);
             row.getRelativPosition().setY(currentY);
 
-            currentY += row.getSize().getHight();
-            maxWidth = Math.max(maxWidth, row.getSize().getHight());
+            currentY += row.getSize().getHeight();
+            maxWidth = Math.max(maxWidth, row.getSize().getHeight());
         }
 
         size = new Size(maxWidth, currentY);
@@ -98,15 +98,15 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
                 .collect(Collectors.toList());
 
         int width = 0;
-        int hight = 0;
+        int height = 0;
 
         for (Drawable drawable : childDrawable) {
             width = Math.max(width, drawable.getPixelSize().getWidth());
-            hight += drawable.getPixelSize().getHight();
+            height += drawable.getPixelSize().getHeight();
         }
 
-        int[] pixels = new int[width * hight];
-        Size pixelsSize = new Size(width, hight);
+        int[] pixels = new int[width * height];
+        Size pixelsSize = new Size(width, height);
 
         int positionX = 0;
         int positionY = 0;
@@ -120,7 +120,7 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
                     pixelsSize, //
                     new Vector2d(positionX, positionY)//
             );
-            positionY += drawable.getPixelSize().getHight();
+            positionY += drawable.getPixelSize().getHeight();
         }
 
         cachedDrawable = new DrawableImpl(pixels, pixelsSize);
@@ -142,7 +142,7 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
             return getPixels();
         }
 
-        int[] pixels = new int[size.getWidth() * size.getHight()];
+        int[] pixels = new int[size.getWidth() * size.getHeight()];
 
         ImageArrayHelper.copyRectangle(//
                 cachedDrawable.getPixels(), //
@@ -180,7 +180,7 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
         updatedAreas.clear();
         cached = true;
 
-        int[] t = new int[size.getWidth() * size.getHight()];
+        int[] t = new int[size.getWidth() * size.getHeight()];
         ImageArrayHelper.copyRectangle(//
                 cachedDrawable.getPixels(), //
                 cachedDrawable.getPixelSize(), //
@@ -279,7 +279,7 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
             if (setCursorToEnd) {
                 cursorPosition.setX(child.getSize().getWidth() - 1);
             }
-            cursorPosition.setY(child.getSize().getHight() - 1);
+            cursorPosition.setY(child.getSize().getHeight() - 1);
             var element = child.getElementOnPosition(cursorPosition);
             if (element != null) {
                 cursor.moveCursorTo(element.getTextPaneListElement());
