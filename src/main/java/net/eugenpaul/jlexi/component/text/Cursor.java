@@ -21,8 +21,8 @@ public class Cursor {
 
     public void moveCursorTo(NodeListElement<TextPaneElement> newGlyph) {
         if (null != currentGlyph && null != effect) {
-            effectHandler.removeEffect(effect);
             currentGlyph.getData().removeEffect(effect);
+            effectHandler.removeEffect(effect);
         }
 
         if (null == newGlyph || null == newGlyph.getData()) {

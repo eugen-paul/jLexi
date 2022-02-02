@@ -40,8 +40,8 @@ public class TextPlaceHolder extends TextPaneElement {
 
     @Override
     public void notifyRedraw(Glyph child, Vector2d position, Size size) {
-        parent.notifyRedraw(this, Vector2d.zero(), this.size);
         cached = false;
+        parent.notifyRedraw(this, Vector2d.zero(), this.size);
     }
 
     @Override

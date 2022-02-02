@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.utils.helper;
 
+import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -61,5 +62,18 @@ public class ImageArrayHelper {
             sourcePosition += srcSize.getWidth();
             targetPosition += destSize.getWidth();
         }
+    }
+
+    public static void copyRectangle(Drawable src, Vector2d srcPosition, Size copySize, Drawable dest,
+            Vector2d destPosition) {
+        copyRectangle(//
+                src.getPixels(), //
+                src.getPixelSize(), //
+                srcPosition, //
+                copySize, //
+                dest.getPixels(), //
+                dest.getPixelSize(), //
+                destPosition //
+        );
     }
 }

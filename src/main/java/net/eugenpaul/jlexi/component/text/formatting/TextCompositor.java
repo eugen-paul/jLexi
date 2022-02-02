@@ -23,7 +23,7 @@ public abstract class TextCompositor<T extends TextPaneElement> extends Glyph im
 
     protected boolean cached;
     protected Drawable cachedDrawable;
-    
+
     protected LinkedList<Glyph> updatedChildren;
     protected LinkedList<Area> updatedAreas;
 
@@ -52,10 +52,11 @@ public abstract class TextCompositor<T extends TextPaneElement> extends Glyph im
 
     @Override
     public void notifyRedraw(Glyph child, Vector2d position, Size size) {
-        parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
         cached = false;
         updatedChildren.add(child);
         updatedAreas.add(new Area(position, size));
+
+        parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
     }
 
     public void updateSize(Size size) {

@@ -117,13 +117,11 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
             var childDrawable = child.getPixels(area.getPosition(), area.getSize());
 
             ImageArrayHelper.copyRectangle(//
-                    childDrawable.getPixels(), //
-                    childDrawable.getPixelSize(), //
+                    childDrawable, //
                     Vector2d.zero(), //
                     childDrawable.getPixelSize(), //
-                    cachedDrawable.getPixels(), //
-                    cachedDrawable.getPixelSize(), //
-                    child.getRelativPosition() //
+                    cachedDrawable, //
+                    area.getPosition().addNew(child.getRelativPosition()) //
             );
         }
 
@@ -180,10 +178,11 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
 
     @Override
     public void notifyRedraw(Glyph child, Vector2d position, Size size) {
-        parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
+        LOGGER.trace("row notifyRedraw to parent");
         cached = false;
         updatedChildren.add(child);
         updatedAreas.add(new Area(position, size));
+        parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
     }
 
     @Override

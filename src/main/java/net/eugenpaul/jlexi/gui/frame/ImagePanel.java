@@ -5,42 +5,69 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.eugenpaul.jlexi.utils.Area;
 
 import java.awt.Image;
-import java.awt.image.MemoryImageSource;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ImagePanel extends JPanel {
-    private transient Image img = null;
-    private transient Image nextImage = null;
-    private transient Area area = null;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImagePanel.class);
+
+    @AllArgsConstructor
+    @Getter
+    private static class ImageToDraw {
+        private Image img = null;
+        private Area area = null;
+    }
+
+    private transient List<ImageToDraw> nextImageList = null;
+
     private final transient Object imgSynch = new Object();
+
+    public ImagePanel() {
+        nextImageList = new LinkedList<>();
+    }
 
     @Override
     public void paint(Graphics g) {
         synchronized (imgSynch) {
-            if (this.img != null) {
-                if (nextImage != null) {
-                    g.clearRect(//
-                            area.getPosition().getX(), //
-                            area.getPosition().getY(), //
-                            area.getSize().getWidth(), //
-                            area.getSize().getHight() //
-                    );
-                    g.drawImage(nextImage, area.getPosition().getX(), area.getPosition().getY(), null);
-                    nextImage = null;
-                } else {
+            for (ImageToDraw imageToDraw : nextImageList) {
+                if (null == imageToDraw.getArea()) {
+                    LOGGER.trace("draw full");
                     g.clearRect(0, 0, getWidth(), getHeight());
-                    g.drawImage(img, 0, 0, this);
+                    g.drawImage(imageToDraw.getImg(), 0, 0, this);
+                } else {
+                    LOGGER.trace("draw area. {}", imageToDraw.getArea());
+                    g.clearRect(//
+                            imageToDraw.getArea().getPosition().getX(), //
+                            imageToDraw.getArea().getPosition().getY(), //
+                            imageToDraw.getArea().getSize().getWidth(), //
+                            imageToDraw.getArea().getSize().getHight() //
+                    );
+                    g.drawImage(//
+                            imageToDraw.getImg(), //
+                            imageToDraw.getArea().getPosition().getX(), //
+                            imageToDraw.getArea().getPosition().getY(), //
+                            null //
+                    );
                 }
             }
+            nextImageList.clear();
         }
     }
 
-    public void update(MemoryImageSource img) {
+    public void update(Image img) {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
-                this.img = createImage(img);
+                nextImageList.clear();
+                nextImageList.add(new ImageToDraw(img, null));
                 repaint();
             }
         });
@@ -49,17 +76,7 @@ public class ImagePanel extends JPanel {
     public void updateArea(Image img, Area area) {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
-                nextImage = img;
-                this.area = area;
-                repaint();
-            }
-        });
-    }
-    public void updateArea(MemoryImageSource img, Area area) {
-        SwingUtilities.invokeLater(() -> {
-            synchronized (imgSynch) {
-                nextImage = createImage(img);
-                this.area = area;
+                nextImageList.add(new ImageToDraw(img, area));
                 repaint();
             }
         });

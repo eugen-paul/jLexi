@@ -56,8 +56,9 @@ public class CharGlyph extends TextPaneElement {
 
     @Override
     public void notifyRedraw(Glyph child, Vector2d position, Size size) {
-        parent.notifyRedraw(this, Vector2d.zero(), this.size);
+        LOGGER.trace("\"{}\" notifyRedraw to parent", c);
         cached = false;
+        parent.notifyRedraw(this, Vector2d.zero(), this.size);
     }
 
     @Override

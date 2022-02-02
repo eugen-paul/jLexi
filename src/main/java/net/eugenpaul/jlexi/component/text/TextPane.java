@@ -194,6 +194,8 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         updatedChildren.add(child);
         updatedAreas.add(new Area(position, size));
 
+        LOGGER.trace("textPane notifyRedraw to parent");
+
         parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
     }
 
@@ -238,13 +240,11 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
             var childDrawable = child.getPixels(area.getPosition(), area.getSize());
 
             ImageArrayHelper.copyRectangle(//
-                    childDrawable.getPixels(), //
-                    childDrawable.getPixelSize(), //
+                    childDrawable, //
                     Vector2d.zero(), //
                     childDrawable.getPixelSize(), //
-                    cachedDrawable.getPixels(), //
-                    cachedDrawable.getPixelSize(), //
-                    child.getRelativPosition() //
+                    cachedDrawable, //
+                    area.getPosition().addNew(child.getRelativPosition()) //
             );
         }
 

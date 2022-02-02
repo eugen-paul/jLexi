@@ -168,13 +168,11 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
             var childDrawable = child.getPixels(area.getPosition(), area.getSize());
 
             ImageArrayHelper.copyRectangle(//
-                    childDrawable.getPixels(), //
-                    childDrawable.getPixelSize(), //
+                    childDrawable, //
                     Vector2d.zero(), //
                     childDrawable.getPixelSize(), //
-                    cachedDrawable.getPixels(), //
-                    cachedDrawable.getPixelSize(), //
-                    child.getRelativPosition() //
+                    cachedDrawable, //
+                    area.getPosition().addNew(child.getRelativPosition()) //
             );
         }
 

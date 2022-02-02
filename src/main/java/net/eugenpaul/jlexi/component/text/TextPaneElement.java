@@ -34,13 +34,13 @@ public abstract class TextPaneElement extends Glyph implements CursorControl {
     }
 
     public void addEffect(TextPaneEffect effect) {
-        this.cached = false;
         effectsList.add(effect);
+        this.cached = false;
     }
 
     public void removeEffect(TextPaneEffect effect) {
-        this.cached = false;
         effectsList.remove(effect);
+        this.cached = false;
     }
 
     public abstract NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY);

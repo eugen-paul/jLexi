@@ -40,16 +40,21 @@ public class CursorEffect extends TextPaneEffect {
     @Override
     public Effect doEffect() {
         if (showCursor) {
+            showCursor = false;
+            if (getGlyph() instanceof CharGlyph) {
+                CharGlyph c = (CharGlyph) getGlyph();
+                LOGGER.trace("hide Cursor on char {}.", c.getC());
+            } else {
+                LOGGER.trace("hide Cursor on {}.", getGlyph().getClass().getName());
+            }
+        } else {
+            showCursor = true;
             if (getGlyph() instanceof CharGlyph) {
                 CharGlyph c = (CharGlyph) getGlyph();
                 LOGGER.trace("show Cursor on char {}.", c.getC());
             } else {
                 LOGGER.trace("show Cursor on {}.", getGlyph().getClass().getName());
             }
-            showCursor = false;
-        } else {
-            LOGGER.trace("hide Cursor.");
-            showCursor = true;
         }
 
         getGlyph().notifyRedraw(null, Vector2d.zero(), getGlyph().getSize());

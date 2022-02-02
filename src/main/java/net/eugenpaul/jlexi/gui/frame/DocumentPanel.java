@@ -50,7 +50,8 @@ public class DocumentPanel extends AbstractPanel {
 
     private void draw() {
         Drawable drawable = glyph.getPixels();
-        panel.update((new MemoryImageSource(//
+        panel.update(//
+        Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
                 drawable.getPixelSize().getWidth(), //
                 drawable.getPixelSize().getHight(), //
                 drawable.getPixels(), //
