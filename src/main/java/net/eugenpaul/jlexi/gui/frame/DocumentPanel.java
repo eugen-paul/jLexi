@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import lombok.Getter;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
+import net.eugenpaul.jlexi.draw.RedrawData;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
@@ -47,6 +48,8 @@ public class DocumentPanel extends AbstractPanel {
             draw((String) evt.getSource());
         } else if (evt.getPropertyName().equalsIgnoreCase(ViewPropertyChangeType.REDRAW.toString())) {
             redraw((String) evt.getSource(), (Area) evt.getNewValue());
+        } else if (evt.getPropertyName().equalsIgnoreCase(ViewPropertyChangeType.DO_REDRAW.toString())) {
+            do_redraw((RedrawData) evt.getNewValue());
         }
     }
 
@@ -64,6 +67,10 @@ public class DocumentPanel extends AbstractPanel {
                 .doOnError(throwable -> LOGGER.error("Failed to get drawable from \"{}\"", source, throwable)) //
                 .onErrorResume(throwable -> Mono.empty()) //
                 .subscribe();
+    }
+
+    private void do_redraw(RedrawData redrawData) {
+        panel.updateArea(redrawData.getDrawable(), redrawData.getArea());
     }
 
 }

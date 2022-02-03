@@ -1,7 +1,6 @@
 package net.eugenpaul.jlexi.component.text;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
+import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.formatting.RowCompositor;
 import net.eugenpaul.jlexi.component.text.formatting.TextCompositor;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
@@ -21,7 +21,6 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectHandler;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList;
@@ -34,7 +33,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 /**
  * Display Rows.
  */
-public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
+public class TextPane extends Glyph implements GuiComponent, KeyHandlerable, TextUpdateable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
 
@@ -52,12 +51,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
     @Setter
     private Cursor mouseCursor;
 
-    private boolean recompose;
-
-    private boolean cached;
     private Drawable cachedDrawable;
-    private LinkedList<Glyph> updatedChildren;
-    private LinkedList<Area> updatedAreas;
 
     private TextPaneKeyHandler keyHanlder;
 
@@ -69,11 +63,6 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         nodeList = new NodeList<>();
 
         mouseCursor = new Cursor(null, null, effectHandler);
-        recompose = true;
-        cached = false;
-
-        updatedChildren = new LinkedList<>();
-        updatedAreas = new LinkedList<>();
 
         resizeTo(Size.ZERO_SIZE);
         addPlaceHolder();
@@ -83,17 +72,9 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
 
     @Override
     public Drawable getPixels() {
-        if (cached && !recompose) {
-            return cachedDrawable;
-        }
-
         compositor.compose(nodeList.iterator());
 
         cachedDrawable = compositor.getPixels();
-        cached = true;
-        recompose = false;
-        updatedChildren.clear();
-        updatedAreas.clear();
 
         return cachedDrawable;
     }
@@ -118,6 +99,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         }
     }
 
+    @Override
     public void setText(String text) {
 
         nodeList.clear();
@@ -129,6 +111,8 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         }
 
         addPlaceHolder();
+
+        getPixels();
 
         mouseCursor.moveCursorTo(nodeList.getFirstNode());
     }
@@ -144,22 +128,6 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
     public void resizeTo(Size size) {
         compositor.updateSize(new Size(size.getWidth(), Integer.MAX_VALUE));
         setSize(size);
-
-        cached = false;
-        recompose = true;
-        updatedChildren.clear();
-        updatedAreas.clear();
-
-    }
-
-    @Override
-    public void notifyUpdate(Glyph child) {
-        LOGGER.trace("textPane notifyUpdate to parent");
-        cached = false;
-        recompose = true;
-        updatedChildren.clear();
-        updatedAreas.clear();
-        getParent().notifyUpdate(this);
     }
 
     @Override
@@ -188,32 +156,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
     }
 
     @Override
-    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
-        cached = false;
-        recompose = false;
-        updatedChildren.add(child);
-        updatedAreas.add(new Area(position, size));
-
-        LOGGER.trace("textPane notifyRedraw to parent");
-
-        parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
-    }
-
-    @Override
     public Drawable getPixels(Vector2d position, Size size) {
-        if (recompose) {
-            getPixels();
-        }
-
-        if (!cached) {
-            return updateAndGetPixels(position, size);
-        }
-
-        if (position.getX() == 0 && position.getY() == 0 //
-                && this.size.equals(size)) {
-            return getPixels();
-        }
-
         int[] pixels = new int[size.getWidth() * size.getHeight()];
 
         ImageArrayHelper.copyRectangle(//
@@ -229,50 +172,31 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable {
         return new DrawableImpl(pixels, size);
     }
 
-    private Drawable updateAndGetPixels(Vector2d position, Size size) {
-        Iterator<Glyph> updatedChildrenIterator = updatedChildren.iterator();
-        Iterator<Area> updatedAreaIterator = updatedAreas.iterator();
-
-        while (updatedChildrenIterator.hasNext() && updatedAreaIterator.hasNext()) {
-            var child = updatedChildrenIterator.next();
-            var area = updatedAreaIterator.next();
-
-            var childDrawable = child.getPixels(area.getPosition(), area.getSize());
-
-            ImageArrayHelper.copyRectangle(//
-                    childDrawable, //
-                    Vector2d.zero(), //
-                    childDrawable.getPixelSize(), //
-                    cachedDrawable, //
-                    area.getPosition().addNew(child.getRelativPosition()) //
-            );
-        }
-
-        updatedChildren.clear();
-        updatedAreas.clear();
-        cached = true;
-
-        int[] t = new int[size.getWidth() * size.getHeight()];
-        ImageArrayHelper.copyRectangle(//
-                cachedDrawable.getPixels(), //
-                cachedDrawable.getPixelSize(), //
-                position, //
-                size, //
-                t, //
-                size, //
-                Vector2d.zero() //
-        );
-
-        return new DrawableImpl(t, size);
+    @Override
+    public void keyUpdate() {
+        parent.notifyRedraw(getPixels(), relativPosition, size);
     }
 
     @Override
-    public void keyUpdate() {
-        cached = false;
-        recompose = true;
-        updatedChildren.clear();
-        updatedAreas.clear();
-        parent.notifyUpdate(this);
+    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+        if (parent == null) {
+            return;
+        }
+
+        if (cachedDrawable == null) {
+            getPixels();
+        }
+
+        LOGGER.trace("TextPane notifyRedraw Data to parent");
+        ImageArrayHelper.copyRectangle(//
+                drawData, //
+                Vector2d.zero(), //
+                size, //
+                cachedDrawable, //
+                relativPosition //
+        );
+
+        parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
     }
 
 }

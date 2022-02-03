@@ -71,19 +71,5 @@ public abstract class Glyph {
 
     public abstract void visit(Visitor checker);
 
-    /**
-     * Size or content of child has changed. All children must be needs to be recomputed.
-     * 
-     * @param child
-     */
-    public abstract void notifyUpdate(Glyph child);
-
-    /**
-     * Element needs to be redrawn on the given area.
-     * 
-     * @param child
-     * @param position
-     * @param size
-     */
-    public abstract void notifyRedraw(Glyph child, Vector2d position, Size size);
+    public abstract void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size);
 }

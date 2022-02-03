@@ -6,6 +6,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.iterator.TextPaneElementToGlyphIterator;
 import net.eugenpaul.jlexi.component.text.Cursor;
@@ -13,7 +16,6 @@ import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
@@ -23,6 +25,9 @@ import net.eugenpaul.jlexi.visitor.Visitor;
  * Compose elements to rows
  */
 public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RowCompositor.class);
+
     private ConcurrentSkipListMap<Integer, TextContainer<T>> yToRowMap;
 
     public RowCompositor(Glyph parent, Size maxSize) {
@@ -83,17 +88,10 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
 
         size = new Size(maxWidth, currentY);
 
-        cached = false;
-        updatedChildren.clear();
-        updatedAreas.clear();
     }
 
     @Override
     public Drawable getPixels() {
-        if (cached) {
-            return cachedDrawable;
-        }
-
         List<Drawable> childDrawable = yToRowMap.values().stream()//
                 .map(TextContainer::getPixels)//
                 .collect(Collectors.toList());
@@ -125,24 +123,12 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
         }
 
         cachedDrawable = new DrawableImpl(pixels, pixelsSize);
-        cached = true;
-        updatedChildren.clear();
-        updatedAreas.clear();
 
         return cachedDrawable;
     }
 
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
-        if (!cached) {
-            return updateAndGetPixels(position, size);
-        }
-
-        if (position.getX() == 0 && position.getY() == 0 //
-                && this.size.equals(size)) {
-            return getPixels();
-        }
-
         int[] pixels = new int[size.getWidth() * size.getHeight()];
 
         ImageArrayHelper.copyRectangle(//
@@ -156,43 +142,6 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
         );
 
         return new DrawableImpl(pixels, size);
-    }
-
-    private Drawable updateAndGetPixels(Vector2d position, Size size) {
-        Iterator<Glyph> updatedChildrenIterator = updatedChildren.iterator();
-        Iterator<Area> updatedAreaIterator = updatedAreas.iterator();
-
-        while (updatedChildrenIterator.hasNext() && updatedAreaIterator.hasNext()) {
-            var child = updatedChildrenIterator.next();
-            var area = updatedAreaIterator.next();
-
-            var childDrawable = child.getPixels(area.getPosition(), area.getSize());
-
-            ImageArrayHelper.copyRectangle(//
-                    childDrawable, //
-                    Vector2d.zero(), //
-                    childDrawable.getPixelSize(), //
-                    cachedDrawable, //
-                    area.getPosition().addNew(child.getRelativPosition()) //
-            );
-        }
-
-        updatedChildren.clear();
-        updatedAreas.clear();
-        cached = true;
-
-        int[] t = new int[size.getWidth() * size.getHeight()];
-        ImageArrayHelper.copyRectangle(//
-                cachedDrawable.getPixels(), //
-                cachedDrawable.getPixelSize(), //
-                position, //
-                size, //
-                t, //
-                size, //
-                Vector2d.zero() //
-        );
-
-        return new DrawableImpl(t, size);
     }
 
     @Override
@@ -323,6 +272,28 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
     @Override
     public void visit(Visitor checker) {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+        if (parent == null) {
+            return;
+        }
+
+        if (cachedDrawable == null) {
+            getPixels();
+        }
+
+        LOGGER.trace("RowCompositor notifyRedraw Data to parent");
+        ImageArrayHelper.copyRectangle(//
+                drawData, //
+                Vector2d.zero(), //
+                size, //
+                cachedDrawable, //
+                relativPosition //
+        );
+
+        parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
     }
 
 }

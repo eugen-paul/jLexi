@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.effect.Effect;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -17,9 +18,11 @@ import reactor.core.Disposable;
 public class ModelController extends AbstractController {
 
     private Map<Effect, Disposable> effectMap;
+    private Map<String, TextUpdateable> textUpdateableMap;
 
     public ModelController() {
         effectMap = Collections.synchronizedMap(new HashMap<>());
+        textUpdateableMap = new HashMap<>();
     }
 
     /**
@@ -52,6 +55,23 @@ public class ModelController extends AbstractController {
 
     public void keyReleased(KeyCode code) {
         setModelProperty(ModelPropertyChangeType.KEY_RELEASED, code);
+    }
+
+    public void addTextPane(String fieldName, TextUpdateable field) {
+        textUpdateableMap.put(fieldName, field);
+    }
+
+    public void setText(String fieldName, String text) {
+        Mono.empty()//
+                .publishOn(modelScheduler)//
+                .doOnSubscribe(v -> {
+                    TextUpdateable field = textUpdateableMap.get(fieldName);
+                    if (field != null) {
+                        field.setText(text);
+                    }
+                })//
+                .subscribe() //
+        ;
     }
 
     @Override

@@ -130,14 +130,6 @@ public class Border extends MonoGlyph implements GuiComponent {
     }
 
     @Override
-    public void notifyUpdate(Glyph child) {
-        LOGGER.trace("Border notifyUpdate to parent");
-        if (null != parent) {
-            parent.notifyUpdate(this);
-        }
-    }
-
-    @Override
     public void onKeyTyped(Character key) {
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
@@ -167,9 +159,9 @@ public class Border extends MonoGlyph implements GuiComponent {
     }
 
     @Override
-    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
+    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
         if (parent != null) {
-            parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
+            parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
         }
     }
 

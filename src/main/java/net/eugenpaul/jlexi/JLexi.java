@@ -25,7 +25,10 @@ public class JLexi {
 
         TextPane textPane = new TextPane(null, fontStorage, controller);
         Border border = new Border(null, textPane);
-        textPane.setText(
+
+        controller.addTextPane("TextPane", textPane);
+
+        controller.setText("TextPane",
                 "A \"Hello, World!\" program is generally a computer program that outputs or displays the message \"Hello, World!\". "
                         + "This program is very simple to write in many programming languages, and is often used to illustrate a language's basic syntax.");
 

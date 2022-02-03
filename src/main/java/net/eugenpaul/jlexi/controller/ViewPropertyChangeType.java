@@ -4,7 +4,8 @@ import lombok.Getter;
 
 public enum ViewPropertyChangeType {
     UPDATE("UPDATE"), //
-    REDRAW("REDRAW");
+    REDRAW("REDRAW"), //
+    DO_REDRAW("DO_REDRAW");
 
     @Getter
     private String typeName;

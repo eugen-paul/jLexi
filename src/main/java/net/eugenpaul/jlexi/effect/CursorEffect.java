@@ -57,7 +57,7 @@ public class CursorEffect extends TextPaneEffect {
             }
         }
 
-        getGlyph().notifyRedraw(null, Vector2d.zero(), getGlyph().getSize());
+        getGlyph().updateEffect(this);
         return this;
     }
 
@@ -86,8 +86,8 @@ public class CursorEffect extends TextPaneEffect {
         } else {
             LOGGER.trace("terminate Cursor on {}.", getGlyph().getClass().getName());
         }
-        getGlyph().notifyRedraw(null, Vector2d.zero(), getGlyph().getSize());
         getGlyph().removeEffect(this);
+        getGlyph().updateEffect(this);
     }
 
 }

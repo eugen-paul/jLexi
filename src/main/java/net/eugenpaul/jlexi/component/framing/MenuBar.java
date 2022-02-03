@@ -15,6 +15,7 @@ import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.RedrawData;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
@@ -134,17 +135,6 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
     }
 
     @Override
-    public void notifyUpdate(Glyph child) {
-        LOGGER.trace("Menubar send Update to window");
-        controller.propertyChange(new PropertyChangeEvent(//
-                name, //
-                ViewPropertyChangeType.UPDATE.getTypeName(), //
-                1, //
-                2 //
-        ));
-    }
-
-    @Override
     public void onKeyTyped(Character key) {
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
@@ -174,16 +164,17 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
     }
 
     @Override
-    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
-        if (parent != null) {
-            parent.notifyRedraw(this, child.getRelativPosition().addNew(position), size);
-        }
-        LOGGER.trace("Menubar send notifyRedraw to window");
+    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+        LOGGER.trace("Menubar send notifyRedraw Data to window");
+
         controller.propertyChange(new PropertyChangeEvent(//
                 name, //
-                ViewPropertyChangeType.REDRAW.getTypeName(), //
+                ViewPropertyChangeType.DO_REDRAW.getTypeName(), //
                 null, //
-                new Area(child.getRelativPosition().addNew(position), size) //
+                new RedrawData(//
+                        drawData, //
+                        new Area(relativPosition.addNew(this.relativPosition), size)//
+                ) //
         ));
     }
 

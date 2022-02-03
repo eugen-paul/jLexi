@@ -12,6 +12,7 @@ import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -24,7 +25,6 @@ public class TextPlaceHolder extends TextPaneElement {
 
     private String fontName;
     private int fontSize;
-    private Drawable drawableWithoutEffects;
 
     public TextPlaceHolder(Glyph parent, FontStorage fontStorage,
             NodeListElement<TextPaneElement> textPaneListElement) {
@@ -39,39 +39,17 @@ public class TextPlaceHolder extends TextPaneElement {
     }
 
     @Override
-    public void notifyRedraw(Glyph child, Vector2d position, Size size) {
-        cached = false;
-        parent.notifyRedraw(this, Vector2d.zero(), this.size);
-    }
-
-    @Override
     public Drawable getPixels() {
-        if (cached) {
-            return cachedDrawable;
-        }
-
-        Drawable respoDrawable = new DrawableImpl(drawableWithoutEffects.getPixels().clone(),
+        cachedDrawable = new DrawableImpl(drawableWithoutEffects.getPixels().clone(),
                 drawableWithoutEffects.getPixelSize());
 
-        effectsList.stream().forEach(v -> v.editDrawable(respoDrawable));
+        effectsList.stream().forEach(v -> v.editDrawable(cachedDrawable));
 
-        cachedDrawable = respoDrawable;
-        cached = true;
-
-        return respoDrawable;
+        return cachedDrawable;
     }
 
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
-        if (!cached) {
-            getPixels();
-        }
-
-        if (position.getX() == 0 && position.getY() == 0 //
-                && this.size.equals(size)) {
-            return getPixels();
-        }
-
         int[] pixels = new int[size.getWidth() * size.getHeight()];
 
         ImageArrayHelper.copyRectangle(//
@@ -109,13 +87,6 @@ public class TextPlaceHolder extends TextPaneElement {
     }
 
     @Override
-    public void notifyUpdate(Glyph child) {
-        LOGGER.trace("End-Of-File notifyUpdate to parent");
-        cached = false;
-        getParent().notifyUpdate(this);
-    }
-
-    @Override
     public boolean isPlaceHolder() {
         return true;
     }
@@ -123,6 +94,28 @@ public class TextPlaceHolder extends TextPaneElement {
     @Override
     public boolean moveCursor(CursorMove move, Cursor cursor) {
         return false;
+    }
+
+    @Override
+    public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
+        if (parent == null) {
+            return;
+        }
+
+        LOGGER.trace("PlaceHolder notifyRedraw Data to parent");
+
+        parent.notifyRedraw(getPixels(), relativPosition, this.size);
+    }
+
+    @Override
+    public void updateEffect(TextPaneEffect effect) {
+        if (parent == null) {
+            return;
+        }
+
+        LOGGER.trace("PlaceHolder updateEffect");
+
+        parent.notifyRedraw(getPixels(), relativPosition, this.size);
     }
 
 }

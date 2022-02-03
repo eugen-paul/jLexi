@@ -19,8 +19,8 @@ public abstract class TextPaneElement extends Glyph implements CursorControl {
 
     protected List<TextPaneEffect> effectsList;
 
-    protected boolean cached;
     protected Drawable cachedDrawable;
+    protected Drawable drawableWithoutEffects;
 
     @Setter
     @Getter
@@ -30,18 +30,19 @@ public abstract class TextPaneElement extends Glyph implements CursorControl {
         super(parent);
         this.textPaneListElement = textPaneListElement;
         this.effectsList = new LinkedList<>();
-        this.cached = false;
+        this.drawableWithoutEffects = null;
+        this.cachedDrawable = null;
     }
 
     public void addEffect(TextPaneEffect effect) {
         effectsList.add(effect);
-        this.cached = false;
     }
 
     public void removeEffect(TextPaneEffect effect) {
         effectsList.remove(effect);
-        this.cached = false;
     }
+
+    public abstract void updateEffect(TextPaneEffect effect);
 
     public abstract NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY);
 
