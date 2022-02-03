@@ -53,6 +53,7 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
                 maxWidth = Math.max(maxWidth, row.getSize().getHeight());
 
                 row = containerConstructor.apply(parent, maxSize);
+                row.add(glyph);
                 row.setParent(this);
             }
 

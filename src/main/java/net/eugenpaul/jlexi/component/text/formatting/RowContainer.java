@@ -195,6 +195,21 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
     }
 
     @Override
+    public void add(T element) {
+        int currentWidth = getSize().getWidth();
+        children.add(element);
+        element.setParent(this);
+        element.getRelativPosition().setX(currentWidth);
+        element.getRelativPosition().setY(0);
+
+        setSize(new Size(//
+                currentWidth + element.getSize().getWidth(), //
+                Math.max(getSize().getHeight(), element.getSize().getHeight())//
+        ) //
+        );
+    }
+
+    @Override
     public boolean addIfPossible(T element) {
         int currentWidth = getSize().getWidth();
         if (element.getSize().getWidth() + currentWidth > maxSize.getWidth()) {

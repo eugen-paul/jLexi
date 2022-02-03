@@ -15,6 +15,7 @@ public abstract class TextContainer<T extends TextPaneElement> extends TextPaneE
     public abstract boolean isEmpty();
 
     public abstract boolean addIfPossible(T element);
+    public abstract void add(T element);
 
     public abstract void updateSize(Size size);
 

@@ -15,6 +15,8 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public class JLexi {
 
+    private static final String MAIN_WINDOW = "MainWindow";
+
     public static void main(String[] args) {
         ModelController controller = new ModelController();
 
@@ -28,12 +30,14 @@ public class JLexi {
                         + "This program is very simple to write in many programming languages, and is often used to illustrate a language's basic syntax.");
 
         Size defaultSize = new Size(800, 600);
-        MenuBar menubar = new MenuBar(null, border, defaultSize, controller);
+        MenuBar menubar = new MenuBar(MAIN_WINDOW, null, border, defaultSize, controller);
         border.setParent(menubar);
         controller.addModel(menubar);
 
-        windowAbstraction.createMainWindow(menubar);
+        windowAbstraction.createMainWindow(defaultSize);
 
-        controller.propertyChange(new PropertyChangeEvent(menubar, "UPDATE", null, defaultSize));
+        controller.addGlyph(menubar, MAIN_WINDOW);
+
+        controller.propertyChange(new PropertyChangeEvent(MAIN_WINDOW, "UPDATE", null, defaultSize));
     }
 }

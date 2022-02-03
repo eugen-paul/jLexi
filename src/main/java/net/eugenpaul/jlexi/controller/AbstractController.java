@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,9 +18,12 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.EffectHandler;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.model.InterfaceModel;
+import net.eugenpaul.jlexi.utils.Area;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -38,6 +42,8 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
     private List<AbstractPanel> registeredViews;
     private List<InterfaceModel> registeredModels;
 
+    private Map<String, Glyph> glyphMap;
+
     private ThreadPoolExecutor pool;
     protected Scheduler modelScheduler;
 
@@ -49,6 +55,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
     protected AbstractController() {
         registeredViews = new ArrayList<>();
         registeredModels = new ArrayList<>();
+        glyphMap = new HashMap<>();
 
         pool = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         modelScheduler = Schedulers.fromExecutorService(pool);
@@ -73,6 +80,10 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
         registeredViews.remove(view);
     }
 
+    public void addGlyph(Glyph glyph, String name) {
+        glyphMap.put(name, glyph);
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         registeredViews.forEach(v -> v.modelPropertyChange(evt));
@@ -80,6 +91,30 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     public void addModel(InterfaceModel model) {
         registeredModels.add(model);
+    }
+
+    public Mono<Drawable> getDrawable(String source) {
+        return Mono.fromCallable(() -> {
+            Glyph destinationGlyph = glyphMap.get(source);
+            if (destinationGlyph != null) {
+                return destinationGlyph.getPixels();
+            }
+            throw new IllegalArgumentException("cann't find glyph: " + source);
+        }) //
+                .publishOn(modelScheduler)//
+        ;
+    }
+
+    public Mono<Drawable> getDrawableArea(String source, Area area) {
+        return Mono.fromCallable(() -> {
+            Glyph destinationGlyph = glyphMap.get(source);
+            if (destinationGlyph != null) {
+                return destinationGlyph.getPixels(area.getPosition(), area.getSize());
+            }
+            throw new IllegalArgumentException("cann't find glyph: " + source);
+        }) //
+                .publishOn(modelScheduler)//
+        ;
     }
 
     /**

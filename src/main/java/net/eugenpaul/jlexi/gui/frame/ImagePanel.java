@@ -1,83 +1,98 @@
 package net.eugenpaul.jlexi.gui.frame;
 
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.MemoryImageSource;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Area;
-
-import java.awt.Image;
-import java.util.LinkedList;
-import java.util.List;
+import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class ImagePanel extends JPanel {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImagePanel.class);
-
-    @AllArgsConstructor
-    @Getter
-    private static class ImageToDraw {
-        private Image img = null;
-        private Area area = null;
-    }
-
-    private transient List<ImageToDraw> nextImageList = null;
+    private transient Drawable currentDrawable;
+    private transient Image currentImage;
 
     private final transient Object imgSynch = new Object();
 
+    /**
+     * C'tor
+     */
     public ImagePanel() {
-        nextImageList = new LinkedList<>();
+        currentDrawable = null;
+        currentImage = null;
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         synchronized (imgSynch) {
-            for (ImageToDraw imageToDraw : nextImageList) {
-                if (null == imageToDraw.getArea()) {
-                    LOGGER.trace("draw full");
-                    g.clearRect(0, 0, getWidth(), getHeight());
-                    g.drawImage(imageToDraw.getImg(), 0, 0, this);
-                } else {
-                    LOGGER.trace("draw area. {}", imageToDraw.getArea());
-                    g.clearRect(//
-                            imageToDraw.getArea().getPosition().getX(), //
-                            imageToDraw.getArea().getPosition().getY(), //
-                            imageToDraw.getArea().getSize().getWidth(), //
-                            imageToDraw.getArea().getSize().getHeight() //
-                    );
-                    g.drawImage(//
-                            imageToDraw.getImg(), //
-                            imageToDraw.getArea().getPosition().getX(), //
-                            imageToDraw.getArea().getPosition().getY(), //
-                            null //
-                    );
+            if (currentDrawable != null) {
+                g.clearRect(0, 0, getWidth(), getHeight());
+
+                if (null == currentImage) {
+                    currentImage = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
+                            currentDrawable.getPixelSize().getWidth(), //
+                            currentDrawable.getPixelSize().getHeight(), //
+                            currentDrawable.getPixels(), //
+                            0, //
+                            currentDrawable.getPixelSize().getWidth()//
+                    ));
                 }
+
+                g.drawImage(currentImage, 0, 0, null);
             }
-            nextImageList.clear();
         }
     }
 
-    public void update(Image img) {
+    public void update(Drawable drawable) {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
-                nextImageList.clear();
-                nextImageList.add(new ImageToDraw(img, null));
+                if (null == currentDrawable //
+                        || !drawable.getPixelSize().equals(currentDrawable.getPixelSize())//
+                ) {
+                    currentDrawable = new DrawableImpl(//
+                            drawable.getPixels().clone(), //
+                            drawable.getPixelSize() //
+                    );
+                } else {
+                    ImageArrayHelper.copyRectangle(//
+                            drawable, //
+                            Vector2d.zero(), //
+                            drawable.getPixelSize(), //
+                            currentDrawable, //
+                            Vector2d.zero() //
+                    );
+                }
+
+                currentImage = null;
                 repaint();
             }
         });
     }
 
-    public void updateArea(Image img, Area area) {
+    public void updateArea(Drawable drawable, Area area) {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
-                nextImageList.add(new ImageToDraw(img, area));
-                repaint();
+                ImageArrayHelper.copyRectangle(//
+                        drawable, //
+                        Vector2d.zero(), //
+                        area.getSize(), //
+                        currentDrawable, //
+                        area.getPosition() //
+                );
+
+                currentImage = null;
+                repaint(//
+                        area.getPosition().getX(), //
+                        area.getPosition().getY(), //
+                        area.getSize().getWidth(), //
+                        area.getSize().getHeight() //
+                );
             }
         });
     }

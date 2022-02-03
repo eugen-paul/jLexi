@@ -38,13 +38,16 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
     private int[] menuBackground;
     private AbstractController controller;
 
+    private final String name;
+
     /**
      * C'tor
      * 
      * @param component
      */
-    public MenuBar(Glyph parent, Glyph component, Size size, AbstractController controller) {
+    public MenuBar(String name, Glyph parent, Glyph component, Size size, AbstractController controller) {
         super(parent, component);
+        this.name = name;
         component.setParent(this);
         component.setRelativPosition(new Vector2d(0, MENUBAR_HEIGHT));
         setSize(size);
@@ -109,7 +112,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
         computePixels();
 
         controller.propertyChange(new PropertyChangeEvent(//
-                this, //
+                name, //
                 ViewPropertyChangeType.UPDATE.getTypeName(), //
                 oldSize, //
                 newSize//
@@ -134,7 +137,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
     public void notifyUpdate(Glyph child) {
         LOGGER.trace("Menubar send Update to window");
         controller.propertyChange(new PropertyChangeEvent(//
-                this, //
+                name, //
                 ViewPropertyChangeType.UPDATE.getTypeName(), //
                 1, //
                 2 //
@@ -177,7 +180,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
         }
         LOGGER.trace("Menubar send notifyRedraw to window");
         controller.propertyChange(new PropertyChangeEvent(//
-                this, //
+                name, //
                 ViewPropertyChangeType.REDRAW.getTypeName(), //
                 null, //
                 new Area(child.getRelativPosition().addNew(position), size) //

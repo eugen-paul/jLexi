@@ -1,32 +1,34 @@
 package net.eugenpaul.jlexi.gui.frame;
 
-import java.beans.PropertyChangeEvent;
 import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.image.MemoryImageSource;
+import java.beans.PropertyChangeEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.utils.Area;
+import net.eugenpaul.jlexi.utils.Size;
+import reactor.core.publisher.Mono;
 
 public class DocumentPanel extends AbstractPanel {
-    private Glyph glyph;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DocumentPanel.class);
+
     @Getter
     private ImagePanel panel;
 
-    public DocumentPanel(Glyph glyph, ModelController controller) {
+    public DocumentPanel(Size defaultSize, ModelController controller) {
         super(controller);
-        this.glyph = glyph;
         this.panel = new ImagePanel();
         this.panel.setDoubleBuffered(true);
         this.panel.addComponentListener(new ResizeListner(controller));
         this.panel.addMouseListener(new MouseListner(controller));
         this.panel.addKeyListener(new KeyListener(controller));
-        this.panel.setPreferredSize(new Dimension(glyph.getSize().getWidth(), glyph.getSize().getHeight()));
+        this.panel.setPreferredSize(new Dimension(defaultSize.getWidth(), defaultSize.getHeight()));
     }
 
     @Override
@@ -42,38 +44,26 @@ public class DocumentPanel extends AbstractPanel {
     @Override
     public void modelPropertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equalsIgnoreCase(ViewPropertyChangeType.UPDATE.toString())) {
-            draw();
+            draw((String) evt.getSource());
         } else if (evt.getPropertyName().equalsIgnoreCase(ViewPropertyChangeType.REDRAW.toString())) {
-            redraw((Area) evt.getNewValue());
+            redraw((String) evt.getSource(), (Area) evt.getNewValue());
         }
     }
 
-    private void draw() {
-        Drawable drawable = glyph.getPixels();
-        panel.update(//
-        Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
-                drawable.getPixelSize().getWidth(), //
-                drawable.getPixelSize().getHeight(), //
-                drawable.getPixels(), //
-                0, //
-                drawable.getPixelSize().getWidth()//
-        )//
-        ));
+    private void draw(String source) {
+        controller.getDrawable(source) //
+                .doOnSuccess(panel::update) //
+                .doOnError(throwable -> LOGGER.error("Failed to get drawable from \"{}\"", source, throwable)) //
+                .onErrorResume(throwable -> Mono.empty()) //
+                .subscribe();
     }
 
-    private void redraw(Area area) {
-        Drawable drawable = glyph.getPixels(area.getPosition(), area.getSize());
-
-        panel.updateArea(//
-                Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
-                        drawable.getPixelSize().getWidth(), //
-                        drawable.getPixelSize().getHeight(), //
-                        drawable.getPixels(), //
-                        0, //
-                        drawable.getPixelSize().getWidth()//
-                )), //
-                area//
-        );
+    private void redraw(String source, Area area) {
+        controller.getDrawableArea(source, area) //
+                .doOnSuccess(v -> panel.updateArea(v, area)) //
+                .doOnError(throwable -> LOGGER.error("Failed to get drawable from \"{}\"", source, throwable)) //
+                .onErrorResume(throwable -> Mono.empty()) //
+                .subscribe();
     }
 
 }

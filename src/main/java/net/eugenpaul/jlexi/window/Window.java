@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.window;
 
-import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
+import net.eugenpaul.jlexi.utils.Size;
 
 /**
  * Abstraction of a Window.
@@ -14,7 +14,7 @@ public class Window {
         this.windowlmp = windowlmp;
     }
 
-    public AbstractPanel createMainWindow(Glyph mGlyph) {
-        return windowlmp.deviceCreateMainWindow(mGlyph);
+    public AbstractPanel createMainWindow(Size defaultSize) {
+        return windowlmp.deviceCreateMainWindow(defaultSize);
     }
 }
