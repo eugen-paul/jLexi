@@ -89,7 +89,9 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
                 componentPixels.getPixels().length//
         );
 
-        return new DrawableImpl(responsePixels, getSize());
+        cachedDrawable = new DrawableImpl(responsePixels, getSize());
+
+        return cachedDrawable;
     }
 
     private static int[] generateMenuBackground(int w, int h) {
@@ -107,17 +109,14 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
         if (getSize().equals(newSize)) {
             return;
         }
-        Size oldSize = this.getSize();
+
         setSize(newSize);
 
         computePixels();
 
-        controller.propertyChange(new PropertyChangeEvent(//
-                name, //
-                ViewPropertyChangeType.UPDATE.getTypeName(), //
-                oldSize, //
-                newSize//
-        ));
+        getPixels();
+
+        notifyRedraw(cachedDrawable, relativPosition, newSize);
     }
 
     @Override
@@ -169,7 +168,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
 
         controller.propertyChange(new PropertyChangeEvent(//
                 name, //
-                ViewPropertyChangeType.DO_REDRAW.getTypeName(), //
+                ViewPropertyChangeType.DRAW_AREA.getTypeName(), //
                 null, //
                 new RedrawData(//
                         drawData, //

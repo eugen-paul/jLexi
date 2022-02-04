@@ -13,12 +13,8 @@ import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
-import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class CharGlyph extends TextPaneElement {
 
@@ -65,23 +61,6 @@ public class CharGlyph extends TextPaneElement {
     }
 
     @Override
-    public Drawable getPixels(Vector2d position, Size size) {
-        int[] pixels = new int[size.getWidth() * size.getHeight()];
-
-        ImageArrayHelper.copyRectangle(//
-                cachedDrawable.getPixels(), //
-                cachedDrawable.getPixelSize(), //
-                position, //
-                size, //
-                pixels, //
-                size, //
-                Vector2d.zero() //
-        );
-
-        return new DrawableImpl(pixels, size);
-    }
-
-    @Override
     public Iterator<Glyph> iterator() {
         return NULLITERATOR;
     }
@@ -105,28 +84,6 @@ public class CharGlyph extends TextPaneElement {
     @Override
     public boolean moveCursor(CursorMove move, Cursor cursor) {
         return false;
-    }
-
-    @Override
-    public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
-        if (parent == null) {
-            return;
-        }
-
-        LOGGER.trace("\"{}\" notifyRedraw Data to parent", c);
-
-        parent.notifyRedraw(getPixels(), relativPosition, this.size);
-    }
-
-    @Override
-    public void updateEffect(TextPaneEffect effect) {
-        if (parent == null) {
-            return;
-        }
-
-        LOGGER.trace("\"{}\" updateEffect", c);
-
-        parent.notifyRedraw(getPixels(), relativPosition, this.size);
     }
 
 }

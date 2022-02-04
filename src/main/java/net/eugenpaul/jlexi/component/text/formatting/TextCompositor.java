@@ -6,7 +6,6 @@ import java.util.function.BiFunction;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorControl;
-import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -19,15 +18,11 @@ public abstract class TextCompositor<T extends TextPaneElement> extends Glyph im
 
     protected Size maxSize;
 
-    protected Drawable cachedDrawable;
-
     protected TextCompositor(Glyph parent) {
         super(parent);
     }
 
     public abstract void compose(Iterator<T> iterator);
-
-    public abstract Drawable getPixels(Vector2d position, Size size);
 
     public abstract TextPaneElement getElementOnPosition(Vector2d position);
 

@@ -18,7 +18,6 @@ import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneKeyHandler;
 import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
 import net.eugenpaul.jlexi.component.text.structure.TextPlaceHolder;
 import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectHandler;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
@@ -27,7 +26,6 @@ import net.eugenpaul.jlexi.utils.container.NodeList;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 /**
@@ -50,8 +48,6 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable, Tex
     @Getter
     @Setter
     private Cursor mouseCursor;
-
-    private Drawable cachedDrawable;
 
     private TextPaneKeyHandler keyHanlder;
 
@@ -156,47 +152,8 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable, Tex
     }
 
     @Override
-    public Drawable getPixels(Vector2d position, Size size) {
-        int[] pixels = new int[size.getWidth() * size.getHeight()];
-
-        ImageArrayHelper.copyRectangle(//
-                cachedDrawable.getPixels(), //
-                cachedDrawable.getPixelSize(), //
-                position, //
-                size, //
-                pixels, //
-                size, //
-                Vector2d.zero() //
-        );
-
-        return new DrawableImpl(pixels, size);
-    }
-
-    @Override
     public void keyUpdate() {
         parent.notifyRedraw(getPixels(), relativPosition, size);
-    }
-
-    @Override
-    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
-        if (parent == null) {
-            return;
-        }
-
-        if (cachedDrawable == null) {
-            getPixels();
-        }
-
-        LOGGER.trace("TextPane notifyRedraw Data to parent");
-        ImageArrayHelper.copyRectangle(//
-                drawData, //
-                Vector2d.zero(), //
-                size, //
-                cachedDrawable, //
-                relativPosition //
-        );
-
-        parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
     }
 
 }

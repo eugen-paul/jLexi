@@ -26,6 +26,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
  */
 public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(RowCompositor.class);
 
     private ConcurrentSkipListMap<Integer, TextContainer<T>> yToRowMap;
@@ -125,23 +126,6 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
         cachedDrawable = new DrawableImpl(pixels, pixelsSize);
 
         return cachedDrawable;
-    }
-
-    @Override
-    public Drawable getPixels(Vector2d position, Size size) {
-        int[] pixels = new int[size.getWidth() * size.getHeight()];
-
-        ImageArrayHelper.copyRectangle(//
-                cachedDrawable.getPixels(), //
-                cachedDrawable.getPixelSize(), //
-                position, //
-                size, //
-                pixels, //
-                size, //
-                Vector2d.zero() //
-        );
-
-        return new DrawableImpl(pixels, size);
     }
 
     @Override
@@ -272,28 +256,6 @@ public class RowCompositor<T extends TextPaneElement> extends TextCompositor<T> 
     @Override
     public void visit(Visitor checker) {
         // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
-        if (parent == null) {
-            return;
-        }
-
-        if (cachedDrawable == null) {
-            getPixels();
-        }
-
-        LOGGER.trace("RowCompositor notifyRedraw Data to parent");
-        ImageArrayHelper.copyRectangle(//
-                drawData, //
-                Vector2d.zero(), //
-                size, //
-                cachedDrawable, //
-                relativPosition //
-        );
-
-        parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
     }
 
 }

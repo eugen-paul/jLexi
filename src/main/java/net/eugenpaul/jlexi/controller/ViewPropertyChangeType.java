@@ -3,9 +3,9 @@ package net.eugenpaul.jlexi.controller;
 import lombok.Getter;
 
 public enum ViewPropertyChangeType {
-    UPDATE("UPDATE"), //
-    REDRAW("REDRAW"), //
-    DO_REDRAW("DO_REDRAW");
+    TRIGGER_FULL_DRAW("TRIGGER_FULL_DRAW"), //
+    TRIGGER_AREA_DRAW("TRIGGER_AREA_DRAW"), //
+    DRAW_AREA("DRAW_AREA");
 
     @Getter
     private String typeName;

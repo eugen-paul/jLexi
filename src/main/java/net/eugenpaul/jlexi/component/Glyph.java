@@ -7,8 +7,10 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.component.iterator.NullIterator;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 @Getter
 @Setter
@@ -19,9 +21,15 @@ public abstract class Glyph {
     protected Glyph parent;
     protected Vector2d relativPosition;
 
-    @Setter(lombok.AccessLevel.PROTECTED)
+    protected Drawable cachedDrawable;
+
     protected Size size;
 
+    /**
+     * C'tor
+     * 
+     * @param parent
+     */
     protected Glyph(Glyph parent) {
         this.parent = parent;
         this.relativPosition = new Vector2d(0, 0);
@@ -42,7 +50,25 @@ public abstract class Glyph {
      * @param size
      * @return
      */
-    public abstract Drawable getPixels(Vector2d position, Size size);
+    public Drawable getPixels(Vector2d position, Size size) {
+        if (cachedDrawable == null) {
+            getPixels();
+        }
+
+        int[] pixels = new int[size.getWidth() * size.getHeight()];
+
+        ImageArrayHelper.copyRectangle(//
+                cachedDrawable.getPixels(), //
+                cachedDrawable.getPixelSize(), //
+                position, //
+                size, //
+                pixels, //
+                size, //
+                Vector2d.zero() //
+        );
+
+        return new DrawableImpl(pixels, size);
+    }
 
     /**
      * get a Iterator to iterate over children
@@ -51,25 +77,59 @@ public abstract class Glyph {
      */
     public abstract Iterator<Glyph> iterator();
 
-    public Vector2d getRelativPositionTo(Glyph glyph) {
-        Glyph parentGlyph = parent;
+    /**
+     * Compute the relativposition of Element to given parentGlyph.
+     * 
+     * @param parentGlyph
+     * @return Result or null if parentGlyph is not a parent.
+     */
+    public Vector2d getRelativPositionTo(Glyph parentGlyph) {
+        Glyph pGlyph = parent;
         Vector2d responsePosition = new Vector2d(relativPosition);
-        while (null != parentGlyph) {
-            if (parentGlyph == glyph) {
+        while (null != pGlyph) {
+            if (pGlyph == parentGlyph) {
                 break;
             }
-            responsePosition.add(parentGlyph.getRelativPosition());
+            responsePosition.add(pGlyph.getRelativPosition());
             // responsePosition
-            parentGlyph = parentGlyph.getParent();
+            pGlyph = pGlyph.getParent();
         }
 
-        if (null == parentGlyph) {
+        if (null == pGlyph) {
             return null;
         }
         return responsePosition;
     }
 
+    /**
+     * 
+     * @param checker
+     */
     public abstract void visit(Visitor checker);
 
-    public abstract void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size);
+    /**
+     * 
+     * @param drawData
+     * @param relativPosition
+     * @param size
+     */
+    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+        if (parent == null) {
+            return;
+        }
+
+        if (cachedDrawable == null) {
+            getPixels();
+        }
+
+        ImageArrayHelper.copyRectangle(//
+                drawData, //
+                Vector2d.zero(), //
+                size, //
+                cachedDrawable, //
+                relativPosition //
+        );
+
+        parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
+    }
 }

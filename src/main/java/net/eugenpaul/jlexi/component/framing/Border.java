@@ -57,7 +57,8 @@ public class Border extends MonoGlyph implements GuiComponent {
         if (getSize().getHeight() <= borderSize * 2 //
                 || getSize().getWidth() <= borderSize * 2 //
         ) {
-            return new DrawableImpl(generateBlackBorder(), getSize());
+            cachedDrawable = new DrawableImpl(generateBlackBorder(), getSize());
+            return cachedDrawable;
         }
 
         Drawable childDraw = super.getPixels();
@@ -96,7 +97,8 @@ public class Border extends MonoGlyph implements GuiComponent {
             );
         }
 
-        return new DrawableImpl(borderPixels, getSize());
+        cachedDrawable = new DrawableImpl(borderPixels, getSize());
+        return cachedDrawable;
     }
 
     private int[] generateBlackBorder() {
@@ -109,6 +111,7 @@ public class Border extends MonoGlyph implements GuiComponent {
     public void resizeTo(Size size) {
         setSize(size);
         computePixels();
+        getPixels();
     }
 
     @Override

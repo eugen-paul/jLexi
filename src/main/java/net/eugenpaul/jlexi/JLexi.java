@@ -6,6 +6,7 @@ import net.eugenpaul.jlexi.component.framing.Border;
 import net.eugenpaul.jlexi.component.framing.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.window.Window;
 import net.eugenpaul.jlexi.gui.window.SwingWindowImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
@@ -41,6 +42,9 @@ public class JLexi {
 
         controller.addGlyph(menubar, MAIN_WINDOW);
 
-        controller.propertyChange(new PropertyChangeEvent(MAIN_WINDOW, "UPDATE", null, defaultSize));
+        controller.propertyChange(new PropertyChangeEvent(MAIN_WINDOW, //
+                ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
+                null, //
+                defaultSize));
     }
 }

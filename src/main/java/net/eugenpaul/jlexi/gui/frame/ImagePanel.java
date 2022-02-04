@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Area;
+import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
@@ -53,12 +54,10 @@ public class ImagePanel extends JPanel {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
                 if (null == currentDrawable //
-                        || !drawable.getPixelSize().equals(currentDrawable.getPixelSize())//
+                        || currentDrawable.getPixelSize().getHeight() != getHeight()//
+                        || currentDrawable.getPixelSize().getWidth() != getWidth()//
                 ) {
-                    currentDrawable = new DrawableImpl(//
-                            drawable.getPixels().clone(), //
-                            drawable.getPixelSize() //
-                    );
+                    currentDrawable = createNewDrawable(drawable, new Area(Vector2d.zero(), drawable.getPixelSize()));
                 } else {
                     ImageArrayHelper.copyRectangle(//
                             drawable, //
@@ -78,13 +77,20 @@ public class ImagePanel extends JPanel {
     public void updateArea(Drawable drawable, Area area) {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
-                ImageArrayHelper.copyRectangle(//
-                        drawable, //
-                        Vector2d.zero(), //
-                        area.getSize(), //
-                        currentDrawable, //
-                        area.getPosition() //
-                );
+                if (null == currentDrawable //
+                        || currentDrawable.getPixelSize().getHeight() != getHeight()//
+                        || currentDrawable.getPixelSize().getWidth() != getWidth()//
+                ) {
+                    currentDrawable = createNewDrawable(drawable, area);
+                } else {
+                    ImageArrayHelper.copyRectangle(//
+                            drawable, //
+                            Vector2d.zero(), //
+                            area.getSize(), //
+                            currentDrawable, //
+                            area.getPosition() //
+                    );
+                }
 
                 currentImage = null;
                 repaint(//
@@ -95,5 +101,23 @@ public class ImagePanel extends JPanel {
                 );
             }
         });
+    }
+
+    private Drawable createNewDrawable(Drawable drawable, Area area) {
+        int h = getHeight();
+        int w = getWidth();
+        int[] pixels = new int[w * h];
+        Size pixelSize = new Size(w, h);
+        Drawable response = new DrawableImpl(pixels, pixelSize);
+
+        ImageArrayHelper.copyRectangle(//
+                drawable, //
+                Vector2d.zero(), //
+                area.getSize(), //
+                response, //
+                area.getPosition() //
+        );
+
+        return response;
     }
 }

@@ -57,7 +57,7 @@ public class CursorEffect extends TextPaneEffect {
             }
         }
 
-        getGlyph().updateEffect(this);
+        getGlyph().updateEffect();
         return this;
     }
 
@@ -87,7 +87,7 @@ public class CursorEffect extends TextPaneEffect {
             LOGGER.trace("terminate Cursor on {}.", getGlyph().getClass().getName());
         }
         getGlyph().removeEffect(this);
-        getGlyph().updateEffect(this);
+        getGlyph().updateEffect();
     }
 
 }

@@ -17,7 +17,6 @@ import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
@@ -25,6 +24,7 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(RowContainer.class);
 
     private LinkedList<T> children;
@@ -67,23 +67,6 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
         cachedDrawable = new DrawableImpl(pixels, pixelsSize);
 
         return cachedDrawable;
-    }
-
-    @Override
-    public Drawable getPixels(Vector2d position, Size size) {
-        int[] pixels = new int[size.getWidth() * size.getHeight()];
-
-        ImageArrayHelper.copyRectangle(//
-                cachedDrawable.getPixels(), //
-                cachedDrawable.getPixelSize(), //
-                position, //
-                size, //
-                pixels, //
-                size, //
-                Vector2d.zero() //
-        );
-
-        return new DrawableImpl(pixels, size);
     }
 
     @Override
@@ -204,33 +187,6 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
     @Override
     public boolean isEmpty() {
         return children.isEmpty();
-    }
-
-    @Override
-    public void updateEffect(TextPaneEffect effect) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
-        if (parent == null) {
-            return;
-        }
-
-        if (cachedDrawable == null) {
-            getPixels();
-        }
-
-        LOGGER.trace("RowContainer notifyRedraw Data to parent");
-        ImageArrayHelper.copyRectangle(//
-                drawData, //
-                Vector2d.zero(), //
-                size, //
-                cachedDrawable, //
-                relativPosition //
-        );
-
-        parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
     }
 
 }
