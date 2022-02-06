@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
-import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
-import net.eugenpaul.jlexi.component.text.structure.EndOfLine;
+import net.eugenpaul.jlexi.component.text.elements.CharGlyph;
+import net.eugenpaul.jlexi.component.text.elements.EndOfLine;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 

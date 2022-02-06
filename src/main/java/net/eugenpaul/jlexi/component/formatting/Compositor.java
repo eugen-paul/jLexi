@@ -3,8 +3,6 @@ package net.eugenpaul.jlexi.component.formatting;
 import java.util.Iterator;
 import java.util.List;
 
-import net.eugenpaul.jlexi.utils.container.NodeList;
-
 /**
  * Interface for Document formater
  * 
@@ -12,18 +10,9 @@ import net.eugenpaul.jlexi.utils.container.NodeList;
  */
 public interface Compositor<T> {
 
-    /**
-     * Do format
-     */
-    public List<T> compose(List<T> data, final int width);
+    public default void compose(List<T> data){
+        compose(data.iterator());
+    }
 
-    /**
-     * Do format
-     */
-    public List<T> compose(Iterator<T> iterator, final int width);
-
-    /**
-     * Do format
-     */
-    public NodeList<T> composeToNodeList(Iterator<T> iterator, final int width);
+    public void compose(Iterator<T> iterator);
 }

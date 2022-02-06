@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.formatting;
+package net.eugenpaul.jlexi.component.text.structure;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.iterator.TextPaneElemenIterator;
 import net.eugenpaul.jlexi.component.iterator.TextPaneElementToGlyphIterator;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
@@ -187,6 +188,11 @@ public class RowContainer<T extends TextPaneElement> extends TextContainer<T> {
     @Override
     public boolean isEmpty() {
         return children.isEmpty();
+    }
+
+    @Override
+    public Iterator<TextPaneElement> textIterator() {
+        return new TextPaneElemenIterator<>(children);
     }
 
 }

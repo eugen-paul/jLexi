@@ -1,11 +1,13 @@
 package net.eugenpaul.jlexi.component.text;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.iterator.NullIterator;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorControl;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
@@ -16,6 +18,8 @@ import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
  * Text-Gui-Components (TaxtPane, Label, ...)
  */
 public abstract class TextPaneElement extends Glyph implements CursorControl {
+
+    protected static final NullIterator<TextPaneElement> TEXT_NULLITERATOR = new NullIterator<>();
 
     protected List<TextPaneEffect> effectsList;
 
@@ -59,6 +63,8 @@ public abstract class TextPaneElement extends Glyph implements CursorControl {
      * @return true if the element can hold the mouse cursor.
      */
     public abstract boolean isCursorHoldable();
+
+    public abstract Iterator<TextPaneElement> textIterator();
 
     public boolean isEndOfLine() {
         return false;

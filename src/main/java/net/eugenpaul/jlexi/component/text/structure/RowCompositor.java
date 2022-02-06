@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.formatting;
+package net.eugenpaul.jlexi.component.text.structure;
 
 import java.util.Iterator;
 import java.util.List;

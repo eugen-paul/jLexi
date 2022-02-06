@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.structure;
+package net.eugenpaul.jlexi.component.text.elements;
 
 import java.util.Iterator;
 
@@ -16,14 +16,15 @@ import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 
-public class EndOfLine extends TextPaneElement {
+public class TextPlaceHolder extends TextPaneElement {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EndOfLine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextPlaceHolder.class);
 
     private String fontName;
     private int fontSize;
 
-    public EndOfLine(Glyph parent, FontStorage fontStorage, NodeListElement<TextPaneElement> textPaneListElement) {
+    public TextPlaceHolder(Glyph parent, FontStorage fontStorage,
+            NodeListElement<TextPaneElement> textPaneListElement) {
         super(parent, textPaneListElement);
 
         this.fontName = FontStorage.DEFAULT_FONT_NAME;
@@ -46,7 +47,7 @@ public class EndOfLine extends TextPaneElement {
 
     @Override
     public NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY) {
-        LOGGER.trace("Click on Text place holder");
+        LOGGER.trace("Click on End-Of-File");
         return this.getTextPaneListElement();
     }
 
@@ -66,13 +67,18 @@ public class EndOfLine extends TextPaneElement {
     }
 
     @Override
-    public boolean isEndOfLine() {
+    public boolean isPlaceHolder() {
         return true;
     }
 
     @Override
     public boolean moveCursor(CursorMove move, Cursor cursor) {
         return false;
+    }
+
+    @Override
+    public Iterator<TextPaneElement> textIterator() {
+        return TEXT_NULLITERATOR;
     }
 
 }

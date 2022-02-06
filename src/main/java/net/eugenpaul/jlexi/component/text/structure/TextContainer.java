@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.formatting;
+package net.eugenpaul.jlexi.component.text.structure;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
-import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
+import net.eugenpaul.jlexi.component.text.elements.CharGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;

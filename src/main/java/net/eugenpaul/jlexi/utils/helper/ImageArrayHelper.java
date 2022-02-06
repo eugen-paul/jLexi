@@ -8,6 +8,9 @@ import net.eugenpaul.jlexi.utils.Vector2d;
  * Helper functions for ImageArrays
  */
 public class ImageArrayHelper {
+
+    private static final Vector2d ZERO_VECTOR = Vector2d.zero();
+
     private ImageArrayHelper() {
 
     }
@@ -81,6 +84,18 @@ public class ImageArrayHelper {
                 src.getPixelSize(), //
                 srcPosition, //
                 copySize, //
+                dest.getPixels(), //
+                dest.getPixelSize(), //
+                destPosition //
+        );
+    }
+
+    public static void copyRectangle(Drawable src, Drawable dest, Vector2d destPosition) {
+        copyRectangle(//
+                src.getPixels(), //
+                src.getPixelSize(), //
+                ZERO_VECTOR, //
+                src.getPixelSize(), //
                 dest.getPixels(), //
                 dest.getPixelSize(), //
                 destPosition //

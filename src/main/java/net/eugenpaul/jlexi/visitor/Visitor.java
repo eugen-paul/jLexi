@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.visitor;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
+import net.eugenpaul.jlexi.component.text.elements.CharGlyph;
 
 public interface Visitor {
 

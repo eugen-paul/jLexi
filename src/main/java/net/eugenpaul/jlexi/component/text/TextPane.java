@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.slf4j.Logger;
@@ -10,14 +11,15 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
-import net.eugenpaul.jlexi.component.text.formatting.RowCompositor;
-import net.eugenpaul.jlexi.component.text.formatting.TextCompositor;
+import net.eugenpaul.jlexi.component.text.elements.CharGlyph;
+import net.eugenpaul.jlexi.component.text.elements.TextPlaceHolder;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneKeyHandler;
-import net.eugenpaul.jlexi.component.text.structure.CharGlyph;
-import net.eugenpaul.jlexi.component.text.structure.TextPlaceHolder;
+import net.eugenpaul.jlexi.component.text.structure.RowCompositor;
+import net.eugenpaul.jlexi.component.text.structure.TextCompositor;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectHandler;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
@@ -26,6 +28,7 @@ import net.eugenpaul.jlexi.utils.container.NodeList;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 /**
@@ -70,7 +73,16 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable, Tex
     public Drawable getPixels() {
         compositor.compose(nodeList.iterator());
 
-        cachedDrawable = compositor.getPixels();
+        int[] emptyPixels = new int[size.getWidth() * size.getHeight()];
+        Arrays.fill(emptyPixels, 0);
+
+        cachedDrawable = new DrawableImpl(//
+                emptyPixels, //
+                size //
+        );
+        Drawable compositorDrawable = compositor.getPixels();
+
+        ImageArrayHelper.copyRectangle(compositorDrawable, cachedDrawable, Vector2d.zero());
 
         return cachedDrawable;
     }

@@ -1,11 +1,10 @@
-package net.eugenpaul.jlexi.component.text.structure;
+package net.eugenpaul.jlexi.component.text.elements;
 
 import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
@@ -14,40 +13,25 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.container.NodeList.NodeListElement;
 
-public class CharGlyph extends TextPaneElement {
+public class EndOfLine extends TextPaneElement {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CharGlyph.class);
-
-    @Getter
-    private Character c;
-
-    private FontStorage fontStorage;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndOfLine.class);
 
     private String fontName;
-    private int style;
     private int fontSize;
 
-    public CharGlyph(Glyph parent, Character c, FontStorage fontStorage,
-            NodeListElement<TextPaneElement> textPaneListElement) {
+    public EndOfLine(Glyph parent, FontStorage fontStorage, NodeListElement<TextPaneElement> textPaneListElement) {
         super(parent, textPaneListElement);
-        this.c = c;
-        this.fontStorage = fontStorage;
 
         this.fontName = FontStorage.DEFAULT_FONT_NAME;
-        this.style = FontStorage.DEFAULT_STYLE;
         this.fontSize = FontStorage.DEFAULT_FONT_SIZE;
 
-        this.drawableWithoutEffects = this.fontStorage.ofChar(//
-                c, //
-                fontName, //
-                style, //
-                fontSize//
-        );
-
-        setSize(this.drawableWithoutEffects.getPixelSize());
-
+        int[] pixels = new int[fontStorage.getMaxAscent(fontName, fontSize)];
+        setSize(new Size(1, pixels.length));
+        drawableWithoutEffects = new DrawableImpl(pixels, getSize());
     }
 
     @Override
@@ -61,13 +45,9 @@ public class CharGlyph extends TextPaneElement {
     }
 
     @Override
-    public Iterator<Glyph> iterator() {
-        return NULLITERATOR;
-    }
-
-    @Override
-    public void visit(Visitor checker) {
-        checker.visit(this);
+    public NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY) {
+        LOGGER.trace("Click on Text place holder");
+        return this.getTextPaneListElement();
     }
 
     @Override
@@ -76,14 +56,28 @@ public class CharGlyph extends TextPaneElement {
     }
 
     @Override
-    public NodeListElement<TextPaneElement> getChildOn(Integer mouseX, Integer mouseY) {
-        LOGGER.trace("Click on \"{}\"", c);
-        return this.getTextPaneListElement();
+    public Iterator<Glyph> iterator() {
+        return NULLITERATOR;
+    }
+
+    @Override
+    public void visit(Visitor checker) {
+        // Nothing to do
+    }
+
+    @Override
+    public boolean isEndOfLine() {
+        return true;
     }
 
     @Override
     public boolean moveCursor(CursorMove move, Cursor cursor) {
         return false;
+    }
+
+    @Override
+    public Iterator<TextPaneElement> textIterator() {
+        return TEXT_NULLITERATOR;
     }
 
 }
