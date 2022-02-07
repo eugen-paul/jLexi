@@ -1,0 +1,102 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>24</x><y>70</y><w>200</w><h>160</h></coordinates><panel_attributes>paragraph
+group=3</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>24</x><y>250</y><w>200</w><h>200</h></coordinates><panel_attributes>paragraph
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>24</x><y>470</y><w>200</w><h>140</h></coordinates><panel_attributes>paragraph
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>44</x><y>100</y><w>150</w><h>40</h></coordinates><panel_attributes>text
+
+group=3</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>44</x><y>160</y><w>150</w><h>40</h></coordinates><panel_attributes>text
+
+group=3</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>44</x><y>280</y><w>150</w><h>40</h></coordinates><panel_attributes>table
+
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>44</x><y>340</y><w>150</w><h>40</h></coordinates><panel_attributes>bold
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>44</x><y>400</y><w>150</w><h>40</h></coordinates><panel_attributes>text
+
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>44</x><y>500</y><w>150</w><h>40</h></coordinates><panel_attributes>text
+
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>44</x><y>560</y><w>150</w><h>40</h></coordinates><panel_attributes>bold
+group=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>274</x><y>70</y><w>160</w><h>230</h></coordinates><panel_attributes>Iterator:
+--
+paragrath
+text
+text
+paragraphEnd -&gt; EOL
+paragrath
+table
+bold
+text
+paragraphEnd -&gt; EOL
+paragrath
+text
+text
+paragraphEnd -&gt; EOL
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>214</x><y>160</y><w>80</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;30;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>214</x><y>180</y><w>80</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;10;10;170</additional_attributes></element><element><id>Relation</id><coordinates><x>214</x><y>180</y><w>80</w><h>380</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;10;10;360</additional_attributes></element><element><id>UMLClass</id><coordinates><x>274</x><y>530</y><w>210</w><h>40</h></coordinates><panel_attributes>SiteCompositor</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>274</x><y>620</y><w>210</w><h>170</h></coordinates><panel_attributes>Sites
+--
+Site 1:
+- text | text
+- EOL
+- table
+
+Site 2:
+- bold | text
+- EOL
+- text | bold</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>374</x><y>560</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>584</x><y>680</y><w>210</w><h>50</h></coordinates><panel_attributes>TextPane</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>474</x><y>680</y><w>130</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;-
+getPixels</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>524</x><y>70</y><w>160</w><h>40</h></coordinates><panel_attributes>ParagraphCompositor</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>424</x><y>80</y><w>120</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>544</x><y>150</y><w>120</w><h>170</h></coordinates><panel_attributes>Paragraph
+--
+Paragraph1:
+- text | text
+
+Paragraph2:
+- table
+- bold | text
+
+Paragraph3:
+- text | bold</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>594</x><y>100</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>684</x><y>390</y><w>100</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>80;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>734</x><y>170</y><w>110</w><h>40</h></coordinates><panel_attributes>RowCompositor
+Paragraph1
+group=4</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>734</x><y>220</y><w>110</w><h>40</h></coordinates><panel_attributes>RowCompositor
+Paragraph2
+group=4</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>734</x><y>270</y><w>110</w><h>40</h></coordinates><panel_attributes>RowCompositor
+Paragraph3
+group=4</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>654</x><y>180</y><w>100</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>80;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>654</x><y>230</y><w>100</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>80;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>654</x><y>280</y><w>100</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>80;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>904</x><y>210</y><w>70</w><h>60</h></coordinates><panel_attributes>Rows:P2
+--
+table
+bold | text</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>904</x><y>280</y><w>70</w><h>50</h></coordinates><panel_attributes>Rows:P3
+--
+text | bold</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>904</x><y>150</y><w>70</w><h>50</h></coordinates><panel_attributes>Rows:P1
+--
+text | text</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>844</x><y>160</y><w>80</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>834</x><y>230</y><w>90</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>70;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>844</x><y>280</y><w>80</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;20;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>584</x><y>350</y><w>110</w><h>140</h></coordinates><panel_attributes>Iterator:
+--
+P1:
+- text | text
+P2
+- table
+- bold | text
+P3
+- text | bold</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>614</x><y>310</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;40;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>724</x><y>160</y><w>130</w><h>160</h></coordinates><panel_attributes>
+group=4</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>10</y><w>790</w><h>160</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>770;140;770;20;10;20;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>850</x><y>150</y><w>70</w><h>50</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>10;30;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>150</y><w>100</w><h>40</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>10;20;80;20</additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>100</y><w>170</w><h>450</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>10;430;150;10</additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>560</y><w>150</w><h>140</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>130;120;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>290</y><w>160</w><h>110</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>140;90;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>560</y><w>60</w><h>80</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>764</x><y>380</y><w>210</w><h>40</h></coordinates><panel_attributes>ColumnCompositor</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>814</x><y>460</y><w>130</w><h>180</h></coordinates><panel_attributes>Iterator:
+--
+Column 1:
+P1:
+- text | text
+P2
+- table
+Column 2:
+- bold | text
+P3
+- text | bold</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>410</y><w>330</w><h>150</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>10;130;310;130;310;10</additional_attributes></element><element><id>Relation</id><coordinates><x>864</x><y>410</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>474</x><y>540</y><w>360</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;340;10</additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>550</y><w>360</w><h>80</h></coordinates><panel_attributes>lt=&lt;..
+fg=red
+Parent</panel_attributes><additional_attributes>10;10;340;60</additional_attributes></element></diagram>

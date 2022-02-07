@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format;
 
+import java.awt.Font;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,13 +32,24 @@ public class FormatAttribute {
         setIfNull(fontName, src.getFontName());
     }
 
-    public <T> T setIfNull(T target, T source) {
+    private <T> T setIfNull(T target, T source) {
         if (target == null) {
             return source;
         }
         return target;
     }
 
+    public int getStyle() {
+        return ((bold != null && bold.booleanValue()) ? Font.BOLD : 0)//
+                | ((italic != null && italic.booleanValue()) ? Font.ITALIC : 0)//
+        ;
+    }
+
+    /**
+     * Return true if all pattributes are set.
+     * 
+     * @return
+     */
     public boolean isFull() {
         return //
         bold != null //

@@ -9,6 +9,7 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.TextPaneElement;
+import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -31,13 +32,28 @@ public class CharGlyph extends TextPaneElement {
 
     public CharGlyph(Glyph parent, Character c, FontStorage fontStorage,
             NodeListElement<TextPaneElement> textPaneListElement) {
+        this(//
+                parent, //
+                c, //
+                fontStorage, //
+                FormatAttribute.builder()//
+                        .bold(false)//
+                        .italic(false)//
+                        .fontName(FontStorage.DEFAULT_FONT_NAME)//
+                        .fontsize(FontStorage.DEFAULT_FONT_SIZE)//
+                        .build(), //
+                textPaneListElement //
+        );
+    }
+
+    public CharGlyph(Glyph parent, Character c, FontStorage fontStorage, FormatAttribute textFormat,
+            NodeListElement<TextPaneElement> textPaneListElement) {
         super(parent, textPaneListElement);
         this.c = c;
         this.fontStorage = fontStorage;
-
-        this.fontName = FontStorage.DEFAULT_FONT_NAME;
-        this.style = FontStorage.DEFAULT_STYLE;
-        this.fontSize = FontStorage.DEFAULT_FONT_SIZE;
+        this.fontName = textFormat.getFontName();
+        this.style = textFormat.getStyle();
+        this.fontSize = textFormat.getFontsize();
 
         this.drawableWithoutEffects = this.fontStorage.ofChar(//
                 c, //
@@ -47,7 +63,6 @@ public class CharGlyph extends TextPaneElement {
         );
 
         setSize(this.drawableWithoutEffects.getPixelSize());
-
     }
 
     @Override

@@ -1,10 +1,7 @@
 package net.eugenpaul.jlexi.resourcesmanager;
 
-import java.awt.Font;
-
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.utils.Size;
 
 /**
  * Abstract Storage for chars as PixelArray
@@ -13,11 +10,10 @@ public abstract class FontStorage {
 
     public static final int[] EMPTY_CHAR = new int[0];
     public static final String DEFAULT_FONT_NAME = "Monospaced";
-    public static final int DEFAULT_STYLE = Font.PLAIN;
     public static final int DEFAULT_FONT_SIZE = 12;
     public static final int DEFAULT_MAX_ASCENT = 7;
 
-    protected static final Drawable DEFAULT_DRAWABLE = new DrawableImpl(EMPTY_CHAR, Size.ZERO_SIZE);
+    protected static final Drawable DEFAULT_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
 
     /**
      * Return Pixel-Array of char

@@ -24,9 +24,6 @@ public class FontStorageImpl extends FontStorage {
         this.fontGenerator = fontGenerator;
         charToArray = new HashMap<>();
         fontToSize = new HashMap<>();
-
-        int maxAscent = fontGenerator.getMaxAscent(DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
-        fontToSize.put(DEFAULT_FONT_NAME, maxAscent);
     }
 
     public FontStorageImpl() {
@@ -39,17 +36,17 @@ public class FontStorageImpl extends FontStorage {
             return DEFAULT_DRAWABLE;
         }
 
-        int maxAscent = fontToSize.get(DEFAULT_FONT_NAME);
+        Integer maxAscent = fontToSize.computeIfAbsent(fontName, k -> getMaxAscent(k, size));
 
         return charToArray.computeIfAbsent(c, key -> {
-            int[] pixels = fontGenerator.ofChar(c, DEFAULT_FONT_NAME, DEFAULT_STYLE, DEFAULT_FONT_SIZE);
+            int[] pixels = fontGenerator.ofChar(c, fontName, style, size);
             return new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
         });
     }
 
     @Override
     public int getMaxAscent(String fontName, int size) {
-        return fontToSize.getOrDefault(DEFAULT_FONT_NAME, DEFAULT_MAX_ASCENT);
+        return fontToSize.getOrDefault(fontName, size);
     }
 
 }
