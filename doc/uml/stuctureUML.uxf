@@ -1,0 +1,72 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text></help_text><element><id>UMLClass</id><coordinates><x>70</x><y>530</y><w>270</w><h>190</h></coordinates><panel_attributes>Glyph
+--
+parent: Gpyph
+relativPosition: Vector
+cachedDrawable: Drawable
+size: Size
+--
+getPixels()
+getPixels(pos, size)
+iterator()
+getRelativPositionTo(glyph)
+notifyRedraw(Drawable, relativPosition, size) </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>30</y><w>280</w><h>300</h></coordinates><panel_attributes>TextElement
+--
+textParent: TextElement
+children: NodeList&lt;TextElement&gt;
+format: FormatAttribute
+effectsList: List&lt;TextPaneEffect&gt;
+--
+textIterator()
+isEndOfLine()
+isPlaceHolder()
+addEffect(TextPaneEffect)
+removeEffect(TextPaneEffect)
+updateEffect(TextPaneEffect)
+add()
+notifyReplace(TextElement, List&lt;TextElement&gt;) 
+isEmpty()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>210</y><w>280</w><h>60</h></coordinates><panel_attributes>TextBold/Italic/Plaint
+--
+format: FormatAttribute="BOLD/ITALIC/PLAINT"
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>230</y><w>60</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>200</y><w>280</w><h>130</h></coordinates><panel_attributes>TextParagraph
+--
+format: FormatAttribute="BOLD"
+parentStructure: TextPaneStructure // column
+structure: NodeList&lt;TextPaneStructure&gt; // rows
+--
+isEndOfLine() = true</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>230</y><w>60</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>390</x><y>580</y><w>280</w><h>220</h></coordinates><panel_attributes>TextPaneStructure
+--
+children: NodeList&lt;TextPaneStructure&gt;
+textChildren: NodeList&lt;TextToStructure&gt;
+--
+addIfPossible(TextPaneStructure)
+notifyReplace(TextElement, List&lt;TextElement&gt;) </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>40</y><w>280</w><h>80</h></coordinates><panel_attributes>TextChar
+--
+children = null
+char = c
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>60</y><w>60</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>100</y><w>280</w><h>80</h></coordinates><panel_attributes>TextTable
+--
+column / row
+preferredSize
+--
+isEndOfLine() = true</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>130</y><w>60</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>130</y><w>280</w><h>60</h></coordinates><panel_attributes>TextImage
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>150</y><w>60</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>710</y><w>210</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50;190;50</additional_attributes></element><element><id>Relation</id><coordinates><x>520</x><y>450</y><w>340</w><h>150</h></coordinates><panel_attributes>lt=-
+m1=1..n
+m2=1</panel_attributes><additional_attributes>300;10;300;70;10;70;10;130</additional_attributes></element><element><id>UMLClass</id><coordinates><x>710</x><y>660</y><w>280</w><h>60</h></coordinates><panel_attributes>TextPaneColumn
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>710</x><y>740</y><w>280</w><h>60</h></coordinates><panel_attributes>TextPaneSite
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>680</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>760</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>320</y><w>340</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;210;10;70;320;70;320;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>710</x><y>580</y><w>280</w><h>60</h></coordinates><panel_attributes>TextPaneRow
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>600</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>380</y><w>280</w><h>80</h></coordinates><panel_attributes>TextToStructure: Interface
+--
+getRows()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>820</x><y>320</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>960</x><y>130</y><w>60</w><h>310</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;290;40;290;40;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>290</y><w>280</w><h>80</h></coordinates><panel_attributes>TextInlineTable
+--
+column / row
+fixSize
+--
+isEndOfLine() = false</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>310</y><w>60</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;10;10;10</additional_attributes></element></diagram>
