@@ -1,0 +1,27 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>410</x><y>120</y><w>300</w><h>80</h></coordinates><panel_attributes>Command
+--
+execute
+undo
+canUndo</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>240</y><w>300</w><h>80</h></coordinates><panel_attributes>TextCommand
+--
+cursor
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>630</x><y>370</y><w>150</w><h>80</h></coordinates><panel_attributes>EnterCommand
+--
+corsor.getParent.split()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>400</x><y>370</y><w>200</w><h>150</h></coordinates><panel_attributes>DeleteCommand
+--
+execute: = {
+parent = cursor.getParent()
+cursor.moveTo (corsor.getNext() )
+cursor.getPrev().remove()
+checkMerge()
+parent.reset()
+}</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>370</y><w>210</w><h>150</h></coordinates><panel_attributes>BackspaceCommand
+--
+execute: = {
+parent = cursor.getPrev().getParent;
+cursor.getPrev().remove();
+checkMerge()
+parent.reset()
+}</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>270</y><w>170</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>150;10;10;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>550</x><y>190</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>310</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>670</x><y>310</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>790</x><y>240</y><w>300</w><h>80</h></coordinates><panel_attributes>Cursor
+--
+position: TextElement</panel_attributes><additional_attributes></additional_attributes></element></diagram>
