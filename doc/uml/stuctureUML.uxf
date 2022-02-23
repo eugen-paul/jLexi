@@ -65,7 +65,7 @@ textElements: NodeList&lt;TextToStructure&gt;
 targetSite: Size
 structureCompositor: = ColumnCompositor
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1160</x><y>720</y><w>30</w><h>180</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;160</additional_attributes></element><element><id>UMLClass</id><coordinates><x>480</x><y>1090</y><w>280</w><h>110</h></coordinates><panel_attributes>TextPaneDocument
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1160</x><y>720</y><w>30</w><h>180</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;160</additional_attributes></element><element><id>UMLClass</id><coordinates><x>480</x><y>1090</y><w>270</w><h>110</h></coordinates><panel_attributes>TextPaneDocument
 --
 childConstructor: TextSection::new
 --
@@ -149,7 +149,7 @@ movePageDown()</panel_attributes><additional_attributes></additional_attributes>
 cursor: Cursor
 doc: TextPaneDocument
 --
-handleKeyInput(key): = doc.handleInput(key, cursor)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>1120</y><w>120</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>450</x><y>840</y><w>330</w><h>210</h></coordinates><panel_attributes>TextStructure
+handleKeyInput(key): = doc.handleInput(key, cursor)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>1120</y><w>120</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>450</x><y>830</y><w>330</w><h>220</h></coordinates><panel_attributes>TextStructure
 --
 children: List&lt;TextPaneStructure&gt;
 childConstructor
@@ -161,20 +161,21 @@ parentStructure: TextPaneStructure
 setFormat(from, to)
 getRows(length: int)
 setFormat(from, to)
+remove(from, to)
 T merge(other: T)
 split()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>710</y><w>160</w><h>80</h></coordinates><panel_attributes>TextParagraph
 --
 textChildren: List&lt;TextField&gt;
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>780</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>710</y><w>120</w><h>80</h></coordinates><panel_attributes>TextTable
+pasteAfter(TextField)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>780</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>710</y><w>120</w><h>80</h></coordinates><panel_attributes>TextTable
 --
 column / row
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>600</x><y>780</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>710</y><w>160</w><h>80</h></coordinates><panel_attributes>TextSection
+pasteAfter(TextField)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>600</x><y>780</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>710</y><w>160</w><h>80</h></coordinates><panel_attributes>TextSection
 --
 format: FormatAttribute="COLUMN=1"
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>750</x><y>780</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1020</x><y>1020</y><w>250</w><h>180</h></coordinates><panel_attributes>TextStructureForm
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>750</x><y>780</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1020</x><y>1020</y><w>250</w><h>180</h></coordinates><panel_attributes>TextStructureForm
 --
 children: List&lt;TextField&gt;
 --
