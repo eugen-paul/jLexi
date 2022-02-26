@@ -25,11 +25,12 @@ public class FormatAttribute {
      * 
      * @param src
      */
-    public void merge(FormatAttribute src) {
+    public FormatAttribute merge(FormatAttribute src) {
         setIfNull(bold, src.getBold());
         setIfNull(italic, src.getItalic());
         setIfNull(fontsize, src.getFontsize());
         setIfNull(fontName, src.getFontName());
+        return this;
     }
 
     private <T> T setIfNull(T target, T source) {

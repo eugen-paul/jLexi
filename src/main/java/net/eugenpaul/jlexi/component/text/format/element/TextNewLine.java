@@ -1,57 +1,43 @@
 package net.eugenpaul.jlexi.component.text.format.element;
 
-import java.util.Iterator;
-
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.visitor.Visitor;
+import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.Size;
 
-public class TextNewLine extends TextElementAbstract{
+public class TextNewLine extends TextElementAbstract {
 
-    protected TextNewLine(Glyph parent) {
-        super(parent);
-    }
-
-    @Override
-    public boolean isEndOfLine() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isPlaceHolder() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void remove() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void reset() {
-        // TODO Auto-generated method stub
-        
+    public TextNewLine(Glyph parent, FontStorage fontStorage) {
+        super(parent, fontStorage);
     }
 
     @Override
     public Drawable getPixels() {
-        // TODO Auto-generated method stub
-        return null;
+        if (null != cachedDrawable) {
+            return cachedDrawable;
+        }
+
+        FormatAttribute textFormat = new FormatAttribute();
+
+        if (null != parentTextField) {
+            textFormat = parentTextField.mergeFormat(textFormat);
+
+            int[] pixels = new int[fontStorage.getMaxAscent(//
+                    (textFormat.getFontName() == null) ? FontStorage.DEFAULT_FONT_NAME : textFormat.getFontName(), //
+                    (textFormat.getFontsize() == null) ? FontStorage.DEFAULT_FONT_SIZE : textFormat.getFontsize() //
+            )];
+            setSize(new Size(1, pixels.length));
+
+            cachedDrawable = new DrawableImpl(pixels, getSize());
+
+            cachedDrawable = doEffects(cachedDrawable);
+        } else {
+            cachedDrawable = DrawableImpl.EMPTY_DRAWABLE;
+        }
+
+        return cachedDrawable;
     }
 
-    @Override
-    public Iterator<Glyph> iterator() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void visit(Visitor checker) {
-        // TODO Auto-generated method stub
-        
-    }
-    
 }

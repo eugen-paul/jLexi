@@ -1,14 +1,12 @@
 package net.eugenpaul.jlexi.component.text.format.field;
 
 import java.util.Iterator;
-import java.util.List;
 
-import net.eugenpaul.jlexi.component.text.format.CursorControl;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 
-public abstract class TextField implements CursorControl {
+public abstract class TextField {
     private TextStructure structureParent;
     private FormatAttribute format;
 
@@ -23,19 +21,24 @@ public abstract class TextField implements CursorControl {
 
     public abstract TextElement getLastChild();
 
-    public abstract void notifyChange();
+    public void notifyChange() {
+        if (null != structureParent) {
+            structureParent.notifyChange();
+        }
+    }
 
     public abstract boolean isEmpty();
 
-    public abstract FormatAttribute mergeFormat(FormatAttribute format);
+    public FormatAttribute mergeFormat(FormatAttribute format) {
+        format.merge(this.format);
+        return format;
+    }
 
     public abstract void remove();
 
     public abstract void addBefor(TextElement position, TextElement element);
 
     public abstract void reset();
-
-    public abstract <T> List<T> split();
 
     public abstract void merge(TextField other);
 

@@ -8,6 +8,8 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.effect.Effect;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
 
 public abstract class TextElement extends Glyph implements EffectHolder {
@@ -22,15 +24,27 @@ public abstract class TextElement extends Glyph implements EffectHolder {
         effects = new LinkedList<>();
     }
 
-    public abstract boolean isEndOfLine();
+    public boolean isEndOfLine() {
+        return false;
+    }
 
-    public abstract boolean isPlaceHolder();
+    public boolean isPlaceHolder() {
+        return false;
+    }
 
     public abstract boolean isCursorHoldable();
 
-    public abstract void remove();
+    public void remove() {
+        effects.stream().forEach(Effect::terminate);
+        effects.clear();
+        if (null != parentTextField) {
+            parentTextField.notifyChange();
+        }
+    }
 
-    public abstract void reset();
+    public void reset() {
+        cachedDrawable = null;
+    }
 
     @Override
     public void addEffect(TextPaneEffect effect) {
@@ -42,8 +56,16 @@ public abstract class TextElement extends Glyph implements EffectHolder {
         effects.remove(effect);
     }
 
+    protected Drawable doEffects(Drawable element) {
+        effects.stream()//
+                .forEach(v -> v.editDrawable(element));
+        return element;
+    }
+
     @Override
     public void updateEffect(TextPaneEffect effect) {
-        // TODO Auto-generated method stub
+        if (null != parentTextField) {
+            parentTextField.notifyChange();
+        }
     }
 }
