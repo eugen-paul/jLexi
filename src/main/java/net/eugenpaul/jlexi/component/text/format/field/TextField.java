@@ -1,12 +1,11 @@
 package net.eugenpaul.jlexi.component.text.format.field;
 
-import java.util.Iterator;
-
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
+import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 
-public abstract class TextField {
+public abstract class TextField implements GlyphIterable<TextElement> {
     private TextStructure structureParent;
     private FormatAttribute format;
 
@@ -14,8 +13,6 @@ public abstract class TextField {
         this.structureParent = structureParent;
         this.format = format;
     }
-
-    public abstract Iterator<TextElement> printableIterator();
 
     public abstract TextElement getFirstChild();
 

@@ -3,9 +3,10 @@ package net.eugenpaul.jlexi.component.text.format.compositor;
 import java.util.Iterator;
 import java.util.List;
 
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
+import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.utils.Size;
 
-public interface TextCompositor {
-    public List<TextStructure> compose(Iterator<TextElement> iterator);
+public interface TextCompositor<T extends Glyph> {
+    public List<TextStructureForm> compose(Iterator<T> iterator, Size maxSize);
 }

@@ -1,22 +1,37 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
 import java.awt.geom.Area;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.CursorControl;
+import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public abstract class TextStructureForm extends Glyph implements CursorControl {
+public abstract class TextStructureForm extends Glyph implements CursorControl, GlyphIterable<TextStructureForm> {
 
-    private List<TextField> children;
+    private List<TextElement> children;
+    private List<TextStructureForm> childrenForm;
 
     protected TextStructureForm(Glyph parent) {
         super(parent);
-        // TODO Auto-generated constructor stub
+        children = new LinkedList<>();
+        childrenForm = new LinkedList<>();
+    }
+
+    public void add(TextElement child) {
+        children.add(child);
+    }
+
+    public void add(TextStructureForm child) {
+        childrenForm.add(child);
+    }
+
+    public boolean isEmpty() {
+        return children.isEmpty();
     }
 
     public abstract void notifyUpdate(TextElement element, Drawable draw, Area area);

@@ -64,4 +64,10 @@ public class TextPaneColumn extends TextStructureForm {
         
     }
 
+    @Override
+    public Iterator<TextStructureForm> printableIterator() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
