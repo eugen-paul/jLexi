@@ -65,7 +65,7 @@ public class TextPaneSite extends TextStructureForm {
     }
 
     @Override
-    public Iterator<TextStructureForm> printableIterator() {
+    public Iterator<TextStructureForm> printableChildIterator() {
         // TODO Auto-generated method stub
         return null;
     }

@@ -3,12 +3,11 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
-import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.utils.Size;
 
-public abstract class TextStructure implements GlyphIterable<TextStructureForm> {
+public abstract class TextStructure {
     private FormatAttribute format;
 
     protected List<TextStructureForm> structureForm;
@@ -37,4 +36,6 @@ public abstract class TextStructure implements GlyphIterable<TextStructureForm> 
     }
 
     public abstract List<TextStructureForm> getRows(Size size);
+
+    public abstract void resetStructure();
 }

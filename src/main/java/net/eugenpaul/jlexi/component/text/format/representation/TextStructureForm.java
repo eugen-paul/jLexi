@@ -13,8 +13,8 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextStructureForm extends Glyph implements CursorControl, GlyphIterable<TextStructureForm> {
 
-    private List<TextElement> children;
-    private List<TextStructureForm> childrenForm;
+    protected List<TextElement> children;
+    protected List<TextStructureForm> childrenForm;
 
     protected TextStructureForm(Glyph parent) {
         super(parent);
@@ -31,7 +31,8 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
     }
 
     public boolean isEmpty() {
-        return children.isEmpty();
+        //TODO
+        return children.isEmpty() && childrenForm.isEmpty();
     }
 
     public abstract void notifyUpdate(TextElement element, Drawable draw, Area area);

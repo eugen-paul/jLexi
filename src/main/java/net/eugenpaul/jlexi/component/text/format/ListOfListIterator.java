@@ -28,7 +28,7 @@ public class ListOfListIterator<E extends Glyph, R extends GlyphIterable<E>> imp
         }
 
         while (rootIterator.hasNext()) {
-            currentChildIterator = rootIterator.next().printableIterator();
+            currentChildIterator = rootIterator.next().printableChildIterator();
             if (currentChildIterator.hasNext()) {
                 return currentChildIterator.next();
             }
@@ -44,7 +44,7 @@ public class ListOfListIterator<E extends Glyph, R extends GlyphIterable<E>> imp
         }
 
         while (rootIterator.hasNext()) {
-            currentChildIterator = rootIterator.next().printableIterator();
+            currentChildIterator = rootIterator.next().printableChildIterator();
             if (currentChildIterator.hasNext()) {
                 return true;
             }

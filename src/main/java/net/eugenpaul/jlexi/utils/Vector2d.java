@@ -74,4 +74,8 @@ public class Vector2d {
         y += addVector.getY();
         return this;
     }
+
+    public Size toSize() {
+        return new Size(x, y);
+    }
 }

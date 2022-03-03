@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
@@ -11,8 +12,8 @@ public abstract class TextElementAbstract extends TextElement {
 
     protected FontStorage fontStorage;
 
-    protected TextElementAbstract(Glyph parent, FontStorage fontStorage) {
-        super(parent);
+    protected TextElementAbstract(Glyph parent, FontStorage fontStorage, TextField parentTextField) {
+        super(parent, parentTextField);
         this.fontStorage = fontStorage;
     }
 

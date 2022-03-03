@@ -3,22 +3,33 @@ package net.eugenpaul.jlexi.component.text.format.field;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.stream.Collectors;
 
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
+import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
 public class TextSpan extends TextField {
 
     private LinkedList<TextElement> children;
 
-    protected TextSpan(TextStructure structureParent, FormatAttribute format) {
+    public TextSpan(TextStructure structureParent, FormatAttribute format) {
         super(structureParent, format);
         children = new LinkedList<>();
     }
 
+    public TextSpan(TextStructure structureParent, FontStorage fontStorage, FormatAttribute format, String text) {
+        super(structureParent, format);
+        children = text.chars() //
+                .mapToObj(v -> (char) v) //
+                .map(v -> new TextChar(null, fontStorage, this, v)) //
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
     @Override
-    public Iterator<TextElement> printableIterator() {
+    public Iterator<TextElement> printableChildIterator() {
         return children.iterator();
     }
 
@@ -61,7 +72,7 @@ public class TextSpan extends TextField {
 
     @Override
     public void merge(TextField other) {
-        Iterator<TextElement> iterator = other.printableIterator();
+        Iterator<TextElement> iterator = other.printableChildIterator();
         while (iterator.hasNext()) {
             children.add(iterator.next());
         }

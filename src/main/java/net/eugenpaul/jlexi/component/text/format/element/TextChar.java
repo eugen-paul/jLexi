@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.component.text.format.element;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
+import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
@@ -10,9 +11,11 @@ public class TextChar extends TextElementAbstract {
 
     private Character c;
 
-    public TextChar(Glyph parent, FontStorage fontStorage, Character c) {
-        super(parent, fontStorage);
+    public TextChar(Glyph parent, FontStorage fontStorage, TextField parentTextField, Character c) {
+        super(parent, fontStorage, parentTextField);
         this.c = c;
+
+        getPixels();
     }
 
     @Override

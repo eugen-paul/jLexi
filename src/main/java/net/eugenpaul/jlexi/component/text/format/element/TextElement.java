@@ -19,9 +19,10 @@ public abstract class TextElement extends Glyph implements EffectHolder {
     protected TextStructureForm parentStructureForm;
     private List<TextPaneEffect> effects;
 
-    protected TextElement(Glyph parent) {
+    protected TextElement(Glyph parent, TextField parentTextField) {
         super(parent);
-        effects = new LinkedList<>();
+        this.parentTextField = parentTextField;
+        this.effects = new LinkedList<>();
     }
 
     public boolean isEndOfLine() {
