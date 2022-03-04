@@ -1,11 +1,11 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
-import java.awt.geom.Area;
 import java.util.Iterator;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
@@ -13,7 +13,7 @@ public class TextPaneSite extends TextStructureForm {
 
     public TextPaneSite(Glyph parent) {
         super(parent);
-        //TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -29,9 +29,9 @@ public class TextPaneSite extends TextStructureForm {
     }
 
     @Override
-    public void getCorsorElementAt(Vector2d pos) {
+    public TextElement getCorsorElementAt(Vector2d pos) {
         // TODO Auto-generated method stub
-
+        return null;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class TextPaneSite extends TextStructureForm {
     @Override
     public void visit(Visitor checker) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override

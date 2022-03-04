@@ -7,6 +7,7 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextNewLine extends TextElementAbstract {
 
@@ -39,6 +40,11 @@ public class TextNewLine extends TextElementAbstract {
         }
 
         return cachedDrawable;
+    }
+
+    @Override
+    public TextElement getCorsorElementAt(Vector2d pos) {
+        return this;
     }
 
 }

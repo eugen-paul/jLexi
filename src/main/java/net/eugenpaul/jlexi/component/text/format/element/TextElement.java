@@ -7,16 +7,15 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.field.TextField;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.Effect;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextElement extends Glyph implements EffectHolder {
 
     @Getter
     protected TextField parentTextField;
-    protected TextStructureForm parentStructureForm;
     private List<TextPaneEffect> effects;
 
     protected TextElement(Glyph parent, TextField parentTextField) {
@@ -34,6 +33,8 @@ public abstract class TextElement extends Glyph implements EffectHolder {
     }
 
     public abstract boolean isCursorHoldable();
+
+    public abstract TextElement getCorsorElementAt(Vector2d pos);
 
     public void remove() {
         effects.stream().forEach(Effect::terminate);
@@ -65,8 +66,9 @@ public abstract class TextElement extends Glyph implements EffectHolder {
 
     @Override
     public void updateEffect(TextPaneEffect effect) {
-        if (null != parentTextField) {
-            parentTextField.notifyChange();
+        if (null != parent) {
+            cachedDrawable = null;
+            parent.notifyRedraw(getPixels(), getRelativPosition(), getSize());
         }
     }
 }

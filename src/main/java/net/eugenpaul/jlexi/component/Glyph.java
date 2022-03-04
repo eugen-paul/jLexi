@@ -110,10 +110,10 @@ public abstract class Glyph {
     /**
      * 
      * @param drawData
-     * @param relativPosition
+     * @param position
      * @param size
      */
-    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+    public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
         if (parent == null) {
             return;
         }
@@ -127,9 +127,9 @@ public abstract class Glyph {
                 Vector2d.zero(), //
                 size, //
                 cachedDrawable, //
-                relativPosition //
+                position //
         );
 
-        parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
+        parent.notifyRedraw(drawData, position.addNew(this.relativPosition), size);
     }
 }

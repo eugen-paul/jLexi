@@ -25,6 +25,7 @@ public class TextStructureFormToColumnCompositor implements TextCompositor<TextS
 
             if (currentHeight + element.getSize().getHeight() <= maxSize.getHeight()) {
                 column.add(element);
+                element.setParent(column);
                 columnSize.setX(Math.max(columnSize.getX(), element.getSize().getWidth()));
                 columnSize.setY(columnSize.getY() + element.getSize().getHeight());
                 currentHeight += element.getSize().getHeight();
@@ -33,9 +34,10 @@ public class TextStructureFormToColumnCompositor implements TextCompositor<TextS
                 column.setSize(columnSize.toSize());
                 column = new TextPaneColumn(null);
                 column.add(element);
+                element.setParent(column);
                 columnSize.setX(element.getSize().getWidth());
                 columnSize.setY(element.getSize().getHeight());
-                currentHeight = 0;
+                currentHeight = element.getSize().getHeight();
             }
         }
 

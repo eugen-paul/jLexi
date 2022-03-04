@@ -6,6 +6,7 @@ import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextChar extends TextElementAbstract {
 
@@ -43,6 +44,11 @@ public class TextChar extends TextElementAbstract {
         }
 
         return cachedDrawable;
+    }
+
+    @Override
+    public TextElement getCorsorElementAt(Vector2d pos) {
+        return this;
     }
 
 }

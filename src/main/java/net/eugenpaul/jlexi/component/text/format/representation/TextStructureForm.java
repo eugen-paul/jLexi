@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
-import java.awt.geom.Area;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import net.eugenpaul.jlexi.component.text.format.CursorControl;
 import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextStructureForm extends Glyph implements CursorControl, GlyphIterable<TextStructureForm> {
@@ -39,7 +39,7 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
 
     public abstract void notifyResize(TextElement element);
 
-    public abstract void getCorsorElementAt(Vector2d pos);
+    public abstract TextElement getCorsorElementAt(Vector2d pos);
 
     public abstract void getFirstChild();
 

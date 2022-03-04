@@ -2,17 +2,20 @@ package net.eugenpaul.jlexi.component.text;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextStructureFormToColumnCompositor;
+import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
@@ -39,6 +42,12 @@ public class TextPaneExtended extends Glyph implements GuiComponent, KeyHandlera
 
     private TextCompositor<TextStructureForm> compositor;
 
+    private TreeMap<Integer, TextStructureForm> yPositionToSite;
+
+    @Getter
+    @Setter
+    private CursorV2 mouseCursor2;
+
     @Getter
     private FontStorage fontStorage;
 
@@ -47,6 +56,10 @@ public class TextPaneExtended extends Glyph implements GuiComponent, KeyHandlera
         this.fontStorage = fontStorage;
         this.compositor = new TextStructureFormToColumnCompositor();
         this.document = new TextPaneDocument(new FormatAttribute(), fontStorage, "Hello, World!");
+
+        this.yPositionToSite = new TreeMap<>();
+
+        this.mouseCursor2 = new CursorV2(null, null, effectWorker);
 
         resizeTo(Size.ZERO_SIZE);
     }
@@ -68,10 +81,18 @@ public class TextPaneExtended extends Glyph implements GuiComponent, KeyHandlera
 
         cachedDrawable = new DrawableImpl(pixels, pixelSize);
 
+        yPositionToSite.clear();
+
         Vector2d position = new Vector2d(0, 0);
         for (var el : sites) {
             ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
-            position.setY(position.getY() + el.getSize().getHeight());
+            var yPosition = position.getY();
+
+            yPositionToSite.put(yPosition, el);
+
+            el.setRelativPosition(new Vector2d(0, yPosition));
+
+            position.setY(yPosition + el.getSize().getHeight());
         }
 
         return cachedDrawable;
@@ -90,6 +111,30 @@ public class TextPaneExtended extends Glyph implements GuiComponent, KeyHandlera
     @Override
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
+
+        var row = yPositionToSite.floorEntry(mouseY);
+        if (null == row) {
+            return;
+        }
+
+        TextElement clickedElement = row.getValue().getCorsorElementAt(//
+                new Vector2d(//
+                        mouseX - row.getValue().getRelativPosition().getX(), //
+                        mouseY - row.getValue().getRelativPosition().getY() //
+                )//
+        );
+        if (clickedElement != null) {
+            LOGGER.trace("Document Click on Element: {}.", clickedElement);
+            mouseCursor2.moveCursorTo(clickedElement);
+        } else {
+            LOGGER.trace("Document Click on Element: NONE.");
+        }
+    }
+
+    @Override
+    public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
+        super.notifyRedraw(drawData, position, size);
+        LOGGER.trace("Recive Redraw from schild");
     }
 
     @Override
