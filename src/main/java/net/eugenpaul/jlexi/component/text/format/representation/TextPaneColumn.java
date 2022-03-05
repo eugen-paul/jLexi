@@ -69,4 +69,50 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
         return cachedDrawable;
     }
 
+    @Override
+    public TextElement getUp(TextElement element) {
+        var structure = getChildStructureOfElement(element);
+        if (null == structure) {
+            return null;
+        }
+
+        var e = structure.getUp(element);
+
+        if (null == e) {
+            var pos = element.getRelativPositionTo(this);
+            while (e == null && structure != null && pos != null) {
+                structure = getPreviousStructureForm(structure);
+                if (structure != null) {
+                    pos.setY(0);
+                    e = structure.getCorsorElementAt(pos);
+                }
+            }
+        }
+
+        return e;
+    }
+
+    @Override
+    public TextElement getDown(TextElement element) {
+        var structure = getChildStructureOfElement(element);
+        if (null == structure) {
+            return null;
+        }
+
+        var e = structure.getDown(element);
+
+        if (null == e) {
+            var pos = element.getRelativPositionTo(this);
+            while (e == null && structure != null && pos != null) {
+                structure = getNextStructureForm(structure);
+                if (structure != null) {
+                    pos.setY(0);
+                    e = structure.getCorsorElementAt(pos);
+                }
+            }
+        }
+
+        return e;
+    }
+
 }

@@ -25,8 +25,8 @@ public class JLexi {
         FontStorage fontStorage = new FontStorageImpl(new FontGenerator());
         Window windowAbstraction = new Window(new SwingWindowImpl(controller));
 
-        TextPane textPane = new TextPane(null, fontStorage, controller);
-        // TextPaneExtended textPane = new TextPaneExtended(null, fontStorage, controller);
+        // TextPane textPane = new TextPane(null, fontStorage, controller);
+        TextPaneExtended textPane = new TextPaneExtended(null, fontStorage, controller);
         Border border = new Border(null, textPane);
 
         controller.addTextPane("TextPane", textPane);

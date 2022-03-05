@@ -67,7 +67,7 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
 
     public abstract TextStructureForm getPreviousStructureForm(TextStructureForm structure);
 
-    private TextStructureForm getChildStructureOfElement(TextElement element) {
+    protected TextStructureForm getChildStructureOfElement(TextElement element) {
         var parent = element.getParent();
         Glyph previousParent = null;
         while (parent != null && parent != this) {
@@ -83,14 +83,22 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
 
     @Override
     public TextElement getUp(TextElement element) {
-        // TODO Auto-generated method stub
-        return null;
+        var structure = getChildStructureOfElement(element);
+        if (null == structure) {
+            return null;
+        }
+
+        return structure.getUp(element);
     }
 
     @Override
     public TextElement getDown(TextElement element) {
-        // TODO Auto-generated method stub
-        return null;
+        var structure = getChildStructureOfElement(element);
+        if (null == structure) {
+            return null;
+        }
+
+        return structure.getDown(element);
     }
 
     @Override
