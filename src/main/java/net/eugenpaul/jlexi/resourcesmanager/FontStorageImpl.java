@@ -41,7 +41,7 @@ public class FontStorageImpl extends FontStorage {
         return charToArray.computeIfAbsent(c, key -> {
             int[] pixels = fontGenerator.ofChar(c, fontName, style, size);
             return new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
-        });
+        }).copy();
     }
 
     @Override

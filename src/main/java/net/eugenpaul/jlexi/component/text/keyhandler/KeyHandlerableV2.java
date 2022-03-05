@@ -1,14 +1,15 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.text.Cursor;
+import net.eugenpaul.jlexi.component.text.CursorV2;
+import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
 /**
  * Interface for Text-Panel-Elements that can handle a key input
  */
-public interface KeyHandlerable {
+public interface KeyHandlerableV2 {
 
     public FontStorage getFontStorage();
 
@@ -18,8 +19,9 @@ public interface KeyHandlerable {
 
     public Glyph getThis();
 
-    public Cursor getMouseCursor();
-    public void setMouseCursor(Cursor cursor);
+    public CursorV2 getMouseCursor();
 
     public void doCursorMove(CursorMove cursorMove);
+
+    public TextStructureForm getTextStructureForm();
 }

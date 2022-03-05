@@ -15,7 +15,7 @@ public class TextStructureFormToColumnCompositor implements TextCompositor<TextS
     public List<TextStructureForm> compose(Iterator<TextStructureForm> iterator, Size maxSize) {
         List<TextStructureForm> responseRows = new LinkedList<>();
 
-        TextStructureForm column = new TextPaneColumn(null);
+        TextPaneColumn column = new TextPaneColumn(null);
         int currentHeight = 0;
 
         Vector2d columnSize = new Vector2d(0, 0);

@@ -12,4 +12,9 @@ public class DrawableImpl implements Drawable {
 
     private int[] pixels;
     private Size pixelSize;
+
+    @Override
+    public Drawable copy() {
+        return new DrawableImpl(pixels.clone(), pixelSize);
+    }
 }

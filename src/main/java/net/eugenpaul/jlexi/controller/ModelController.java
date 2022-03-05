@@ -75,10 +75,10 @@ public class ModelController extends AbstractController {
     }
 
     @Override
-    public void addEffect(Effect effect) {
+    public void addEffectToController(Effect effect) {
         // I don't use "repeate" function because each repetition can have its own delay.
         Disposable disp = effectToMono(effect)//
-                .doOnSuccess(v -> addEffect(effect))//
+                .doOnSuccess(v -> addEffectToController(effect))//
                 .subscribe();
 
         effectMap.put(effect, disp);
@@ -97,7 +97,7 @@ public class ModelController extends AbstractController {
     }
 
     @Override
-    public void removeEffect(Effect effect) {
+    public void removeEffectFromController(Effect effect) {
         Disposable disposeEffect = effectMap.remove(effect);
         if (disposeEffect != null) {
             disposeEffect.dispose();

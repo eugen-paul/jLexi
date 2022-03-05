@@ -5,18 +5,18 @@ import java.util.List;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.text.format.EffectHolder;
+import net.eugenpaul.jlexi.component.text.format.EffectHolderV2;
 import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.Effect;
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
+import net.eugenpaul.jlexi.effect.TextPaneEffectV2;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public abstract class TextElement extends Glyph implements EffectHolder {
+public abstract class TextElement extends Glyph implements EffectHolderV2 {
 
     @Getter
     protected TextField parentTextField;
-    private List<TextPaneEffect> effects;
+    private List<TextPaneEffectV2> effects;
 
     protected TextElement(Glyph parent, TextField parentTextField) {
         super(parent);
@@ -49,12 +49,12 @@ public abstract class TextElement extends Glyph implements EffectHolder {
     }
 
     @Override
-    public void addEffect(TextPaneEffect effect) {
+    public void addEffect(TextPaneEffectV2 effect) {
         effects.add(effect);
     }
 
     @Override
-    public void removeEffect(TextPaneEffect effect) {
+    public void removeEffect(TextPaneEffectV2 effect) {
         effects.remove(effect);
     }
 
@@ -65,10 +65,11 @@ public abstract class TextElement extends Glyph implements EffectHolder {
     }
 
     @Override
-    public void updateEffect(TextPaneEffect effect) {
+    public void updateEffect(TextPaneEffectV2 effect) {
         if (null != parent) {
             cachedDrawable = null;
             parent.notifyRedraw(getPixels(), getRelativPosition(), getSize());
         }
     }
+
 }

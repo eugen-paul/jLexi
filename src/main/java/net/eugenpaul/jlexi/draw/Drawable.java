@@ -20,4 +20,10 @@ public interface Drawable {
      * @return
      */
     public Size getPixelSize();
+
+    /**
+     * get Copy of the Element
+     * @return
+     */
+    public Drawable copy();
 }

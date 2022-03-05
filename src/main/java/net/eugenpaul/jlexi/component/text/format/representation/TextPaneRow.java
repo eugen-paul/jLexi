@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
-import java.util.Iterator;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -10,32 +9,18 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
-import net.eugenpaul.jlexi.visitor.Visitor;
 
-public class TextPaneRow extends TextStructureForm {
+public class TextPaneRow extends TextStructureFormOfStructures {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneRow.class);
 
-    private TreeMap<Integer, TextElement> xPositionToRow;
+    private TreeMap<Integer, TextStructureForm> xPositionToRow;
 
     public TextPaneRow(Glyph parent) {
         super(parent);
         this.xPositionToRow = new TreeMap<>();
-    }
-
-    @Override
-    public void notifyUpdate(TextElement element, Drawable draw, Area area) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void notifyResize(TextElement element) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -56,18 +41,6 @@ public class TextPaneRow extends TextStructureForm {
             LOGGER.trace("Row Click on Element: NONE.");
         }
         return clickedElement;
-    }
-
-    @Override
-    public void getFirstChild() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void getLastChild() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -94,24 +67,6 @@ public class TextPaneRow extends TextStructureForm {
         }
 
         return cachedDrawable;
-    }
-
-    @Override
-    public Iterator<Glyph> iterator() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void visit(Visitor checker) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public Iterator<TextStructureForm> printableChildIterator() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

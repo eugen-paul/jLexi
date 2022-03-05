@@ -51,4 +51,9 @@ public class TextChar extends TextElementAbstract {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return Character.toString(c);
+    }
+
 }

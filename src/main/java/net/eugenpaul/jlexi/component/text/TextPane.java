@@ -20,7 +20,7 @@ import net.eugenpaul.jlexi.component.text.structure.RowCompositor;
 import net.eugenpaul.jlexi.component.text.structure.TextCompositor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.effect.EffectHandler;
+import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -46,7 +46,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable, Tex
     private FontStorage fontStorage;
 
     @Getter
-    private EffectHandler effectHandler;
+    private EffectController effectHandler;
 
     @Getter
     @Setter
@@ -54,7 +54,7 @@ public class TextPane extends Glyph implements GuiComponent, KeyHandlerable, Tex
 
     private TextPaneKeyHandler keyHanlder;
 
-    public TextPane(Glyph parent, FontStorage fontStorage, EffectHandler effectWorker) {
+    public TextPane(Glyph parent, FontStorage fontStorage, EffectController effectWorker) {
         super(parent);
         this.effectHandler = effectWorker;
         this.fontStorage = fontStorage;

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.effect.EffectHandler;
+import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Area;
@@ -35,7 +35,7 @@ import reactor.core.scheduler.Schedulers;
  * <p>
  * This is a View of MVC
  */
-public abstract class AbstractController implements PropertyChangeListener, EffectHandler {
+public abstract class AbstractController implements PropertyChangeListener, EffectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
