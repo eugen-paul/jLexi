@@ -26,10 +26,10 @@ public class FormatAttribute {
      * @param src
      */
     public FormatAttribute merge(FormatAttribute src) {
-        setIfNull(bold, src.getBold());
-        setIfNull(italic, src.getItalic());
-        setIfNull(fontsize, src.getFontsize());
-        setIfNull(fontName, src.getFontName());
+        bold = setIfNull(bold, src.getBold());
+        italic = setIfNull(italic, src.getItalic());
+        fontsize = setIfNull(fontsize, src.getFontsize());
+        fontName = setIfNull(fontName, src.getFontName());
         return this;
     }
 

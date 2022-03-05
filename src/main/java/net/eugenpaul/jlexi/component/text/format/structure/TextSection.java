@@ -9,14 +9,15 @@ import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextSection extends TextStructure implements GlyphIterable<TextStructureForm> {
 
     private List<TextParagraph> paragraphs;
 
-    protected TextSection(FormatAttribute format) {
-        super(format);
+    protected TextSection(FormatAttribute format, FontStorage fontStorage) {
+        super(format, fontStorage);
         this.paragraphs = new LinkedList<>();
     }
 

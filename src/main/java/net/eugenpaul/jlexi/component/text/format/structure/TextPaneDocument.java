@@ -16,19 +16,19 @@ public class TextPaneDocument extends TextStructure {
     private List<TextParagraph> paragraphs;
 
     public TextPaneDocument(FormatAttribute format, FontStorage fontStorage, String text) {
-        super(format);
-        initParagraphs(fontStorage, text);
+        super(format, fontStorage);
+        initParagraphs(text);
     }
 
-    private void initParagraphs(FontStorage fontStorage, String text) {
+    private void initParagraphs(String text) {
         String[] paragraphText = text.split("\n");
         paragraphs = Stream.of(paragraphText) //
                 .map(v -> new TextParagraph(new FormatAttribute(), fontStorage, v)) //
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    protected TextPaneDocument(FormatAttribute format) {
-        super(format);
+    protected TextPaneDocument(FormatAttribute format, FontStorage fontStorage) {
+        super(format, fontStorage);
         paragraphs = new LinkedList<>();
         // TODO Auto-generated constructor stub
     }

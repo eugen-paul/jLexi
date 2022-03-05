@@ -5,17 +5,20 @@ import java.util.List;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 
 public abstract class TextStructure {
     private FormatAttribute format;
 
     protected List<TextStructureForm> structureForm;
+    protected FontStorage fontStorage;
     private TextStructure parentStructure;
 
-    protected TextStructure(FormatAttribute format) {
+    protected TextStructure(FormatAttribute format, FontStorage fontStorage) {
         this.format = format;
-        structureForm = null;
+        this.fontStorage = fontStorage;
+        this.structureForm = null;
     }
 
     public FormatAttribute mergeFormat(FormatAttribute format) {

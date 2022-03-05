@@ -33,7 +33,8 @@ public class JLexi {
 
         controller.setText("TextPane",
                 "A \"Hello, World!\" program is generally a computer program that outputs or displays the message \"Hello, World!\". "
-                        + "This program is very simple to write in many programming languages, and is often used to illustrate a language's basic syntax.");
+                        + "This program is very simple to write in many programming languages, and is often used to illustrate a language's basic syntax.\n"
+                        + "Text can be: {BI:bold and italic}, {B :bold} or { I:italic}.");
 
         Size defaultSize = new Size(800, 600);
         MenuBar menubar = new MenuBar(MAIN_WINDOW, null, border, defaultSize, controller);

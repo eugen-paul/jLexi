@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
@@ -23,14 +25,47 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     private List<TextField> fields;
 
     public TextParagraph(FormatAttribute format, FontStorage fontStorage, String text) {
-        super(format);
+        super(format, fontStorage);
         this.fields = new LinkedList<>();
-        this.fields.add(new TextSpan(this, fontStorage, new FormatAttribute(), text));
+        initFields(text);
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
 
-    protected TextParagraph(FormatAttribute format) {
-        super(format);
+    /**
+     * !!JUST for Test!!<br>
+     * test format: {XX:text} XX - format text - printed Text example: "Text can be: {BI:bold and italics}, {B :bold} or
+     * { I:italics}."
+     * 
+     * @param text
+     */
+    private void initFields(String text) {
+        Pattern tagRegex = Pattern.compile("([^\\}]*)\\{(.+?)\\}([^\\{]*)");
+        final Matcher matcher = tagRegex.matcher(text);
+        int counter = 0;
+        while (matcher.find()) {
+            counter++;
+            if (!matcher.group(1).isEmpty()) {
+                fields.add(new TextSpan(this, fontStorage, new FormatAttribute(), matcher.group(1)));
+            }
+
+            if (!matcher.group(2).isEmpty()) {
+                var f = new FormatAttribute();
+                f.setBold(matcher.group(2).charAt(0) == 'B');
+                f.setItalic(matcher.group(2).charAt(1) == 'I');
+                fields.add(new TextSpan(this, fontStorage, f, matcher.group(2).substring(3)));
+            }
+
+            if (!matcher.group(3).isEmpty()) {
+                fields.add(new TextSpan(this, fontStorage, new FormatAttribute(), matcher.group(3)));
+            }
+        }
+        if (counter == 0 && !text.isEmpty()) {
+            fields.add(new TextSpan(this, fontStorage, new FormatAttribute(), text));
+        }
+    }
+
+    protected TextParagraph(FormatAttribute format, FontStorage fontStorage) {
+        super(format, fontStorage);
         this.fields = new LinkedList<>();
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
