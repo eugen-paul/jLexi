@@ -55,17 +55,19 @@ public class TextPaneExtended extends TextStructureFormOfStructures
     @Getter
     private FontStorage fontStorage;
 
+    private boolean editMode = false;
+
     public TextPaneExtended(Glyph parent, FontStorage fontStorage, EffectController effectWorker) {
         super(parent);
         this.fontStorage = fontStorage;
         this.compositor = new TextStructureFormToColumnCompositor();
-        this.document = new TextPaneDocument(new FormatAttribute(), fontStorage, "Hello, World!");
+        this.document = new TextPaneDocument(new FormatAttribute(), fontStorage, "Hello, World!", this);
 
         this.yPositionToSite = new TreeMap<>();
 
         this.mouseCursor = new CursorV2(null, null, effectWorker);
 
-        this.keyHandler = new TextPaneExtendedKeyHandlerV2(this);
+        this.keyHandler = new TextPaneExtendedKeyHandlerV2(this, fontStorage);
 
         resizeTo(Size.ZERO_SIZE);
     }
@@ -150,8 +152,15 @@ public class TextPaneExtended extends TextStructureFormOfStructures
     @Override
     public void setText(String text) {
         LOGGER.trace("Set Document.text to \"{}\".", text);
-        document = new TextPaneDocument(new FormatAttribute(), fontStorage, text);
+        document = new TextPaneDocument(new FormatAttribute(), fontStorage, text, this);
         getPixels();
+    }
+
+    public void notifyChange() {
+        cachedDrawable = null;
+        if (!editMode) {
+            parent.notifyRedraw(getPixels(), relativPosition, size);
+        }
     }
 
     @Override
@@ -164,7 +173,13 @@ public class TextPaneExtended extends TextStructureFormOfStructures
     @Override
     public void onKeyTyped(Character key) {
         LOGGER.trace("Key typed: {}", key);
-        keyHandler.onKeyTyped(key);
+        editMode = true;
+        try {
+            keyHandler.onKeyTyped(key);
+        } finally {
+            editMode = false;
+        }
+        parent.notifyRedraw(getPixels(), relativPosition, size);
     }
 
     @Override

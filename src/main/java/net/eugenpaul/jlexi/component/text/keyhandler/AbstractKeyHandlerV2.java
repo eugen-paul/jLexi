@@ -1,18 +1,31 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
+import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 
 public class AbstractKeyHandlerV2 {
 
     private KeyHandlerableV2 component;
+    private FontStorage fontStorage;
 
-    protected AbstractKeyHandlerV2(KeyHandlerableV2 component) {
+    protected AbstractKeyHandlerV2(KeyHandlerableV2 component, FontStorage fontStorage) {
         this.component = component;
+        this.fontStorage = fontStorage;
     }
 
     public void onKeyTyped(Character key) {
-        // TODO
+        var cursor = component.getMouseCursor();
+        var element = cursor.getCurrentGlyph();
+        var textField = element.getParentTextField();
+
+        if (null == textField) {
+            return;
+        }
+
+        textField.addBefore(element, new TextChar(null, fontStorage, textField, key));
+        textField.notifyChange();
     }
 
     public void onKeyPressed(KeyCode keyCode) {

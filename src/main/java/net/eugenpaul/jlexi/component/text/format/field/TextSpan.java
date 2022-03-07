@@ -54,11 +54,12 @@ public class TextSpan extends TextField {
     }
 
     @Override
-    public void addBefor(TextElement position, TextElement element) {
+    public void addBefore(TextElement position, TextElement element) {
         ListIterator<TextElement> iterator = children.listIterator();
         while (iterator.hasNext()) {
             TextElement iteratorPosition = iterator.next();
             if (iteratorPosition == position) {
+                iterator.previous();
                 iterator.add(element);
                 break;
             }

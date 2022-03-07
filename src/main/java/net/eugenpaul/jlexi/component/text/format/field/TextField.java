@@ -33,7 +33,7 @@ public abstract class TextField implements GlyphIterable<TextElement> {
 
     public abstract void remove();
 
-    public abstract void addBefor(TextElement position, TextElement element);
+    public abstract void addBefore(TextElement position, TextElement element);
 
     public abstract void reset();
 

@@ -15,7 +15,8 @@ public abstract class TextStructure {
     protected FontStorage fontStorage;
     private TextStructure parentStructure;
 
-    protected TextStructure(FormatAttribute format, FontStorage fontStorage) {
+    protected TextStructure(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
+        this.parentStructure = parentStructure;
         this.format = format;
         this.fontStorage = fontStorage;
         this.structureForm = null;

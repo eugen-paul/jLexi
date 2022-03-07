@@ -24,8 +24,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     protected TextCompositor<TextElement> fieldCompositor;
     private List<TextField> fields;
 
-    public TextParagraph(FormatAttribute format, FontStorage fontStorage, String text) {
-        super(format, fontStorage);
+    public TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage, String text) {
+        super(parentStructure, format, fontStorage);
         this.fields = new LinkedList<>();
         initFields(text);
         this.fieldCompositor = new TextElementToRowCompositor<>();
@@ -64,8 +64,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         }
     }
 
-    protected TextParagraph(FormatAttribute format, FontStorage fontStorage) {
-        super(format, fontStorage);
+    protected TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
+        super(parentStructure, format, fontStorage);
         this.fields = new LinkedList<>();
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }

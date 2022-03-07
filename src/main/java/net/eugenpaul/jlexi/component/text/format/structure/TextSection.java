@@ -16,8 +16,8 @@ public class TextSection extends TextStructure implements GlyphIterable<TextStru
 
     private List<TextParagraph> paragraphs;
 
-    protected TextSection(FormatAttribute format, FontStorage fontStorage) {
-        super(format, fontStorage);
+    protected TextSection(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
+        super(parentStructure, format, fontStorage);
         this.paragraphs = new LinkedList<>();
     }
 
