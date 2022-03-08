@@ -47,4 +47,9 @@ public class TextSection extends TextStructure implements GlyphIterable<TextStru
         structureForm = null;
         paragraphs.stream().forEach(TextStructure::resetStructure);
     }
+
+    @Override
+    protected void restructureChildren() {
+        // TODO
+    }
 }

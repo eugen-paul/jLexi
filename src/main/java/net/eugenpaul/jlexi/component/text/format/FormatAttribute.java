@@ -20,6 +20,13 @@ public class FormatAttribute {
     private Integer fontsize;
     private String fontName;
 
+    public FormatAttribute(FormatAttribute original) {
+        this.bold = original.bold;
+        this.italic = original.italic;
+        this.fontsize = original.fontsize;
+        this.fontName = original.fontName;
+    }
+
     /**
      * takes over the parameters from the source that are not set by itself.
      * 

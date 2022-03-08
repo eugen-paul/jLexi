@@ -2,8 +2,10 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextNewLine;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
+import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 
 public class AbstractKeyHandlerV2 {
 
@@ -16,6 +18,10 @@ public class AbstractKeyHandlerV2 {
     }
 
     public void onKeyTyped(Character key) {
+        if (!CharacterHelper.isPrintable(key)) {
+            return;
+        }
+
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
         var textField = element.getParentTextField();
@@ -49,6 +55,19 @@ public class AbstractKeyHandlerV2 {
 
     public void onKeyReleased(KeyCode keyCode) {
         // Nothing to do
+    }
+
+    private void keyPressedEnter() {
+        var cursor = component.getMouseCursor();
+        var element = cursor.getCurrentGlyph();
+        var textField = element.getParentTextField();
+
+        if (null == textField) {
+            return;
+        }
+
+        textField.addBefore(element, new TextNewLine(null, fontStorage, textField));
+        textField.notifyChange();
     }
 
     private void keyPressedBackSpace() {
@@ -93,7 +112,4 @@ public class AbstractKeyHandlerV2 {
         cursor.moveCursorTo(el);
     }
 
-    private void keyPressedEnter() {
-        // TODO
-    }
 }

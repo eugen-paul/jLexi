@@ -13,6 +13,9 @@ public class TextNewLine extends TextElementAbstract {
 
     public TextNewLine(Glyph parent, FontStorage fontStorage, TextField parentTextField) {
         super(parent, fontStorage, parentTextField);
+
+        // we must compute pixels to set size of element
+        getPixels();
     }
 
     @Override
@@ -45,6 +48,11 @@ public class TextNewLine extends TextElementAbstract {
     @Override
     public TextElement getCorsorElementAt(Vector2d pos) {
         return this;
+    }
+
+    @Override
+    public boolean isEndOfLine() {
+        return true;
     }
 
 }

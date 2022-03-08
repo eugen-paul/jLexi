@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public class TextPaneDocument extends TextStructure {
 
-    private List<TextParagraph> paragraphs;
+    private LinkedList<TextParagraph> paragraphs;
     private TextPaneExtended textPane;
 
     public TextPaneDocument(FormatAttribute format, FontStorage fontStorage, String text, TextPaneExtended textPane) {
@@ -57,8 +58,35 @@ public class TextPaneDocument extends TextStructure {
     }
 
     @Override
-    public void notifyChange() {
+    public void notifyChange(boolean restructure) {
+        if (restructure) {
+            restructureChildren();
+        }
         structureForm = null;
         textPane.notifyChange();
+    }
+
+    @Override
+    protected void restructureChildren() {
+        var iterator = paragraphs.listIterator();
+        while (iterator.hasNext()) {
+            var paragraph = iterator.next();
+            if (!paragraph.getSplits().isEmpty()) {
+                paragraph.getSplits().stream()//
+                        .filter(TextParagraph.class::isInstance)//
+                        .forEach(v -> iterator.add((TextParagraph) v));
+                paragraph.clearSplitter();
+            }
+        }
+    }
+
+    @Override
+    public List<TextStructure> getSplits() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void clearSplitter() {
+        // nothing to do.
     }
 }
