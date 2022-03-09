@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public class TextPaneDocument extends TextStructure {
 
-    private LinkedList<TextParagraph> paragraphs;
+    private LinkedList<TextParagraph> children;
     private TextPaneExtended textPane;
 
     public TextPaneDocument(FormatAttribute format, FontStorage fontStorage, String text, TextPaneExtended textPane) {
@@ -26,14 +27,14 @@ public class TextPaneDocument extends TextStructure {
 
     private void initParagraphs(String text) {
         String[] paragraphText = text.split("\n");
-        paragraphs = Stream.of(paragraphText) //
+        children = Stream.of(paragraphText) //
                 .map(v -> new TextParagraph(this, new FormatAttribute(), fontStorage, v)) //
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
     protected TextPaneDocument(FormatAttribute format, FontStorage fontStorage) {
         super(null, format, fontStorage);
-        paragraphs = new LinkedList<>();
+        children = new LinkedList<>();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class TextPaneDocument extends TextStructure {
     public List<TextStructureForm> getRows(Size size) {
         if (null == structureForm) {
             structureForm = new LinkedList<>();
-            paragraphs.stream().map(v -> v.getRows(size)).forEach(structureForm::addAll);
+            children.stream().map(v -> v.getRows(size)).forEach(structureForm::addAll);
         }
         return structureForm;
     }
@@ -54,7 +55,7 @@ public class TextPaneDocument extends TextStructure {
     @Override
     public void resetStructure() {
         structureForm = null;
-        paragraphs.stream().forEach(TextStructure::resetStructure);
+        children.stream().forEach(TextStructure::resetStructure);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class TextPaneDocument extends TextStructure {
 
     @Override
     protected void restructureChildren() {
-        var iterator = paragraphs.listIterator();
+        var iterator = children.listIterator();
         while (iterator.hasNext()) {
             var paragraph = iterator.next();
             if (!paragraph.getSplits().isEmpty()) {
@@ -88,5 +89,15 @@ public class TextPaneDocument extends TextStructure {
     @Override
     public void clearSplitter() {
         // nothing to do.
+    }
+
+    @Override
+    protected Iterator<TextStructure> childIterator() {
+        return new TextStructureToIterator<>(children);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return children.isEmpty();
     }
 }

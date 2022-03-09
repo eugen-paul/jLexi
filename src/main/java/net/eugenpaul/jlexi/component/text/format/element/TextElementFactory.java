@@ -20,4 +20,8 @@ public final class TextElementFactory {
 
         return response;
     }
+
+    public static TextElement genNewLineChar(Glyph parent, FontStorage fontStorage, TextField parentTextField) {
+        return new TextNewLine(parent, fontStorage, parentTextField);
+    }
 }

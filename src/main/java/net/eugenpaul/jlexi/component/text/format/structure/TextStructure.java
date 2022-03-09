@@ -1,8 +1,10 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.eugenpaul.jlexi.component.text.format.Empty;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.Splitable;
 import net.eugenpaul.jlexi.component.text.format.TextFormat;
@@ -11,7 +13,7 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextStructureFor
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.Size;
 
-public abstract class TextStructure implements TextFormat, Splitable<TextStructure> {
+public abstract class TextStructure implements TextFormat, Splitable<TextStructure>, Empty {
 
     protected TextStructure parentStructure;
     protected FormatAttribute format;
@@ -62,5 +64,38 @@ public abstract class TextStructure implements TextFormat, Splitable<TextStructu
     @Override
     public void clearSplitter() {
         splits.clear();
+    }
+
+    protected abstract Iterator<TextStructure> childIterator();
+
+    public TextStructure getNextStructure(TextStructure element) {
+        var iterator = childIterator();
+        var found = false;
+        while (iterator.hasNext()) {
+            var currentElement = iterator.next();
+            if (currentElement == element) {
+                found = true;
+                continue;
+            }
+            if (found && !currentElement.isEmpty()) {
+                return currentElement;
+            }
+        }
+        return null;
+    }
+
+    public TextStructure getPrevious(TextStructure element) {
+        var iterator = childIterator();
+        TextStructure lastNotEmptyElement = null;
+        while (iterator.hasNext()) {
+            var currentElement = iterator.next();
+            if (currentElement == element) {
+                return lastNotEmptyElement;
+            }
+            if (!currentElement.isEmpty()) {
+                lastNotEmptyElement = currentElement;
+            }
+        }
+        return null;
     }
 }

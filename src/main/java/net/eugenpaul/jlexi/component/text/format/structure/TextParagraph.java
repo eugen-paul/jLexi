@@ -23,11 +23,11 @@ import net.eugenpaul.jlexi.utils.Size;
 public class TextParagraph extends TextStructure implements GlyphIterable<TextStructureForm> {
 
     protected TextCompositor<TextElement> fieldCompositor;
-    private List<TextField> fields;
+    private List<TextField> children;
 
     public TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage, String text) {
         super(parentStructure, format, fontStorage);
-        this.fields = new LinkedList<>();
+        this.children = new LinkedList<>();
         initFields(text);
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
@@ -35,7 +35,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     protected TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage,
             List<TextField> fields) {
         super(parentStructure, format, fontStorage);
-        this.fields = fields;
+        this.children = fields;
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
 
@@ -53,29 +53,29 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         while (matcher.find()) {
             counter++;
             if (!matcher.group(1).isEmpty()) {
-                fields.add(new TextSpan(this, new FormatAttribute(), fontStorage, matcher.group(1)));
+                children.add(new TextSpan(this, new FormatAttribute(), fontStorage, matcher.group(1)));
             }
 
             if (!matcher.group(2).isEmpty()) {
                 var f = new FormatAttribute();
                 f.setBold(matcher.group(2).charAt(0) == 'B');
                 f.setItalic(matcher.group(2).charAt(1) == 'I');
-                fields.add(new TextSpan(this, f, fontStorage, matcher.group(2).substring(3)));
+                children.add(new TextSpan(this, f, fontStorage, matcher.group(2).substring(3)));
             }
 
             if (!matcher.group(3).isEmpty()) {
-                fields.add(new TextSpan(this, new FormatAttribute(), fontStorage, matcher.group(3)));
+                children.add(new TextSpan(this, new FormatAttribute(), fontStorage, matcher.group(3)));
             }
         }
         if (counter == 0 && !text.isEmpty()) {
-            fields.add(new TextSpan(this, new FormatAttribute(), fontStorage, text));
+            children.add(new TextSpan(this, new FormatAttribute(), fontStorage, text));
         }
-        fields.add(new TextSpan(this, new FormatAttribute(), fontStorage, "\n"));
+        children.add(new TextSpan(this, new FormatAttribute(), fontStorage, "\n"));
     }
 
     protected TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
         super(parentStructure, format, fontStorage);
-        this.fields = new LinkedList<>();
+        this.children = new LinkedList<>();
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
 
@@ -102,18 +102,18 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     }
 
     private Iterator<TextElement> getCompositorIterator() {
-        return new ListOfListIterator<>(fields);
+        return new ListOfListIterator<>(children);
     }
 
     @Override
     public void resetStructure() {
         structureForm = null;
-        fields.stream().forEach(TextField::reset);
+        children.stream().forEach(TextField::reset);
     }
 
     @Override
     protected void restructureChildren() {
-        var iterator = fields.listIterator();
+        var iterator = children.listIterator();
         while (iterator.hasNext()) {
             var field = iterator.next();
             if (!field.getSplits().isEmpty()) {
@@ -125,7 +125,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     }
 
     private void split() {
-        ListIterator<TextField> iterator = fields.listIterator();
+        ListIterator<TextField> iterator = children.listIterator();
         LinkedList<TextField> splitter = new LinkedList<>();
 
         clearSplitter();
@@ -152,6 +152,59 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         if (!splitter.isEmpty()) {
             splits.add(newParagraph);
         }
+    }
+
+    public void removeField(TextField element) {
+        var iterator = children.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == element) {
+                iterator.remove();
+            }
+        }
+    }
+
+    @Override
+    protected ListIterator<TextStructure> childIterator() {
+        return Collections.emptyListIterator();
+    }
+
+    public TextField getNext(TextField element) {
+        var iterator = children.iterator();
+        var found = false;
+        while (iterator.hasNext()) {
+            var currentElement = iterator.next();
+            if (currentElement == element) {
+                found = true;
+                continue;
+            }
+            if (found && !currentElement.isEmpty()) {
+                return currentElement;
+            }
+        }
+        return null;
+    }
+
+    public TextField getPrevious(TextField element) {
+        var iterator = children.listIterator();
+        while (iterator.hasNext()) {
+            var currentElement = iterator.next();
+            if (currentElement == element) {
+                iterator.previous();
+                while (iterator.hasPrevious()) {
+                    var currentPrevious = iterator.previous();
+                    if (!currentPrevious.isEmpty()) {
+                        return currentPrevious;
+                    }
+                }
+                break;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return children.isEmpty();
     }
 
 }

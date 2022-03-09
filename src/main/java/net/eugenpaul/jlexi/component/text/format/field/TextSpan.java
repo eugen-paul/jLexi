@@ -7,25 +7,28 @@ import java.util.ListIterator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
-import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
-import net.eugenpaul.jlexi.component.text.format.element.TextNewLine;
-import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
+import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
 public class TextSpan extends TextField {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextSpan.class);
 
     private LinkedList<TextElement> children;
     private LinkedList<TextField> splits;
     private FontStorage fontStorage;
 
-    public TextSpan(TextStructure structureParent, FormatAttribute format, FontStorage fontStorage) {
+    public TextSpan(TextParagraph structureParent, FormatAttribute format, FontStorage fontStorage) {
         this(structureParent, format, fontStorage, new LinkedList<>());
     }
 
-    public TextSpan(TextStructure structureParent, FormatAttribute format, FontStorage fontStorage, String text) {
+    public TextSpan(TextParagraph structureParent, FormatAttribute format, FontStorage fontStorage, String text) {
         this(structureParent, format, fontStorage, (LinkedList<TextElement>) null);
 
         this.children = text.chars() //
@@ -35,7 +38,7 @@ public class TextSpan extends TextField {
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    protected TextSpan(TextStructure structureParent, FormatAttribute format, FontStorage fontStorage,
+    protected TextSpan(TextParagraph structureParent, FormatAttribute format, FontStorage fontStorage,
             LinkedList<TextElement> data) {
         super(structureParent, format);
         this.fontStorage = fontStorage;
@@ -63,17 +66,17 @@ public class TextSpan extends TextField {
         return children.isEmpty();
     }
 
-    @Override
-    public void remove() {
-        children.stream().forEach(TextElement::remove);
-    }
+    // @Override
+    // public void remove() {
+    // children.stream().forEach(TextElement::remove);
+    // }
 
     @Override
     public void addBefore(TextElement position, TextElement element) {
-        if (element instanceof TextChar) {
-            add(position, element);
-        } else if (element instanceof TextNewLine) {
+        if (element.isEndOfLine()) {
             split(position);
+        } else {
+            add(position, element);
         }
     }
 
@@ -113,8 +116,59 @@ public class TextSpan extends TextField {
             }
         }
 
-        children.add(new TextNewLine(null, fontStorage, this));
+        children.add(TextElementFactory.genNewLineChar(null, fontStorage, this));
         splits.add(newSpan);
+        edit = true;
+    }
+
+    @Override
+    public TextElement remove(TextElement element) {
+        if (element.isEndOfLine()) {
+            // TODO do merge with next
+            return null;
+        } else {
+            var response = removeElement(element);
+            if (response == null) {
+                response = getStructureParent().getNext(this).getFirstChild();
+            }
+            return response;
+        }
+    }
+
+    private TextElement removeElement(TextElement element) {
+        var iterator = children.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == element) {
+                iterator.remove();
+                if (iterator.hasNext()) {
+                    return iterator.next();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public TextElement removeBefore(TextElement element) {
+        var iterator = children.listIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == element) {
+                iterator.previous();
+                if (iterator.hasPrevious()) {
+                    iterator.previous();
+                    iterator.remove();
+                    break;
+                }
+                // TODO do merge with previous
+                LOGGER.trace("Merge TextSpan with previous element.");
+                var previous = getStructureParent().getPrevious(this);
+                if (previous != null) {
+                    previous.remove(previous.getLastChild());
+                }
+                break;
+            }
+        }
+        return element;
     }
 
     @Override

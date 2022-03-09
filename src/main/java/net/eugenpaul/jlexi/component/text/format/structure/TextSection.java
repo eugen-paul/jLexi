@@ -14,11 +14,11 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public class TextSection extends TextStructure implements GlyphIterable<TextStructureForm> {
 
-    private List<TextParagraph> paragraphs;
+    private LinkedList<TextParagraph> children;
 
     protected TextSection(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
         super(parentStructure, format, fontStorage);
-        this.paragraphs = new LinkedList<>();
+        this.children = new LinkedList<>();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class TextSection extends TextStructure implements GlyphIterable<TextStru
     }
 
     public Iterator<TextStructureForm> printableChildIterator() {
-        return new ListOfListIterator<>(paragraphs);
+        return new ListOfListIterator<>(children);
     }
 
     @Override
@@ -45,11 +45,22 @@ public class TextSection extends TextStructure implements GlyphIterable<TextStru
     @Override
     public void resetStructure() {
         structureForm = null;
-        paragraphs.stream().forEach(TextStructure::resetStructure);
+        children.stream().forEach(TextStructure::resetStructure);
     }
 
     @Override
     protected void restructureChildren() {
         // TODO
     }
+
+    @Override
+    protected Iterator<TextStructure> childIterator() {
+        return new TextStructureToIterator<>(children);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return children.isEmpty();
+    }
+
 }

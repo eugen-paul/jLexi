@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -76,19 +77,16 @@ public class TextPaneExtended extends TextStructureFormOfStructures
     public Drawable getPixels() {
         var sites = compositor.compose(document.getRows(getSize()).iterator(), getSize());
 
-        int sizeW = 0;
-        int sizeH = 0;
-
         children.clear();
 
         for (var el : sites) {
             children.add(el);
-            sizeW = Math.max(sizeW, el.getSize().getWidth());
-            sizeH += el.getSize().getHeight();
         }
 
-        Size pixelSize = new Size(sizeW, sizeH);
-        int[] pixels = new int[sizeW * sizeH];
+        // we must always draw the full area to override removed objects
+        Size pixelSize = new Size(size.getWidth(), size.getHeight());
+        int[] pixels = new int[size.getWidth() * size.getHeight()];
+        Arrays.fill(pixels, 0);
 
         cachedDrawable = new DrawableImpl(pixels, pixelSize);
 

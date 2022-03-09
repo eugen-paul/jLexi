@@ -39,13 +39,13 @@ public abstract class TextElement extends Glyph implements EffectHolderV2, TextF
 
     public abstract TextElement getCorsorElementAt(Vector2d pos);
 
-    public void remove() {
-        effects.stream().forEach(Effect::terminate);
-        effects.clear();
-        if (null != parentTextField) {
-            parentTextField.notifyChange();
-        }
-    }
+    // public void remove() {
+    //     effects.stream().forEach(Effect::terminate);
+    //     effects.clear();
+    //     if (null != parentTextField) {
+    //         parentTextField.notifyChange();
+    //     }
+    // }
 
     public void reset() {
         cachedDrawable = null;

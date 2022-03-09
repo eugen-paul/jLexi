@@ -71,8 +71,8 @@ public abstract class TextStructureFormOfStructures extends TextStructureForm {
     public TextStructureForm getNextStructureForm(TextStructureForm structure) {
         var iterator = children.iterator();
         while (iterator.hasNext()) {
-            var e = iterator.next();
-            if (e == structure) {
+            var currentElement = iterator.next();
+            if (currentElement == structure) {
                 if (iterator.hasNext()) {
                     return iterator.next();
                 } else {
@@ -86,13 +86,13 @@ public abstract class TextStructureFormOfStructures extends TextStructureForm {
     @Override
     public TextStructureForm getPreviousStructureForm(TextStructureForm structure) {
         var iterator = children.iterator();
-        TextStructureForm prevStructure = null;
+        TextStructureForm lastElement = null;
         while (iterator.hasNext()) {
-            var e = iterator.next();
-            if (e == structure) {
-                return prevStructure;
+            var currentElement = iterator.next();
+            if (currentElement == structure) {
+                return lastElement;
             }
-            prevStructure = e;
+            lastElement = currentElement;
         }
         return null;
     }

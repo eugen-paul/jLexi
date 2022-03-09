@@ -2,7 +2,7 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.element.TextNewLine;
+import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
@@ -66,16 +66,40 @@ public class AbstractKeyHandlerV2 {
             return;
         }
 
-        textField.addBefore(element, new TextNewLine(null, fontStorage, textField));
+        textField.addBefore(element, TextElementFactory.genNewLineChar(null, fontStorage, textField));
         textField.notifyChange();
     }
 
     private void keyPressedBackSpace() {
-        // TODO
+        var cursor = component.getMouseCursor();
+        var element = cursor.getCurrentGlyph();
+        var textField = element.getParentTextField();
+
+        if (null == textField) {
+            return;
+        }
+
+        var nextElement = textField.removeBefore(element);
+        if (nextElement != null) {
+            cursor.moveCursorTo(nextElement);
+        }
+        textField.notifyChange();
     }
 
     private void keyPressedDelete() {
-        // TODO
+        var cursor = component.getMouseCursor();
+        var element = cursor.getCurrentGlyph();
+        var textField = element.getParentTextField();
+
+        if (null == textField) {
+            return;
+        }
+
+        var nextElement = textField.remove(element);
+        if (nextElement != null) {
+            cursor.moveCursorTo(nextElement);
+        }
+        textField.notifyChange();
     }
 
     private void keyPressedCursorMove(KeyCode keyCode) {
