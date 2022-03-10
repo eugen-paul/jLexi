@@ -68,6 +68,17 @@ public abstract class TextStructure implements TextFormat, Splitable<TextStructu
 
     protected abstract Iterator<TextStructure> childIterator();
 
+    protected void remove(TextStructure element) {
+        var iterator = childIterator();
+        while (iterator.hasNext()) {
+            var currentElement = iterator.next();
+            if (currentElement == element) {
+                iterator.remove();
+                return;
+            }
+        }
+    }
+
     public TextStructure getNextStructure(TextStructure element) {
         var iterator = childIterator();
         var found = false;

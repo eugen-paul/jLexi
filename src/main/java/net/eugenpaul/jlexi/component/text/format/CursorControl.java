@@ -5,7 +5,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 public interface CursorControl {
     public TextElement getNext(TextElement element);
 
-    public TextElement getPrevious(TextElement element);
+    public TextElement getPrevious(TextElement element, boolean moveForDelete);
 
     public TextElement getUp(TextElement element);
 

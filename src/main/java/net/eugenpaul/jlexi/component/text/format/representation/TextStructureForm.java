@@ -48,13 +48,13 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
     public abstract TextStructureForm getNextStructureForm(TextStructureForm structure);
 
     @Override
-    public TextElement getPrevious(TextElement element) {
+    public TextElement getPrevious(TextElement element, boolean moveForDelete) {
         var structure = getChildStructureOfElement(element);
         if (null == structure) {
             return null;
         }
 
-        var e = structure.getPrevious(element);
+        var e = structure.getPrevious(element, moveForDelete);
         while (e == null && structure != null) {
             structure = getPreviousStructureForm(structure);
             if (structure != null) {

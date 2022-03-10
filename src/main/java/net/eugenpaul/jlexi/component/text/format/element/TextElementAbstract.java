@@ -23,6 +23,11 @@ public abstract class TextElementAbstract extends TextElement {
     }
 
     @Override
+    public boolean isRemoveable() {
+        return true;
+    }
+
+    @Override
     public Iterator<Glyph> iterator() {
         return Collections.emptyIterator();
     }

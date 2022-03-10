@@ -10,7 +10,6 @@ import net.eugenpaul.jlexi.component.text.format.EffectHolderV2;
 import net.eugenpaul.jlexi.component.text.format.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.effect.Effect;
 import net.eugenpaul.jlexi.effect.TextPaneEffectV2;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -31,21 +30,9 @@ public abstract class TextElement extends Glyph implements EffectHolderV2, TextF
         return false;
     }
 
-    public boolean isPlaceHolder() {
-        return false;
-    }
-
     public abstract boolean isCursorHoldable();
 
     public abstract TextElement getCorsorElementAt(Vector2d pos);
-
-    // public void remove() {
-    //     effects.stream().forEach(Effect::terminate);
-    //     effects.clear();
-    //     if (null != parentTextField) {
-    //         parentTextField.notifyChange();
-    //     }
-    // }
 
     public void reset() {
         cachedDrawable = null;
@@ -74,5 +61,12 @@ public abstract class TextElement extends Glyph implements EffectHolderV2, TextF
             parent.notifyRedraw(getPixels(), getRelativPosition(), getSize());
         }
     }
+
+    /**
+     * return true if the Text Element can be removed by DELETE or BACKSPACE
+     * 
+     * @return
+     */
+    public abstract boolean isRemoveable();
 
 }

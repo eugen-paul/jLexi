@@ -18,6 +18,7 @@ import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 
 public class TextSpan extends TextField {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(TextSpan.class);
 
     private LinkedList<TextElement> children;
@@ -65,11 +66,6 @@ public class TextSpan extends TextField {
     public boolean isEmpty() {
         return children.isEmpty();
     }
-
-    // @Override
-    // public void remove() {
-    // children.stream().forEach(TextElement::remove);
-    // }
 
     @Override
     public void addBefore(TextElement position, TextElement element) {
@@ -124,15 +120,47 @@ public class TextSpan extends TextField {
     @Override
     public TextElement remove(TextElement element) {
         if (element.isEndOfLine()) {
-            // TODO do merge with next
-            return null;
+            return mergeWithNext(element);
         } else {
             var response = removeElement(element);
             if (response == null) {
-                response = getStructureParent().getNext(this).getFirstChild();
+                response = getStructureParent().getNext(this, true).getFirstChild();
             }
             return response;
         }
+    }
+
+    private TextElement mergeWithNext(TextElement element) {
+        if (getStructureParent() == null) {
+            return element;
+        }
+
+        var nextElement = getStructureParent().getNext(this, true);
+        if (nextElement != null) {
+            var response = nextElement.getFirstChild();
+            if (response != null) {
+                children.removeLast();
+                edit = true;
+                return response;
+            }
+        }
+
+        var nextParagraph = getStructureParent().getNextParagraph();
+        if (nextParagraph == null) {
+            return element;
+        }
+
+        nextElement = nextParagraph.getFirst();
+        if (nextElement != null) {
+            var response = nextElement.getFirstChild();
+            if (response != null) {
+                children.removeLast();
+                edit = true;
+                return response;
+            }
+        }
+
+        return element;
     }
 
     private TextElement removeElement(TextElement element) {
@@ -148,28 +176,28 @@ public class TextSpan extends TextField {
         return null;
     }
 
-    @Override
-    public TextElement removeBefore(TextElement element) {
-        var iterator = children.listIterator();
-        while (iterator.hasNext()) {
-            if (iterator.next() == element) {
-                iterator.previous();
-                if (iterator.hasPrevious()) {
-                    iterator.previous();
-                    iterator.remove();
-                    break;
-                }
-                // TODO do merge with previous
-                LOGGER.trace("Merge TextSpan with previous element.");
-                var previous = getStructureParent().getPrevious(this);
-                if (previous != null) {
-                    previous.remove(previous.getLastChild());
-                }
-                break;
-            }
-        }
-        return element;
-    }
+    // @Override
+    // public TextElement removeBefore(TextElement element) {
+    // var iterator = children.listIterator();
+    // while (iterator.hasNext()) {
+    // if (iterator.next() == element) {
+    // iterator.previous();
+    // if (iterator.hasPrevious()) {
+    // iterator.previous();
+    // iterator.remove();
+    // break;
+    // }
+    // // TODO do merge with previous
+    // LOGGER.trace("Merge TextSpan with previous element.");
+    // var previous = getStructureParent().getPrevious(this);
+    // if (previous != null) {
+    // previous.remove(previous.getLastChild());
+    // }
+    // break;
+    // }
+    // }
+    // return element;
+    // }
 
     @Override
     public void reset() {

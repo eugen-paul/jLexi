@@ -40,7 +40,7 @@ public class AbstractKeyHandlerV2 {
             keyPressedEnter();
             break;
         case RIGHT, LEFT, UP, DOWN:
-            keyPressedCursorMove(keyCode);
+            keyPressedCursorMove(keyCode, true);
             break;
         case DELETE:
             keyPressedDelete();
@@ -71,19 +71,9 @@ public class AbstractKeyHandlerV2 {
     }
 
     private void keyPressedBackSpace() {
-        var cursor = component.getMouseCursor();
-        var element = cursor.getCurrentGlyph();
-        var textField = element.getParentTextField();
-
-        if (null == textField) {
-            return;
+        if (keyPressedCursorMove(KeyCode.LEFT, false)) {
+            keyPressedDelete();
         }
-
-        var nextElement = textField.removeBefore(element);
-        if (nextElement != null) {
-            cursor.moveCursorTo(nextElement);
-        }
-        textField.notifyChange();
     }
 
     private void keyPressedDelete() {
@@ -102,13 +92,12 @@ public class AbstractKeyHandlerV2 {
         textField.notifyChange();
     }
 
-    private void keyPressedCursorMove(KeyCode keyCode) {
+    private boolean keyPressedCursorMove(KeyCode keyCode, boolean moveForDelete) {
         var cursor = component.getMouseCursor();
-
         var structureForm = component.getTextStructureForm();
 
         if (null == structureForm) {
-            return;
+            return false;
         }
 
         TextElement el = null;
@@ -117,7 +106,7 @@ public class AbstractKeyHandlerV2 {
             el = structureForm.getNext(cursor.getCurrentGlyph());
             break;
         case LEFT:
-            el = structureForm.getPrevious(cursor.getCurrentGlyph());
+            el = structureForm.getPrevious(cursor.getCurrentGlyph(), moveForDelete);
             break;
         case UP:
             el = structureForm.getUp(cursor.getCurrentGlyph());
@@ -130,10 +119,12 @@ public class AbstractKeyHandlerV2 {
         }
 
         if (el == null) {
-            return;
+            return false;
         }
 
         cursor.moveCursorTo(el);
+
+        return true;
     }
 
 }

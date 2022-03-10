@@ -23,7 +23,7 @@ import net.eugenpaul.jlexi.utils.Size;
 public class TextParagraph extends TextStructure implements GlyphIterable<TextStructureForm> {
 
     protected TextCompositor<TextElement> fieldCompositor;
-    private List<TextField> children;
+    private LinkedList<TextField> children;
 
     public TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage, String text) {
         super(parentStructure, format, fontStorage);
@@ -33,7 +33,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     }
 
     protected TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage,
-            List<TextField> fields) {
+            LinkedList<TextField> fields) {
         super(parentStructure, format, fontStorage);
         this.children = fields;
         this.fieldCompositor = new TextElementToRowCompositor<>();
@@ -114,14 +114,41 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     @Override
     protected void restructureChildren() {
         var iterator = children.listIterator();
+        boolean doSplit = false;
         while (iterator.hasNext()) {
             var field = iterator.next();
             if (!field.getSplits().isEmpty()) {
                 field.getSplits().stream().forEach(iterator::add);
                 field.clearSplitter();
+                doSplit = true;
             }
         }
-        split();
+        if (doSplit) {
+            split();
+        }
+        if (children.isEmpty() //
+                || children.getLast().isEmpty() //
+                || !children.getLast().getLastChild().isEndOfLine() //
+        ) {
+            // Last element is not "endOfLine" => merge with this paragraph with the next paragraph.
+            mergeWithNext();
+        }
+    }
+
+    private void mergeWithNext() {
+        if (parentStructure == null) {
+            return;
+        }
+
+        var nextElement = parentStructure.getNextStructure(this);
+        if (!(nextElement instanceof TextParagraph)) {
+            return;
+        }
+
+        var nextParagraph = (TextParagraph) nextElement;
+        nextParagraph.children.stream().forEach(v -> v.setStructureParent(this));
+        children.addAll(nextParagraph.children);
+        parentStructure.remove(nextParagraph);
     }
 
     private void split() {
@@ -168,7 +195,30 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         return Collections.emptyListIterator();
     }
 
-    public TextField getNext(TextField element) {
+    public TextField getFirst() {
+        var iterator = children.iterator();
+        while (iterator.hasNext()) {
+            var currentElement = iterator.next();
+            if (!currentElement.isEmpty()) {
+                return currentElement;
+            }
+        }
+        return null;
+    }
+
+    public TextParagraph getNextParagraph() {
+        if (parentStructure == null) {
+            return null;
+        }
+
+        var nextParagraph = parentStructure.getNextStructure(this);
+        if (!(nextParagraph instanceof TextParagraph)) {
+            return null;
+        }
+        return (TextParagraph) nextParagraph;
+    }
+
+    public TextField getNext(TextField element, boolean forDelete) {
         var iterator = children.iterator();
         var found = false;
         while (iterator.hasNext()) {
@@ -184,7 +234,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         return null;
     }
 
-    public TextField getPrevious(TextField element) {
+    public TextField getPrevious(TextField element, boolean forDelete) {
         var iterator = children.listIterator();
         while (iterator.hasNext()) {
             var currentElement = iterator.next();

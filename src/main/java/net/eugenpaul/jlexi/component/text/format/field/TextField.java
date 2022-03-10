@@ -42,11 +42,7 @@ public abstract class TextField implements GlyphIterable<TextElement>, TextForma
         return format;
     }
 
-    // public abstract void remove();
-
     public abstract TextElement remove(TextElement element);
-
-    public abstract TextElement removeBefore(TextElement element);
 
     public abstract void addBefore(TextElement position, TextElement element);
 
