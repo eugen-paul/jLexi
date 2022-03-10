@@ -140,7 +140,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                 iteratorPosition.setStructureParent(newParagraph);
                 iterator.remove();
             }
-            if (iteratorPosition.getLastChild().isEndOfLine()) {
+            if (!iteratorPosition.isEmpty() && iteratorPosition.getLastChild().isEndOfLine()) {
                 found = true;
                 if (!splitter.isEmpty()) {
                     splits.add(newParagraph);
