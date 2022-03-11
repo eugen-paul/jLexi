@@ -2,7 +2,7 @@ package net.eugenpaul.jlexi.component.text.format.element;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
-import net.eugenpaul.jlexi.component.text.format.field.TextField;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
@@ -13,8 +13,9 @@ public class TextChar extends TextElementAbstract {
 
     private Character c;
 
-    public TextChar(Glyph parent, ResourceManager storage, TextField parentTextField, Character c) {
-        super(parent, storage, parentTextField);
+    public TextChar(Glyph parent, ResourceManager storage, TextStructure parentTextField, Character c,
+            TextFormat format) {
+        super(parent, storage, parentTextField, format);
         this.c = c;
 
         getPixels();
@@ -26,10 +27,10 @@ public class TextChar extends TextElementAbstract {
             return cachedDrawable;
         }
 
-        FormatAttribute textFormat = new FormatAttribute();
+        FormatAttribute textFormat = new FormatAttribute(getFormat());
 
-        if (null != parentTextField) {
-            textFormat = parentTextField.mergeFormat(textFormat);
+        if (null != structureParent) {
+            textFormat = structureParent.mergeFormat(textFormat);
             this.cachedDrawable = this.storage.getFonts().ofChar(//
                     c, //
                     (textFormat.getFontName() == null) ? FontStorage.DEFAULT_FONT_NAME : textFormat.getFontName(), //

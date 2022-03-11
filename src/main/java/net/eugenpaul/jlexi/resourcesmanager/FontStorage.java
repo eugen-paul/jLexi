@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.resourcesmanager;
 
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 
@@ -25,6 +26,8 @@ public abstract class FontStorage implements Resource {
      * @return Pixel-Array of the char
      */
     public abstract Drawable ofChar(Character c, String fontName, int style, int size);
+
+    public abstract Drawable ofChar(Character c, TextFormat format);
 
     /**
      * Return max Pixel Ascent of font of given size

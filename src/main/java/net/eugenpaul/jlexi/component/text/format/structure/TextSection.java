@@ -63,4 +63,16 @@ public class TextSection extends TextStructure implements GlyphIterable<TextStru
         return children.isEmpty();
     }
 
+    @Override
+    public TextElement removeElement(TextElement element) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void addBefore(TextElement position, TextElement element) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

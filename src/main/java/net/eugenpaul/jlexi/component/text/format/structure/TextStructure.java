@@ -56,6 +56,10 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
 
     public abstract void resetStructure();
 
+    public abstract TextElement removeElement(TextElement element);
+
+    public abstract void addBefore(TextElement position, TextElement element);
+
     @Override
     public List<TextStructure> getSplits() {
         return splits;

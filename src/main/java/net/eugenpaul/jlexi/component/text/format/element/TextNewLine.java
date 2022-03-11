@@ -2,7 +2,7 @@ package net.eugenpaul.jlexi.component.text.format.element;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
-import net.eugenpaul.jlexi.component.text.format.field.TextField;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
@@ -12,8 +12,8 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextNewLine extends TextElementAbstract {
 
-    public TextNewLine(Glyph parent, ResourceManager storage, TextField parentTextField) {
-        super(parent, storage, parentTextField);
+    public TextNewLine(Glyph parent, ResourceManager storage, TextStructure parentTextField, TextFormat format) {
+        super(parent, storage, parentTextField, format);
 
         // we must compute pixels to set size of element
         getPixels();
@@ -27,8 +27,8 @@ public class TextNewLine extends TextElementAbstract {
 
         FormatAttribute textFormat = new FormatAttribute();
 
-        if (null != parentTextField) {
-            textFormat = parentTextField.mergeFormat(textFormat);
+        if (null != structureParent) {
+            textFormat = structureParent.mergeFormat(textFormat);
 
             int[] pixels = new int[storage.getFonts().getMaxAscent(//
                     (textFormat.getFontName() == null) ? FontStorage.DEFAULT_FONT_NAME : textFormat.getFontName(), //

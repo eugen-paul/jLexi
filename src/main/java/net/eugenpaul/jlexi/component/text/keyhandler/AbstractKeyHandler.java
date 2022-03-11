@@ -24,14 +24,14 @@ public class AbstractKeyHandler {
 
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
-        var textField = element.getParentTextField();
+        var textField = element.getStructureParent();
 
         if (null == textField) {
             return;
         }
 
-        textField.addBefore(element, new TextChar(null, storage, textField, key));
-        textField.notifyChange();
+        textField.addBefore(element, new TextChar(null, storage, textField, key, element.getFormat()));
+        textField.notifyChange(true);
     }
 
     public void onKeyPressed(KeyCode keyCode) {
@@ -60,14 +60,14 @@ public class AbstractKeyHandler {
     private void keyPressedEnter() {
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
-        var textField = element.getParentTextField();
+        var textField = element.getStructureParent();
 
         if (null == textField) {
             return;
         }
 
-        textField.addBefore(element, TextElementFactory.genNewLineChar(null, storage, textField));
-        textField.notifyChange();
+        textField.addBefore(element, TextElementFactory.genNewLineChar(null, storage, textField, element.getFormat()));
+        textField.notifyChange(true);
     }
 
     private void keyPressedBackSpace() {
@@ -79,17 +79,17 @@ public class AbstractKeyHandler {
     private void keyPressedDelete() {
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
-        var textField = element.getParentTextField();
+        var textField = element.getStructureParent();
 
         if (null == textField) {
             return;
         }
 
-        var nextElement = textField.remove(element);
+        var nextElement = textField.removeElement(element);
         if (nextElement != null) {
             cursor.moveCursorTo(nextElement);
         }
-        textField.notifyChange();
+        textField.notifyChange(true);
     }
 
     private boolean keyPressedCursorMove(KeyCode keyCode, boolean moveForDelete) {

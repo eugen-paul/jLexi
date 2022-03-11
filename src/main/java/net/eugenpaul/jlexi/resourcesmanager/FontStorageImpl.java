@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.resourcesmanager;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontGenerator;
@@ -33,6 +34,10 @@ public class FontStorageImpl extends FontStorage {
 
     public FontStorageImpl() {
         this(new FontGenerator());
+    }
+
+    public Drawable ofChar(Character c, TextFormat format) {
+        return ofChar(c, format.getFontName(), format.getStyle(), format.getFontsize());
     }
 
     @Override

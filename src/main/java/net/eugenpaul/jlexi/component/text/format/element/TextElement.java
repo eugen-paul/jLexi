@@ -8,7 +8,7 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
-import net.eugenpaul.jlexi.component.text.format.field.TextField;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.TextPaneEffect;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -17,12 +17,15 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
 
     @Getter
     @Setter
-    protected TextField parentTextField;
+    protected TextStructure structureParent;
     private List<TextPaneEffect> effects;
+    @Getter
+    private TextFormat format;
 
-    protected TextElement(Glyph parent, TextField parentTextField) {
+    protected TextElement(Glyph parent, TextStructure structureParent, TextFormat format) {
         super(parent);
-        this.parentTextField = parentTextField;
+        this.structureParent = structureParent;
+        this.format = format;
         this.effects = new LinkedList<>();
     }
 

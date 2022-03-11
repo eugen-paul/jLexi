@@ -30,6 +30,13 @@ public class FormatAttribute {
         this.fontName = original.fontName;
     }
 
+    public FormatAttribute(TextFormat format) {
+        this.bold = format.getBold();
+        this.italic = format.getItalic();
+        this.fontsize = format.getFontsize();
+        this.fontName = format.getFontName();
+    }
+
     /**
      * takes over the parameters from the source that are not set by itself.
      * 
