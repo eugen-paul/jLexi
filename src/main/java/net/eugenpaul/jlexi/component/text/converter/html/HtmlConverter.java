@@ -2,9 +2,10 @@ package net.eugenpaul.jlexi.component.text.converter.html;
 
 import java.io.File;
 
-import net.eugenpaul.jlexi.component.text.TextPaneElement;
 import net.eugenpaul.jlexi.component.text.converter.TextConverter;
-import net.eugenpaul.jlexi.component.text.elements.CharGlyph;
+// import net.eugenpaul.jlexi.component.text.TextPaneElement;
+// import net.eugenpaul.jlexi.component.text.converter.TextConverter;
+// import net.eugenpaul.jlexi.component.text.elements.CharGlyph;
 // import net.eugenpaul.jlexi.component.text.format.container.Bold;
 // import net.eugenpaul.jlexi.component.text.format.container.Italic;
 // import net.eugenpaul.jlexi.component.text.format.container.Paragraph;
@@ -21,10 +22,10 @@ public class HtmlConverter implements TextConverter {
         this.fontStorage = fontStorage;
     }
 
-    @Override
-    public NodeList<TextPaneElement> read(File file) {
+    // @Override
+    // public NodeList<TextPaneElement> read(File file) {
 
-        NodeList<TextPaneElement> responseNodeList = new NodeList<>();
+    //     NodeList<TextPaneElement> responseNodeList = new NodeList<>();
 
         // TextFormatContainer<TextPaneElement> paragraph = new Paragraph<>(null, null);
         // var el = responseNodeList.addFirst(paragraph);
@@ -57,13 +58,13 @@ public class HtmlConverter implements TextConverter {
         //     c.add(glyph);
         // }
 
-        return responseNodeList;
-    }
+    //     return responseNodeList;
+    // }
 
-    @Override
-    public File write(NodeList<TextPaneElement> rawList) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    // @Override
+    // public File write(NodeList<TextPaneElement> rawList) {
+    //     // TODO Auto-generated method stub
+    //     return null;
+    // }
 
 }

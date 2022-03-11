@@ -4,10 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-
-import net.eugenpaul.jlexi.component.text.TextPaneElement;
-
-public class TextPaneElemenIterator<T extends TextPaneElement> implements Iterator<TextPaneElement> {
+public class TextPaneElemenIterator<T> implements Iterator<T> {
 
     private Iterator<T> iterator;
 
@@ -25,7 +22,7 @@ public class TextPaneElemenIterator<T extends TextPaneElement> implements Iterat
     }
 
     @Override
-    public TextPaneElement next() {
+    public T next() {
         return iterator.next();
     }
 

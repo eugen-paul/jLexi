@@ -5,17 +5,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.text.TextPaneElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
-public class TextPaneElementToGlyphIterator<T extends TextPaneElement> implements Iterator<Glyph> {
+public class TextElementToGlyphIterator<T extends TextElement> implements Iterator<Glyph> {
 
     private Iterator<T> iterator;
 
-    public TextPaneElementToGlyphIterator(List<T> list) {
+    public TextElementToGlyphIterator(List<T> list) {
         this.iterator = list.iterator();
     }
 
-    public TextPaneElementToGlyphIterator(Collection<T> list) {
+    public TextElementToGlyphIterator(Collection<T> list) {
         this.iterator = list.iterator();
     }
 

@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 
 import net.eugenpaul.jlexi.component.framing.Border;
 import net.eugenpaul.jlexi.component.framing.MenuBar;
-import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.TextPaneExtended;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
@@ -31,7 +30,6 @@ public class JLexi {
 
         Window windowAbstraction = new Window(new SwingWindowImpl(controller));
 
-        // TextPane textPane = new TextPane(null, fontStorage, controller);
         TextPaneExtended textPane = new TextPaneExtended(null, storage, controller);
         Border border = new Border(null, textPane);
 
