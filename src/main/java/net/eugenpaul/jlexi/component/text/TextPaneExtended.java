@@ -26,7 +26,7 @@ import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandlerV
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectController;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -54,21 +54,21 @@ public class TextPaneExtended extends TextStructureFormOfStructures
     private CursorV2 mouseCursor;
 
     @Getter
-    private FontStorage fontStorage;
+    private ResourceManager storage;
 
     private boolean editMode = false;
 
-    public TextPaneExtended(Glyph parent, FontStorage fontStorage, EffectController effectWorker) {
+    public TextPaneExtended(Glyph parent, ResourceManager storage, EffectController effectWorker) {
         super(parent);
-        this.fontStorage = fontStorage;
+        this.storage = storage;
         this.compositor = new TextStructureFormToColumnCompositor();
-        this.document = new TextPaneDocument(new FormatAttribute(), fontStorage, "Hello, World!", this);
+        this.document = new TextPaneDocument(new FormatAttribute(), storage, "Hello, World!", this);
 
         this.yPositionToSite = new TreeMap<>();
 
         this.mouseCursor = new CursorV2(null, null, effectWorker);
 
-        this.keyHandler = new TextPaneExtendedKeyHandlerV2(this, fontStorage);
+        this.keyHandler = new TextPaneExtendedKeyHandlerV2(this, storage);
 
         resizeTo(Size.ZERO_SIZE);
     }
@@ -150,7 +150,7 @@ public class TextPaneExtended extends TextStructureFormOfStructures
     @Override
     public void setText(String text) {
         LOGGER.trace("Set Document.text to \"{}\".", text);
-        document = new TextPaneDocument(new FormatAttribute(), fontStorage, text, this);
+        document = new TextPaneDocument(new FormatAttribute(), storage, text, this);
         getPixels();
     }
 

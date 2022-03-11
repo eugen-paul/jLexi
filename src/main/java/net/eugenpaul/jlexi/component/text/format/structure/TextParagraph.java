@@ -17,7 +17,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.component.text.format.field.TextSpan;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextParagraph extends TextStructure implements GlyphIterable<TextStructureForm> {
@@ -25,16 +25,16 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     protected TextCompositor<TextElement> fieldCompositor;
     private LinkedList<TextField> children;
 
-    public TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage, String text) {
-        super(parentStructure, format, fontStorage);
+    public TextParagraph(TextStructure parentStructure, FormatAttribute format, ResourceManager storage, String text) {
+        super(parentStructure, format, storage);
         this.children = new LinkedList<>();
         initFields(text);
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
 
-    protected TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage,
+    protected TextParagraph(TextStructure parentStructure, FormatAttribute format, ResourceManager storage,
             LinkedList<TextField> fields) {
-        super(parentStructure, format, fontStorage);
+        super(parentStructure, format, storage);
         this.children = fields;
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
@@ -53,28 +53,28 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         while (matcher.find()) {
             counter++;
             if (!matcher.group(1).isEmpty()) {
-                children.add(new TextSpan(this, new FormatAttribute(), fontStorage, matcher.group(1)));
+                children.add(new TextSpan(this, new FormatAttribute(), storage, matcher.group(1)));
             }
 
             if (!matcher.group(2).isEmpty()) {
                 var f = new FormatAttribute();
                 f.setBold(matcher.group(2).charAt(0) == 'B');
                 f.setItalic(matcher.group(2).charAt(1) == 'I');
-                children.add(new TextSpan(this, f, fontStorage, matcher.group(2).substring(3)));
+                children.add(new TextSpan(this, f, storage, matcher.group(2).substring(3)));
             }
 
             if (!matcher.group(3).isEmpty()) {
-                children.add(new TextSpan(this, new FormatAttribute(), fontStorage, matcher.group(3)));
+                children.add(new TextSpan(this, new FormatAttribute(), storage, matcher.group(3)));
             }
         }
         if (counter == 0 && !text.isEmpty()) {
-            children.add(new TextSpan(this, new FormatAttribute(), fontStorage, text));
+            children.add(new TextSpan(this, new FormatAttribute(), storage, text));
         }
-        children.add(new TextSpan(this, new FormatAttribute(), fontStorage, "\n"));
+        children.add(new TextSpan(this, new FormatAttribute(), storage, "\n"));
     }
 
-    protected TextParagraph(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
-        super(parentStructure, format, fontStorage);
+    protected TextParagraph(TextStructure parentStructure, FormatAttribute format, ResourceManager storage) {
+        super(parentStructure, format, storage);
         this.children = new LinkedList<>();
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
@@ -158,7 +158,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         clearSplitter();
 
         boolean found = false;
-        var newParagraph = new TextParagraph(parentStructure, format, fontStorage, splitter);
+        var newParagraph = new TextParagraph(parentStructure, format, storage, splitter);
 
         while (iterator.hasNext()) {
             var iteratorPosition = iterator.next();

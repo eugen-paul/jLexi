@@ -6,11 +6,11 @@ import net.eugenpaul.jlexi.component.text.format.Empty;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.Splitable;
-import net.eugenpaul.jlexi.component.text.format.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
 
-public abstract class TextField implements GlyphIterable<TextElement>, TextFormat, Splitable<TextField>, Empty {
+public abstract class TextField implements GlyphIterable<TextElement>, TextDocumentElement, Splitable<TextField>, Empty {
     @Getter(lombok.AccessLevel.PROTECTED)
     @Setter
     private TextParagraph structureParent;

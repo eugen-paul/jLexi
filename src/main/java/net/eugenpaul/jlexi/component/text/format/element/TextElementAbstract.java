@@ -5,16 +5,16 @@ import java.util.Iterator;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.field.TextField;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public abstract class TextElementAbstract extends TextElement {
 
-    protected FontStorage fontStorage;
+    protected ResourceManager storage;
 
-    protected TextElementAbstract(Glyph parent, FontStorage fontStorage, TextField parentTextField) {
+    protected TextElementAbstract(Glyph parent, ResourceManager storage, TextField parentTextField) {
         super(parent, parentTextField);
-        this.fontStorage = fontStorage;
+        this.storage = storage;
     }
 
     @Override

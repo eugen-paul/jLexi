@@ -7,13 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.EffectHolderV2;
-import net.eugenpaul.jlexi.component.text.format.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.field.TextField;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.TextPaneEffectV2;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public abstract class TextElement extends Glyph implements EffectHolderV2, TextFormat {
+public abstract class TextElement extends Glyph implements EffectHolderV2, TextDocumentElement {
 
     @Getter
     @Setter

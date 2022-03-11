@@ -6,7 +6,7 @@ import net.eugenpaul.jlexi.draw.DrawableImpl;
 /**
  * Abstract Storage for chars as PixelArray
  */
-public abstract class FontStorage {
+public abstract class FontStorage implements Resource {
 
     public static final int[] EMPTY_CHAR = new int[0];
     public static final String DEFAULT_FONT_NAME = "Monospaced";

@@ -7,25 +7,25 @@ import java.util.List;
 import net.eugenpaul.jlexi.component.text.format.Empty;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.Splitable;
-import net.eugenpaul.jlexi.component.text.format.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
-public abstract class TextStructure implements TextFormat, Splitable<TextStructure>, Empty {
+public abstract class TextStructure implements TextDocumentElement, Splitable<TextStructure>, Empty {
 
     protected TextStructure parentStructure;
     protected FormatAttribute format;
-    protected FontStorage fontStorage;
+    protected ResourceManager storage;
     protected List<TextStructureForm> structureForm;
 
     protected List<TextStructure> splits;
 
-    protected TextStructure(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
+    protected TextStructure(TextStructure parentStructure, FormatAttribute format, ResourceManager storage) {
         this.parentStructure = parentStructure;
         this.format = format;
-        this.fontStorage = fontStorage;
+        this.storage = storage;
         this.structureForm = null;
         this.splits = new LinkedList<>();
     }

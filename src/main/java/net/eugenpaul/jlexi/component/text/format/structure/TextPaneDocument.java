@@ -11,7 +11,7 @@ import net.eugenpaul.jlexi.component.text.TextPaneExtended;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextPaneDocument extends TextStructure {
@@ -19,8 +19,8 @@ public class TextPaneDocument extends TextStructure {
     private LinkedList<TextParagraph> children;
     private TextPaneExtended textPane;
 
-    public TextPaneDocument(FormatAttribute format, FontStorage fontStorage, String text, TextPaneExtended textPane) {
-        super(null, format, fontStorage);
+    public TextPaneDocument(FormatAttribute format, ResourceManager storage, String text, TextPaneExtended textPane) {
+        super(null, format, storage);
         this.textPane = textPane;
         initParagraphs(text);
     }
@@ -28,12 +28,12 @@ public class TextPaneDocument extends TextStructure {
     private void initParagraphs(String text) {
         String[] paragraphText = text.split("\n");
         children = Stream.of(paragraphText) //
-                .map(v -> new TextParagraph(this, new FormatAttribute(), fontStorage, v)) //
+                .map(v -> new TextParagraph(this, new FormatAttribute(), storage, v)) //
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    protected TextPaneDocument(FormatAttribute format, FontStorage fontStorage) {
-        super(null, format, fontStorage);
+    protected TextPaneDocument(FormatAttribute format, ResourceManager storage) {
+        super(null, format, storage);
         children = new LinkedList<>();
     }
 

@@ -5,7 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Storage {
+public class ResourceManager {
 
-    private FontStorage fontStorage;
+    private FontStorage fonts;
+
+    private FormatStorage formats;
 }

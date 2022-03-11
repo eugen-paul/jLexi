@@ -12,6 +12,9 @@ import net.eugenpaul.jlexi.window.Window;
 import net.eugenpaul.jlexi.gui.window.SwingWindowImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorageImpl;
+import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
+import net.eugenpaul.jlexi.resourcesmanager.FormatStorageImpl;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -22,11 +25,14 @@ public class JLexi {
     public static void main(String[] args) {
         ModelController controller = new ModelController();
 
-        FontStorage fontStorage = new FontStorageImpl(new FontGenerator());
+        FontStorage fonts = new FontStorageImpl(new FontGenerator());
+        FormatStorage formats = new FormatStorageImpl();
+        ResourceManager storage = new ResourceManager(fonts, formats);
+
         Window windowAbstraction = new Window(new SwingWindowImpl(controller));
 
         // TextPane textPane = new TextPane(null, fontStorage, controller);
-        TextPaneExtended textPane = new TextPaneExtended(null, fontStorage, controller);
+        TextPaneExtended textPane = new TextPaneExtended(null, storage, controller);
         Border border = new Border(null, textPane);
 
         controller.addTextPane("TextPane", textPane);

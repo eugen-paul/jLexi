@@ -4,15 +4,18 @@ import java.awt.Font;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class FormatAttribute {
 
     private Boolean bold;
@@ -65,5 +68,14 @@ public class FormatAttribute {
                 && fontsize != null //
                 && fontName != null //
         ;
+    }
+
+    public TextFormat toTextFormat() {
+        return TextFormat.builder()//
+                .bold(bold)//
+                .italic(italic)//
+                .fontsize(fontsize)//
+                .fontName(fontName)//
+                .build();
     }
 }

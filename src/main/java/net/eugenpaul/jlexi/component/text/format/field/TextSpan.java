@@ -14,7 +14,7 @@ import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 public class TextSpan extends TextField {
 
@@ -23,26 +23,26 @@ public class TextSpan extends TextField {
 
     private LinkedList<TextElement> children;
     private LinkedList<TextField> splits;
-    private FontStorage fontStorage;
+    private ResourceManager storage;
 
-    public TextSpan(TextParagraph structureParent, FormatAttribute format, FontStorage fontStorage) {
-        this(structureParent, format, fontStorage, new LinkedList<>());
+    public TextSpan(TextParagraph structureParent, FormatAttribute format, ResourceManager storage) {
+        this(structureParent, format, storage, new LinkedList<>());
     }
 
-    public TextSpan(TextParagraph structureParent, FormatAttribute format, FontStorage fontStorage, String text) {
-        this(structureParent, format, fontStorage, (LinkedList<TextElement>) null);
+    public TextSpan(TextParagraph structureParent, FormatAttribute format, ResourceManager storage, String text) {
+        this(structureParent, format, storage, (LinkedList<TextElement>) null);
 
         this.children = text.chars() //
                 .mapToObj(v -> (char) v) //
-                .map(v -> TextElementFactory.fromChar(null, fontStorage, this, v)) //
+                .map(v -> TextElementFactory.fromChar(null, storage, this, v)) //
                 .filter(Objects::nonNull)//
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    protected TextSpan(TextParagraph structureParent, FormatAttribute format, FontStorage fontStorage,
+    protected TextSpan(TextParagraph structureParent, FormatAttribute format, ResourceManager storage,
             LinkedList<TextElement> data) {
         super(structureParent, format);
-        this.fontStorage = fontStorage;
+        this.storage = storage;
         this.children = data;
         this.splits = new LinkedList<>();
     }
@@ -97,7 +97,7 @@ public class TextSpan extends TextField {
         boolean found = false;
         var newSpan = new TextSpan(getStructureParent(), //
                 new FormatAttribute(getFormat()), //
-                fontStorage, //
+                storage, //
                 splitter);
 
         while (iterator.hasNext()) {
@@ -112,7 +112,7 @@ public class TextSpan extends TextField {
             }
         }
 
-        children.add(TextElementFactory.genNewLineChar(null, fontStorage, this));
+        children.add(TextElementFactory.genNewLineChar(null, storage, this));
         splits.add(newSpan);
         edit = true;
     }

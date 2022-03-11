@@ -9,15 +9,15 @@ import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextSection extends TextStructure implements GlyphIterable<TextStructureForm> {
 
     private LinkedList<TextParagraph> children;
 
-    protected TextSection(TextStructure parentStructure, FormatAttribute format, FontStorage fontStorage) {
-        super(parentStructure, format, fontStorage);
+    protected TextSection(TextStructure parentStructure, FormatAttribute format, ResourceManager storage) {
+        super(parentStructure, format, storage);
         this.children = new LinkedList<>();
     }
 

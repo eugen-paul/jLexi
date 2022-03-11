@@ -3,18 +3,18 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 
 public class AbstractKeyHandlerV2 {
 
     private KeyHandlerableV2 component;
-    private FontStorage fontStorage;
+    private ResourceManager storage;
 
-    protected AbstractKeyHandlerV2(KeyHandlerableV2 component, FontStorage fontStorage) {
+    protected AbstractKeyHandlerV2(KeyHandlerableV2 component, ResourceManager storage) {
         this.component = component;
-        this.fontStorage = fontStorage;
+        this.storage = storage;
     }
 
     public void onKeyTyped(Character key) {
@@ -30,7 +30,7 @@ public class AbstractKeyHandlerV2 {
             return;
         }
 
-        textField.addBefore(element, new TextChar(null, fontStorage, textField, key));
+        textField.addBefore(element, new TextChar(null, storage, textField, key));
         textField.notifyChange();
     }
 
@@ -66,7 +66,7 @@ public class AbstractKeyHandlerV2 {
             return;
         }
 
-        textField.addBefore(element, TextElementFactory.genNewLineChar(null, fontStorage, textField));
+        textField.addBefore(element, TextElementFactory.genNewLineChar(null, storage, textField));
         textField.notifyChange();
     }
 
