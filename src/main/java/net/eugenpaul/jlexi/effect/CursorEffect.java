@@ -12,15 +12,15 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class CursorEffectV2 extends TextPaneEffectV2 {
+public class CursorEffect extends TextPaneEffect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CursorEffectV2.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CursorEffect.class);
 
     private static final int CURSOR_COLOR = 0xFF0000FF;
 
     private boolean showCursor;
 
-    public CursorEffectV2(TextElement glyph) {
+    public CursorEffect(TextElement glyph) {
         super(glyph);
         showCursor = false;
         glyph.addEffect(this);

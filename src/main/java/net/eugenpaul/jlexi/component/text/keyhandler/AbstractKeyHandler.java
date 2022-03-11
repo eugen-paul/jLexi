@@ -7,12 +7,12 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 
-public class AbstractKeyHandlerV2 {
+public class AbstractKeyHandler {
 
-    private KeyHandlerableV2 component;
+    private KeyHandlerable component;
     private ResourceManager storage;
 
-    protected AbstractKeyHandlerV2(KeyHandlerableV2 component, ResourceManager storage) {
+    protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage) {
         this.component = component;
         this.storage = storage;
     }

@@ -19,10 +19,10 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureFormOfStructures;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
-import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandlerV2;
+import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
-import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerableV2;
-import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandlerV2;
+import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
+import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectController;
@@ -37,10 +37,10 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 /**
  * Display Rows.
  */
-public class TextPaneExtended extends TextStructureFormOfStructures
-        implements GuiComponent, KeyHandlerableV2, TextUpdateable {
+public class TextPane extends TextStructureFormOfStructures
+        implements GuiComponent, KeyHandlerable, TextUpdateable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneExtended.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
 
     private TextPaneDocument document;
 
@@ -48,17 +48,17 @@ public class TextPaneExtended extends TextStructureFormOfStructures
 
     private TreeMap<Integer, TextStructureForm> yPositionToSite;
 
-    private AbstractKeyHandlerV2 keyHandler;
+    private AbstractKeyHandler keyHandler;
 
     @Getter
-    private CursorV2 mouseCursor;
+    private Cursor mouseCursor;
 
     @Getter
     private ResourceManager storage;
 
     private boolean editMode = false;
 
-    public TextPaneExtended(Glyph parent, ResourceManager storage, EffectController effectWorker) {
+    public TextPane(Glyph parent, ResourceManager storage, EffectController effectWorker) {
         super(parent);
         this.storage = storage;
         this.compositor = new TextStructureFormToColumnCompositor();
@@ -66,9 +66,9 @@ public class TextPaneExtended extends TextStructureFormOfStructures
 
         this.yPositionToSite = new TreeMap<>();
 
-        this.mouseCursor = new CursorV2(null, null, effectWorker);
+        this.mouseCursor = new Cursor(null, null, effectWorker);
 
-        this.keyHandler = new TextPaneExtendedKeyHandlerV2(this, storage);
+        this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
 
         resizeTo(Size.ZERO_SIZE);
     }

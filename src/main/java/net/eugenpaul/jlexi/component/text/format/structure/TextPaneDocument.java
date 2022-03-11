@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.eugenpaul.jlexi.component.text.TextPaneExtended;
+import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
@@ -17,9 +17,9 @@ import net.eugenpaul.jlexi.utils.Size;
 public class TextPaneDocument extends TextStructure {
 
     private LinkedList<TextParagraph> children;
-    private TextPaneExtended textPane;
+    private TextPane textPane;
 
-    public TextPaneDocument(FormatAttribute format, ResourceManager storage, String text, TextPaneExtended textPane) {
+    public TextPaneDocument(FormatAttribute format, ResourceManager storage, String text, TextPane textPane) {
         super(null, format, storage);
         this.textPane = textPane;
         initParagraphs(text);
