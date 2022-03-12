@@ -9,22 +9,40 @@ import java.awt.image.DataBufferByte;
 
 import javax.swing.JLabel;
 
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+
 public class FontGenerator implements FontPixelsGenerator {
 
     @Override
-    public int[] ofChar(Character c, String font, int style, int size) {
-        return extractedChar(c, font, style, size);
+    public int[] ofChar(Character c, TextFormat format) {
+        return extractedChar(c, format);
     }
 
     @Override
-    public int getMaxAscent(String fontName, int style, int size) {
-        Font font = new Font(fontName, style, size);
+    public int getMaxAscent(TextFormat format) {
+        Font font = new Font(//
+                format.getFontName(), //
+                getStyle(format), //
+                format.getFontsize() //
+        );
+
         FontMetrics metrics = new JLabel().getFontMetrics(font);
         return metrics.getMaxAscent();
     }
 
-    private static int[] extractedChar(Character c, String fontName, int style, int size) {
-        Font font = new Font(fontName, style, size);
+    @Override
+    public int getStyle(TextFormat format) {
+        return ((format.getBold() != null && format.getBold().booleanValue()) ? Font.BOLD : 0)//
+                | ((format.getItalic() != null && format.getItalic().booleanValue()) ? Font.ITALIC : 0)//
+        ;
+    }
+
+    private int[] extractedChar(Character c, TextFormat format) {
+        Font font = new Font(//
+                format.getFontName(), //
+                getStyle(format), //
+                format.getFontsize() //
+        );
 
         // use a JLabel to get a FontMetrics object
         FontMetrics metrics = new JLabel().getFontMetrics(font);

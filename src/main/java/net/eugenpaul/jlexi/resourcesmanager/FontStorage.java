@@ -19,14 +19,10 @@ public abstract class FontStorage implements Resource {
     /**
      * Return Pixel-Array of char
      * 
-     * @param c        - character
-     * @param fontName - font of character
-     * @param style    - style of character (for example, Font.ITALIC or Font.BOLD|Font.ITALIC)
-     * @param size     - size of character
-     * @return Pixel-Array of the char
+     * @param c      - character
+     * @param format - Format of the character
+     * @return Drawable of the char
      */
-    public abstract Drawable ofChar(Character c, String fontName, int style, int size);
-
     public abstract Drawable ofChar(Character c, TextFormat format);
 
     /**

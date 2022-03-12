@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.Empty;
-import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.Splitable;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
@@ -16,26 +16,18 @@ import net.eugenpaul.jlexi.utils.Size;
 public abstract class TextStructure implements TextDocumentElement, Splitable<TextStructure>, Empty {
 
     protected TextStructure parentStructure;
-    protected FormatAttribute format;
+    protected TextFormat format;
     protected ResourceManager storage;
     protected List<TextStructureForm> structureForm;
 
     protected List<TextStructure> splits;
 
-    protected TextStructure(TextStructure parentStructure, FormatAttribute format, ResourceManager storage) {
+    protected TextStructure(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
         this.parentStructure = parentStructure;
         this.format = format;
         this.storage = storage;
         this.structureForm = null;
         this.splits = new LinkedList<>();
-    }
-
-    public FormatAttribute mergeFormat(FormatAttribute format) {
-        format = format.merge(this.format);
-        if (null != parentStructure) {
-            format = parentStructure.mergeFormat(format);
-        }
-        return format;
     }
 
     public abstract void setFormat(TextElement from, TextElement to);

@@ -1,7 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.element;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -25,23 +24,15 @@ public class TextNewLine extends TextElementAbstract {
             return cachedDrawable;
         }
 
-        FormatAttribute textFormat = new FormatAttribute();
+        int[] pixels = new int[storage.getFonts().getMaxAscent(//
+                (getFormat().getFontName() == null) ? FontStorage.DEFAULT_FONT_NAME : getFormat().getFontName(), //
+                (getFormat().getFontsize() == null) ? FontStorage.DEFAULT_FONT_SIZE : getFormat().getFontsize() //
+        )];
+        setSize(new Size(1, pixels.length));
 
-        if (null != structureParent) {
-            textFormat = structureParent.mergeFormat(textFormat);
+        cachedDrawable = new DrawableImpl(pixels, getSize());
 
-            int[] pixels = new int[storage.getFonts().getMaxAscent(//
-                    (textFormat.getFontName() == null) ? FontStorage.DEFAULT_FONT_NAME : textFormat.getFontName(), //
-                    (textFormat.getFontsize() == null) ? FontStorage.DEFAULT_FONT_SIZE : textFormat.getFontsize() //
-            )];
-            setSize(new Size(1, pixels.length));
-
-            cachedDrawable = new DrawableImpl(pixels, getSize());
-
-            cachedDrawable = doEffects(cachedDrawable);
-        } else {
-            cachedDrawable = DrawableImpl.EMPTY_DRAWABLE;
-        }
+        cachedDrawable = doEffects(cachedDrawable);
 
         return cachedDrawable;
     }

@@ -37,29 +37,27 @@ public class FontStorageImpl extends FontStorage {
     }
 
     public Drawable ofChar(Character c, TextFormat format) {
-        return ofChar(c, format.getFontName(), format.getStyle(), format.getFontsize());
-    }
-
-    @Override
-    public Drawable ofChar(Character c, String fontName, int style, int size) {
         if (!CharacterHelper.isPrintable(c)) {
             return DEFAULT_DRAWABLE;
         }
 
-        Integer maxAscent = fontToSize.computeIfAbsent(fontName, k -> getMaxAscent(k, size));
+        Integer style = fontGenerator.getStyle(format);
+
+        Integer maxAscent = fontToSize.computeIfAbsent(format.getFontName(),
+                k -> getMaxAscent(k, format.getFontsize()));
 
         var response = storage.computeIfAbsent(c, key -> {
-            int[] pixels = fontGenerator.ofChar(c, fontName, style, size);
+            int[] pixels = fontGenerator.ofChar(c, format);
             Drawable drawable = new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
 
             Map<Integer, // Size
                     Drawable> sizeMap = new HashMap<>();
-            sizeMap.put(size, drawable);
+            sizeMap.put(format.getFontsize(), drawable);
 
             Map<String, // FontName
                     Map<Integer, // Size
                             Drawable>> fontMap = new HashMap<>();
-            fontMap.put(fontName, sizeMap);
+            fontMap.put(format.getFontName(), sizeMap);
 
             Map<Integer, // Style
                     Map<String, // FontName
@@ -69,28 +67,28 @@ public class FontStorageImpl extends FontStorage {
 
             return styleMap;
         }).computeIfAbsent(style, key -> {
-            int[] pixels = fontGenerator.ofChar(c, fontName, style, size);
+            int[] pixels = fontGenerator.ofChar(c, format);
             Drawable drawable = new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
 
             Map<Integer, // Size
                     Drawable> sizeMap = new HashMap<>();
-            sizeMap.put(size, drawable);
+            sizeMap.put(format.getFontsize(), drawable);
 
             Map<String, // FontName
                     Map<Integer, // Size
                             Drawable>> fontMap = new HashMap<>();
-            fontMap.put(fontName, sizeMap);
+            fontMap.put(format.getFontName(), sizeMap);
             return fontMap;
-        }).computeIfAbsent(fontName, key -> {
-            int[] pixels = fontGenerator.ofChar(c, fontName, style, size);
+        }).computeIfAbsent(format.getFontName(), key -> {
+            int[] pixels = fontGenerator.ofChar(c, format);
             Drawable drawable = new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
 
             Map<Integer, // Size
                     Drawable> sizeMap = new HashMap<>();
-            sizeMap.put(size, drawable);
+            sizeMap.put(format.getFontsize(), drawable);
             return sizeMap;
-        }).computeIfAbsent(size, key -> {
-            int[] pixels = fontGenerator.ofChar(c, fontName, style, size);
+        }).computeIfAbsent(format.getFontsize(), key -> {
+            int[] pixels = fontGenerator.ofChar(c, format);
             return new DrawableImpl(pixels, new Size(pixels.length / maxAscent, maxAscent));
         });
 

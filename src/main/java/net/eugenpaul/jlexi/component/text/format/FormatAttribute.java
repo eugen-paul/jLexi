@@ -1,7 +1,5 @@
 package net.eugenpaul.jlexi.component.text.format;
 
-import java.awt.Font;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,12 +53,6 @@ public class FormatAttribute {
             return source;
         }
         return target;
-    }
-
-    public int getStyle() {
-        return ((bold != null && bold.booleanValue()) ? Font.BOLD : 0)//
-                | ((italic != null && italic.booleanValue()) ? Font.ITALIC : 0)//
-        ;
     }
 
     /**

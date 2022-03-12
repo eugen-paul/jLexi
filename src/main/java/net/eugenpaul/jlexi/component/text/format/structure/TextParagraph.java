@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
@@ -27,14 +26,14 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     protected TextCompositor<TextElement> fieldCompositor;
     private LinkedList<TextElement> children;
 
-    public TextParagraph(TextStructure parentStructure, FormatAttribute format, ResourceManager storage, String text) {
+    public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage, String text) {
         super(parentStructure, format, storage);
         this.children = new LinkedList<>();
         initFields(text);
         this.fieldCompositor = new TextElementToRowCompositor<>();
     }
 
-    protected TextParagraph(TextStructure parentStructure, FormatAttribute format, ResourceManager storage,
+    protected TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage,
             LinkedList<TextElement> children) {
         super(parentStructure, format, storage);
         this.children = children;
@@ -55,25 +54,27 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         while (matcher.find()) {
             counter++;
             if (!matcher.group(1).isEmpty()) {
-                children.addAll(stringToChars(matcher.group(1), storage.getFormats().of(new FormatAttribute())));
+                children.addAll(stringToChars(matcher.group(1), format));
             }
 
             if (!matcher.group(2).isEmpty()) {
-                var f = new FormatAttribute();
-                f.setBold(matcher.group(2).charAt(0) == 'B');
-                f.setItalic(matcher.group(2).charAt(1) == 'I');
-                children.addAll(stringToChars(matcher.group(2).substring(3), f.toTextFormat()));
+                var f = TextFormat.builder()//
+                        .fontName(format.getFontName())//
+                        .fontsize(format.getFontsize())//
+                        .bold(matcher.group(2).charAt(0) == 'B')//
+                        .italic(matcher.group(2).charAt(1) == 'I')//
+                        .build();
+                children.addAll(stringToChars(matcher.group(2).substring(3), f));
             }
 
             if (!matcher.group(3).isEmpty()) {
-                children.addAll(stringToChars(matcher.group(3), storage.getFormats().of(new FormatAttribute())));
+                children.addAll(stringToChars(matcher.group(3), format));
             }
         }
         if (counter == 0 && !text.isEmpty()) {
-            children.addAll(stringToChars(text, storage.getFormats().of(new FormatAttribute())));
+            children.addAll(stringToChars(text, format));
         }
-        children.add(
-                TextElementFactory.genNewLineChar(null, storage, this, storage.getFormats().of(new FormatAttribute())));
+        children.add(TextElementFactory.genNewLineChar(null, storage, this, format));
     }
 
     private LinkedList<TextElement> stringToChars(String data, TextFormat format) {
@@ -84,7 +85,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    protected TextParagraph(TextStructure parentStructure, FormatAttribute format, ResourceManager storage) {
+    protected TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
         super(parentStructure, format, storage);
         this.children = new LinkedList<>();
         this.fieldCompositor = new TextElementToRowCompositor<>();
@@ -190,6 +191,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         }
     }
 
+    @Override
     public TextElement removeElement(TextElement element) {
         var iterator = children.iterator();
         while (iterator.hasNext()) {

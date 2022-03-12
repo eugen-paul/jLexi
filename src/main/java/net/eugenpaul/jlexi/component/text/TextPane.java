@@ -12,10 +12,10 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
-import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextStructureFormToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureFormOfStructures;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
@@ -26,6 +26,7 @@ import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectController;
+import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -37,8 +38,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 /**
  * Display Rows.
  */
-public class TextPane extends TextStructureFormOfStructures
-        implements GuiComponent, KeyHandlerable, TextUpdateable {
+public class TextPane extends TextStructureFormOfStructures implements GuiComponent, KeyHandlerable, TextUpdateable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
 
@@ -58,11 +58,22 @@ public class TextPane extends TextStructureFormOfStructures
 
     private boolean editMode = false;
 
+    private TextFormat defaulTextFormat;
+
     public TextPane(Glyph parent, ResourceManager storage, EffectController effectWorker) {
         super(parent);
         this.storage = storage;
         this.compositor = new TextStructureFormToColumnCompositor();
-        this.document = new TextPaneDocument(new FormatAttribute(), storage, "Hello, World!", this);
+
+        storage.getFonts();
+        this.defaulTextFormat = TextFormat.builder()//
+                .fontName(FontStorage.DEFAULT_FONT_NAME)//
+                .fontsize(FontStorage.DEFAULT_FONT_SIZE)//
+                .bold(false)//
+                .italic(false)//
+                .build();
+
+        this.document = new TextPaneDocument(defaulTextFormat, storage, "Hello, World!", this);
 
         this.yPositionToSite = new TreeMap<>();
 
@@ -150,7 +161,7 @@ public class TextPane extends TextStructureFormOfStructures
     @Override
     public void setText(String text) {
         LOGGER.trace("Set Document.text to \"{}\".", text);
-        document = new TextPaneDocument(new FormatAttribute(), storage, text, this);
+        document = new TextPaneDocument(defaulTextFormat, storage, text, this);
         getPixels();
     }
 

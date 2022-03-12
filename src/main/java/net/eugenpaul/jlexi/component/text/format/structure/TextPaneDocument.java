@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.eugenpaul.jlexi.component.text.TextPane;
-import net.eugenpaul.jlexi.component.text.format.FormatAttribute;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
@@ -19,7 +19,7 @@ public class TextPaneDocument extends TextStructure {
     private LinkedList<TextParagraph> children;
     private TextPane textPane;
 
-    public TextPaneDocument(FormatAttribute format, ResourceManager storage, String text, TextPane textPane) {
+    public TextPaneDocument(TextFormat format, ResourceManager storage, String text, TextPane textPane) {
         super(null, format, storage);
         this.textPane = textPane;
         initParagraphs(text);
@@ -28,11 +28,11 @@ public class TextPaneDocument extends TextStructure {
     private void initParagraphs(String text) {
         String[] paragraphText = text.split("\n");
         children = Stream.of(paragraphText) //
-                .map(v -> new TextParagraph(this, new FormatAttribute(), storage, v)) //
+                .map(v -> new TextParagraph(this, format, storage, v)) //
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    protected TextPaneDocument(FormatAttribute format, ResourceManager storage) {
+    protected TextPaneDocument(TextFormat format, ResourceManager storage) {
         super(null, format, storage);
         children = new LinkedList<>();
     }

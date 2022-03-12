@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.resourcesmanager.fontgenerator;
 
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+
 /**
  * Interface for Pixel-Array-Generator for chars.
  */
@@ -8,21 +10,19 @@ public interface FontPixelsGenerator {
     /**
      * Get Pixel-Array-Representation of char
      * 
-     * @param c        - character
-     * @param fontName - font of character
-     * @param style    - style of character (for example, Font.ITALIC or Font.BOLD|Font.ITALIC)
-     * @param size     - size of character
+     * @param c      - character
+     * @param format - format of character
      * @return Pixel-Array
      */
-    public int[] ofChar(Character c, String fontName, int style, int size);
+    public int[] ofChar(Character c, TextFormat format);
 
     /**
      * Get max Size of char
      * 
-     * @param fontName - font of character
-     * @param style    - style of character (for example, Font.ITALIC or Font.BOLD|Font.ITALIC)
-     * @param size     - size of character
+     * @param format - format of character
      * @return max size of character
      */
-    public int getMaxAscent(String fontName, int style, int size);
+    public int getMaxAscent(TextFormat format);
+
+    public int getStyle(TextFormat format);
 }
