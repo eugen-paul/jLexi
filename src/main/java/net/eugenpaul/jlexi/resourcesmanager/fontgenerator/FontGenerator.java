@@ -19,11 +19,11 @@ public class FontGenerator implements FontPixelsGenerator {
     }
 
     @Override
-    public int getMaxAscent(TextFormat format) {
+    public int getMaxAscent(String fontName, int fontSize) {
         Font font = new Font(//
-                format.getFontName(), //
-                getStyle(format), //
-                format.getFontsize() //
+                fontName, //
+                Font.PLAIN, //
+                fontSize //
         );
 
         FontMetrics metrics = new JLabel().getFontMetrics(font);

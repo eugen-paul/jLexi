@@ -10,7 +10,7 @@ import net.eugenpaul.jlexi.component.text.format.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
+import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextElement extends Glyph implements EffectHolder, TextDocumentElement {
@@ -18,7 +18,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     @Getter
     @Setter
     protected TextStructure structureParent;
-    private List<TextPaneEffect> effects;
+    private List<GlyphEffect> effects;
     @Getter
     private TextFormat format;
 
@@ -42,12 +42,12 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     }
 
     @Override
-    public void addEffect(TextPaneEffect effect) {
+    public void addEffect(GlyphEffect effect) {
         effects.add(effect);
     }
 
     @Override
-    public void removeEffect(TextPaneEffect effect) {
+    public void removeEffect(GlyphEffect effect) {
         effects.remove(effect);
     }
 
@@ -58,7 +58,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     }
 
     @Override
-    public void updateEffect(TextPaneEffect effect) {
+    public void updateEffect(GlyphEffect effect) {
         if (null != parent) {
             cachedDrawable = null;
             parent.notifyRedraw(getPixels(), getRelativPosition(), getSize());

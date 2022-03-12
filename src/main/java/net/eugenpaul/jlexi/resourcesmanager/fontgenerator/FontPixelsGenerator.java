@@ -19,10 +19,11 @@ public interface FontPixelsGenerator {
     /**
      * Get max Size of char
      * 
-     * @param format - format of character
+     * @param fontName
+     * @param fontSize
      * @return max size of character
      */
-    public int getMaxAscent(TextFormat format);
+    public int getMaxAscent(String fontName, int fontSize);
 
     public int getStyle(TextFormat format);
 }

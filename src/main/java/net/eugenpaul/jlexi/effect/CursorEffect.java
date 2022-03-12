@@ -12,7 +12,7 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class CursorEffect extends TextPaneEffect {
+public class CursorEffect extends GlyphEffect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CursorEffect.class);
 
@@ -37,7 +37,7 @@ public class CursorEffect extends TextPaneEffect {
     }
 
     @Override
-    public Effect doEffect() {
+    public GlyphEffect doEffect() {
         if (showCursor) {
             showCursor = false;
             LOGGER.trace("hide Cursor on {}.", getGlyph());

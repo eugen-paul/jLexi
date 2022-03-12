@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
-import net.eugenpaul.jlexi.effect.Effect;
+import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
@@ -17,7 +17,7 @@ import reactor.core.Disposable;
  */
 public class ModelController extends AbstractController {
 
-    private Map<Effect, Disposable> effectMap;
+    private Map<GlyphEffect, Disposable> effectMap;
     private Map<String, TextUpdateable> textUpdateableMap;
 
     public ModelController() {
@@ -75,7 +75,7 @@ public class ModelController extends AbstractController {
     }
 
     @Override
-    public void addEffectToController(Effect effect) {
+    public void addEffectToController(GlyphEffect effect) {
         // I don't use "repeate" function because each repetition can have its own delay.
         Disposable disp = effectToMono(effect)//
                 .doOnSuccess(v -> addEffectToController(effect))//
@@ -84,7 +84,7 @@ public class ModelController extends AbstractController {
         effectMap.put(effect, disp);
     }
 
-    private Mono<Object> effectToMono(Effect effect) {
+    private Mono<Object> effectToMono(GlyphEffect effect) {
         return Mono.empty()//
                 .publishOn(modelScheduler)//
                 .delaySubscription(effect.timeToNextExecute())//
@@ -97,7 +97,7 @@ public class ModelController extends AbstractController {
     }
 
     @Override
-    public void removeEffectFromController(Effect effect) {
+    public void removeEffectFromController(GlyphEffect effect) {
         Disposable disposeEffect = effectMap.remove(effect);
         if (disposeEffect != null) {
             disposeEffect.dispose();

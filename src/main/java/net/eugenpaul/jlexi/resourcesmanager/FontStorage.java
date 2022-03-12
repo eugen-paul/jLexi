@@ -12,7 +12,6 @@ public abstract class FontStorage implements Resource {
     public static final int[] EMPTY_CHAR = new int[0];
     public static final String DEFAULT_FONT_NAME = "Monospaced";
     public static final int DEFAULT_FONT_SIZE = 12;
-    public static final int DEFAULT_MAX_ASCENT = 7;
 
     protected static final Drawable DEFAULT_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
 

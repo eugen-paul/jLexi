@@ -1,11 +1,11 @@
 package net.eugenpaul.jlexi.component.text.format;
 
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
+import net.eugenpaul.jlexi.effect.GlyphEffect;
 
 public interface EffectHolder {
-    public void addEffect(TextPaneEffect effect);
+    public void addEffect(GlyphEffect effect);
 
-    public void removeEffect(TextPaneEffect effect);
+    public void removeEffect(GlyphEffect effect);
 
-    public void updateEffect(TextPaneEffect effect);
+    public void updateEffect(GlyphEffect effect);
 }

@@ -19,6 +19,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.resourcesmanager.textformatter.UnderlineType;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextParagraph extends TextStructure implements GlyphIterable<TextStructureForm> {
@@ -51,18 +52,34 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         Pattern tagRegex = Pattern.compile("([^\\}]*)\\{(.+?)\\}([^\\{]*)");
         final Matcher matcher = tagRegex.matcher(text);
         int counter = 0;
+        int underline = 0;
         while (matcher.find()) {
             counter++;
+            underline = counter % 3;
+
             if (!matcher.group(1).isEmpty()) {
                 children.addAll(stringToChars(matcher.group(1), format));
             }
 
             if (!matcher.group(2).isEmpty()) {
+                UnderlineType uType = UnderlineType.NONE;
+                switch (underline) {
+                case 1:
+                    uType = UnderlineType.SINGLE;
+                    break;
+                case 2:
+                    uType = UnderlineType.DOUBLE;
+                    break;
+                default:
+                    break;
+                }
+
                 var f = TextFormat.builder()//
                         .fontName(format.getFontName())//
                         .fontsize(format.getFontsize())//
                         .bold(matcher.group(2).charAt(0) == 'B')//
                         .italic(matcher.group(2).charAt(1) == 'I')//
+                        .underline(uType)//
                         .build();
                 children.addAll(stringToChars(matcher.group(2).substring(3), f));
             }
@@ -221,6 +238,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
             if (currentElement == position) {
                 iterator.previous();
                 iterator.add(element);
+                element.setStructureParent(this);
                 break;
             }
         }

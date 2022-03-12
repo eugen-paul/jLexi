@@ -101,4 +101,29 @@ public class ImageArrayHelper {
                 destPosition //
         );
     }
+
+    public static void copyRectangle(int[] src, Size srcSize, Vector2d srcPosition, Size copySize, Drawable dest,
+            Vector2d destPosition) {
+        copyRectangle(//
+                src, //
+                srcSize, //
+                srcPosition, //
+                copySize, //
+                dest.getPixels(), //
+                dest.getPixelSize(), //
+                destPosition //
+        );
+    }
+
+    public static void copyRectangle(int[] src, Size srcSize, Drawable dest, Vector2d destPosition) {
+        copyRectangle(//
+                src, //
+                srcSize, //
+                ZERO_VECTOR, //
+                srcSize, //
+                dest.getPixels(), //
+                dest.getPixelSize(), //
+                destPosition //
+        );
+    }
 }

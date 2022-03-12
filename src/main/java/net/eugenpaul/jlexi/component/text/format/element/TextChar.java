@@ -29,6 +29,9 @@ public class TextChar extends TextElementAbstract {
         setSize(cachedDrawable.getPixelSize());
         cachedDrawable = doEffects(cachedDrawable);
 
+        getFormat().getFormatter(storage.getFormats()).stream()//
+                .forEach(f -> f.doFormat(cachedDrawable));
+
         return cachedDrawable;
     }
 

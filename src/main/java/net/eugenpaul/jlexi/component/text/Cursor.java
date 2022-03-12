@@ -4,16 +4,16 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.effect.CursorEffect;
 import net.eugenpaul.jlexi.effect.EffectController;
-import net.eugenpaul.jlexi.effect.TextPaneEffect;
+import net.eugenpaul.jlexi.effect.GlyphEffect;
 
 public class Cursor {
 
     @Getter
     private TextElement currentGlyph;
-    private TextPaneEffect effect;
+    private GlyphEffect effect;
     private EffectController effectHandler;
 
-    public Cursor(TextElement glyphElement, TextPaneEffect effect, EffectController effectHandler) {
+    public Cursor(TextElement glyphElement, GlyphEffect effect, EffectController effectHandler) {
         this.currentGlyph = glyphElement;
         this.effect = effect;
         this.effectHandler = effectHandler;
