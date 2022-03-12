@@ -43,17 +43,11 @@ public class AbstractKeyHandler {
             return;
         }
 
-        var command = new TextAddBeforeCommand(//
+        var addCommand = new TextAddBeforeCommand(//
                 List.of(TextElementFactory.fromChar(null, storage, parentStructure, key, element.getFormat())), //
                 element);
 
-        command.execute();
-
-        if (command.reversible()) {
-            undoCommands.add(command);
-        }
-
-        redoCommands.clear();
+        doTextCommant(addCommand);
     }
 
     public void onKeyPressed(KeyCode keyCode) {
@@ -110,6 +104,22 @@ public class AbstractKeyHandler {
         cursor.moveCursorTo(command.getCursorPosition());
     }
 
+    private void doTextCommant(TextCommand command) {
+        command.execute();
+
+        if (command.isEmpty()) {
+            return;
+        }
+
+        if (command.reversible()) {
+            undoCommands.add(command);
+        } else {
+            undoCommands.clear();
+        }
+
+        redoCommands.clear();
+    }
+
     public void onKeyReleased(KeyCode keyCode) {
         switch (keyCode) {
         case CTRL:
@@ -128,17 +138,11 @@ public class AbstractKeyHandler {
             return;
         }
 
-        var command = new TextAddBeforeCommand(//
+        var addCommand = new TextAddBeforeCommand(//
                 List.of(TextElementFactory.genNewLineChar(null, storage, parentStructure, element.getFormat())), //
                 element);
 
-        command.execute();
-
-        if (command.reversible()) {
-            undoCommands.add(command);
-        }
-
-        redoCommands.clear();
+        doTextCommant(addCommand);
     }
 
     private void keyPressedBackSpace() {
@@ -152,12 +156,9 @@ public class AbstractKeyHandler {
         var element = cursor.getCurrentGlyph();
 
         var deleteCommand = new TextRemoveCommant(List.of(element));
-        deleteCommand.execute();
-        undoCommands.add(deleteCommand);
+        doTextCommant(deleteCommand);
 
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
-
-        redoCommands.clear();
     }
 
     private boolean keyPressedCursorMove(KeyCode keyCode, boolean moveForDelete) {

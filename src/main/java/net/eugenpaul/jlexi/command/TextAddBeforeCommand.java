@@ -39,4 +39,9 @@ public class TextAddBeforeCommand implements TextCommand {
         return true;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
 }
