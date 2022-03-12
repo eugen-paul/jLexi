@@ -12,9 +12,9 @@ public abstract class TextElementAbstract extends TextElement {
 
     protected ResourceManager storage;
 
-    protected TextElementAbstract(Glyph parent, ResourceManager storage, TextStructure parentTextField,
+    protected TextElementAbstract(Glyph parent, ResourceManager storage, TextStructure parentStructure,
             TextFormat format) {
-        super(parent, parentTextField, format);
+        super(parent, parentStructure, format);
         this.storage = storage;
     }
 

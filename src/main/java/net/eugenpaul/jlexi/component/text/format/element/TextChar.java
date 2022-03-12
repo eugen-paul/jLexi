@@ -10,9 +10,9 @@ public class TextChar extends TextElementAbstract {
 
     private Character c;
 
-    public TextChar(Glyph parent, ResourceManager storage, TextStructure parentTextField, Character c,
+    public TextChar(Glyph parent, ResourceManager storage, TextStructure parentStructure, Character c,
             TextFormat format) {
-        super(parent, storage, parentTextField, format);
+        super(parent, storage, parentStructure, format);
         this.c = c;
 
         getPixels();

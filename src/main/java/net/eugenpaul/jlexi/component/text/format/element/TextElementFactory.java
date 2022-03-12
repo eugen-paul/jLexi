@@ -10,20 +10,20 @@ public final class TextElementFactory {
 
     }
 
-    public static TextElement fromChar(Glyph parent, ResourceManager storage, TextStructure parentTextField,
+    public static TextElement fromChar(Glyph parent, ResourceManager storage, TextStructure parentStructure,
             Character c, TextFormat format) {
         TextElement response = null;
         if (c == '\n') {
-            response = new TextNewLine(parent, storage, parentTextField, format);
+            response = new TextNewLine(parent, storage, parentStructure, format);
         } else if (CharacterHelper.isPrintable(c)) {
-            response = new TextChar(parent, storage, parentTextField, c, format);
+            response = new TextChar(parent, storage, parentStructure, c, format);
         }
 
         return response;
     }
 
-    public static TextElement genNewLineChar(Glyph parent, ResourceManager storage, TextStructure parentTextField,
+    public static TextElement genNewLineChar(Glyph parent, ResourceManager storage, TextStructure parentStructure,
             TextFormat format) {
-        return new TextNewLine(parent, storage, parentTextField, format);
+        return new TextNewLine(parent, storage, parentStructure, format);
     }
 }

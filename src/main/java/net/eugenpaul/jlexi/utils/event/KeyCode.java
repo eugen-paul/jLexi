@@ -20,6 +20,8 @@ public enum KeyCode {
     DELETE(8), //
     BACK_SPACE(9), //
     ENTER(10), //
+    F1(11), //
+    F2(12), //
     ;
 
     @Getter

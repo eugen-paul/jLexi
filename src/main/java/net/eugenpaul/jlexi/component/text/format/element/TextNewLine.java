@@ -11,8 +11,8 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextNewLine extends TextElementAbstract {
 
-    public TextNewLine(Glyph parent, ResourceManager storage, TextStructure parentTextField, TextFormat format) {
-        super(parent, storage, parentTextField, format);
+    public TextNewLine(Glyph parent, ResourceManager storage, TextStructure parentStructure, TextFormat format) {
+        super(parent, storage, parentStructure, format);
 
         // we must compute pixels to set size of element
         getPixels();

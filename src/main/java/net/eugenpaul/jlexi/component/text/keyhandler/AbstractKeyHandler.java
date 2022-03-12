@@ -1,6 +1,10 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
-import net.eugenpaul.jlexi.component.text.format.element.TextChar;
+import java.util.LinkedList;
+import java.util.List;
+
+import net.eugenpaul.jlexi.command.Command;
+import net.eugenpaul.jlexi.command.TextAddBeforeCommand;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -12,9 +16,18 @@ public class AbstractKeyHandler {
     private KeyHandlerable component;
     private ResourceManager storage;
 
+    private boolean ctrlPressed;
+
+    private LinkedList<Command> undoCommands;
+    private LinkedList<Command> redoCommands;
+
     protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage) {
         this.component = component;
         this.storage = storage;
+        this.ctrlPressed = false;
+
+        this.undoCommands = new LinkedList<>();
+        this.redoCommands = new LinkedList<>();
     }
 
     public void onKeyTyped(Character key) {
@@ -24,14 +37,20 @@ public class AbstractKeyHandler {
 
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
-        var textField = element.getStructureParent();
-
-        if (null == textField) {
+        var parentStructure = element.getStructureParent();
+        if (null == parentStructure) {
             return;
         }
 
-        textField.addBefore(element, new TextChar(null, storage, textField, key, element.getFormat()));
-        textField.notifyChange(true);
+        var command = new TextAddBeforeCommand(//
+                List.of(TextElementFactory.fromChar(null, storage, parentStructure, key, element.getFormat())), //
+                element);
+
+        command.execute();
+
+        if (command.reversible()) {
+            undoCommands.add(command);
+        }
     }
 
     public void onKeyPressed(KeyCode keyCode) {
@@ -48,26 +67,67 @@ public class AbstractKeyHandler {
         case BACK_SPACE:
             keyPressedBackSpace();
             break;
+        case CTRL:
+            ctrlPressed = true;
+            break;
+        case F1:
+            undo();
+            break;
+        case F2:
+            redo();
+            break;
         default:
             break;
         }
     }
 
+    public void undo() {
+        Command command = undoCommands.pollLast();
+        if (null == command) {
+            return;
+        }
+
+        command.unexecute();
+        redoCommands.add(command);
+    }
+
+    public void redo() {
+        Command command = redoCommands.pollLast();
+        if (null == command) {
+            return;
+        }
+
+        command.execute();
+        undoCommands.add(command);
+    }
+
     public void onKeyReleased(KeyCode keyCode) {
-        // Nothing to do
+        switch (keyCode) {
+        case CTRL:
+            ctrlPressed = false;
+            break;
+        default:
+            break;
+        }
     }
 
     private void keyPressedEnter() {
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
-        var textField = element.getStructureParent();
-
-        if (null == textField) {
+        var parentStructure = element.getStructureParent();
+        if (null == parentStructure) {
             return;
         }
 
-        textField.addBefore(element, TextElementFactory.genNewLineChar(null, storage, textField, element.getFormat()));
-        textField.notifyChange(true);
+        var command = new TextAddBeforeCommand(//
+                List.of(TextElementFactory.genNewLineChar(null, storage, parentStructure, element.getFormat())), //
+                element);
+
+        command.execute();
+
+        if (command.reversible()) {
+            undoCommands.add(command);
+        }
     }
 
     private void keyPressedBackSpace() {
@@ -79,17 +139,17 @@ public class AbstractKeyHandler {
     private void keyPressedDelete() {
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
-        var textField = element.getStructureParent();
+        var parentStructure = element.getStructureParent();
 
-        if (null == textField) {
+        if (null == parentStructure) {
             return;
         }
 
-        var nextElement = textField.removeElement(element);
+        var nextElement = parentStructure.removeElement(element);
         if (nextElement != null) {
             cursor.moveCursorTo(nextElement);
         }
-        textField.notifyChange(true);
+        parentStructure.notifyChange(true);
     }
 
     private boolean keyPressedCursorMove(KeyCode keyCode, boolean moveForDelete) {

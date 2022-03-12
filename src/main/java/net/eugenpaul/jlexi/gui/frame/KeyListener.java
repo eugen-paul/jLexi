@@ -53,6 +53,12 @@ public class KeyListener extends KeyAdapter {
         case KeyEvent.VK_ENTER:
             code = KeyCode.ENTER;
             break;
+        case KeyEvent.VK_F1:
+            code = KeyCode.F1;
+            break;
+        case KeyEvent.VK_F2:
+            code = KeyCode.F2;
+            break;
         default:
             break;
         }
