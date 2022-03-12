@@ -2,33 +2,35 @@ package net.eugenpaul.jlexi.command;
 
 import java.util.List;
 
+import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
-public class TextAddBeforeCommand implements Command {
+public class TextAddBeforeCommand implements TextCommand {
 
     private List<TextElement> text;
-    private TextElement position;
+    @Getter
+    private TextElement cursorPosition;
 
-    public TextAddBeforeCommand(List<TextElement> text, TextElement position) {
+    public TextAddBeforeCommand(List<TextElement> text, TextElement cursorPosition) {
         this.text = text;
-        this.position = position;
+        this.cursorPosition = cursorPosition;
     }
 
     @Override
     public void execute() {
-        var parentStructure = position.getStructureParent();
+        var parentStructure = cursorPosition.getStructureParent();
 
         if (null == parentStructure) {
             return;
         }
 
-        text.stream().forEach(element -> parentStructure.addBefore(position, element));
+        text.stream().forEach(element -> parentStructure.addBefore(cursorPosition, element));
         parentStructure.notifyChange(true);
     }
 
     @Override
     public void unexecute() {
-        TextRemoveCommant undoCommand = new TextRemoveCommant(text, position);
+        TextRemoveCommant undoCommand = new TextRemoveCommant(text, cursorPosition);
         undoCommand.execute();
     }
 

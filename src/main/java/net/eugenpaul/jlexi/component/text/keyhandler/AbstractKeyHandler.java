@@ -3,8 +3,9 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.eugenpaul.jlexi.command.Command;
 import net.eugenpaul.jlexi.command.TextAddBeforeCommand;
+import net.eugenpaul.jlexi.command.TextCommand;
+import net.eugenpaul.jlexi.command.TextRemoveCommant;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -18,8 +19,8 @@ public class AbstractKeyHandler {
 
     private boolean ctrlPressed;
 
-    private LinkedList<Command> undoCommands;
-    private LinkedList<Command> redoCommands;
+    private LinkedList<TextCommand> undoCommands;
+    private LinkedList<TextCommand> redoCommands;
 
     protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage) {
         this.component = component;
@@ -51,6 +52,8 @@ public class AbstractKeyHandler {
         if (command.reversible()) {
             undoCommands.add(command);
         }
+
+        redoCommands.clear();
     }
 
     public void onKeyPressed(KeyCode keyCode) {
@@ -82,23 +85,29 @@ public class AbstractKeyHandler {
     }
 
     public void undo() {
-        Command command = undoCommands.pollLast();
+        var command = undoCommands.pollLast();
         if (null == command) {
             return;
         }
 
         command.unexecute();
         redoCommands.add(command);
+
+        var cursor = component.getMouseCursor();
+        cursor.moveCursorTo(command.getCursorPosition());
     }
 
     public void redo() {
-        Command command = redoCommands.pollLast();
+        var command = redoCommands.pollLast();
         if (null == command) {
             return;
         }
 
         command.execute();
         undoCommands.add(command);
+
+        var cursor = component.getMouseCursor();
+        cursor.moveCursorTo(command.getCursorPosition());
     }
 
     public void onKeyReleased(KeyCode keyCode) {
@@ -128,6 +137,8 @@ public class AbstractKeyHandler {
         if (command.reversible()) {
             undoCommands.add(command);
         }
+
+        redoCommands.clear();
     }
 
     private void keyPressedBackSpace() {
@@ -139,17 +150,14 @@ public class AbstractKeyHandler {
     private void keyPressedDelete() {
         var cursor = component.getMouseCursor();
         var element = cursor.getCurrentGlyph();
-        var parentStructure = element.getStructureParent();
 
-        if (null == parentStructure) {
-            return;
-        }
+        var deleteCommand = new TextRemoveCommant(List.of(element));
+        deleteCommand.execute();
+        undoCommands.add(deleteCommand);
 
-        var nextElement = parentStructure.removeElement(element);
-        if (nextElement != null) {
-            cursor.moveCursorTo(nextElement);
-        }
-        parentStructure.notifyChange(true);
+        cursor.moveCursorTo(deleteCommand.getCursorPosition());
+
+        redoCommands.clear();
     }
 
     private boolean keyPressedCursorMove(KeyCode keyCode, boolean moveForDelete) {
