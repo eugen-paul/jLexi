@@ -11,19 +11,19 @@ public final class TextElementFactory {
     }
 
     public static TextElement fromChar(Glyph parent, ResourceManager storage, TextStructure parentStructure,
-            Character c, TextFormat format) {
+            Character c, TextFormat format, TextFormatEffect formatEffect) {
         TextElement response = null;
         if (c == '\n') {
-            response = new TextNewLine(parent, storage, parentStructure, format);
+            response = new TextNewLine(parent, storage, parentStructure, format, formatEffect);
         } else if (CharacterHelper.isPrintable(c)) {
-            response = new TextChar(parent, storage, parentStructure, c, format);
+            response = new TextChar(parent, storage, parentStructure, c, format, formatEffect);
         }
 
         return response;
     }
 
     public static TextElement genNewLineChar(Glyph parent, ResourceManager storage, TextStructure parentStructure,
-            TextFormat format) {
-        return new TextNewLine(parent, storage, parentStructure, format);
+            TextFormat format, TextFormatEffect formatEffect) {
+        return new TextNewLine(parent, storage, parentStructure, format, formatEffect);
     }
 }

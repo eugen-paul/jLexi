@@ -17,6 +17,7 @@ import net.eugenpaul.jlexi.component.text.format.compositor.TextElementToRowComp
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.resourcesmanager.textformatter.UnderlineType;
@@ -58,7 +59,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
             underline = counter % 3;
 
             if (!matcher.group(1).isEmpty()) {
-                children.addAll(stringToChars(matcher.group(1), format));
+                children.addAll(stringToChars(matcher.group(1), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
             }
 
             if (!matcher.group(2).isEmpty()) {
@@ -79,25 +80,30 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                         .fontsize(format.getFontsize())//
                         .bold(matcher.group(2).charAt(0) == 'B')//
                         .italic(matcher.group(2).charAt(1) == 'I')//
+                        .build();
+
+                var ef = TextFormatEffect.builder()//
                         .underline(uType)//
                         .build();
-                children.addAll(stringToChars(matcher.group(2).substring(3), f));
+
+                children.addAll(stringToChars(matcher.group(2).substring(3), f, ef));
             }
 
             if (!matcher.group(3).isEmpty()) {
-                children.addAll(stringToChars(matcher.group(3), format));
+                children.addAll(stringToChars(matcher.group(3), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
             }
         }
         if (counter == 0 && !text.isEmpty()) {
-            children.addAll(stringToChars(text, format));
+            children.addAll(stringToChars(text, format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
         }
-        children.add(TextElementFactory.genNewLineChar(null, storage, this, format));
+        children.add(
+                TextElementFactory.genNewLineChar(null, storage, this, format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
     }
 
-    private LinkedList<TextElement> stringToChars(String data, TextFormat format) {
+    private LinkedList<TextElement> stringToChars(String data, TextFormat format, TextFormatEffect formatEffect) {
         return data.chars() //
                 .mapToObj(v -> (char) v) //
-                .map(v -> TextElementFactory.fromChar(null, storage, this, v, format)) //
+                .map(v -> TextElementFactory.fromChar(null, storage, this, v, format, formatEffect)) //
                 .filter(Objects::nonNull)//
                 .collect(Collectors.toCollection(LinkedList::new));
     }

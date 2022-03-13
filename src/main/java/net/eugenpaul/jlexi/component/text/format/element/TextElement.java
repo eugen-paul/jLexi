@@ -21,11 +21,15 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     private List<GlyphEffect> effects;
     @Getter
     private TextFormat format;
+    @Getter
+    private TextFormatEffect formatEffect;
 
-    protected TextElement(Glyph parent, TextStructure structureParent, TextFormat format) {
+    protected TextElement(Glyph parent, TextStructure structureParent, TextFormat format,
+            TextFormatEffect formatEffect) {
         super(parent);
         this.structureParent = structureParent;
         this.format = format;
+        this.formatEffect = formatEffect;
         this.effects = new LinkedList<>();
     }
 

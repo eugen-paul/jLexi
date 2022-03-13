@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.resourcesmanager;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,13 +9,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.NonNull;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.textformatter.FormatterType;
+import net.eugenpaul.jlexi.resourcesmanager.textformatter.FormatterTypeParameter;
 import net.eugenpaul.jlexi.resourcesmanager.textformatter.Underline;
 import net.eugenpaul.jlexi.resourcesmanager.textformatter.UnderlineType;
 
 public class FormatStorageImpl implements FormatStorage {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FormatStorageImpl.class);
 
     private Map<Integer, // Style
             Map<String, // FontName
@@ -22,10 +30,12 @@ public class FormatStorageImpl implements FormatStorage {
                             TextFormat>>> storage;
 
     private EnumMap<FormatterType, PixelsFormatter> formatter;
+    private Map<TextFormatEffect, TextFormatEffect> formatEffekts;
 
     public FormatStorageImpl() {
         storage = new HashMap<>();
         formatter = new EnumMap<>(FormatterType.class);
+        formatEffekts = new HashMap<>();
         initFormatter();
     }
 
@@ -91,7 +101,7 @@ public class FormatStorageImpl implements FormatStorage {
                 TextFormat.builder()//
                         .fontName(format.getFontName())//
                         .fontsize(format.getFontsize())//
-                        .bold(format.getBold())//
+                        .bold(bold)//
                         .italic(format.getItalic())//
                         .build()//
                 );
@@ -107,13 +117,13 @@ public class FormatStorageImpl implements FormatStorage {
                         .fontName(format.getFontName())//
                         .fontsize(format.getFontsize())//
                         .bold(format.getBold())//
-                        .italic(format.getItalic())//
+                        .italic(italic)//
                         .build()//
                 );
     }
 
     @Override
-    public List<PixelsFormatter> formatter(@NonNull TextFormat format) {
+    public List<PixelsFormatter> formatter(TextFormatEffect format) {
         List<PixelsFormatter> response = new LinkedList<>();
 
         switch (format.getUnderline()) {
@@ -127,7 +137,39 @@ public class FormatStorageImpl implements FormatStorage {
             break;
         }
 
-        return response.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        return response.stream().filter(Objects::nonNull).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public TextFormatEffect add(TextFormatEffect format) {
+        return formatEffekts.computeIfAbsent(format, v -> v);
+    }
+
+    @Override
+    public <T> TextFormatEffect setFormatEffect(TextFormatEffect format, FormatterTypeParameter<T> parameter,
+            T value) {
+
+        var newFormatBuilder = TextFormatEffect.builder()//
+                .textFormatEffect(format);
+
+        try {
+            var methode = newFormatBuilder.getClass().getMethod(parameter.getFunction(), parameter.getClazz());
+            if (methode != null) {
+                methode.invoke(newFormatBuilder, value);
+            } else {
+                return format;
+            }
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            LOGGER.error("Cann't find method to set Formatter Type Parameter", e);
+            return format;
+        }
+
+        var newFormat = newFormatBuilder.build();
+
+        newFormat = formatEffekts.computeIfAbsent(newFormat, v -> v);
+
+        return newFormat;
     }
 
 }

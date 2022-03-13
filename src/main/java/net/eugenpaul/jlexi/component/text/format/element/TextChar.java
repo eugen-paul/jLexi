@@ -11,8 +11,8 @@ public class TextChar extends TextElementAbstract {
     private Character c;
 
     public TextChar(Glyph parent, ResourceManager storage, TextStructure parentStructure, Character c,
-            TextFormat format) {
-        super(parent, storage, parentStructure, format);
+            TextFormat format, TextFormatEffect formatEffect) {
+        super(parent, storage, parentStructure, format, formatEffect);
         this.c = c;
 
         getPixels();
@@ -29,7 +29,7 @@ public class TextChar extends TextElementAbstract {
         setSize(cachedDrawable.getPixelSize());
         cachedDrawable = doEffects(cachedDrawable);
 
-        getFormat().getFormatter(storage.getFormats()).stream()//
+        getFormatEffect().getFormatter(storage.getFormats()).stream()//
                 .forEach(f -> f.doFormat(cachedDrawable));
 
         return cachedDrawable;

@@ -3,6 +3,8 @@ package net.eugenpaul.jlexi.resourcesmanager;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
+import net.eugenpaul.jlexi.resourcesmanager.textformatter.FormatterTypeParameter;
 
 /**
  * Format-Storage for text elements
@@ -19,5 +21,10 @@ public interface FormatStorage extends Resource {
 
     public TextFormat setItalic(TextFormat format, boolean italic);
 
-    public List<PixelsFormatter> formatter(TextFormat format);
+    public List<PixelsFormatter> formatter(TextFormatEffect format);
+
+    public TextFormatEffect add(TextFormatEffect format);
+
+    public <T> TextFormatEffect setFormatEffect(TextFormatEffect format, FormatterTypeParameter<T> parameter,
+            T value);
 }

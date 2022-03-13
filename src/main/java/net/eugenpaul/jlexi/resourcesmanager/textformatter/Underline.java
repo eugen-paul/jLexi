@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.resourcesmanager.textformatter;
 
 import java.util.Arrays;
 
+import lombok.Getter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.resourcesmanager.PixelsFormatter;
 import net.eugenpaul.jlexi.utils.Size;
@@ -11,6 +12,7 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 public class Underline implements PixelsFormatter {
 
     private static final int LINE_COLOR = 0xFF000000;
+    @Getter
     private UnderlineType type;
 
     public Underline(UnderlineType type) {

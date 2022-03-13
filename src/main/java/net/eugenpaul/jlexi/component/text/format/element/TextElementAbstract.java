@@ -13,8 +13,8 @@ public abstract class TextElementAbstract extends TextElement {
     protected ResourceManager storage;
 
     protected TextElementAbstract(Glyph parent, ResourceManager storage, TextStructure parentStructure,
-            TextFormat format) {
-        super(parent, parentStructure, format);
+            TextFormat format, TextFormatEffect formatEffect) {
+        super(parent, parentStructure, format, formatEffect);
         this.storage = storage;
     }
 

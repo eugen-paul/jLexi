@@ -44,7 +44,8 @@ public class AbstractKeyHandler {
         }
 
         var addCommand = new TextAddBeforeCommand(//
-                List.of(TextElementFactory.fromChar(null, storage, parentStructure, key, element.getFormat())), //
+                List.of(TextElementFactory.fromChar(null, storage, parentStructure, key, element.getFormat(),
+                        element.getFormatEffect())), //
                 element);
 
         doTextCommant(addCommand);
@@ -139,7 +140,8 @@ public class AbstractKeyHandler {
         }
 
         var addCommand = new TextAddBeforeCommand(//
-                List.of(TextElementFactory.genNewLineChar(null, storage, parentStructure, element.getFormat())), //
+                List.of(TextElementFactory.genNewLineChar(null, storage, parentStructure, element.getFormat(),
+                        element.getFormatEffect())), //
                 element);
 
         doTextCommant(addCommand);
