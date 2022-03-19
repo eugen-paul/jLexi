@@ -7,10 +7,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.eugenpaul.jlexi.component.text.TextPane;
+import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
-public class TextPaneDocument extends TextStructure {
+public class TextPaneDocument extends TextStructureOfStructure {
 
     private TextPane textPane;
 
@@ -18,6 +19,12 @@ public class TextPaneDocument extends TextStructure {
         super(null, format, storage);
         this.textPane = textPane;
         initParagraphs(text);
+    }
+
+    public TextPaneDocument(TextFormat format, ResourceManager storage, List<TextElement> data, TextPane textPane) {
+        super(null, format, storage);
+        this.textPane = textPane;
+        initParagraphs(data);
     }
 
     public TextPaneDocument(TextFormat format, ResourceManager storage) {
@@ -29,6 +36,27 @@ public class TextPaneDocument extends TextStructure {
         children = Stream.of(paragraphText) //
                 .map(v -> new TextParagraph(this, format, storage, v)) //
                 .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    private void initParagraphs(List<TextElement> data) {
+        children.clear();
+
+        var currentParagraph = new TextParagraph(this, format, storage);
+
+        var iterator = data.iterator();
+        while (iterator.hasNext()) {
+            var element = iterator.next();
+            currentParagraph.add(element);
+
+            if (element.isEndOfLine()) {
+                children.add(currentParagraph);
+                currentParagraph = new TextParagraph(this, format, storage);
+            }
+        }
+
+        if (!currentParagraph.isEmpty()) {
+            children.add(currentParagraph);
+        }
     }
 
     @Override

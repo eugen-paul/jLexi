@@ -7,7 +7,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
-public class TextSection extends TextStructure implements GlyphIterable<TextStructureForm> {
+public class TextSection extends TextStructureOfStructure implements GlyphIterable<TextStructureForm> {
 
     public TextSection(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
         super(parentStructure, format, storage);

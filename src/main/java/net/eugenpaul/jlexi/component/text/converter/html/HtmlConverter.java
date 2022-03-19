@@ -2,7 +2,7 @@ package net.eugenpaul.jlexi.component.text.converter.html;
 
 import java.io.File;
 
-import net.eugenpaul.jlexi.component.text.converter.TextConverter;
+import net.eugenpaul.jlexi.component.text.converter.TextConverterOld;
 // import net.eugenpaul.jlexi.component.text.TextPaneElement;
 // import net.eugenpaul.jlexi.component.text.converter.TextConverter;
 // import net.eugenpaul.jlexi.component.text.elements.CharGlyph;
@@ -14,7 +14,7 @@ import net.eugenpaul.jlexi.component.text.converter.TextConverter;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.utils.container.NodeList;
 
-public class HtmlConverter implements TextConverter {
+public class HtmlConverter implements TextConverterOld {
 
     private FontStorage fontStorage;
 

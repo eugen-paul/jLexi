@@ -1,0 +1,146 @@
+{
+    "data": [
+        {
+            "format": {
+                "bold": true,
+                "fontsize": 12,
+                "fontName": "Monospaced"
+            },
+            "text": "Progress:",
+            "eol": true
+        },
+        {
+            "format": {
+                "bold": false,
+                "italic": false,
+                "fontsize": 12,
+                "fontName": "Monospaced"
+            },
+            "text": "   - simple text formatting by reading a file: ",
+            "eol": true
+        },
+        {
+            "text": "         "
+        },
+        {
+            "format": {
+                "bold": true
+            },
+            "text": "bold",
+            "eol": true
+        },
+        {
+            "text": "         "
+        },
+        {
+            "format": {
+                "italic": true
+            },
+            "text": "italic",
+            "eol": true
+        },
+        {
+            "text": "         "
+        },
+        {
+            "format": {
+                "bold": true,
+                "italic": true
+            },
+            "text": "bold and italic",
+            "eol": true
+        },
+        {
+            "text": "         "
+        },
+        {
+            "format": {
+                "bold": true,
+                "italic": true
+            },
+            "formatEffect": {
+                "underline": "DOUBLE"
+            },
+            "text": "single underline",
+            "eol": true
+        },
+        {
+            "text": "         "
+        },
+        {
+            "format": {
+                "bold": true,
+                "italic": true
+            },
+            "formatEffect": {
+                "underline": "DOUBLE"
+            },
+            "text": "bold and italic and double underline",
+            "eol": true
+        },
+        {
+            "text": "         "
+        },
+        {
+            "format": {
+                "bold": false,
+                "italic": false,
+                "fontsize": 30,
+                "fontName": "Monospaced"
+            },
+            "text": "large size ",
+            "eol": true
+        },
+        {
+            "format": {
+                "bold": false,
+                "italic": false,
+                "fontsize": 12,
+                "fontName": "Monospaced"
+            },
+            "text": "   - undo and redo by F1 and F2",
+            "eol": true
+        },
+        {
+            "format": {
+                "bold": true,
+                "italic": true,
+                "fontsize": 20,
+                "fontName": "Serif Bold"
+            },
+            "formatEffect": {},
+            "text": "Next steps:",
+            "eol": true
+        },
+        {
+            "format": {
+                "bold": false,
+                "italic": false,
+                "fontsize": 12,
+                "fontName": "Monospaced"
+            },
+            "text": "   - save file",
+            "eol": true
+        },
+        {
+            "format": {
+                "bold": false,
+                "italic": false,
+                "fontsize": 12,
+                "fontName": "Monospaced"
+            },
+            "text": "   - text formatting",
+            "eol": true
+        },
+        {
+            "format": {
+                "bold": false,
+                "italic": false,
+                "fontsize": 12,
+                "fontName": "Monospaced"
+            },
+            "text": "   - GUI (menu, buttons, ...)",
+            "eol": true
+        }
+    ]
+}

@@ -21,6 +21,8 @@ dependencies {
     compileOnly             commonDependencies.lombok
     annotationProcessor     commonDependencies.lombok
 
+    implementation          commonDependencies.jackson
+
     implementation          commonDependencies.reactor_core
 
     implementation          commonDependencies.logback_core

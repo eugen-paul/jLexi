@@ -1,10 +1,14 @@
 package net.eugenpaul.jlexi;
 
 import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import net.eugenpaul.jlexi.component.framing.Border;
 import net.eugenpaul.jlexi.component.framing.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
+import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.window.Window;
@@ -35,10 +39,18 @@ public class JLexi {
 
         controller.addTextPane("TextPane", textPane);
 
-        controller.setText("TextPane",
-                "A \"Hello, World!\" program is generally a computer program that outputs or displays the message \"Hello, World!\". "
-                        + "This program is very simple to write in many programming languages, and is often used to illustrate a language's basic syntax.\n"
-                        + "Text can be: {BI:bold and italic}, {B :bold} or { I:italic}.");
+        JsonConverter converter = new JsonConverter(storage);
+        try {
+            var text = converter.read(//
+                    Files.readString(//
+                            (new File("src/main/resources/Progress.json")).toPath()//
+                    )//
+            );
+            controller.setText("TextPane", text);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
 
         Size defaultSize = new Size(800, 600);
         MenuBar menubar = new MenuBar(MAIN_WINDOW, null, border, defaultSize, controller);

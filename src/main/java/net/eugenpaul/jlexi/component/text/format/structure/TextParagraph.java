@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -173,8 +174,9 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         }
     }
 
-    private void add(TextElement element) {
+    protected void add(TextElement element) {
         textElements.add(element);
+        element.setStructureParent(this);
     }
 
     private void checkAndMergeWithNext() {
@@ -271,8 +273,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
 
     @Override
     public void clear() {
-        super.clear();
         textElements.clear();
+        resetStructure();
     }
 
     @Override
@@ -299,6 +301,21 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
             return null;
         }
         return textElements.peekLast();
+    }
+
+    @Override
+    protected ListIterator<TextStructure> childListIterator() {
+        return Collections.emptyListIterator();
+    }
+
+    @Override
+    protected TextStructure getFirstChild() {
+        return null;
+    }
+
+    @Override
+    protected TextStructure getLastChild() {
+        return null;
     }
 
 }

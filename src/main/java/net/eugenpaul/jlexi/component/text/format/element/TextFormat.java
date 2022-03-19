@@ -12,6 +12,9 @@ import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 @Getter
 @EqualsAndHashCode
 public class TextFormat {
+
+    public static final TextFormat DEFAULT = TextFormat.builder().build();
+
     @Builder.Default
     private Boolean bold = false;
 

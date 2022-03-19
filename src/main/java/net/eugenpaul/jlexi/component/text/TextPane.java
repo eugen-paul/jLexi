@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -161,6 +162,13 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     @Override
     public void setText(String text) {
         LOGGER.trace("Set Document.text to \"{}\".", text);
+        document = new TextPaneDocument(defaulTextFormat, storage, text, this);
+        getPixels();
+    }
+
+    @Override
+    public void setText(List<TextElement> text) {
+        LOGGER.trace("Set Document.text from List<TextElement>");
         document = new TextPaneDocument(defaulTextFormat, storage, text, this);
         getPixels();
     }

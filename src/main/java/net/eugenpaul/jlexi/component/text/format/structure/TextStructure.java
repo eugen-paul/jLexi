@@ -19,7 +19,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
     protected TextFormat format;
     protected ResourceManager storage;
     protected List<TextStructureForm> structureForm;
-    protected LinkedList<TextStructure> children;
 
     protected List<TextStructure> splits;
 
@@ -28,7 +27,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         this.format = format;
         this.storage = storage;
         this.structureForm = null;
-        this.children = new LinkedList<>();
         this.splits = new LinkedList<>();
     }
 
@@ -72,10 +70,7 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
 
     public abstract void resetStructure();
 
-    public void clear() {
-        children.clear();
-        resetStructure();
-    }
+    public abstract void clear();
 
     public TextElement removeElement(TextElement element) {
         TextStructure child = getChildWithElement(element);
@@ -123,47 +118,15 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         splits.clear();
     }
 
-    @Override
-    public boolean isEmpty() {
-        return children.isEmpty();
-    }
+    protected abstract ListIterator<TextStructure> childListIterator();
 
-    protected ListIterator<TextStructure> childListIterator() {
-        return children.listIterator();
-    }
+    protected abstract TextStructure getFirstChild();
 
-    protected TextStructure getFirstChild() {
-        return children.peekFirst();
-    }
+    protected abstract TextStructure getLastChild();
 
-    protected TextStructure getLastChild() {
-        return children.peekLast();
-    }
+    protected abstract TextElement getFirstElement();
 
-    protected TextElement getFirstElement() {
-        if (isEmpty()) {
-            return null;
-        }
-        return children.peekFirst().getFirstElement();
-    }
-
-    protected TextElement getLastElement() {
-        if (isEmpty()) {
-            return null;
-        }
-        return children.peekLast().getLastElement();
-    }
-
-    protected void remove(TextStructure element) {
-        var iterator = childListIterator();
-        while (iterator.hasNext()) {
-            var currentElement = iterator.next();
-            if (currentElement == element) {
-                iterator.remove();
-                return;
-            }
-        }
-    }
+    protected abstract TextElement getLastElement();
 
     public TextStructure getNextStructure(TextStructure element) {
         var iterator = childListIterator();

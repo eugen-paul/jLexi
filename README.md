@@ -16,4 +16,11 @@ Mouse pointer is displayed and blinking.
 Mouse pointer can be moved with left and right arrows or placed with the mouse. 
 Text can be entered and deleted. 
 
-![First text](doc/img/Progress_2022_01_23.png).
+![Progress_1](doc/img/Progress_1.png).
+
+## Step 3
+Formatted text cann be read from File.
+
+Undo/Redo by F1/F2.
+
+![Progress_2](doc/img/Progress_2.png).

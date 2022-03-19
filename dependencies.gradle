@@ -1,13 +1,15 @@
 ext {
-    lombok_version = "1.18.22"
+    jackson_version = "2.12.4"
     junit_version = "5.8.1"
+    logback_version = "1.2.10"
+    lombok_version = "1.18.22"
     mockito_version = "4.2.0"
     reactor_core_version = "3.4.14"
-    logback_version = "1.2.10"
     slf4j_api_version = "1.7.33"
 
     commonDependencies = [
             lombok                 : "org.projectlombok:lombok:$lombok_version",
+            jackson                : "com.fasterxml.jackson.core:jackson-databind:$jackson_version",
 
             reactor_core           : "io.projectreactor:reactor-core:$reactor_core_version",
 
