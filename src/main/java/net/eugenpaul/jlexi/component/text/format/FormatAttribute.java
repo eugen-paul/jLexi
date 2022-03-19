@@ -8,12 +8,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 
+/**
+ * @deprecated since now
+ */
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Deprecated(since = "now")
 public class FormatAttribute {
 
     private Boolean bold;

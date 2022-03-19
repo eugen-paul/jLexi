@@ -1,8 +1,10 @@
-package net.eugenpaul.jlexi.component.text.format.structure;
+package net.eugenpaul.jlexi.component.iterator;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 
 public class TextStructureToIterator<T extends TextStructure> implements Iterator<TextStructure> {
 

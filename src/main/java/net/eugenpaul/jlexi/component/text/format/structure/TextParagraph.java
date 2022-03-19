@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,21 +24,27 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public class TextParagraph extends TextStructure implements GlyphIterable<TextStructureForm> {
 
-    protected TextCompositor<TextElement> fieldCompositor;
-    private LinkedList<TextElement> children;
+    protected TextCompositor<TextElement> compositor;
+    private LinkedList<TextElement> textElements;
 
     public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage, String text) {
         super(parentStructure, format, storage);
-        this.children = new LinkedList<>();
-        initFields(text);
-        this.fieldCompositor = new TextElementToRowCompositor<>();
+        this.textElements = new LinkedList<>();
+        initText(text);
+        this.compositor = new TextElementToRowCompositor<>();
     }
 
-    protected TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage,
+    public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage,
             LinkedList<TextElement> children) {
         super(parentStructure, format, storage);
-        this.children = children;
-        this.fieldCompositor = new TextElementToRowCompositor<>();
+        this.textElements = children;
+        this.compositor = new TextElementToRowCompositor<>();
+    }
+
+    public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
+        super(parentStructure, format, storage);
+        this.textElements = new LinkedList<>();
+        this.compositor = new TextElementToRowCompositor<>();
     }
 
     /**
@@ -49,7 +54,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
      * 
      * @param text
      */
-    private void initFields(String text) {
+    private void initText(String text) {
         Pattern tagRegex = Pattern.compile("([^\\}]*)\\{(.+?)\\}([^\\{]*)");
         final Matcher matcher = tagRegex.matcher(text);
         int counter = 0;
@@ -59,7 +64,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
             underline = counter % 3;
 
             if (!matcher.group(1).isEmpty()) {
-                children.addAll(stringToChars(matcher.group(1), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
+                textElements.addAll(stringToChars(matcher.group(1), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
             }
 
             if (!matcher.group(2).isEmpty()) {
@@ -86,17 +91,17 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                         .underline(uType)//
                         .build();
 
-                children.addAll(stringToChars(matcher.group(2).substring(3), f, ef));
+                textElements.addAll(stringToChars(matcher.group(2).substring(3), f, ef));
             }
 
             if (!matcher.group(3).isEmpty()) {
-                children.addAll(stringToChars(matcher.group(3), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
+                textElements.addAll(stringToChars(matcher.group(3), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
             }
         }
         if (counter == 0 && !text.isEmpty()) {
-            children.addAll(stringToChars(text, format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
+            textElements.addAll(stringToChars(text, format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
         }
-        children.add(
+        textElements.add(
                 TextElementFactory.genNewLineChar(null, storage, this, format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
     }
 
@@ -106,17 +111,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                 .map(v -> TextElementFactory.fromChar(null, storage, this, v, format, formatEffect)) //
                 .filter(Objects::nonNull)//
                 .collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    protected TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
-        super(parentStructure, format, storage);
-        this.children = new LinkedList<>();
-        this.fieldCompositor = new TextElementToRowCompositor<>();
-    }
-
-    @Override
-    public void setFormat(TextElement from, TextElement to) {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -131,13 +125,13 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     public List<TextStructureForm> getRows(Size size) {
         if (null == structureForm) {
             Iterator<TextElement> elIterator = getCompositorIterator();
-            structureForm = fieldCompositor.compose(elIterator, size);
+            structureForm = compositor.compose(elIterator, size);
         }
         return structureForm;
     }
 
     private Iterator<TextElement> getCompositorIterator() {
-        return children.iterator();
+        return textElements.iterator();
     }
 
     @Override
@@ -146,120 +140,124 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     }
 
     @Override
-    protected void restructureChildren() {
-        var iterator = children.listIterator();
-        boolean doSplit = false;
-        while (iterator.hasNext()) {
-            var field = iterator.next();
-            if (!field.isEndOfLine()) {
-                doSplit = true;
-                break;
-            }
-        }
-        if (doSplit) {
-            split();
-        }
+    protected void restructChildren() {
+        checkAndSplit();
 
-        if (children.isEmpty() //
-                || !children.getLast().isEndOfLine() //
-        ) {
-            // Last element is not "endOfLine" => merge with this paragraph with the next paragraph.
-            mergeWithNext();
-        }
+        checkAndMergeWithNext();
     }
 
-    private void mergeWithNext() {
-        if (parentStructure == null) {
-            return;
-        }
-
-        var nextElement = parentStructure.getNextStructure(this);
-        if (!(nextElement instanceof TextParagraph)) {
-            return;
-        }
-
-        var nextParagraph = (TextParagraph) nextElement;
-        nextParagraph.children.stream().forEach(v -> v.setStructureParent(this));
-        children.addAll(nextParagraph.children);
-        parentStructure.remove(nextParagraph);
-    }
-
-    private void split() {
-        var iterator = children.listIterator();
-        var splitter = new LinkedList<TextElement>();
+    private void checkAndSplit() {
+        var iterator = textElements.listIterator();
+        var newParagraph = new TextParagraph(parentStructure, format, storage);
 
         clearSplitter();
 
-        boolean found = false;
-        var newParagraph = new TextParagraph(parentStructure, format, storage, splitter);
+        boolean doSplit = false;
 
         while (iterator.hasNext()) {
-            var iteratorPosition = iterator.next();
-            if (found) {
-                splitter.add(iteratorPosition);
-                iteratorPosition.setStructureParent(newParagraph);
+            var currentElement = iterator.next();
+
+            if (doSplit) {
+                newParagraph.add(currentElement);
+                currentElement.setStructureParent(newParagraph);
                 iterator.remove();
             }
-            if (iteratorPosition.isEndOfLine()) {
-                found = true;
-                if (!splitter.isEmpty()) {
+
+            if (currentElement.isEndOfLine()) {
+                if (!newParagraph.isEmpty()) {
                     splits.add(newParagraph);
-                    splitter = new LinkedList<>();
                 }
+                newParagraph = new TextParagraph(parentStructure, format, storage);
+                doSplit = true;
             }
         }
+    }
 
-        if (!splitter.isEmpty()) {
-            splits.add(newParagraph);
+    private void add(TextElement element) {
+        textElements.add(element);
+    }
+
+    private void checkAndMergeWithNext() {
+        if (isEmpty() || textElements.getLast().isEndOfLine()) {
+            return;
         }
+
+        var nextParagraph = getNextParagraph();
+        if (null == nextParagraph) {
+            return;
+        }
+
+        nextParagraph.textElements.stream().forEach(v -> v.setStructureParent(this));
+        textElements.addAll(nextParagraph.textElements);
+        nextParagraph.clear();
     }
 
     @Override
     public TextElement removeElement(TextElement element) {
-        var iterator = children.iterator();
+        if (element.getStructureParent() != this) {
+            return element;
+        }
+
+        var iterator = textElements.iterator();
         while (iterator.hasNext()) {
             if (iterator.next() == element) {
-                iterator.remove();
                 if (iterator.hasNext()) {
+                    iterator.remove();
                     return iterator.next();
                 } else {
-                    var nextParagraph = getNextParagraph();
-                    if (nextParagraph == null) {
-                        children.add(element);
-                        return element;
-                    } else {
-                        return nextParagraph.getFirst();
-                    }
+                    return checkNextAndRemove(element, iterator);
                 }
             }
         }
         return null;
     }
 
+    private TextElement checkNextAndRemove(TextElement element, Iterator<TextElement> iterator) {
+        if (parentStructure == null) {
+            return element;
+        }
+
+        var nextStructure = parentStructure.getNextStructure(this);
+        if (null == nextStructure) {
+            // There is no further structure => EOL cann't be removed.
+            return element;
+        }
+
+        if (!(nextStructure instanceof TextParagraph)) {
+            // The next structure is not a paragraph. EOL can only be deleted if the current structure is empty.
+            if (isEmpty()) {
+                iterator.remove();
+                return nextStructure.getFirstElement();
+            }
+            return element;
+        }
+
+        // The next structure is a paragraph. EOL can be deleted.
+        var nextParagraph = (TextParagraph) nextStructure;
+        iterator.remove();
+        return nextParagraph.getFirstElement();
+    }
+
     @Override
-    public void addBefore(TextElement position, TextElement element) {
-        var iterator = children.listIterator();
+    public boolean addBefore(TextElement position, TextElement element) {
+        if (position.getStructureParent() != this) {
+            return false;
+        }
+
+        var iterator = textElements.listIterator();
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
             if (currentElement == position) {
                 iterator.previous();
                 iterator.add(element);
                 element.setStructureParent(this);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
-    @Override
-    protected ListIterator<TextStructure> childIterator() {
-        return Collections.emptyListIterator();
-    }
-
-    public TextElement getFirst() {
-        return children.getFirst();
-    }
-
-    public TextParagraph getNextParagraph() {
+    private TextParagraph getNextParagraph() {
         if (parentStructure == null) {
             return null;
         }
@@ -271,40 +269,36 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         return (TextParagraph) nextParagraph;
     }
 
-    public TextElement getNext(TextElement element) {
-        var iterator = children.iterator();
-        var found = false;
-        while (iterator.hasNext()) {
-            var currentElement = iterator.next();
-            if (currentElement == element) {
-                found = true;
-                continue;
-            }
-            if (found) {
-                return currentElement;
-            }
-        }
-        return null;
-    }
-
-    public TextElement getPrevious(TextElement element) {
-        var iterator = children.listIterator();
-        while (iterator.hasNext()) {
-            var currentElement = iterator.next();
-            if (currentElement == element) {
-                iterator.previous();
-                if (iterator.hasPrevious()) {
-                    return iterator.previous();
-                }
-                break;
-            }
-        }
-        return null;
+    @Override
+    public void clear() {
+        super.clear();
+        textElements.clear();
     }
 
     @Override
     public boolean isEmpty() {
-        return children.isEmpty();
+        return textElements.isEmpty();
+    }
+
+    @Override
+    public boolean childCompleteTest() {
+        return textElements.peekLast().isEndOfLine();
+    }
+
+    @Override
+    protected TextElement getFirstElement() {
+        if (isEmpty()) {
+            return null;
+        }
+        return textElements.peekFirst();
+    }
+
+    @Override
+    protected TextElement getLastElement() {
+        if (isEmpty()) {
+            return null;
+        }
+        return textElements.peekLast();
     }
 
 }
