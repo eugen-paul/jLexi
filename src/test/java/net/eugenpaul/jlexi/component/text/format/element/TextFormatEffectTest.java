@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import net.eugenpaul.jlexi.resourcesmanager.textformatter.UnderlineType;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.UnderlineType;
 
 public class TextFormatEffectTest {
     @Test

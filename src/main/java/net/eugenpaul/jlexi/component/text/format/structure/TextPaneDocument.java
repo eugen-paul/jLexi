@@ -1,10 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -15,12 +12,6 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     private TextPane textPane;
 
-    public TextPaneDocument(TextFormat format, ResourceManager storage, String text, TextPane textPane) {
-        super(null, format, storage);
-        this.textPane = textPane;
-        initParagraphs(text);
-    }
-
     public TextPaneDocument(TextFormat format, ResourceManager storage, List<TextElement> data, TextPane textPane) {
         super(null, format, storage);
         this.textPane = textPane;
@@ -29,13 +20,6 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     public TextPaneDocument(TextFormat format, ResourceManager storage) {
         super(null, format, storage);
-    }
-
-    private void initParagraphs(String text) {
-        String[] paragraphText = text.split("\n");
-        children = Stream.of(paragraphText) //
-                .map(v -> new TextParagraph(this, format, storage, v)) //
-                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     private void initParagraphs(List<TextElement> data) {

@@ -14,11 +14,11 @@ import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.window.Window;
 import net.eugenpaul.jlexi.gui.window.SwingWindowImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
-import net.eugenpaul.jlexi.resourcesmanager.FormatStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
-import net.eugenpaul.jlexi.resourcesmanager.fontgenerator.FontGenerator;
+import net.eugenpaul.jlexi.resourcesmanager.font.FontStorageImpl;
+import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.FormatStorageImpl;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class JLexi {

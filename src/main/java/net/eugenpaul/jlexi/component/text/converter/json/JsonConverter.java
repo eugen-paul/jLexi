@@ -11,10 +11,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.eugenpaul.jlexi.component.text.converter.NotYetImplementedException;
 import net.eugenpaul.jlexi.component.text.converter.TextConverter;
+import net.eugenpaul.jlexi.component.text.converter.json.format.JsonElement;
+import net.eugenpaul.jlexi.component.text.converter.json.format.JsonFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
+import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 public class JsonConverter implements TextConverter {
@@ -32,7 +34,7 @@ public class JsonConverter implements TextConverter {
     }
 
     @Override
-    public List<TextElement> read(String data) {
+    public List<TextElement> read(String data) throws NotYetImplementedException {
         List<TextElement> response = new LinkedList<>();
 
         try {
@@ -69,12 +71,12 @@ public class JsonConverter implements TextConverter {
     }
 
     @Override
-    public String write(List<TextElement> data) {
+    public String write(List<TextElement> data) throws NotYetImplementedException {
         throw new NotYetImplementedException("JsonConverter: writeList is not implemented.");
     }
 
     @Override
-    public String write(Iterator<TextElement> data) {
+    public String write(Iterator<TextElement> data) throws NotYetImplementedException {
         throw new NotYetImplementedException("JsonConverter: writeIterator is not implemented.");
     }
 

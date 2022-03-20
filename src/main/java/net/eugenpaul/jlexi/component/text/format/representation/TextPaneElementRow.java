@@ -154,7 +154,7 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public Iterator<TextStructureForm> printableChildIterator() {
+    public Iterator<TextStructureForm> drawableChildIterator() {
         // TODO Auto-generated method stub
         return null;
     }

@@ -16,7 +16,9 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextStructureFormToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureFormOfStructures;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
@@ -27,7 +29,6 @@ import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectController;
-import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -59,22 +60,25 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
     private boolean editMode = false;
 
-    private TextFormat defaulTextFormat;
-
     public TextPane(Glyph parent, ResourceManager storage, EffectController effectWorker) {
         super(parent);
         this.storage = storage;
         this.compositor = new TextStructureFormToColumnCompositor();
 
         storage.getFonts();
-        this.defaulTextFormat = TextFormat.builder()//
-                .fontName(FontStorage.DEFAULT_FONT_NAME)//
-                .fontsize(FontStorage.DEFAULT_FONT_SIZE)//
-                .bold(false)//
-                .italic(false)//
-                .build();
 
-        this.document = new TextPaneDocument(defaulTextFormat, storage, "Hello, World!", this);
+        this.document = new TextPaneDocument(//
+                TextFormat.DEFAULT, //
+                storage, //
+                List.of(TextElementFactory.genNewLineChar(//
+                        null, //
+                        storage, //
+                        null, //
+                        TextFormat.DEFAULT, //
+                        TextFormatEffect.DEFAULT_FORMAT_EFFECT//
+                )), //
+                this//
+        );
 
         this.yPositionToSite = new TreeMap<>();
 
@@ -160,16 +164,9 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
-    public void setText(String text) {
-        LOGGER.trace("Set Document.text to \"{}\".", text);
-        document = new TextPaneDocument(defaulTextFormat, storage, text, this);
-        getPixels();
-    }
-
-    @Override
     public void setText(List<TextElement> text) {
         LOGGER.trace("Set Document.text from List<TextElement>");
-        document = new TextPaneDocument(defaulTextFormat, storage, text, this);
+        document = new TextPaneDocument(TextFormat.DEFAULT, storage, text, this);
         getPixels();
     }
 

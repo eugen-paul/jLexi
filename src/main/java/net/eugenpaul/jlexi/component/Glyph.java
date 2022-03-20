@@ -5,7 +5,6 @@ import java.util.Iterator;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.component.iterator.NullIterator;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
@@ -15,8 +14,6 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 @Getter
 @Setter
 public abstract class Glyph {
-
-    protected static final NullIterator<Glyph> NULLITERATOR = new NullIterator<>();
 
     protected Glyph parent;
     protected Vector2d relativPosition;

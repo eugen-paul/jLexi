@@ -63,19 +63,6 @@ public class ModelController extends AbstractController {
         textUpdateableMap.put(fieldName, field);
     }
 
-    public void setText(String fieldName, String text) {
-        Mono.empty()//
-                .publishOn(modelScheduler)//
-                .doOnSuccess(v -> {
-                    TextUpdateable field = textUpdateableMap.get(fieldName);
-                    if (field != null) {
-                        field.setText(text);
-                    }
-                })//
-                .subscribe() //
-        ;
-    }
-
     public void setText(String fieldName, List<TextElement> text) {
         Mono.empty()//
                 .publishOn(modelScheduler)//

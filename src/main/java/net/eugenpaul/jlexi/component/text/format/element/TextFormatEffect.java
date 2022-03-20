@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.EqualsAndHashCode.Exclude;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
-import net.eugenpaul.jlexi.resourcesmanager.PixelsFormatter;
-import net.eugenpaul.jlexi.resourcesmanager.textformatter.UnderlineType;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.UnderlineType;
 
 /**
  * Immutable text format data.

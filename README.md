@@ -19,7 +19,7 @@ Text can be entered and deleted.
 ![Progress_1](doc/img/Progress_1.png).
 
 ## Step 3
-Formatted text cann be read from File.
+Formatted text can be read from file.
 
 Undo/Redo by F1/F2.
 

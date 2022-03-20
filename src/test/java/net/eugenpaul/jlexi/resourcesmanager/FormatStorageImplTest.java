@@ -11,9 +11,10 @@ import org.junit.jupiter.api.Test;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
-import net.eugenpaul.jlexi.resourcesmanager.textformatter.ParameterUnderline;
-import net.eugenpaul.jlexi.resourcesmanager.textformatter.Underline;
-import net.eugenpaul.jlexi.resourcesmanager.textformatter.UnderlineType;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.FormatStorageImpl;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.ParameterUnderline;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.Underline;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.UnderlineType;
 
 public class FormatStorageImplTest {
 

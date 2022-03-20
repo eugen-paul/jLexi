@@ -5,35 +5,21 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import net.eugenpaul.jlexi.component.text.format.GlyphIterable;
-import net.eugenpaul.jlexi.component.text.format.ListOfListIterator;
+import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
+import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextElementToRowCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
-import net.eugenpaul.jlexi.resourcesmanager.textformatter.UnderlineType;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextParagraph extends TextStructure implements GlyphIterable<TextStructureForm> {
 
     protected TextCompositor<TextElement> compositor;
     private LinkedList<TextElement> textElements;
-
-    public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage, String text) {
-        super(parentStructure, format, storage);
-        this.textElements = new LinkedList<>();
-        initText(text);
-        this.compositor = new TextElementToRowCompositor<>();
-    }
 
     public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage,
             LinkedList<TextElement> children) {
@@ -48,74 +34,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         this.compositor = new TextElementToRowCompositor<>();
     }
 
-    /**
-     * !!JUST for Test!!<br>
-     * test format: {XX:text} XX - format text - printed Text example: "Text can be: {BI:bold and italics}, {B :bold} or
-     * { I:italics}."
-     * 
-     * @param text
-     */
-    private void initText(String text) {
-        Pattern tagRegex = Pattern.compile("([^\\}]*)\\{(.+?)\\}([^\\{]*)");
-        final Matcher matcher = tagRegex.matcher(text);
-        int counter = 0;
-        int underline = 0;
-        while (matcher.find()) {
-            counter++;
-            underline = counter % 3;
-
-            if (!matcher.group(1).isEmpty()) {
-                textElements.addAll(stringToChars(matcher.group(1), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
-            }
-
-            if (!matcher.group(2).isEmpty()) {
-                UnderlineType uType = UnderlineType.NONE;
-                switch (underline) {
-                case 1:
-                    uType = UnderlineType.SINGLE;
-                    break;
-                case 2:
-                    uType = UnderlineType.DOUBLE;
-                    break;
-                default:
-                    break;
-                }
-
-                var f = TextFormat.builder()//
-                        .fontName(format.getFontName())//
-                        .fontsize(format.getFontsize())//
-                        .bold(matcher.group(2).charAt(0) == 'B')//
-                        .italic(matcher.group(2).charAt(1) == 'I')//
-                        .build();
-
-                var ef = TextFormatEffect.builder()//
-                        .underline(uType)//
-                        .build();
-
-                textElements.addAll(stringToChars(matcher.group(2).substring(3), f, ef));
-            }
-
-            if (!matcher.group(3).isEmpty()) {
-                textElements.addAll(stringToChars(matcher.group(3), format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
-            }
-        }
-        if (counter == 0 && !text.isEmpty()) {
-            textElements.addAll(stringToChars(text, format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
-        }
-        textElements.add(
-                TextElementFactory.genNewLineChar(null, storage, this, format, TextFormatEffect.DEFAULT_FORMAT_EFFECT));
-    }
-
-    private LinkedList<TextElement> stringToChars(String data, TextFormat format, TextFormatEffect formatEffect) {
-        return data.chars() //
-                .mapToObj(v -> (char) v) //
-                .map(v -> TextElementFactory.fromChar(null, storage, this, v, format, formatEffect)) //
-                .filter(Objects::nonNull)//
-                .collect(Collectors.toCollection(LinkedList::new));
-    }
-
     @Override
-    public Iterator<TextStructureForm> printableChildIterator() {
+    public Iterator<TextStructureForm> drawableChildIterator() {
         if (null == structureForm) {
             return Collections.emptyIterator();
         }
