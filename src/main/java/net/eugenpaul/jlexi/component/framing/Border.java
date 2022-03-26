@@ -30,22 +30,26 @@ public class Border extends MonoGlyph implements GuiComponent {
 
     private int borderSize = BORDER_SIZE;
 
+    private String name;
+
     /**
      * C'tor
      * 
      * @param component component that will be bordered.
      */
-    public Border(Glyph parent, Glyph component) {
+    public Border(String name, Glyph parent, Glyph component) {
         super(parent, component);
+        this.name = name;
         component.setParent(this);
         component.setRelativPosition(new Vector2d(borderSize, borderSize));
-        resizeTo(Size.ZERO_SIZE);
+        resizeTo(this.name, Size.ZERO_SIZE);
     }
 
     private void computePixels() {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
             child.resizeTo(//
+                    this.name, //
                     Math.max(0, getSize().getWidth() - borderSize * 2), //
                     Math.max(0, getSize().getHeight() - borderSize * 2)//
             );
@@ -108,14 +112,21 @@ public class Border extends MonoGlyph implements GuiComponent {
     }
 
     @Override
-    public void resizeTo(Size size) {
+    public void resizeTo(String name, Size size) {
+        if (!name.equals(this.name)) {
+            return;
+        }
         setSize(size);
         computePixels();
         getPixels();
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+    public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
+        if (!name.equals(this.name)) {
+            return;
+        }
+
         if (mouseX < BORDER_SIZE //
                 || mouseX > getSize().getWidth() - BORDER_SIZE //
                 || mouseY < BORDER_SIZE //
@@ -127,32 +138,42 @@ public class Border extends MonoGlyph implements GuiComponent {
                     mouseX - BORDER_SIZE, mouseY - BORDER_SIZE);
             if (component instanceof MouseClickable) {
                 MouseClickable comp = (MouseClickable) component;
-                comp.onMouseClick(mouseX - BORDER_SIZE, mouseY - BORDER_SIZE, button);
+                comp.onMouseClick(name, mouseX - BORDER_SIZE, mouseY - BORDER_SIZE, button);
             }
         }
     }
 
     @Override
-    public void onKeyTyped(Character key) {
+    public void onKeyTyped(String name, Character key) {
+        if (!name.equals(this.name)) {
+            return;
+        }
+
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
-            comp.onKeyTyped(key);
+            comp.onKeyTyped(name, key);
         }
     }
 
     @Override
-    public void onKeyPressed(KeyCode keyCode) {
+    public void onKeyPressed(String name, KeyCode keyCode) {
+        if (!name.equals(this.name)) {
+            return;
+        }
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
-            comp.onKeyPressed(keyCode);
+            comp.onKeyPressed(name, keyCode);
         }
     }
 
     @Override
-    public void onKeyReleased(KeyCode keyCode) {
+    public void onKeyReleased(String name, KeyCode keyCode) {
+        if (!name.equals(this.name)) {
+            return;
+        }
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
-            comp.onKeyReleased(keyCode);
+            comp.onKeyReleased(name, keyCode);
         }
     }
 

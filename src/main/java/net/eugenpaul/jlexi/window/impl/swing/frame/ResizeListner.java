@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.gui.frame;
+package net.eugenpaul.jlexi.window.impl.swing.frame;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -12,6 +12,7 @@ import net.eugenpaul.jlexi.utils.Size;
 @AllArgsConstructor
 public class ResizeListner extends ComponentAdapter {
 
+    private String name;
     private ModelController controller;
 
     @Override
@@ -21,6 +22,6 @@ public class ResizeListner extends ComponentAdapter {
                 ((JPanel) e.getSource()).getHeight()//
         );
 
-        controller.resizeMainWindow(size);
+        controller.resizeMainWindow(name, size);
     }
 }

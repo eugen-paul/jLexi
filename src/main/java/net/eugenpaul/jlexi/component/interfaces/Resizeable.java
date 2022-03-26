@@ -10,18 +10,20 @@ public interface Resizeable {
     /**
      * Set new size
      * 
+     * @param name - name of the object that will be resized
      * @param size - new size
      */
-    public void resizeTo(Size size);
+    public void resizeTo(String name, Size size);
 
     /**
      * Set new width und height
      * 
-     * @param width - new width
+     * @param name   - name of the object that will be resized
+     * @param width  - new width
      * @param height - new height
      */
-    public default void resizeTo(int width, int height) {
-        resizeTo(new Size(width, height));
+    public default void resizeTo(String name, int width, int height) {
+        resizeTo(name, new Size(width, height));
     }
 
 }

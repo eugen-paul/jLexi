@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.EffectController;
-import net.eugenpaul.jlexi.gui.AbstractPanel;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Area;
+import net.eugenpaul.jlexi.window.AbstractView;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -39,7 +39,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
-    private List<AbstractPanel> registeredViews;
+    private List<AbstractView> registeredViews;
     private List<InterfaceModel> registeredModels;
 
     private Map<String, Glyph> glyphMap;
@@ -67,7 +67,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * 
      * @param view
      */
-    public void addView(AbstractPanel view) {
+    public void addView(AbstractView view) {
         registeredViews.add(view);
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * 
      * @param view
      */
-    public void removeView(AbstractPanel view) {
+    public void removeView(AbstractView view) {
         registeredViews.remove(view);
     }
 

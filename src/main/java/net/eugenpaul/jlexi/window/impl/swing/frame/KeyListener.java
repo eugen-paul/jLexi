@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.gui.frame;
+package net.eugenpaul.jlexi.window.impl.swing.frame;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -10,13 +10,14 @@ import net.eugenpaul.jlexi.utils.event.KeyCode;
 @AllArgsConstructor
 public class KeyListener extends KeyAdapter {
 
+    private String name;
     private ModelController controller;
 
     @Override
     public void keyPressed(KeyEvent e) {
         KeyCode code = keyToKeyCode(e);
         if (null != code) {
-            controller.keyPressed(code);
+            controller.keyPressed(name, code);
         }
     }
 
@@ -69,12 +70,12 @@ public class KeyListener extends KeyAdapter {
     public void keyReleased(KeyEvent e) {
         KeyCode code = keyToKeyCode(e);
         if (null != code) {
-            controller.keyReleased(code);
+            controller.keyReleased(name, code);
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        controller.keyTyped(e.getKeyChar());
+        controller.keyTyped(name, e.getKeyChar());
     }
 }

@@ -1,15 +1,15 @@
-package net.eugenpaul.jlexi.gui;
+package net.eugenpaul.jlexi.window;
 
 import java.beans.PropertyChangeEvent;
 
 import net.eugenpaul.jlexi.controller.AbstractController;
 
 /**
- * AbstractPanel to display Data.
+ * AbstractView to display Data.
  * <p>
  * This is a View of MVC
  */
-public abstract class AbstractPanel {
+public abstract class AbstractView {
 
     protected AbstractController controller;
 
@@ -18,15 +18,14 @@ public abstract class AbstractPanel {
      * 
      * @param controller Controller to send/recive actions to/from model.
      */
-    protected AbstractPanel(AbstractController controller) {
+    protected AbstractView(AbstractController controller) {
         this.controller = controller;
     }
 
     /**
      * Init the component.
      * 
-     * @return true if the cursor has been explicitly set for this Component;<br>
-     *         false otherwise.
+     * @return true if the initialisation was successful.
      */
     public abstract boolean init();
 

@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.gui.frame;
+package net.eugenpaul.jlexi.window.impl.swing.frame;
 
 import java.awt.Graphics;
 import java.awt.Image;

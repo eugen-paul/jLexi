@@ -32,8 +32,8 @@ public class ModelController extends AbstractController {
      * 
      * @param size new size of window
      */
-    public void resizeMainWindow(Size size) {
-        setModelProperty(ModelPropertyChangeType.FORM_RESIZE, size);
+    public void resizeMainWindow(String name, Size size) {
+        setModelProperty(ModelPropertyChangeType.FORM_RESIZE, name, size);
     }
 
     /**
@@ -43,20 +43,20 @@ public class ModelController extends AbstractController {
      * @param mouseY the horizontal y position of the event relative to the window component.
      * @param button which, if any, of the mouse buttons has changed state.
      */
-    public void clickOnWindow(int mouseX, int mouseY, MouseButton button) {
-        setModelProperty(ModelPropertyChangeType.MOUSE_CLICK, mouseX, mouseY, button);
+    public void clickOnWindow(String name, int mouseX, int mouseY, MouseButton button) {
+        setModelProperty(ModelPropertyChangeType.MOUSE_CLICK, name, mouseX, mouseY, button);
     }
 
-    public void keyTyped(Character key) {
-        setModelProperty(ModelPropertyChangeType.KEY_TYPED, key);
+    public void keyTyped(String name, Character key) {
+        setModelProperty(ModelPropertyChangeType.KEY_TYPED, name, key);
     }
 
-    public void keyPressed(KeyCode code) {
-        setModelProperty(ModelPropertyChangeType.KEY_PRESSED, code);
+    public void keyPressed(String name, KeyCode code) {
+        setModelProperty(ModelPropertyChangeType.KEY_PRESSED, name, code);
     }
 
-    public void keyReleased(KeyCode code) {
-        setModelProperty(ModelPropertyChangeType.KEY_RELEASED, code);
+    public void keyReleased(String name, KeyCode code) {
+        setModelProperty(ModelPropertyChangeType.KEY_RELEASED, name, code);
     }
 
     public void addTextPane(String fieldName, TextUpdateable field) {

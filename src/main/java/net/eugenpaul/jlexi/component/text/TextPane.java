@@ -60,8 +60,11 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
     private boolean editMode = false;
 
-    public TextPane(Glyph parent, ResourceManager storage, EffectController effectWorker) {
+    private String name;
+
+    public TextPane(String name, Glyph parent, ResourceManager storage, EffectController effectWorker) {
         super(parent);
+        this.name = name;
         this.storage = storage;
         this.compositor = new TextStructureFormToColumnCompositor();
 
@@ -86,7 +89,7 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
 
-        resizeTo(Size.ZERO_SIZE);
+        resizeTo(this.name, Size.ZERO_SIZE);
     }
 
     @Override
@@ -135,7 +138,11 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+    public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
+        if (!name.equals(this.name)) {
+            return;
+        }
+
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
 
         var row = yPositionToSite.floorEntry(mouseY);
@@ -178,14 +185,22 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
-    public void resizeTo(Size size) {
+    public void resizeTo(String name, Size size) {
+        if (!name.equals(this.name)) {
+            return;
+        }
+
         setSize(size);
         cachedDrawable = null;
         document.resetStructure();
     }
 
     @Override
-    public void onKeyTyped(Character key) {
+    public void onKeyTyped(String name, Character key) {
+        if (!name.equals(this.name)) {
+            return;
+        }
+
         LOGGER.trace("Key typed: {}", key);
         editMode = true;
         try {
@@ -197,13 +212,21 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
-    public void onKeyPressed(KeyCode keyCode) {
+    public void onKeyPressed(String name, KeyCode keyCode) {
+        if (!name.equals(this.name)) {
+            return;
+        }
+
         LOGGER.trace("Key pressed: {}", keyCode);
         keyHandler.onKeyPressed(keyCode);
     }
 
     @Override
-    public void onKeyReleased(KeyCode keyCode) {
+    public void onKeyReleased(String name, KeyCode keyCode) {
+        if (!name.equals(this.name)) {
+            return;
+        }
+
         LOGGER.trace("Key released: {}", keyCode);
         keyHandler.onKeyReleased(keyCode);
     }

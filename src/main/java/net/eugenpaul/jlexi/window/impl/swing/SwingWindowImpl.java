@@ -1,10 +1,10 @@
-package net.eugenpaul.jlexi.gui.window;
+package net.eugenpaul.jlexi.window.impl.swing;
 
 import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.window.AbstractView;
 import net.eugenpaul.jlexi.window.Windowlmp;
-import net.eugenpaul.jlexi.gui.AbstractPanel;
-import net.eugenpaul.jlexi.gui.frame.DocumentPanel;
-import net.eugenpaul.jlexi.gui.frame.MainFrame;
+import net.eugenpaul.jlexi.window.impl.swing.frame.MainFrame;
+import net.eugenpaul.jlexi.window.impl.swing.frame.MainPanel;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class SwingWindowImpl extends Windowlmp {
@@ -14,17 +14,18 @@ public class SwingWindowImpl extends Windowlmp {
     }
 
     @Override
-    public AbstractPanel deviceCreateMainWindow(Size defaultSize) {
+    public AbstractView deviceCreateMainWindow(Size defaultSize, String name) {
 
-        MainFrame mFrame = new MainFrame(controller);
+        MainFrame mFrame = new MainFrame(controller, name);
         mFrame.init();
 
-        DocumentPanel dPanel = new DocumentPanel(defaultSize, controller);
+        MainPanel dPanel = new MainPanel(defaultSize, controller, name);
+        dPanel.init();
+
         mFrame.setMainPanel(dPanel);
         mFrame.setVisible(true);
 
         controller.addView(mFrame);
-        controller.addView(dPanel);
 
         return mFrame;
     }
