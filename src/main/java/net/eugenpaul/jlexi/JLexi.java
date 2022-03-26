@@ -18,7 +18,7 @@ import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.resourcesmanager.font.FontStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.FormatStorageImpl;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.impl.FormatStorageImpl;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class JLexi {

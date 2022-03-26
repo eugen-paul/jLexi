@@ -11,10 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.FormatStorageImpl;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.ParameterUnderline;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.Underline;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.UnderlineType;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.impl.FormatStorageImpl;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderline;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
 
 public class FormatStorageImplTest {
 
@@ -136,37 +135,37 @@ public class FormatStorageImplTest {
     @Test
     void testFormatterUnderline_single() {
         TextFormatEffect formatEffect = TextFormatEffect.builder()//
-                .underline(UnderlineType.SINGLE)//
+                .underline(FormatUnderlineType.SINGLE)//
                 .build();
 
         var formatter = storage.formatter(formatEffect);
         assertNotNull(formatter);
         assertEquals(1, formatter.size());
-        assertTrue(formatter.get(0) instanceof Underline);
+        assertTrue(formatter.get(0) instanceof FormatUnderline);
 
-        Underline f = (Underline) formatter.get(0);
-        assertEquals(UnderlineType.SINGLE, f.getType());
+        FormatUnderline f = (FormatUnderline) formatter.get(0);
+        assertEquals(FormatUnderlineType.SINGLE, f.getType());
     }
 
     @Test
     void testFormatterUnderline_double() {
         TextFormatEffect formatEffect = TextFormatEffect.builder()//
-                .underline(UnderlineType.DOUBLE)//
+                .underline(FormatUnderlineType.DOUBLE)//
                 .build();
 
         var formatter = storage.formatter(formatEffect);
         assertNotNull(formatter);
         assertEquals(1, formatter.size());
-        assertTrue(formatter.get(0) instanceof Underline);
+        assertTrue(formatter.get(0) instanceof FormatUnderline);
 
-        Underline f = (Underline) formatter.get(0);
-        assertEquals(UnderlineType.DOUBLE, f.getType());
+        FormatUnderline f = (FormatUnderline) formatter.get(0);
+        assertEquals(FormatUnderlineType.DOUBLE, f.getType());
     }
 
     @Test
     void testFormatterUnderline_none() {
         TextFormatEffect formatEffect = TextFormatEffect.builder()//
-                .underline(UnderlineType.NONE)//
+                .underline(FormatUnderlineType.NONE)//
                 .build();
 
         var formatter = storage.formatter(formatEffect);
@@ -177,7 +176,7 @@ public class FormatStorageImplTest {
     @Test
     void testAddTextFormatEffect() {
         TextFormatEffect formatEffect = TextFormatEffect.builder()//
-                .underline(UnderlineType.SINGLE)//
+                .underline(FormatUnderlineType.SINGLE)//
                 .build();
 
         var responseFormatEffect = storage.add(formatEffect);
@@ -185,7 +184,7 @@ public class FormatStorageImplTest {
         assertSame(responseFormatEffect, formatEffect);
 
         TextFormatEffect formatEffectNew = TextFormatEffect.builder()//
-                .underline(UnderlineType.SINGLE)//
+                .underline(FormatUnderlineType.SINGLE)//
                 .build();
 
         var responseFormatEffectNew = storage.add(formatEffectNew);
@@ -193,27 +192,5 @@ public class FormatStorageImplTest {
         assertSame(responseFormatEffect, responseFormatEffectNew);
 
         assertNotSame(formatEffect, formatEffectNew);
-    }
-
-    @Test
-    void testSetFormatEffect() {
-        TextFormatEffect formatEffect = TextFormatEffect.builder()//
-                .underline(UnderlineType.SINGLE)//
-                .build();
-        var responseFormatEffect = storage.add(formatEffect);
-
-        var responseFormatEffectNew = storage.setFormatEffect(formatEffect, ParameterUnderline.UNDERLINE,
-                UnderlineType.DOUBLE);
-
-        assertNotNull(responseFormatEffectNew);
-        assertEquals(UnderlineType.DOUBLE, responseFormatEffectNew.getUnderline());
-        assertNotSame(responseFormatEffect, responseFormatEffectNew);
-
-        TextFormatEffect formatEffectNew = TextFormatEffect.builder()//
-                .underline(UnderlineType.DOUBLE)//
-                .build();
-
-        var responseFormatEffectSecond = storage.add(formatEffectNew);
-        assertSame(responseFormatEffectSecond, responseFormatEffectNew);
     }
 }

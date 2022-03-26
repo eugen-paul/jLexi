@@ -1,6 +1,5 @@
-package net.eugenpaul.jlexi.resourcesmanager.textformat;
+package net.eugenpaul.jlexi.resourcesmanager.textformat.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,13 +15,11 @@ import lombok.NonNull;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.FormatterType;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.FormatterTypeParameter;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.Underline;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.UnderlineType;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
 
 public class FormatStorageImpl implements FormatStorage {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(FormatStorageImpl.class);
 
     private Map<Integer, // Style
@@ -41,8 +38,9 @@ public class FormatStorageImpl implements FormatStorage {
     }
 
     private void initFormatter() {
-        formatter.put(FormatterType.UNDERLINE_SINGLE, new Underline(UnderlineType.SINGLE));
-        formatter.put(FormatterType.UNDERLINE_DOUBLE, new Underline(UnderlineType.DOUBLE));
+        for (var type : FormatterType.values()) {
+            formatter.put(type, type.getCreator().create());
+        }
     }
 
     @Override
@@ -138,39 +136,14 @@ public class FormatStorageImpl implements FormatStorage {
             break;
         }
 
-        return response.stream().filter(Objects::nonNull).collect(Collectors.toUnmodifiableList());
+        return response.stream()//
+                .filter(Objects::nonNull)//
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
     public TextFormatEffect add(TextFormatEffect format) {
         return formatEffekts.computeIfAbsent(format, v -> v);
-    }
-
-    @Override
-    public <T> TextFormatEffect setFormatEffect(TextFormatEffect format, FormatterTypeParameter<T> parameter,
-            T value) {
-
-        var newFormatBuilder = TextFormatEffect.builder()//
-                .textFormatEffect(format);
-
-        try {
-            var methode = newFormatBuilder.getClass().getMethod(parameter.getFunction(), parameter.getClazz());
-            if (methode != null) {
-                methode.invoke(newFormatBuilder, value);
-            } else {
-                return format;
-            }
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-            LOGGER.error("Cann't find method to set Formatter Type Parameter", e);
-            return format;
-        }
-
-        var newFormat = newFormatBuilder.build();
-
-        newFormat = formatEffekts.computeIfAbsent(newFormat, v -> v);
-
-        return newFormat;
     }
 
 }

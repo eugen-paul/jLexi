@@ -7,10 +7,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.With;
 import lombok.EqualsAndHashCode.Exclude;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.UnderlineType;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
 
 /**
  * Immutable text format data.
@@ -22,21 +24,26 @@ public class TextFormatEffect {
 
     public static final int DEFAULT_FONT_COLOR = 0xFF000000;
     public static final int DEFAULT_BACKGROUND_COLOR = 0xFFFFFFFF;
-    public static final UnderlineType DEFAULT_UNDERLINE = UnderlineType.NONE;
+    public static final FormatUnderlineType DEFAULT_UNDERLINE = FormatUnderlineType.NONE;
     public static final int DEFAULT_UNDERLINE_COLOR = 0xFFFFFFFF;
 
     public static final TextFormatEffect DEFAULT_FORMAT_EFFECT = TextFormatEffect.builder().build();
 
     @Builder.Default
-    private UnderlineType underline = DEFAULT_UNDERLINE;
+    @With
+    @NonNull
+    private FormatUnderlineType underline = DEFAULT_UNDERLINE;
 
     @Builder.Default
+    @With
     private int underlineColor = DEFAULT_UNDERLINE_COLOR;
 
     @Builder.Default
+    @With
     private int fontColor = DEFAULT_FONT_COLOR;
 
     @Builder.Default
+    @With
     private int backgroundColor = DEFAULT_BACKGROUND_COLOR;
 
     @Getter(lombok.AccessLevel.NONE)
@@ -60,11 +67,9 @@ public class TextFormatEffect {
     }
 
     public List<PixelsFormatter> getFormatter(FormatStorage storage) {
-        if (formatterInit.get()) {
+        if (formatterInit.getAndSet(true)) {
             return formatter;
         }
-
-        formatterInit.set(true);
 
         formatter.addAll(storage.formatter(this));
 

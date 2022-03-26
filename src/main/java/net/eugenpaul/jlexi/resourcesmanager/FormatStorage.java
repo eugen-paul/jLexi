@@ -5,7 +5,6 @@ import java.util.List;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.FormatterTypeParameter;
 
 /**
  * Text-Format-Storage
@@ -70,7 +69,4 @@ public interface FormatStorage extends Resource {
     public List<PixelsFormatter> formatter(TextFormatEffect formatEffect);
 
     public TextFormatEffect add(TextFormatEffect formatEffect);
-
-    public <T> TextFormatEffect setFormatEffect(TextFormatEffect formatEffect, FormatterTypeParameter<T> parameter,
-            T value);
 }

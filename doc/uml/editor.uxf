@@ -1,0 +1,45 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>440</x><y>680</y><w>230</w><h>150</h></coordinates><panel_attributes>Focus
+--
+setFocus(Focusable: component)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>990</x><y>430</y><w>210</w><h>190</h></coordinates><panel_attributes>keyHandler
+--
+
+--
+keyPressed
+keyReleased
+keyTypted
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>430</y><w>210</w><h>190</h></coordinates><panel_attributes>Focusable
+--
+KeyHandler
+--
+key
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>820</x><y>380</y><w>280</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10;260;10;260;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>480</y><w>270</w><h>50</h></coordinates><panel_attributes>AbstractController
+--
+setModelProperty(propertyType, ... newValue)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>430</y><w>230</w><h>190</h></coordinates><panel_attributes>EditorGUI
+--
+Focus
+List&lt;Panels&gt;
+--
+addWindow(panel: Panel)
+removeWindow(name: String)
+doMouseEvent
+doKeyEvent
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>30</y><w>230</w><h>50</h></coordinates><panel_attributes>Glyph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>210</y><w>230</w><h>50</h></coordinates><panel_attributes>Window
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>120</y><w>230</w><h>50</h></coordinates><panel_attributes>Panel
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>210</y><w>290</w><h>50</h></coordinates><panel_attributes>Component
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>300</y><w>230</w><h>50</h></coordinates><panel_attributes>FrameWindow
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>300</y><w>110</w><h>50</h></coordinates><panel_attributes>Button
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>300</y><w>110</w><h>50</h></coordinates><panel_attributes>Label
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>290</x><y>300</y><w>110</w><h>50</h></coordinates><panel_attributes>TextField
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>500</y><w>130</w><h>30</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>110;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>130</y><w>260</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>240;10;10;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>160</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>70</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>250</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>250</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>250</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>100</x><y>250</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element></diagram>

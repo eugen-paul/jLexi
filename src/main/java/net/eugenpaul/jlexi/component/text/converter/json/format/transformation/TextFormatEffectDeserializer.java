@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
-import net.eugenpaul.jlexi.resourcesmanager.textformat.textformatter.UnderlineType;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
 
 public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEffect> {
 
@@ -18,7 +18,7 @@ public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEff
     public TextFormatEffect deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode node = p.getCodec().readTree(p);
 
-        UnderlineType underline = null;
+        FormatUnderlineType underline = null;
         Integer underlineColor = null;
         Integer fontColor = null;
         Integer backgroundColor = null;
@@ -26,7 +26,7 @@ public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEff
         var builder = TextFormatEffect.builder();
 
         if (node.has("underline")) {
-            underline = UnderlineType.valueOf(node.get("underline").asText());
+            underline = FormatUnderlineType.valueOf(node.get("underline").asText());
             builder.underline(underline);
         }
         if (node.has("underlineColor")) {
