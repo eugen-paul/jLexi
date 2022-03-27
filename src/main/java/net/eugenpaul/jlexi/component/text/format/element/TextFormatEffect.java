@@ -13,6 +13,7 @@ import lombok.EqualsAndHashCode.Exclude;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
+import net.eugenpaul.jlexi.utils.Color;
 
 /**
  * Immutable text format data.
@@ -22,10 +23,10 @@ import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineTyp
 @EqualsAndHashCode
 public class TextFormatEffect {
 
-    public static final int DEFAULT_FONT_COLOR = 0xFF000000;
-    public static final int DEFAULT_BACKGROUND_COLOR = 0xFFFFFFFF;
+    public static final Color DEFAULT_FONT_COLOR = Color.WHITE;
+    public static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
     public static final FormatUnderlineType DEFAULT_UNDERLINE = FormatUnderlineType.NONE;
-    public static final int DEFAULT_UNDERLINE_COLOR = 0xFFFFFFFF;
+    public static final Color DEFAULT_UNDERLINE_COLOR = Color.BLACK;
 
     public static final TextFormatEffect DEFAULT_FORMAT_EFFECT = TextFormatEffect.builder().build();
 
@@ -36,15 +37,15 @@ public class TextFormatEffect {
 
     @Builder.Default
     @With
-    private int underlineColor = DEFAULT_UNDERLINE_COLOR;
+    private Color underlineColor = DEFAULT_UNDERLINE_COLOR;
 
     @Builder.Default
     @With
-    private int fontColor = DEFAULT_FONT_COLOR;
+    private Color fontColor = DEFAULT_FONT_COLOR;
 
     @Builder.Default
     @With
-    private int backgroundColor = DEFAULT_BACKGROUND_COLOR;
+    private Color backgroundColor = DEFAULT_BACKGROUND_COLOR;
 
     @Getter(lombok.AccessLevel.NONE)
     @Exclude

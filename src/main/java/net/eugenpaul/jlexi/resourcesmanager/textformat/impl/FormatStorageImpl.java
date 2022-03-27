@@ -15,6 +15,7 @@ import lombok.NonNull;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
+import net.eugenpaul.jlexi.resourcesmanager.textformat.FormatterCreator;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
 
 public class FormatStorageImpl implements FormatStorage {
@@ -27,7 +28,7 @@ public class FormatStorageImpl implements FormatStorage {
                     Map<Integer, // Size
                             TextFormat>>> storage;
 
-    private EnumMap<FormatterType, PixelsFormatter> formatter;
+    private EnumMap<FormatterType, FormatterCreator> formatter;
     private Map<TextFormatEffect, TextFormatEffect> formatEffekts;
 
     public FormatStorageImpl() {
@@ -39,7 +40,7 @@ public class FormatStorageImpl implements FormatStorage {
 
     private void initFormatter() {
         for (var type : FormatterType.values()) {
-            formatter.put(type, type.getCreator().create());
+            formatter.put(type, type.getCreator());
         }
     }
 
@@ -127,10 +128,10 @@ public class FormatStorageImpl implements FormatStorage {
 
         switch (format.getUnderline()) {
         case SINGLE:
-            response.add(formatter.get(FormatterType.UNDERLINE_SINGLE));
+            response.add(formatter.get(FormatterType.UNDERLINE_SINGLE).create(format.getUnderlineColor()));
             break;
         case DOUBLE:
-            response.add(formatter.get(FormatterType.UNDERLINE_DOUBLE));
+            response.add(formatter.get(FormatterType.UNDERLINE_DOUBLE).create(format.getUnderlineColor()));
             break;
         default:
             break;

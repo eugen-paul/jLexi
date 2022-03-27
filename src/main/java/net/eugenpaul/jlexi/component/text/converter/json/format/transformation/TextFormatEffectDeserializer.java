@@ -7,10 +7,10 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.IntNode;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
+import net.eugenpaul.jlexi.utils.Color;
 
 public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEffect> {
 
@@ -19,9 +19,9 @@ public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEff
         JsonNode node = p.getCodec().readTree(p);
 
         FormatUnderlineType underline = null;
-        Integer underlineColor = null;
-        Integer fontColor = null;
-        Integer backgroundColor = null;
+        Color underlineColor = null;
+        Color fontColor = null;
+        Color backgroundColor = null;
 
         var builder = TextFormatEffect.builder();
 
@@ -30,15 +30,15 @@ public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEff
             builder.underline(underline);
         }
         if (node.has("underlineColor")) {
-            underlineColor = (Integer) ((IntNode) node.get("underlineColor")).numberValue();
+            underlineColor = Color.fromText(node.get("underlineColor").asText());
             builder.underlineColor(underlineColor);
         }
         if (node.has("fontColor")) {
-            fontColor = (Integer) ((IntNode) node.get("fontColor")).numberValue();
+            fontColor = Color.fromText(node.get("fontColor").asText());
             builder.fontColor(fontColor);
         }
         if (node.has("backgroundColor")) {
-            backgroundColor = (Integer) ((IntNode) node.get("backgroundColor")).numberValue();
+            backgroundColor = Color.fromText(node.get("backgroundColor").asText());
             builder.backgroundColor(backgroundColor);
         }
 

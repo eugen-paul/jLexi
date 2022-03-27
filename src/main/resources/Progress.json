@@ -59,7 +59,8 @@
                 "italic": true
             },
             "formatEffect": {
-                "underline": "DOUBLE"
+                "underline": "SINGLE",
+                "underlineColor": "green"
             },
             "text": "single underline",
             "eol": true
