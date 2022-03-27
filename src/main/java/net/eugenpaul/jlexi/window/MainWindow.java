@@ -38,7 +38,7 @@ public class MainWindow extends ApplicationWindow {
         TextPane textPane = new TextPane(name, null, storage, controller);
         Border border = new Border(name, null, textPane);
 
-        MenuBar menubar = new MenuBar(name, null, border, size, controller);
+        MenuBar menubar = new MenuBar(name, null, border, size, controller, storage);
         border.setParent(menubar);
 
         controller.addTextPane(textPaneName, textPane);

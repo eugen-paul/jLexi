@@ -1,6 +1,9 @@
 package net.eugenpaul.jlexi.design;
 
-public abstract class GuiFactory {
+import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
-    public abstract Button createButton();
+public interface GuiFactory {
+    Button createButton(Glyph parent, TextFormat format, ResourceManager storage);
 }

@@ -2,6 +2,8 @@ package net.eugenpaul.jlexi.component.framing;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,16 +13,23 @@ import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
 import net.eugenpaul.jlexi.component.interfaces.Resizeable;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
+import net.eugenpaul.jlexi.design.Button;
+import net.eugenpaul.jlexi.design.GuiFactory;
+import net.eugenpaul.jlexi.design.dark.DarkFactory;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.RedrawData;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 /**
  * Add Menubar to Glyph
@@ -40,20 +49,44 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
 
     private final String name;
 
+    private List<Button> menuButtons;
+
+    private ResourceManager resourceManager;
+
     /**
      * C'tor
      * 
      * @param component
      */
-    public MenuBar(String name, Glyph parent, Glyph component, Size size, AbstractController controller) {
+    public MenuBar(String name, Glyph parent, Glyph component, Size size, AbstractController controller,
+            ResourceManager resourceManager) {
         super(parent, component);
         this.name = name;
+        this.resourceManager = resourceManager;
         component.setParent(this);
         component.setRelativPosition(new Vector2d(0, MENUBAR_HEIGHT));
         setSize(size);
         this.controller = controller;
+        this.menuButtons = new LinkedList<>();
 
+        initMenu();
         computePixels();
+    }
+
+    private void initMenu() {
+        GuiFactory factory = new DarkFactory();
+
+        Button boldButton = factory.createButton(this, TextFormat.DEFAULT, resourceManager);
+        boldButton.setLabel("B");
+        boldButton.setTextFormat(boldButton.getFormat().withBold(true));
+        boldButton.setSize(new Size(20, 20));
+        menuButtons.add(boldButton);
+
+        Button italicButton = factory.createButton(this, TextFormat.DEFAULT, resourceManager);
+        italicButton.setLabel("I");
+        italicButton.setTextFormat(italicButton.getFormat().withItalic(true));
+        italicButton.setSize(new Size(20, 20));
+        menuButtons.add(italicButton);
     }
 
     private void computePixels() {
@@ -80,6 +113,19 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
 
         System.arraycopy(menuBackground, 0, responsePixels, 0, menuBackground.length);
 
+        cachedDrawable = new DrawableImpl(responsePixels, getSize());
+
+        Vector2d pos = new Vector2d(5, 5);
+        for (Button button : menuButtons) {
+            ImageArrayHelper.copyRectangle(//
+                    button.getPixels(), //
+                    cachedDrawable, //
+                    pos//
+            );
+            button.setRelativPosition(new Vector2d(pos));
+            pos.setX(pos.getX() + button.getSize().getWidth() + 5);
+        }
+
         System.arraycopy(//
                 componentPixels.getPixels(), //
                 0, //
@@ -87,8 +133,6 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
                 menuBackground.length, //
                 componentPixels.getPixels().length//
         );
-
-        cachedDrawable = new DrawableImpl(responsePixels, getSize());
 
         return cachedDrawable;
     }
@@ -126,6 +170,13 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
 
         if (mouseY <= MENUBAR_HEIGHT) {
             LOGGER.trace("Click on Menu. Position ({},{}).", mouseX, mouseY);
+            for (Button menuButton : menuButtons) {
+                if (CollisionHelper.isPointOnArea(mouseX, mouseY, menuButton.getRelativPosition(),
+                        menuButton.getSize())) {
+                    menuButton.press();
+                    return;
+                }
+            }
         } else {
             LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY, mouseX,
                     mouseY - MENUBAR_HEIGHT);

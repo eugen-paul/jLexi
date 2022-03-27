@@ -8,12 +8,15 @@ public class CollisionHelper {
     }
 
     public static boolean isPointOnArea(Vector2d point, Vector2d areaPosiion, Size areaSize) {
-        return (//
-        point.getX() >= areaPosiion.getX() //
-                && point.getY() >= areaPosiion.getY() //
-                && point.getX() < areaPosiion.getX() + areaSize.getWidth() //
-                && point.getY() < areaPosiion.getY() + areaSize.getHeight() //
-        );
+        return isPointOnArea(point.getX(), point.getY(), areaPosiion, areaSize);
+    }
 
+    public static boolean isPointOnArea(int pointX, int pointY, Vector2d areaPosiion, Size areaSize) {
+        return (//
+        pointX >= areaPosiion.getX() //
+                && pointY >= areaPosiion.getY() //
+                && pointX < areaPosiion.getX() + areaSize.getWidth() //
+                && pointY < areaPosiion.getY() + areaSize.getHeight() //
+        );
     }
 }

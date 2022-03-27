@@ -94,7 +94,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         }
     }
 
-    protected void add(TextElement element) {
+    public void add(TextElement element) {
         textElements.add(element);
         element.setStructureParent(this);
     }
