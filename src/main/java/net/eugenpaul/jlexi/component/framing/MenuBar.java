@@ -16,7 +16,6 @@ import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.RedrawData;
-import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -26,7 +25,7 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 /**
  * Add Menubar to Glyph
  */
-public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
+public class MenuBar extends MonoGlyph implements GuiComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
@@ -194,4 +193,8 @@ public class MenuBar extends MonoGlyph implements GuiComponent, InterfaceModel {
         ));
     }
 
+    @Override
+    public Glyph getMainGlyph() {
+        return this;
+    }
 }

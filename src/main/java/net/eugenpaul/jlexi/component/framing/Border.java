@@ -189,4 +189,8 @@ public class Border extends MonoGlyph implements GuiComponent {
         }
     }
 
+    @Override
+    public Glyph getMainGlyph() {
+        return this;
+    }
 }

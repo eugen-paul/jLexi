@@ -277,4 +277,9 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
         return this;
     }
 
+    @Override
+    public Glyph getMainGlyph() {
+        return this;
+    }
+
 }

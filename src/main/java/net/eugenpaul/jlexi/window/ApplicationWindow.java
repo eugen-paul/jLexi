@@ -1,78 +1,57 @@
 package net.eugenpaul.jlexi.window;
 
-import java.beans.PropertyChangeEvent;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import net.eugenpaul.jlexi.component.framing.Border;
-import net.eugenpaul.jlexi.component.framing.MenuBar;
-import net.eugenpaul.jlexi.component.text.TextPane;
-import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
 import net.eugenpaul.jlexi.controller.ModelController;
-import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.event.KeyCode;
+import net.eugenpaul.jlexi.utils.event.MouseButton;
 
-public class ApplicationWindow extends Window {
+public abstract class ApplicationWindow extends Window {
 
-    private static final String DEFAULT_TEXT_PANE_SUFFIX = "-TextPane";
-    private static final Size DEFAULT_SIZE = new Size(800, 600);
-
-    private ResourceManager storage;
-    private String textPaneName;
-
-    public ApplicationWindow(String name, ModelController controller, ResourceManager storage) {
+    protected ApplicationWindow(String name, ModelController controller, Size size) {
         super(//
                 name, //
-                DEFAULT_SIZE, //
+                size, //
                 factory.createApplicationWindow().apply(controller), //
                 controller //
         );
 
-        this.storage = storage;
-        this.textPaneName = name + DEFAULT_TEXT_PANE_SUFFIX;
+        this.focusOn = null;
     }
 
     @Override
-    protected void setContent() {
-        TextPane textPane = new TextPane(name, null, storage, controller);
-        Border border = new Border(name, null, textPane);
-
-        MenuBar menubar = new MenuBar(name, null, border, size, controller);
-        border.setParent(menubar);
-
-        controller.addTextPane(textPaneName, textPane);
-        controller.addModel(menubar);
-        controller.addGlyph(menubar, name);
+    public void onKeyTyped(String name, Character key) {
+        if (focusOn != null) {
+            focusOn.onKeyTyped(name, key);
+        }
     }
 
-    /**
-     * load text file to textpane
-     * 
-     * @param path
-     * @return
-     */
-    public boolean loadFile(Path path) {
-        JsonConverter converter = new JsonConverter(storage);
-        try {
-            var fileData = Files.readString(path);
-            var textElements = converter.read(fileData);
-            controller.setText(textPaneName, textElements);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+    @Override
+    public void onKeyPressed(String name, KeyCode keyCode) {
+        if (focusOn != null) {
+            focusOn.onKeyPressed(name, keyCode);
+        }
+    }
+
+    @Override
+    public void onKeyReleased(String name, KeyCode keyCode) {
+        if (focusOn != null) {
+            focusOn.onKeyReleased(name, keyCode);
         }
 
-        view.modelPropertyChange(//
-                new PropertyChangeEvent(name, //
-                        ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
-                        null, //
-                        size//
-                )//
-        );
+    }
 
-        return true;
+    @Override
+    public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
+        if (mainGlyph != null) {
+            mainGlyph.onMouseClick(name, mouseX, mouseY, button);
+        }
+    }
+
+    @Override
+    public void resizeTo(String name, Size size) {
+        if (mainGlyph != null) {
+            mainGlyph.resizeTo(name, size);
+        }
     }
 
 }

@@ -24,6 +24,7 @@ import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.window.AbstractView;
+import net.eugenpaul.jlexi.window.Window;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -42,7 +43,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
     private List<AbstractView> registeredViews;
     private List<InterfaceModel> registeredModels;
 
-    private Map<String, Glyph> glyphMap;
+    private Map<String, Window> windowsMap;
 
     private ThreadPoolExecutor pool;
     protected Scheduler modelScheduler;
@@ -55,7 +56,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
     protected AbstractController() {
         registeredViews = new ArrayList<>();
         registeredModels = new ArrayList<>();
-        glyphMap = new HashMap<>();
+        windowsMap = new HashMap<>();
 
         pool = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         modelScheduler = Schedulers.fromExecutorService(pool);
@@ -80,8 +81,8 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
         registeredViews.remove(view);
     }
 
-    public void addGlyph(Glyph glyph, String name) {
-        glyphMap.put(name, glyph);
+    public void addWindow(Window glyph, String name) {
+        windowsMap.put(name, glyph);
     }
 
     @Override
@@ -95,7 +96,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     public Mono<Drawable> getDrawable(String source) {
         return Mono.fromCallable(() -> {
-            Glyph destinationGlyph = glyphMap.get(source);
+            Glyph destinationGlyph = windowsMap.get(source).getMainGlyph().getMainGlyph();
             if (destinationGlyph != null) {
                 return destinationGlyph.getPixels();
             }
@@ -107,7 +108,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     public Mono<Drawable> getDrawableArea(String source, Area area) {
         return Mono.fromCallable(() -> {
-            Glyph destinationGlyph = glyphMap.get(source);
+            Glyph destinationGlyph = windowsMap.get(source).getMainGlyph().getMainGlyph();
             if (destinationGlyph != null) {
                 return destinationGlyph.getPixels(area.getPosition(), area.getSize());
             }
@@ -131,28 +132,31 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
             oldChange.dispose();
         }
 
-        Disposable disp = Mono.fromRunnable(() -> {
-            Class<?>[] methodParameter = Stream.of(newValue) //
-                    .map(Object::getClass) //
-                    .collect(Collectors.toList()) //
-                    .toArray(new Class[0]);
-
-            registeredModels.stream()//
-                    .filter(v -> ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass()))//
-                    .forEach(v -> {
-                        try {
-                            Method method = v.getClass().getDeclaredMethod(propertyType.getMethode(), methodParameter);
-                            method.invoke(v, newValue);
-                        } catch (Exception ex) {
-                            // Handle exception.
-                        }
-                    });
-        })//
+        Disposable disp = Mono//
+                .fromRunnable(() -> doModelPropertyChange(propertyType, newValue))//
                 .publishOn(modelScheduler)//
                 .delaySubscription(propertyType.getDelay())//
                 .doOnSuccess(v -> LOGGER.trace("setModelProperty done"))//
                 .subscribe();
 
         modelPropChangeMap.put(propertyType, disp);
+    }
+
+    private void doModelPropertyChange(ModelPropertyChangeType propertyType, Object... newValue) {
+        Class<?>[] methodParameter = Stream.of(newValue) //
+                .map(Object::getClass) //
+                .collect(Collectors.toList()) //
+                .toArray(new Class[0]);
+
+        registeredModels.stream()//
+                .filter(v -> ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass()))//
+                .forEach(v -> {
+                    try {
+                        Method method = v.getClass().getMethod(propertyType.getMethode(), methodParameter);
+                        method.invoke(v, newValue);
+                    } catch (Exception ex) {
+                        // Handle exception.
+                    }
+                });
     }
 }

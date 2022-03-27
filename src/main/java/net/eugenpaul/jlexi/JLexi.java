@@ -9,7 +9,7 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.resourcesmanager.font.FontStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.impl.FormatStorageImpl;
-import net.eugenpaul.jlexi.window.ApplicationWindow;
+import net.eugenpaul.jlexi.window.MainWindow;
 import net.eugenpaul.jlexi.window.Window;
 import net.eugenpaul.jlexi.window.impl.swing.SwingWindowFactory;
 
@@ -24,7 +24,7 @@ public class JLexi {
 
         Window.setFactory(new SwingWindowFactory());
 
-        ApplicationWindow mainWindow = new ApplicationWindow(//
+        MainWindow mainWindow = new MainWindow(//
                 "MainWindow", //
                 controller, //
                 storage //
