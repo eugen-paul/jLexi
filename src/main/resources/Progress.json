@@ -4,7 +4,9 @@
             "format": {
                 "bold": true,
                 "fontsize": 12,
-                "fontName": "Monospaced"
+                "fontName": "Monospaced",
+                "fontColor": "white",
+                "backgroundColor": "black"
             },
             "text": "Progress:",
             "eol": true
@@ -14,7 +16,8 @@
                 "bold": false,
                 "italic": false,
                 "fontsize": 12,
-                "fontName": "Monospaced"
+                "fontName": "Monospaced",
+                "fontColor": "RED"
             },
             "text": "   - simple text formatting by reading a file: ",
             "eol": true
@@ -24,7 +27,9 @@
         },
         {
             "format": {
-                "bold": true
+                "bold": true,
+                "fontColor": "black",
+                "backgroundColor": "white"
             },
             "text": "bold",
             "eol": true

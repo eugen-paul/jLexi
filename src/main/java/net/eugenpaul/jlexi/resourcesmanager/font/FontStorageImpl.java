@@ -8,6 +8,7 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 
@@ -26,7 +27,9 @@ public class FontStorageImpl extends FontStorage {
             Map<Integer, // Style
                     Map<String, // FontName
                             Map<Integer, // Size
-                                    Drawable>>>> pixelStorage;
+                                    Map<Color, // FontColor
+                                            Map<Color, // BackgroundColor
+                                                    Drawable>>>>>> pixelStorage;
 
     public FontStorageImpl(FontPixelsGenerator fontGenerator) {
         this.fontGenerator = fontGenerator;
@@ -51,7 +54,10 @@ public class FontStorageImpl extends FontStorage {
                 .computeIfAbsent(c, key -> new HashMap<>())//
                 .computeIfAbsent(style, key -> new HashMap<>())//
                 .computeIfAbsent(format.getFontName(), key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontsize(), key -> genDrawble(c, format, maxAscent));
+                .computeIfAbsent(format.getFontsize(), key -> new HashMap<>())//
+                .computeIfAbsent(format.getFontColor(), key -> new HashMap<>())//
+                .computeIfAbsent(format.getBackgroundColor(), key -> genDrawble(c, format, maxAscent))//
+        ;
         return response.copy();
     }
 

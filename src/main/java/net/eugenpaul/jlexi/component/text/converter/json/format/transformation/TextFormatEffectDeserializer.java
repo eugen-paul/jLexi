@@ -20,8 +20,6 @@ public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEff
 
         FormatUnderlineType underline = null;
         Color underlineColor = null;
-        Color fontColor = null;
-        Color backgroundColor = null;
 
         var builder = TextFormatEffect.builder();
 
@@ -32,14 +30,6 @@ public class TextFormatEffectDeserializer extends JsonDeserializer<TextFormatEff
         if (node.has("underlineColor")) {
             underlineColor = Color.fromText(node.get("underlineColor").asText());
             builder.underlineColor(underlineColor);
-        }
-        if (node.has("fontColor")) {
-            fontColor = Color.fromText(node.get("fontColor").asText());
-            builder.fontColor(fontColor);
-        }
-        if (node.has("backgroundColor")) {
-            backgroundColor = Color.fromText(node.get("backgroundColor").asText());
-            builder.backgroundColor(backgroundColor);
         }
 
         return builder.build();

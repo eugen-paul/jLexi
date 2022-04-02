@@ -19,6 +19,7 @@ public class Color {
     public static final Color RED = new Color(0xFF_FF_00_00);
     public static final Color GREEN = new Color(0xFF_00_FF_00);
     public static final Color BLUE = new Color(0xFF_00_00_FF);
+    public static final Color INVISIBLE = new Color(0x00_00_00_00);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Color.class);
 
@@ -40,6 +41,22 @@ public class Color {
         );
     }
 
+    public int getA() {
+        return (value & 0xFF_00_00_00) >>> 24;
+    }
+
+    public int getR() {
+        return (value & 0x00_FF_00_00) >>> 16;
+    }
+
+    public int getG() {
+        return (value & 0x00_00_FF_00) >>> 8;
+    }
+
+    public int getB() {
+        return (value & 0x00_00_00_FF);
+    }
+
     public static Color convert(String input) throws IllegalArgumentException {
         try {
             return fromHexARGB(input);
@@ -59,9 +76,9 @@ public class Color {
     public static Color fromText(String input) throws IllegalArgumentException {
         switch (input.toLowerCase()) {
         case "black":
-            return Color.WHITE;
-        case "white":
             return Color.BLACK;
+        case "white":
+            return Color.WHITE;
         case "red":
             return Color.RED;
         case "green":

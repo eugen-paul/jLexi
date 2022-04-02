@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.With;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
+import net.eugenpaul.jlexi.utils.Color;
 
 /**
  * Immutable text format data.
@@ -36,4 +37,14 @@ public class TextFormat {
     @With
     @NonNull
     private String fontName = FontStorage.DEFAULT_FONT_NAME;
+    
+    @Builder.Default
+    @With
+    @NonNull
+    private Color fontColor = Color.BLACK;
+
+    @Builder.Default
+    @With
+    @NonNull
+    private Color backgroundColor = Color.WHITE;
 }

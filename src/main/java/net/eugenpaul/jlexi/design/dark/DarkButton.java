@@ -12,10 +12,14 @@ import net.eugenpaul.jlexi.utils.Color;
 public class DarkButton extends Button {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DarkButton.class);
-    private static final Color BACKGROUND_COLOR = Color.fromHexARGB("0xFFBFBFBF");
+    public static final Color BACKGROUND_COLOR = Color.fromHexARGB("0xFFBFBFBF");
 
     public DarkButton(Glyph parent, TextFormat format, ResourceManager storage) {
-        super(parent, BACKGROUND_COLOR, format, storage);
+        super(parent, format.getBackgroundColor(), format, storage);
+    }
+
+    public DarkButton(Glyph parent, TextFormat format, Color buttonBackground, ResourceManager storage) {
+        super(parent, buttonBackground, format, storage);
     }
 
     @Override

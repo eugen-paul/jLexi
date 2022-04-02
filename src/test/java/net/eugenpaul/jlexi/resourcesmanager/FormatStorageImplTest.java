@@ -25,7 +25,26 @@ public class FormatStorageImplTest {
     }
 
     @Test
-    void testAdd() {
+    void testAddNew() {
+        TextFormat format = TextFormat.builder()//
+                .bold(true)//
+                .fontName("testFont")//
+                .build();
+
+        TextFormat responseFormat = storage.add(format);
+        assertNotNull(responseFormat);
+        assertSame(responseFormat, format);
+
+        TextFormat formatNew = format.withItalic(true);
+
+        TextFormat responseFormatCopy = storage.add(formatNew);
+        assertNotNull(responseFormatCopy);
+        assertSame(formatNew, responseFormatCopy);
+        assertNotSame(format, responseFormatCopy);
+    }
+
+    @Test
+    void testAddCopy() {
         TextFormat format = TextFormat.builder()//
                 .bold(true)//
                 .build();
@@ -41,95 +60,6 @@ public class FormatStorageImplTest {
         TextFormat responseFormatCopy = storage.add(formatCopy);
         assertNotNull(responseFormatCopy);
         assertSame(responseFormat, responseFormatCopy);
-    }
-
-    @Test
-    void testSetFontSize() {
-        TextFormat format = TextFormat.builder()//
-                .bold(true)//
-                .fontsize(7)//
-                .build();
-
-        format = storage.add(format);
-
-        TextFormat responseFormat = storage.setFontSize(format, 15);
-        assertNotNull(responseFormat);
-        assertEquals(15, responseFormat.getFontsize());
-
-        format = TextFormat.builder()//
-                .bold(true)//
-                .fontsize(15)//
-                .build();
-
-        TextFormat responseNewFormat = storage.add(format);
-        assertNotNull(responseNewFormat);
-        assertSame(responseFormat, responseNewFormat);
-    }
-
-    @Test
-    void testSetBold() {
-        TextFormat format = TextFormat.builder()//
-                .bold(false)//
-                .build();
-
-        format = storage.add(format);
-
-        TextFormat responseFormat = storage.setBold(format, true);
-        assertNotNull(responseFormat);
-        assertTrue(responseFormat.getBold().booleanValue());
-
-        format = TextFormat.builder()//
-                .bold(true)//
-                .build();
-
-        TextFormat responseNewFormat = storage.add(format);
-        assertNotNull(responseNewFormat);
-        assertSame(responseFormat, responseNewFormat);
-    }
-
-    @Test
-    void testSetFontName() {
-        TextFormat format = TextFormat.builder()//
-                .bold(true)//
-                .build();
-
-        format = storage.add(format);
-
-        TextFormat responseFormat = storage.setFontName(format, "Example");
-        assertNotNull(responseFormat);
-        assertEquals("Example", responseFormat.getFontName());
-
-        format = TextFormat.builder()//
-                .bold(true)//
-                .fontName("Example")//
-                .build();
-
-        TextFormat responseNewFormat = storage.add(format);
-        assertNotNull(responseNewFormat);
-        assertSame(responseFormat, responseNewFormat);
-    }
-
-    @Test
-    void testSetItalic() {
-        TextFormat format = TextFormat.builder()//
-                .bold(false)//
-                .italic(false)//
-                .build();
-
-        format = storage.add(format);
-
-        TextFormat responseFormat = storage.setItalic(format, true);
-        assertNotNull(responseFormat);
-        assertTrue(responseFormat.getItalic().booleanValue());
-
-        format = TextFormat.builder()//
-                .bold(false)//
-                .italic(true)//
-                .build();
-
-        TextFormat responseNewFormat = storage.add(format);
-        assertNotNull(responseNewFormat);
-        assertSame(responseFormat, responseNewFormat);
     }
 
     @Test

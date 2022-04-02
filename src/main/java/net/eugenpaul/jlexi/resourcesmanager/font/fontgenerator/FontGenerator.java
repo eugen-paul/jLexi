@@ -33,8 +33,8 @@ public class FontGenerator implements FontPixelsGenerator {
 
     @Override
     public int getStyle(TextFormat format) {
-        return ((format.getBold() != null && format.getBold().booleanValue()) ? Font.BOLD : 0)//
-                | ((format.getItalic() != null && format.getItalic().booleanValue()) ? Font.ITALIC : 0)//
+        return ((format.getBold().booleanValue()) ? Font.BOLD : 0)//
+                | ((format.getItalic().booleanValue()) ? Font.ITALIC : 0)//
         ;
     }
 
@@ -56,7 +56,9 @@ public class FontGenerator implements FontPixelsGenerator {
         // create a Graphics2D object from the BufferedImage
         Graphics2D g2d = bi.createGraphics();
         g2d.setFont(font);
-        g2d.setColor(Color.black);
+        g2d.setColor(convertColor(format.getBackgroundColor()));
+        g2d.fillRect(0, 0, width, height);
+        g2d.setColor(convertColor(format.getFontColor()));
         g2d.drawString(c + "", 0, height - metrics.getDescent() + 1);
         g2d.dispose();
 
@@ -93,6 +95,15 @@ public class FontGenerator implements FontPixelsGenerator {
         }
 
         return result;
+    }
+
+    private Color convertColor(net.eugenpaul.jlexi.utils.Color color) {
+        return new Color(//
+                color.getR(), //
+                color.getG(), //
+                color.getB(), //
+                color.getA() //
+        );
     }
 
 }

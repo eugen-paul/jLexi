@@ -17,6 +17,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.FormatterCreator;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
+import net.eugenpaul.jlexi.utils.Color;
 
 public class FormatStorageImpl implements FormatStorage {
 
@@ -26,7 +27,9 @@ public class FormatStorageImpl implements FormatStorage {
     private Map<Integer, // Style
             Map<String, // FontName
                     Map<Integer, // Size
-                            TextFormat>>> storage;
+                            Map<Color, // FontColor
+                                    Map<Color, // BackgroundColor
+                                            TextFormat>>>>> storage;
 
     private EnumMap<FormatterType, FormatterCreator> formatter;
     private Map<TextFormatEffect, TextFormatEffect> formatEffekts;
@@ -49,7 +52,9 @@ public class FormatStorageImpl implements FormatStorage {
         return storage//
                 .computeIfAbsent(getStyle(format), key -> new HashMap<>())//
                 .computeIfAbsent(format.getFontName(), key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontsize(), key -> format);
+                .computeIfAbsent(format.getFontsize(), key -> new HashMap<>())//
+                .computeIfAbsent(format.getFontColor(), key -> new HashMap<>())//
+                .computeIfAbsent(format.getBackgroundColor(), key -> format);
     }
 
     private static int getStyle(TextFormat format) {
@@ -60,66 +65,6 @@ public class FormatStorageImpl implements FormatStorage {
         return ((bold != null && bold.booleanValue()) ? 1 : 0)//
                 | ((italic != null && italic.booleanValue()) ? 2 : 0)//
         ;
-    }
-
-    @Override
-    public TextFormat setFontSize(@NonNull TextFormat format, int size) {
-        return storage//
-                .computeIfAbsent(getStyle(format), key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontName(), key -> new HashMap<>())//
-                .computeIfAbsent(size, key -> //
-                TextFormat.builder()//
-                        .fontName(format.getFontName())//
-                        .fontsize(size)//
-                        .bold(format.getBold())//
-                        .italic(format.getItalic())//
-                        .build()//
-                );
-    }
-
-    @Override
-    public TextFormat setFontName(@NonNull TextFormat format, @NonNull String fontName) {
-        return storage//
-                .computeIfAbsent(getStyle(format), key -> new HashMap<>())//
-                .computeIfAbsent(fontName, key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontsize(), key -> //
-                TextFormat.builder()//
-                        .fontName(fontName)//
-                        .fontsize(format.getFontsize())//
-                        .bold(format.getBold())//
-                        .italic(format.getItalic())//
-                        .build()//
-                );
-    }
-
-    @Override
-    public TextFormat setBold(@NonNull TextFormat format, boolean bold) {
-        return storage//
-                .computeIfAbsent(getStyle(bold, format.getItalic()), key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontName(), key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontsize(), key -> //
-                TextFormat.builder()//
-                        .fontName(format.getFontName())//
-                        .fontsize(format.getFontsize())//
-                        .bold(bold)//
-                        .italic(format.getItalic())//
-                        .build()//
-                );
-    }
-
-    @Override
-    public TextFormat setItalic(@NonNull TextFormat format, boolean italic) {
-        return storage//
-                .computeIfAbsent(getStyle(format.getBold(), italic), key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontName(), key -> new HashMap<>())//
-                .computeIfAbsent(format.getFontsize(), key -> //
-                TextFormat.builder()//
-                        .fontName(format.getFontName())//
-                        .fontsize(format.getFontsize())//
-                        .bold(format.getBold())//
-                        .italic(italic)//
-                        .build()//
-                );
     }
 
     @Override

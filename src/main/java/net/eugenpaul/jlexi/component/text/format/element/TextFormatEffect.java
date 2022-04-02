@@ -23,8 +23,6 @@ import net.eugenpaul.jlexi.utils.Color;
 @EqualsAndHashCode
 public class TextFormatEffect {
 
-    public static final Color DEFAULT_FONT_COLOR = Color.WHITE;
-    public static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
     public static final FormatUnderlineType DEFAULT_UNDERLINE = FormatUnderlineType.NONE;
     public static final Color DEFAULT_UNDERLINE_COLOR = Color.BLACK;
 
@@ -38,14 +36,6 @@ public class TextFormatEffect {
     @Builder.Default
     @With
     private Color underlineColor = DEFAULT_UNDERLINE_COLOR;
-
-    @Builder.Default
-    @With
-    private Color fontColor = DEFAULT_FONT_COLOR;
-
-    @Builder.Default
-    @With
-    private Color backgroundColor = DEFAULT_BACKGROUND_COLOR;
 
     @Getter(lombok.AccessLevel.NONE)
     @Exclude
@@ -61,8 +51,6 @@ public class TextFormatEffect {
         public TextFormatEffectBuilder textFormatEffect(TextFormatEffect original) {
             underline(original.underline);
             underlineColor(original.underlineColor);
-            fontColor(original.fontColor);
-            backgroundColor(original.backgroundColor);
             return this;
         }
     }

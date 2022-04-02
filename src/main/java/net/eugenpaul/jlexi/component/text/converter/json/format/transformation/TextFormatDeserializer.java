@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.utils.Color;
 
 public class TextFormatDeserializer extends JsonDeserializer<TextFormat> {
 
@@ -22,6 +23,8 @@ public class TextFormatDeserializer extends JsonDeserializer<TextFormat> {
         Boolean italic = null;
         Integer fontsize = null;
         String fontName = null;
+        Color fontColor = null;
+        Color backgroundColor = null;
 
         var builder = TextFormat.builder();
         if (node.has("bold")) {
@@ -39,6 +42,14 @@ public class TextFormatDeserializer extends JsonDeserializer<TextFormat> {
         if (node.has("fontName")) {
             fontName = node.get("fontName").asText();
             builder.fontName(fontName);
+        }
+        if (node.has("fontColor")) {
+            fontColor = Color.fromText(node.get("fontColor").asText());
+            builder.fontColor(fontColor);
+        }
+        if (node.has("backgroundColor")) {
+            backgroundColor = Color.fromText(node.get("backgroundColor").asText());
+            builder.backgroundColor(backgroundColor);
         }
 
         return builder.build();
