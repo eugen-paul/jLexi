@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.utils;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.With;
 
 /**
  * Immutable size of the Element. width or height cann't be negative. Negative value will be sets to 0;
@@ -14,8 +15,10 @@ public class Size {
     public static final Size ZERO_MAX = new Size(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     /** width of the element */
+    @With
     private int width;
     /** height of the element */
+    @With
     private int height;
 
     public Size(int width, int height) {

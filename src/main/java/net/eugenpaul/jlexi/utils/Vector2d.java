@@ -75,6 +75,12 @@ public class Vector2d {
         return this;
     }
 
+    public Vector2d add(Size addSize) {
+        x += addSize.getWidth();
+        y += addSize.getHeight();
+        return this;
+    }
+
     public Size toSize() {
         return new Size(x, y);
     }

@@ -13,7 +13,6 @@ import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
 import net.eugenpaul.jlexi.component.interfaces.Resizeable;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.Button;
@@ -76,15 +75,13 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
     private void initMenu() {
         GuiFactory factory = new DarkFactory();
 
-        Button boldButton = factory.createButton(this, TextFormat.DEFAULT, resourceManager);
-        boldButton.setLabel("B");
+        Button boldButton = factory.createButton(this, "B", resourceManager);
         boldButton.setTextFormat(boldButton.getFormat().withBold(true));
         boldButton.setSize(new Size(20, 20));
         menuButtons.add(boldButton);
 
-        Button italicButton = factory.createButton(this, TextFormat.DEFAULT, resourceManager);
-        italicButton.setLabel("I");
-        italicButton.setTextFormat(italicButton.getFormat().withItalic(true));
+        Button italicButton = factory.createButton(this, "I", resourceManager);
+        boldButton.setTextFormat(boldButton.getFormat().withItalic(true));
         italicButton.setSize(new Size(20, 20));
         menuButtons.add(italicButton);
     }

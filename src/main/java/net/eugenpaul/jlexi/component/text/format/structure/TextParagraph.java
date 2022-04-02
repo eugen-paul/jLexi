@@ -21,12 +21,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     protected TextCompositor<TextElement> compositor;
     private LinkedList<TextElement> textElements;
 
-    public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage,
-            LinkedList<TextElement> children) {
-        super(parentStructure, format, storage);
-        this.textElements = children;
-        this.compositor = new TextElementToRowCompositor<>();
-    }
+    private boolean needRestruct = true;
 
     public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
         super(parentStructure, format, storage);
@@ -45,14 +40,9 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     @Override
     public List<TextStructureForm> getRows(Size size) {
         if (null == structureForm) {
-            Iterator<TextElement> elIterator = getCompositorIterator();
-            structureForm = compositor.compose(elIterator, size);
+            structureForm = compositor.compose(textElements.iterator(), size);
         }
         return structureForm;
-    }
-
-    private Iterator<TextElement> getCompositorIterator() {
-        return textElements.iterator();
     }
 
     @Override
@@ -62,9 +52,15 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
 
     @Override
     protected void restructChildren() {
+        if (!needRestruct) {
+            return;
+        }
+
         checkAndSplit();
 
         checkAndMergeWithNext();
+
+        needRestruct = false;
     }
 
     private void checkAndSplit() {
@@ -97,6 +93,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     public void add(TextElement element) {
         textElements.add(element);
         element.setStructureParent(this);
+
+        setRestructIfNeedet(element);
     }
 
     private void checkAndMergeWithNext() {
@@ -173,10 +171,18 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                 iterator.previous();
                 iterator.add(element);
                 element.setStructureParent(this);
+
+                setRestructIfNeedet(element);
                 return true;
             }
         }
         return false;
+    }
+
+    private void setRestructIfNeedet(TextElement addetElement) {
+        if (addetElement.isEndOfLine()) {
+            needRestruct = true;
+        }
     }
 
     private TextParagraph getNextParagraph() {
