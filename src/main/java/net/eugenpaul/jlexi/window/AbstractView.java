@@ -1,15 +1,14 @@
 package net.eugenpaul.jlexi.window;
 
-import java.beans.PropertyChangeEvent;
-
 import net.eugenpaul.jlexi.controller.AbstractController;
+import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
 
 /**
  * AbstractView to display Data.
  * <p>
  * This is a View of MVC
  */
-public abstract class AbstractView {
+public abstract class AbstractView implements ModelPropertyChangeListner {
 
     protected AbstractController controller;
 
@@ -36,10 +35,4 @@ public abstract class AbstractView {
      */
     public abstract void setVisible(boolean status);
 
-    /**
-     * callback function, that will be called by changes in model.
-     * 
-     * @param evt
-     */
-    public abstract void modelPropertyChange(final PropertyChangeEvent evt);
 }

@@ -16,12 +16,9 @@ import net.eugenpaul.jlexi.component.interfaces.Resizeable;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.Button;
-import net.eugenpaul.jlexi.design.GuiFactory;
-import net.eugenpaul.jlexi.design.dark.DarkFactory;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.RedrawData;
-import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -50,40 +47,27 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
 
     private List<Button> menuButtons;
 
-    private ResourceManager resourceManager;
-
     /**
      * C'tor
      * 
      * @param component
      */
-    public MenuBar(String name, Glyph parent, Glyph component, Size size, AbstractController controller,
-            ResourceManager resourceManager) {
+    public MenuBar(String name, Glyph parent, Glyph component, Size size, AbstractController controller) {
         super(parent, component);
         this.name = name;
-        this.resourceManager = resourceManager;
         component.setParent(this);
         component.setRelativPosition(new Vector2d(0, MENUBAR_HEIGHT));
         setSize(size);
         this.controller = controller;
         this.menuButtons = new LinkedList<>();
 
-        initMenu();
         computePixels();
     }
 
-    private void initMenu() {
-        GuiFactory factory = new DarkFactory();
-
-        Button boldButton = factory.createButton(this, "B", resourceManager);
-        boldButton.setTextFormat(boldButton.getFormat().withBold(true));
-        boldButton.setSize(new Size(20, 20));
-        menuButtons.add(boldButton);
-
-        Button italicButton = factory.createButton(this, "I", resourceManager);
-        boldButton.setTextFormat(boldButton.getFormat().withItalic(true));
-        italicButton.setSize(new Size(20, 20));
-        menuButtons.add(italicButton);
+    public boolean addMenuButton(Button button) {
+        menuButtons.add(button);
+        computePixels();
+        return true;
     }
 
     private void computePixels() {
@@ -170,7 +154,12 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
             for (Button menuButton : menuButtons) {
                 if (CollisionHelper.isPointOnArea(mouseX, mouseY, menuButton.getRelativPosition(),
                         menuButton.getSize())) {
-                    menuButton.press();
+                    menuButton.onMouseClick(//
+                            name, //
+                            mouseX - menuButton.getRelativPosition().getX(), //
+                            mouseY - menuButton.getRelativPosition().getY(), //
+                            button //
+                    );
                     return;
                 }
             }

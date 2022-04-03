@@ -37,14 +37,14 @@ public class AbstractKeyHandler {
         }
 
         var cursor = component.getMouseCursor();
-        var element = cursor.getCurrentGlyph();
+        var element = cursor.getTextElement();
         var parentStructure = element.getStructureParent();
         if (null == parentStructure) {
             return;
         }
 
         var addCommand = new TextAddBeforeCommand(//
-                List.of(TextElementFactory.fromChar(null, storage, parentStructure, key, element.getFormat(),
+                List.of(TextElementFactory.fromChar(null, storage, parentStructure, key, cursor.getTextFormat(),
                         element.getFormatEffect())), //
                 element);
 
@@ -133,14 +133,14 @@ public class AbstractKeyHandler {
 
     private void keyPressedEnter() {
         var cursor = component.getMouseCursor();
-        var element = cursor.getCurrentGlyph();
+        var element = cursor.getTextElement();
         var parentStructure = element.getStructureParent();
         if (null == parentStructure) {
             return;
         }
 
         var addCommand = new TextAddBeforeCommand(//
-                List.of(TextElementFactory.genNewLineChar(null, storage, parentStructure, element.getFormat(),
+                List.of(TextElementFactory.genNewLineChar(null, storage, parentStructure, cursor.getTextFormat(),
                         element.getFormatEffect())), //
                 element);
 
@@ -155,7 +155,7 @@ public class AbstractKeyHandler {
 
     private void keyPressedDelete() {
         var cursor = component.getMouseCursor();
-        var element = cursor.getCurrentGlyph();
+        var element = cursor.getTextElement();
 
         var deleteCommand = new TextRemoveCommant(List.of(element));
         doTextCommant(deleteCommand);
@@ -174,16 +174,16 @@ public class AbstractKeyHandler {
         TextElement el = null;
         switch (keyCode) {
         case RIGHT:
-            el = structureForm.getNext(cursor.getCurrentGlyph());
+            el = structureForm.getNext(cursor.getTextElement());
             break;
         case LEFT:
-            el = structureForm.getPrevious(cursor.getCurrentGlyph(), moveForDelete);
+            el = structureForm.getPrevious(cursor.getTextElement(), moveForDelete);
             break;
         case UP:
-            el = structureForm.getUp(cursor.getCurrentGlyph());
+            el = structureForm.getUp(cursor.getTextElement());
             break;
         case DOWN:
-            el = structureForm.getDown(cursor.getCurrentGlyph());
+            el = structureForm.getDown(cursor.getTextElement());
             break;
         default:
             break;

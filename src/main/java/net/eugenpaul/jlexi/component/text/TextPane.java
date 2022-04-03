@@ -26,6 +26,7 @@ import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
+import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.effect.EffectController;
@@ -62,7 +63,7 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
     private String name;
 
-    public TextPane(String name, Glyph parent, ResourceManager storage, EffectController effectWorker) {
+    public TextPane(String name, Glyph parent, ResourceManager storage, AbstractController controller) {
         super(parent);
         this.name = name;
         this.storage = storage;
@@ -85,7 +86,7 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
         this.yPositionToSite = new TreeMap<>();
 
-        this.mouseCursor = new Cursor(null, null, effectWorker);
+        this.mouseCursor = new Cursor(null, null, controller, "textPaneCursor");
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
 

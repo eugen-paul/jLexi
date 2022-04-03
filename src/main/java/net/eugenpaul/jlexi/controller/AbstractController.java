@@ -23,7 +23,6 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Area;
-import net.eugenpaul.jlexi.window.AbstractView;
 import net.eugenpaul.jlexi.window.Window;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
@@ -40,7 +39,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
-    private List<AbstractView> registeredViews;
+    private List<ModelPropertyChangeListner> registeredViews;
     private List<InterfaceModel> registeredModels;
 
     private Map<String, Window> windowsMap;
@@ -68,7 +67,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * 
      * @param view
      */
-    public void addView(AbstractView view) {
+    public void addView(ModelPropertyChangeListner view) {
         registeredViews.add(view);
     }
 
@@ -77,7 +76,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * 
      * @param view
      */
-    public void removeView(AbstractView view) {
+    public void removeView(ModelPropertyChangeListner view) {
         registeredViews.remove(view);
     }
 

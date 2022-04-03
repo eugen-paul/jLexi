@@ -1,80 +1,90 @@
 package net.eugenpaul.jlexi.design;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
+import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
-import net.eugenpaul.jlexi.utils.Color;
-import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public abstract class Button extends Glyph {
+public abstract class Button extends Glyph implements MouseClickable {
 
-    private Label text;
+    @Setter(value = AccessLevel.PROTECTED)
+    private GlyphCompositor<Glyph> compositor;
 
-    private Color backgroundColor;
-    private GlyphCompositor<Label> compositor;
+    @Getter(value = AccessLevel.PROTECTED)
+    private List<Glyph> elements;
 
-    protected Button(Glyph parent, String text, TextFormat format, ResourceManager storage) {
+    @Getter
+    @Setter
+    protected ButtonState state;
+
+    @Setter
+    protected MouseEventAdapter mouseEventAdapter;
+
+    protected Button(Glyph parent, List<Glyph> elements, GlyphCompositor<Glyph> compositor) {
         super(parent);
-        this.backgroundColor = format.getBackgroundColor();
-        this.text = new Label(this, text, format, storage);
-        this.compositor = new CentralGlypthCompositor<>(this.backgroundColor);
+        this.state = ButtonState.NORMAL;
+        this.elements = elements;
+        this.compositor = compositor;
+
+        this.mouseEventAdapter = new MouseEventAdapter() {
+
+        };
     }
 
-    /**
-     * Will be call by pressing the Button
-     */
-    public abstract void press();
-
-    public void setLabel(String text) {
-        this.text.setText(text);
+    protected Button(Glyph parent) {
+        this(parent, new LinkedList<>(), null);
     }
 
-    @Override
-    public void setSize(Size size) {
-        super.setSize(size);
-        text.setSize(size);
-    }
-
-    public String getLabel() {
-        return text.getText();
-    }
-
-    public void setTextFormat(TextFormat format) {
-        this.text.setTextFormat(format);
-    }
-
-    public TextFormat getFormat() {
-        return text.getFormat();
+    public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
+        mouseEventAdapter.mouseClicked(button);
     }
 
     @Override
     public Drawable getPixels() {
-        List<Glyph> glyph = compositor.compose(List.of(text).iterator(), size);
+        if (cachedDrawable != null) {
+            return cachedDrawable;
+        }
+
+        if (compositor == null) {
+            return DrawableImpl.EMPTY_DRAWABLE;
+        }
+
+        List<Glyph> glyph = compositor.compose(elements.iterator(), size);
 
         if (glyph.isEmpty()) {
             return DrawableImpl.EMPTY_DRAWABLE;
         }
 
-        return glyph.get(0).getPixels();
+        cachedDrawable = glyph.get(0).getPixels();
+        return cachedDrawable;
     }
 
     @Override
     public Iterator<Glyph> iterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return elements.iterator();
     }
 
     @Override
     public void visit(Visitor checker) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void redraw() {
+        cachedDrawable = null;
+        if (parent != null) {
+            parent.notifyRedraw(getPixels(), getRelativPosition(), size);
+        }
     }
 }

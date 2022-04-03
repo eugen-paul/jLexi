@@ -24,7 +24,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 public class Label extends Glyph {
 
     @Getter
-    private TextFormat format;
+    private TextFormat textFormat;
     private ResourceManager storage;
 
     @Getter
@@ -33,12 +33,12 @@ public class Label extends Glyph {
 
     private TextCompositor<TextStructureForm> compositor;
 
-    public Label(Glyph parent, String text, TextFormat format, ResourceManager storage) {
+    public Label(Glyph parent, String text, TextFormat textFormat, ResourceManager storage) {
         super(parent);
-        this.format = format;
+        this.textFormat = textFormat;
         this.storage = storage;
         this.text = text;
-        this.textElement = new TextParagraph(null, format, storage);
+        this.textElement = new TextParagraph(null, textFormat, storage);
         compositor = new TextStructureFormToColumnCompositor();
         setText(text);
     }
@@ -54,7 +54,7 @@ public class Label extends Glyph {
                             storage, //
                             null, //
                             c, //
-                            format, //
+                            textFormat, //
                             TextFormatEffect.DEFAULT_FORMAT_EFFECT//
                     )//
             );
@@ -63,7 +63,7 @@ public class Label extends Glyph {
     }
 
     public void setTextFormat(TextFormat format) {
-        this.format = storage.getFormats().add(format);
+        this.textFormat = storage.getFormats().add(format);
         setText(text);
     }
 

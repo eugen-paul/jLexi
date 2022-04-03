@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi;
 import java.io.File;
 
 import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.design.dark.DarkFactory;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -27,7 +28,8 @@ public class JLexi {
         MainWindow mainWindow = new MainWindow(//
                 "MainWindow", //
                 controller, //
-                storage //
+                storage, //
+                new DarkFactory() //
         );
 
         mainWindow.createWindow();
