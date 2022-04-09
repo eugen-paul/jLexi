@@ -18,8 +18,6 @@ public abstract class ApplicationWindow extends Window {
                 factory.createApplicationWindow().apply(controller), //
                 controller //
         );
-
-        this.focusOn = null;
     }
 
 }

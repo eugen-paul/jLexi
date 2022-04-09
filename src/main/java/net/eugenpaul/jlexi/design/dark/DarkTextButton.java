@@ -20,22 +20,22 @@ public class DarkTextButton extends TextButton {
 
     @Override
     protected Color getBgColorNormal() {
-        return DarkFactory.BACKGROUND_COLOR;
+        return DarkFactory.BUTTON_BACKGROUND_COLOR;
     }
 
     @Override
     protected Color getBgColorFocus() {
-        return DarkFactory.BACKGROUND_FOCUS_COLOR;
+        return DarkFactory.BUTTON_BACKGROUND_FOCUS_COLOR;
     }
 
     @Override
     protected Color getBgColorPush() {
-        return DarkFactory.BACKGROUND_PUSH_COLOR;
+        return DarkFactory.BUTTON_BACKGROUND_PUSH_COLOR;
     }
 
     @Override
     protected Color getBgColorCheck() {
-        return DarkFactory.BACKGROUND_CHECK_COLOR;
+        return DarkFactory.BUTTON_BACKGROUND_CHECK_COLOR;
     }
 
 }

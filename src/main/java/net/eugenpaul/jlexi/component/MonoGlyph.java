@@ -1,9 +1,8 @@
-package net.eugenpaul.jlexi.component.framing;
+package net.eugenpaul.jlexi.component;
 
 import java.util.Collections;
 import java.util.Iterator;
 
-import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;

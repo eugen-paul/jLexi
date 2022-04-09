@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import net.eugenpaul.jlexi.component.border.Border;
 import net.eugenpaul.jlexi.component.button.TextButton;
-import net.eugenpaul.jlexi.component.framing.Border;
-import net.eugenpaul.jlexi.component.framing.MenuBar;
+import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
 import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
@@ -27,9 +27,9 @@ public class MainWindow extends ApplicationWindow {
 
     private ResourceManager storage;
     private String textPaneName;
-    private GuiFactory factory;
+    private GuiFactory guiFactory;
 
-    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory factory) {
+    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory guiFactory) {
         super(//
                 name, //
                 controller, //
@@ -37,16 +37,16 @@ public class MainWindow extends ApplicationWindow {
         );
 
         this.storage = storage;
-        this.factory = factory;
+        this.guiFactory = guiFactory;
         this.textPaneName = name + DEFAULT_TEXT_PANE_SUFFIX;
     }
 
     @Override
     protected void setContent() {
         TextPane textPane = new TextPane(name, null, storage, controller);
-        Border border = new Border(null, textPane);
+        Border border = guiFactory.createBorder(null, textPane);
 
-        MenuBar menubar = new MenuBar(null, border, size, controller);
+        MenuBar menubar = guiFactory.createMenuBar(null, border, size);
         initMenu(menubar, textPane.getCursorName());
         menubar.setParent(this);
         menubar.setRelativPosition(Vector2d.zero());
@@ -63,7 +63,7 @@ public class MainWindow extends ApplicationWindow {
     }
 
     private void initMenu(MenuBar menubar, String cursorName) {
-        TextButton boldButton = factory.createTextButton(menubar, "B", storage);
+        TextButton boldButton = guiFactory.createTextButton(menubar, "B", storage);
         boldButton.setTextFormat(boldButton.getTextFormat().withBold(true));
         boldButton.setSize(new Size(20, 20));
         menubar.addMenuButton(boldButton);
@@ -74,7 +74,7 @@ public class MainWindow extends ApplicationWindow {
         MouseEventAdapter mouseEventAdapter = new BoldActivate(cursorName, boldButton, this.controller);
         boldButton.setMouseEventAdapter(mouseEventAdapter);
 
-        TextButton italicButton = factory.createTextButton(menubar, "I", storage);
+        TextButton italicButton = guiFactory.createTextButton(menubar, "I", storage);
         boldButton.setTextFormat(boldButton.getTextFormat().withItalic(true));
         italicButton.setSize(new Size(20, 20));
         menubar.addMenuButton(italicButton);
