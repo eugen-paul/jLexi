@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.component.framing;
 
-import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,17 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.button.Button;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
 import net.eugenpaul.jlexi.component.interfaces.Resizeable;
 import net.eugenpaul.jlexi.controller.AbstractController;
-import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.design.Button;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.draw.RedrawData;
-import net.eugenpaul.jlexi.utils.Area;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -34,16 +31,15 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
-    private static final int MENUBAR_HEIGHT = 40;
-    private static final int MENUBAR_BACKGROUND = 0xFF00FF00;
-
     private static final int[] EMPTY_MENUBAR = new int[0];
     private static final Drawable EMPTY_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
 
     private int[] menuBackground;
     private AbstractController controller;
 
-    private final String name;
+    private Color backgroundColor = Color.WHITE;
+    private int menubarHeight = 0;
+    private int menubarPadding = 2;
 
     private List<Button> menuButtons;
 
@@ -52,33 +48,40 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
      * 
      * @param component
      */
-    public MenuBar(String name, Glyph parent, Glyph component, Size size, AbstractController controller) {
+    public MenuBar(Glyph parent, Glyph component, Size size, AbstractController controller) {
         super(parent, component);
-        this.name = name;
         component.setParent(this);
-        component.setRelativPosition(new Vector2d(0, MENUBAR_HEIGHT));
+        component.setRelativPosition(new Vector2d(0, menubarHeight));
         setSize(size);
         this.controller = controller;
         this.menuButtons = new LinkedList<>();
 
-        computePixels();
+        computeBackground();
     }
 
     public boolean addMenuButton(Button button) {
         menuButtons.add(button);
-        computePixels();
+
+        menubarHeight = menuButtons.stream().map(v -> v.getSize().getHeight()).reduce(0, Math::max);
+        if (menubarHeight > 0) {
+            menubarHeight += menubarPadding * 2;
+        }
+
+        component.setRelativPosition(new Vector2d(0, menubarHeight));
+
+        computeBackground();
         return true;
     }
 
-    private void computePixels() {
+    private void computeBackground() {
         if (component instanceof Resizeable) {
             Resizeable child = (Resizeable) component;
-            child.resizeTo(name, getSize().getWidth(), Math.max(0, getSize().getHeight() - MENUBAR_HEIGHT));
+            child.resizeTo(getSize().getWidth(), Math.max(0, getSize().getHeight() - menubarHeight));
         }
 
         this.menuBackground = generateMenuBackground(//
                 getSize().getWidth(), //
-                Math.min(getSize().getHeight(), MENUBAR_HEIGHT)//
+                Math.min(getSize().getHeight(), menubarHeight)//
         );
     }
 
@@ -96,7 +99,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
 
         cachedDrawable = new DrawableImpl(responsePixels, getSize());
 
-        Vector2d pos = new Vector2d(5, 5);
+        Vector2d pos = new Vector2d(menubarPadding, menubarPadding);
         for (Button button : menuButtons) {
             ImageArrayHelper.copyRectangle(//
                     button.getPixels(), //
@@ -104,7 +107,7 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
                     pos//
             );
             button.setRelativPosition(new Vector2d(pos));
-            pos.setX(pos.getX() + button.getSize().getWidth() + 5);
+            pos.setX(pos.getX() + button.getSize().getWidth() + menubarPadding);
         }
 
         System.arraycopy(//
@@ -118,25 +121,21 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
         return cachedDrawable;
     }
 
-    private static int[] generateMenuBackground(int w, int h) {
+    private int[] generateMenuBackground(int w, int h) {
         if (0 == w || 0 == h) {
             return EMPTY_MENUBAR;
         }
 
         int[] responsePixels = new int[h * w];
-        Arrays.fill(responsePixels, MENUBAR_BACKGROUND);
+        Arrays.fill(responsePixels, backgroundColor.getARGB());
         return responsePixels;
     }
 
     @Override
-    public void resizeTo(String name, Size newSize) {
-        if (!name.equals(this.name) || getSize().equals(newSize)) {
-            return;
-        }
-
+    public void resizeTo(Size newSize) {
         setSize(newSize);
 
-        computePixels();
+        computeBackground();
 
         getPixels();
 
@@ -144,18 +143,13 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
     }
 
     @Override
-    public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
-        if (!name.equals(this.name)) {
-            return;
-        }
-
-        if (mouseY <= MENUBAR_HEIGHT) {
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+        if (mouseY <= menubarHeight) {
             LOGGER.trace("Click on Menu. Position ({},{}).", mouseX, mouseY);
             for (Button menuButton : menuButtons) {
                 if (CollisionHelper.isPointOnArea(mouseX, mouseY, menuButton.getRelativPosition(),
                         menuButton.getSize())) {
                     menuButton.onMouseClick(//
-                            name, //
                             mouseX - menuButton.getRelativPosition().getX(), //
                             mouseY - menuButton.getRelativPosition().getY(), //
                             button //
@@ -165,69 +159,63 @@ public class MenuBar extends MonoGlyph implements GuiComponent {
             }
         } else {
             LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY, mouseX,
-                    mouseY - MENUBAR_HEIGHT);
+                    mouseY - menubarHeight);
             if (component instanceof MouseClickable) {
                 MouseClickable comp = (MouseClickable) component;
-                comp.onMouseClick(name, mouseX, mouseY - MENUBAR_HEIGHT, button);
+                comp.onMouseClick(mouseX, mouseY - menubarHeight, button);
             }
         }
     }
 
     @Override
-    public void onKeyTyped(String name, Character key) {
-        if (!name.equals(this.name)) {
-            return;
-        }
+    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onKeyTyped(Character key) {
 
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
-            comp.onKeyTyped(name, key);
+            comp.onKeyTyped(key);
         }
     }
 
     @Override
-    public void onKeyPressed(String name, KeyCode keyCode) {
-        if (!name.equals(this.name)) {
-            return;
-        }
+    public void onKeyPressed(KeyCode keyCode) {
 
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
-            comp.onKeyPressed(name, keyCode);
+            comp.onKeyPressed(keyCode);
         }
     }
 
     @Override
-    public void onKeyReleased(String name, KeyCode keyCode) {
-        if (!name.equals(this.name)) {
-            return;
-        }
+    public void onKeyReleased(KeyCode keyCode) {
 
         if (component instanceof KeyPressable) {
             KeyPressable comp = (KeyPressable) component;
-            comp.onKeyReleased(name, keyCode);
+            comp.onKeyReleased(keyCode);
         }
     }
 
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
-        return component.getPixels(new Vector2d(position.getX(), position.getY() - MENUBAR_HEIGHT), size);
+        return component.getPixels(new Vector2d(position.getX(), position.getY() - menubarHeight), size);
     }
 
     @Override
     public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
-        LOGGER.trace("Menubar send notifyRedraw Data to window");
-
-        controller.propertyChange(new PropertyChangeEvent(//
-                name, //
-                ViewPropertyChangeType.DRAW_AREA.getTypeName(), //
-                null, //
-                new RedrawData(//
-                        name, //
-                        drawData, //
-                        new Area(relativPosition.addNew(this.relativPosition), size)//
-                ) //
-        ));
+        if (parent != null) {
+            parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
+        }
     }
 
     @Override

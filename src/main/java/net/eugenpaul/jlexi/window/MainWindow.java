@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.framing.Border;
 import net.eugenpaul.jlexi.component.framing.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
@@ -14,10 +15,10 @@ import net.eugenpaul.jlexi.component.text.keyhandler.ItalicFormatChangeListner;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.GuiFactory;
-import net.eugenpaul.jlexi.design.TextButton;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class MainWindow extends ApplicationWindow {
 
@@ -43,10 +44,13 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected void setContent() {
         TextPane textPane = new TextPane(name, null, storage, controller);
-        Border border = new Border(name, null, textPane);
+        Border border = new Border(null, textPane);
 
-        MenuBar menubar = new MenuBar(name, null, border, size, controller);
-        initMenu(menubar);
+        MenuBar menubar = new MenuBar(null, border, size, controller);
+        initMenu(menubar, textPane.getCursorName());
+        menubar.setParent(this);
+        menubar.setRelativPosition(Vector2d.zero());
+
         border.setParent(menubar);
 
         controller.addTextPane(textPaneName, textPane);
@@ -55,19 +59,19 @@ public class MainWindow extends ApplicationWindow {
         controller.addModel(this);
 
         focusOn = textPane;
-        mainGlyph = menubar;
+        setMainGlyph(menubar);
     }
 
-    private void initMenu(MenuBar menubar) {
+    private void initMenu(MenuBar menubar, String cursorName) {
         TextButton boldButton = factory.createTextButton(menubar, "B", storage);
         boldButton.setTextFormat(boldButton.getTextFormat().withBold(true));
         boldButton.setSize(new Size(20, 20));
         menubar.addMenuButton(boldButton);
 
-        BoldFormatChangeListner boldListner = new BoldFormatChangeListner(boldButton, "textPaneCursor");
+        BoldFormatChangeListner boldListner = new BoldFormatChangeListner(boldButton, cursorName);
         this.controller.addView(boldListner);
 
-        MouseEventAdapter mouseEventAdapter = new BoldActivate("textPaneCursor", boldButton, this.controller);
+        MouseEventAdapter mouseEventAdapter = new BoldActivate(cursorName, boldButton, this.controller);
         boldButton.setMouseEventAdapter(mouseEventAdapter);
 
         TextButton italicButton = factory.createTextButton(menubar, "I", storage);
@@ -75,10 +79,10 @@ public class MainWindow extends ApplicationWindow {
         italicButton.setSize(new Size(20, 20));
         menubar.addMenuButton(italicButton);
 
-        ItalicFormatChangeListner italicListner = new ItalicFormatChangeListner(italicButton, "textPaneCursor");
+        ItalicFormatChangeListner italicListner = new ItalicFormatChangeListner(italicButton, cursorName);
         this.controller.addView(italicListner);
 
-        mouseEventAdapter = new ItalicActivate("textPaneCursor", italicButton, this.controller);
+        mouseEventAdapter = new ItalicActivate(cursorName, italicButton, this.controller);
         italicButton.setMouseEventAdapter(mouseEventAdapter);
     }
 

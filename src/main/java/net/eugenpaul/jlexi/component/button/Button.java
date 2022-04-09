@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.design;
+package net.eugenpaul.jlexi.component.button;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -46,8 +46,19 @@ public abstract class Button extends Glyph implements MouseClickable {
         this(parent, new LinkedList<>(), null);
     }
 
-    public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
+    @Override
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
         mouseEventAdapter.mouseClicked(button);
+    }
+
+    @Override
+    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+        mouseEventAdapter.mousePressed(button);
+    }
+
+    @Override
+    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+        mouseEventAdapter.mouseReleased(button);
     }
 
     @Override

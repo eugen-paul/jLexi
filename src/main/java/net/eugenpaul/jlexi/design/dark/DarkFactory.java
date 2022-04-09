@@ -1,10 +1,10 @@
 package net.eugenpaul.jlexi.design.dark;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.button.TextButton;
+import net.eugenpaul.jlexi.component.label.Label;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.design.GuiFactory;
-import net.eugenpaul.jlexi.design.Label;
-import net.eugenpaul.jlexi.design.TextButton;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 

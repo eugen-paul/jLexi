@@ -3,9 +3,9 @@ package net.eugenpaul.jlexi.design.listener;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 
 public interface MouseClickListener {
-    public void mouseClicked(MouseButton button);
+    void mouseClicked(MouseButton button);
 
-    public void mousePressed(MouseButton button);
+    void mousePressed(MouseButton button);
 
-    public void mouseReleased(MouseButton button);
+    void mouseReleased(MouseButton button);
 }

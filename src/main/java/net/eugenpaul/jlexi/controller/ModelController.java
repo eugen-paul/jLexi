@@ -43,8 +43,16 @@ public class ModelController extends AbstractController {
      * @param mouseY the horizontal y position of the event relative to the window component.
      * @param button which, if any, of the mouse buttons has changed state.
      */
-    public void clickOnWindow(String name, int mouseX, int mouseY, MouseButton button) {
+    public void mouseClickOnWindow(String name, int mouseX, int mouseY, MouseButton button) {
         setModelProperty(ModelPropertyChangeType.MOUSE_CLICK, name, mouseX, mouseY, button);
+    }
+
+    public void mousePressedOnWindow(String name, int mouseX, int mouseY, MouseButton button) {
+        setModelProperty(ModelPropertyChangeType.MOUSE_PRESSED, name, mouseX, mouseY, button);
+    }
+
+    public void mouseReleasedOnWindow(String name, int mouseX, int mouseY, MouseButton button) {
+        setModelProperty(ModelPropertyChangeType.MOUSE_RELEASED, name, mouseX, mouseY, button);
     }
 
     public void keyTyped(String name, Character key) {

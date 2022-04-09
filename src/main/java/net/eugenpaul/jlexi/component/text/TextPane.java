@@ -61,11 +61,12 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
     private boolean editMode = false;
 
-    private String name;
+    @Getter
+    private final String cursorName;
 
-    public TextPane(String name, Glyph parent, ResourceManager storage, AbstractController controller) {
+    public TextPane(String cursorPrefix, Glyph parent, ResourceManager storage, AbstractController controller) {
         super(parent);
-        this.name = name;
+        this.cursorName = cursorPrefix + "textPaneCursor";
         this.storage = storage;
         this.compositor = new TextStructureFormToColumnCompositor();
 
@@ -86,11 +87,11 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
         this.yPositionToSite = new TreeMap<>();
 
-        this.mouseCursor = new Cursor(null, null, controller, "textPaneCursor");
+        this.mouseCursor = new Cursor(null, null, controller, this.cursorName);
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
 
-        resizeTo(this.name, Size.ZERO_SIZE);
+        resizeTo(Size.ZERO_SIZE);
     }
 
     @Override
@@ -139,10 +140,17 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
-    public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
-        if (!name.equals(this.name)) {
-            return;
-        }
+    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+        // TODO
+    }
+
+    @Override
+    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+        // TODO
+    }
+
+    @Override
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
 
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
 
@@ -186,22 +194,14 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
-    public void resizeTo(String name, Size size) {
-        if (!name.equals(this.name)) {
-            return;
-        }
-
+    public void resizeTo(Size size) {
         setSize(size);
         cachedDrawable = null;
         document.resetStructure();
     }
 
     @Override
-    public void onKeyTyped(String name, Character key) {
-        if (!name.equals(this.name)) {
-            return;
-        }
-
+    public void onKeyTyped(Character key) {
         LOGGER.trace("Key typed: {}", key);
         editMode = true;
         try {
@@ -213,21 +213,13 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
-    public void onKeyPressed(String name, KeyCode keyCode) {
-        if (!name.equals(this.name)) {
-            return;
-        }
-
+    public void onKeyPressed(KeyCode keyCode) {
         LOGGER.trace("Key pressed: {}", keyCode);
         keyHandler.onKeyPressed(keyCode);
     }
 
     @Override
-    public void onKeyReleased(String name, KeyCode keyCode) {
-        if (!name.equals(this.name)) {
-            return;
-        }
-
+    public void onKeyReleased(KeyCode keyCode) {
         LOGGER.trace("Key released: {}", keyCode);
         keyHandler.onKeyReleased(keyCode);
     }

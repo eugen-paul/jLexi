@@ -3,11 +3,11 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 import java.beans.PropertyChangeEvent;
 
 import lombok.AllArgsConstructor;
+import net.eugenpaul.jlexi.component.button.ButtonState;
+import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.design.ButtonState;
-import net.eugenpaul.jlexi.design.TextButton;
 
 @AllArgsConstructor
 public class ItalicFormatChangeListner implements ModelPropertyChangeListner {

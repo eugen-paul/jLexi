@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.design;
+package net.eugenpaul.jlexi.component.label;
 
 import java.util.Collections;
 import java.util.Iterator;

@@ -3,10 +3,10 @@ package net.eugenpaul.jlexi.window;
 import java.beans.PropertyChangeEvent;
 
 import lombok.AllArgsConstructor;
+import net.eugenpaul.jlexi.component.button.Button;
+import net.eugenpaul.jlexi.component.button.ButtonState;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.design.Button;
-import net.eugenpaul.jlexi.design.ButtonState;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 

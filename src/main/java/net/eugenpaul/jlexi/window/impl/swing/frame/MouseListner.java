@@ -15,6 +15,16 @@ public class MouseListner extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        controller.clickOnWindow(name, e.getX(), e.getY(), MouseButton.ofButton(e.getButton()));
+        controller.mouseClickOnWindow(name, e.getX(), e.getY(), MouseButton.ofButton(e.getButton()));
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        controller.mousePressedOnWindow(name, e.getX(), e.getY(), MouseButton.ofButton(e.getButton()));
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        controller.mouseReleasedOnWindow(name, e.getX(), e.getY(), MouseButton.ofButton(e.getButton()));
     }
 }
