@@ -95,7 +95,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     public Mono<Drawable> getDrawable(String source) {
         return Mono.fromCallable(() -> {
-            Glyph destinationGlyph = windowsMap.get(source).getMainGlyph().getMainGlyph();
+            Glyph destinationGlyph = windowsMap.get(source).getGlyph();
             if (destinationGlyph != null) {
                 return destinationGlyph.getPixels();
             }
@@ -107,7 +107,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     public Mono<Drawable> getDrawableArea(String source, Area area) {
         return Mono.fromCallable(() -> {
-            Glyph destinationGlyph = windowsMap.get(source).getMainGlyph().getMainGlyph();
+            Glyph destinationGlyph = windowsMap.get(source).getGlyph();
             if (destinationGlyph != null) {
                 return destinationGlyph.getPixels(area.getPosition(), area.getSize());
             }

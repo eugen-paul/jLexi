@@ -104,5 +104,4 @@ public class Label extends Glyph {
         // TODO Auto-generated method stub
 
     }
-
 }

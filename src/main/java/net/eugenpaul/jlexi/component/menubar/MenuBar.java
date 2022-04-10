@@ -190,9 +190,4 @@ public abstract class MenuBar extends MonoGlyph implements GuiComponent {
             parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
         }
     }
-
-    @Override
-    public Glyph getMainGlyph() {
-        return this;
-    }
 }

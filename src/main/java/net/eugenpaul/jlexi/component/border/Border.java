@@ -210,17 +210,13 @@ public class Border extends MonoGlyph implements GuiComponent {
         // TODO get Pixels from cachedDrawable
         return component.getPixels(new Vector2d(position.getX() - borderSize, position.getY() - borderSize), size);
     }
-
+    
     @Override
     public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+        // TODO add Pixels to cachedDrawable
         cachedDrawable = null;
         if (parent != null) {
             parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
         }
-    }
-
-    @Override
-    public Glyph getMainGlyph() {
-        return this;
     }
 }

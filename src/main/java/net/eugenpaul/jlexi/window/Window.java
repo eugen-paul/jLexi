@@ -5,7 +5,6 @@ import java.beans.PropertyChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
@@ -42,7 +41,6 @@ public abstract class Window extends MonoGlyph
     protected final ModelController controller;
 
     protected AbstractView view;
-    @Getter
     private GuiComponent mainGlyph;
     protected KeyPressable focusOn;
 
@@ -60,6 +58,10 @@ public abstract class Window extends MonoGlyph
     protected <T extends Glyph & GuiComponent> void setMainGlyph(T glyph) {
         mainGlyph = glyph;
         component = glyph;
+    }
+
+    public Glyph getGlyph() {
+        return component;
     }
 
     public AbstractView createWindow() {
@@ -118,29 +120,29 @@ public abstract class Window extends MonoGlyph
 
     @Override
     public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button) {
-        if (getMainGlyph() != null) {
-            getMainGlyph().onMouseClick(mouseX, mouseY, button);
+        if (mainGlyph != null) {
+            mainGlyph.onMouseClick(mouseX, mouseY, button);
         }
     }
 
     @Override
     public void onMousePressed(String name, Integer mouseX, Integer mouseY, MouseButton button) {
-        if (getMainGlyph() != null) {
-            getMainGlyph().onMousePressed(mouseX, mouseY, button);
+        if (mainGlyph != null) {
+            mainGlyph.onMousePressed(mouseX, mouseY, button);
         }
     }
 
     @Override
     public void onMouseReleased(String name, Integer mouseX, Integer mouseY, MouseButton button) {
-        if (getMainGlyph() != null) {
-            getMainGlyph().onMouseReleased(mouseX, mouseY, button);
+        if (mainGlyph != null) {
+            mainGlyph.onMouseReleased(mouseX, mouseY, button);
         }
     }
 
     @Override
     public void resizeTo(String name, Size size) {
-        if (getMainGlyph() != null) {
-            getMainGlyph().resizeTo(size);
+        if (mainGlyph != null) {
+            mainGlyph.resizeTo(size);
         }
     }
 
