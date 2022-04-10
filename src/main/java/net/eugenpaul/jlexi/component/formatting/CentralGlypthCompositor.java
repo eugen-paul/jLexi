@@ -46,7 +46,7 @@ public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor
             elementSize.add(elementDrawable.getPixelSize());
         }
 
-        Glyph responseGlyph = new SimpleGlyph();
+        SimpleGlyph responseGlyph = new SimpleGlyph();
         Drawable glyphDrawable = new DrawableImpl(maxSize);
 
         ImageArrayHelper.fillRectangle(//
@@ -64,7 +64,7 @@ public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor
                         maxSize.getHeight() / 2 - elementSize.getY() / 2 //
                 ) //
         );
-        responseGlyph.setCachedDrawable(glyphDrawable);
+        responseGlyph.setDrawable(glyphDrawable);
 
         return List.of(responseGlyph);
     }

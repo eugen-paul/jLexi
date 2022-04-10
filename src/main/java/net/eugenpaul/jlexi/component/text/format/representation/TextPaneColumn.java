@@ -9,6 +9,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
@@ -21,6 +22,16 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
     public TextPaneColumn(Glyph parent) {
         super(parent);
         this.yPositionToRow = new TreeMap<>();
+    }
+
+    @Override
+    public void add(TextStructureForm child) {
+        super.add(child);
+        Size currentSize = getSize();
+        setSize(new Size(//
+                Math.max(currentSize.getWidth(), child.getSize().getWidth()), //
+                currentSize.getHeight() + child.getSize().getHeight()//
+        ));
     }
 
     @Override

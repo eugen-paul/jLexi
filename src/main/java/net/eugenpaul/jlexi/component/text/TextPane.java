@@ -105,8 +105,8 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
         }
 
         // we must always draw the full area to override removed objects
-        Size pixelSize = new Size(size.getWidth(), size.getHeight());
-        int[] pixels = new int[size.getWidth() * size.getHeight()];
+        Size pixelSize = size;
+        int[] pixels = new int[(int) pixelSize.compArea()];
         Arrays.fill(pixels, 0);
 
         cachedDrawable = new DrawableImpl(pixels, pixelSize);
@@ -184,6 +184,7 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
         LOGGER.trace("Set Document.text from List<TextElement>");
         document = new TextPaneDocument(TextFormat.DEFAULT, storage, text, this);
         getPixels();
+        notifyChange();
     }
 
     public void notifyChange() {

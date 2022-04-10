@@ -12,6 +12,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Area;
+import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
@@ -31,6 +32,11 @@ public class TextPaneElementRow extends TextStructureForm {
 
     public void add(TextElement child) {
         children.add(child);
+        Size currentSize = getSize();
+        setSize(new Size(//
+                currentSize.getWidth() + child.getSize().getWidth(), //
+                Math.max(currentSize.getHeight(), child.getSize().getHeight())//
+        ));
     }
 
     public boolean isEmpty() {

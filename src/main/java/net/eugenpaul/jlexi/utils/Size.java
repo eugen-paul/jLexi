@@ -38,6 +38,10 @@ public class Size {
         return 0 == width || 0 == height;
     }
 
+    public long compArea() {
+        return (long) width * height;
+    }
+
     @Override
     public String toString() {
         StringBuilder response = new StringBuilder();

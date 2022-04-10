@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.component;
 
 import java.util.Iterator;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.visitor.Visitor;
@@ -14,12 +15,15 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 @Getter
 @Setter
 public abstract class Glyph {
-
+    
     protected Glyph parent;
     protected Vector2d relativPosition;
-
+    
+    @Setter(value = AccessLevel.PROTECTED)
+    @Getter(value = AccessLevel.PROTECTED)
     protected Drawable cachedDrawable;
-
+    
+    @Setter(value = AccessLevel.PROTECTED)
     protected Size size;
 
     /**
@@ -31,6 +35,7 @@ public abstract class Glyph {
         this.parent = parent;
         this.relativPosition = new Vector2d(0, 0);
         this.size = Size.ZERO_SIZE;
+        this.cachedDrawable = null;
     }
 
     /**

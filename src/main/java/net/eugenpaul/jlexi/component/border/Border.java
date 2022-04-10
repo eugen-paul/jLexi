@@ -1,12 +1,18 @@
 package net.eugenpaul.jlexi.component.border;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
+import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
+import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
@@ -30,34 +36,51 @@ public class Border extends MonoGlyph implements GuiComponent {
     private static final int BORDER_SIZE = 2;
 
     private Color borderColor;
+    private Color backgroundColor;
     private int borderSize = BORDER_SIZE;
+
+    @Setter(value = AccessLevel.PROTECTED)
+    @Getter(value = AccessLevel.PROTECTED)
+    private GlyphCompositor<Glyph> compositor;
 
     /**
      * C'tor
      * 
      * @param component component that will be bordered.
      */
-    public Border(Glyph parent, Glyph component, Color borderColor) {
+    public Border(Glyph parent, Glyph component, Color borderColor, Color backgroundColor) {
         super(parent, component);
         this.borderColor = borderColor;
+        this.backgroundColor = backgroundColor;
 
-        component.setParent(this);
-        component.setRelativPosition(new Vector2d(borderSize, borderSize));
+        this.compositor = new CentralGlypthCompositor<>(backgroundColor);
+        this.component.setParent(this);
+        this.component.setRelativPosition(new Vector2d(borderSize, borderSize));
         resizeTo(Size.ZERO_SIZE);
     }
 
-    private void computePixels() {
-        if (component instanceof Resizeable) {
-            Resizeable child = (Resizeable) component;
+    private void resizeComponent() {
+        if (this.component instanceof Resizeable) {
+            Resizeable child = (Resizeable) this.component;
             child.resizeTo(//
-                    Math.max(0, getSize().getWidth() - borderSize * 2), //
-                    Math.max(0, getSize().getHeight() - borderSize * 2)//
+                    Math.max(0, getSize().getWidth() - this.borderSize * 2), //
+                    Math.max(0, getSize().getHeight() - this.borderSize * 2)//
             );
         }
     }
 
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        this.compositor.setBackgroundColor(backgroundColor);
+        this.cachedDrawable = null;
+    }
+
     @Override
     public Drawable getPixels() {
+        if (cachedDrawable != null) {
+            return cachedDrawable;
+        }
+
         if (getSize().getHeight() <= borderSize * 2 //
                 || getSize().getWidth() <= borderSize * 2 //
         ) {
@@ -65,10 +88,19 @@ public class Border extends MonoGlyph implements GuiComponent {
             return cachedDrawable;
         }
 
-        Drawable childDraw = super.getPixels();
+        Size childSize = new Size(//
+                size.getWidth() - borderSize * 2, //
+                size.getHeight() - borderSize * 2 //
+        );
+
+        List<Glyph> composedGlyphs = compositor.compose(List.of(component).iterator(), childSize);
+
+        Drawable childDraw = composedGlyphs.get(0).getPixels();
 
         int[] componentPixels = childDraw.getPixels();
-        int[] borderPixels = new int[getSize().getHeight() * getSize().getWidth()];
+        int[] borderPixels = new int[(int) getSize().compArea()];
+
+        Arrays.fill(borderPixels, 0, (int) getSize().compArea(), backgroundColor.getARGB());
 
         if (borderSize > 0) {
             Arrays.fill(borderPixels, 0, getSize().getWidth() * borderSize, borderColor.getARGB());
@@ -106,15 +138,16 @@ public class Border extends MonoGlyph implements GuiComponent {
     }
 
     private int[] generateBlackBorder() {
-        int[] responsePixels = new int[getSize().getHeight() * getSize().getWidth()];
+        int[] responsePixels = new int[(int) getSize().compArea()];
         Arrays.fill(responsePixels, borderColor.getARGB());
         return responsePixels;
     }
 
     @Override
     public void resizeTo(Size size) {
+        cachedDrawable = null;
         setSize(size);
-        computePixels();
+        resizeComponent();
         getPixels();
     }
 
@@ -174,11 +207,13 @@ public class Border extends MonoGlyph implements GuiComponent {
 
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
+        // TODO get Pixels from cachedDrawable
         return component.getPixels(new Vector2d(position.getX() - borderSize, position.getY() - borderSize), size);
     }
 
     @Override
     public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+        cachedDrawable = null;
         if (parent != null) {
             parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
         }

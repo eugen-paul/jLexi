@@ -75,7 +75,7 @@ public class MainWindow extends ApplicationWindow {
         boldButton.setMouseEventAdapter(mouseEventAdapter);
 
         TextButton italicButton = guiFactory.createTextButton(menubar, "I", storage);
-        boldButton.setTextFormat(boldButton.getTextFormat().withItalic(true));
+        italicButton.setTextFormat(italicButton.getTextFormat().withItalic(true));
         italicButton.setSize(new Size(20, 20));
         menubar.addMenuButton(italicButton);
 

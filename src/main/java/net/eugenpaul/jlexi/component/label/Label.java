@@ -59,7 +59,10 @@ public class Label extends Glyph {
                     )//
             );
         }
+        setSize(Size.ZERO_MAX);
         cachedDrawable = null;
+        getPixels();
+        setSize(cachedDrawable.getPixelSize());
     }
 
     public void setTextFormat(TextFormat format) {
@@ -69,6 +72,10 @@ public class Label extends Glyph {
 
     @Override
     public Drawable getPixels() {
+        if (cachedDrawable != null) {
+            return cachedDrawable;
+        }
+
         List<TextStructureForm> rows = textElement.getRows(size);
 
         List<TextStructureForm> column = compositor.compose(rows.iterator(), size);
@@ -77,8 +84,8 @@ public class Label extends Glyph {
             return DrawableImpl.EMPTY_DRAWABLE;
         }
 
-        Size pixelSize = new Size(column.get(0).getSize().getWidth(), column.get(0).getSize().getHeight());
-        int[] pixels = new int[column.get(0).getSize().getWidth() * column.get(0).getSize().getHeight()];
+        Size pixelSize = column.get(0).getSize();
+        int[] pixels = new int[(int) pixelSize.compArea()];
 
         cachedDrawable = new DrawableImpl(pixels, pixelSize);
 

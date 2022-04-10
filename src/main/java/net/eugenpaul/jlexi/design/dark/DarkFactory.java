@@ -16,18 +16,19 @@ public class DarkFactory implements GuiFactory {
 
     protected static final Color MENU_BACKGROUND_COLOR = Color.fromHexARGB("0xFF505050");
 
-    protected static final Color BORDER_COLOR = Color.fromHexARGB("0xFF000000");
-
     protected static final Color BUTTON_BACKGROUND_COLOR = Color.fromHexARGB("0xFFBFBFBF");
     protected static final Color BUTTON_BACKGROUND_FOCUS_COLOR = Color.fromHexARGB("0xFFE2E2E2");
     protected static final Color BUTTON_BACKGROUND_PUSH_COLOR = Color.fromHexARGB("0xFFE2E2E2");
     protected static final Color BUTTON_BACKGROUND_CHECK_COLOR = Color.fromHexARGB("0xFFB2B2B3");
 
+    protected static final Color BORDER_COLOR = Color.fromHexARGB("0xFF000000");
+    protected static final Color BORDER_BACKGROUND_COLOR = Color.fromHexARGB("0xFFBFBFBF");
+
     private static final TextFormat format = TextFormat.DEFAULT.withBackgroundColor(BUTTON_BACKGROUND_COLOR);
 
     @Override
     public TextButton createTextButton(Glyph parent, String text, ResourceManager storage) {
-        return new DarkTextButton(parent, text, format, storage);
+        return new DarkTextButton(parent, this, text, format, storage);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class DarkFactory implements GuiFactory {
 
     @Override
     public Border createBorder(Glyph parent, Glyph component) {
-        return new Border(parent, component, BORDER_COLOR);
+        return new Border(parent, component, BORDER_COLOR, BORDER_BACKGROUND_COLOR);
     }
 
 }

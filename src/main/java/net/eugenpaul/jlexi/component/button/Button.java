@@ -19,6 +19,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 public abstract class Button extends Glyph implements MouseClickable {
 
     @Setter(value = AccessLevel.PROTECTED)
+    @Getter(value = AccessLevel.PROTECTED)
     private GlyphCompositor<Glyph> compositor;
 
     @Getter(value = AccessLevel.PROTECTED)
