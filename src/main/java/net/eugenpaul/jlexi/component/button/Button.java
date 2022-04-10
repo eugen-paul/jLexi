@@ -9,14 +9,16 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
-import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
+import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public abstract class Button extends Glyph implements MouseClickable {
+public abstract class Button extends Glyph implements GuiComponent {
 
     @Setter(value = AccessLevel.PROTECTED)
     @Getter(value = AccessLevel.PROTECTED)
@@ -63,6 +65,35 @@ public abstract class Button extends Glyph implements MouseClickable {
     }
 
     @Override
+    public boolean isResizeble() {
+        return true;
+    }
+
+    @Override
+    public void resizeTo(Size size) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onKeyTyped(Character key) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onKeyPressed(KeyCode keyCode) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onKeyReleased(KeyCode keyCode) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public Drawable getPixels() {
         if (cachedDrawable != null) {
             return cachedDrawable;
@@ -98,5 +129,10 @@ public abstract class Button extends Glyph implements MouseClickable {
         if (parent != null) {
             parent.notifyRedraw(getPixels(), getRelativPosition(), size);
         }
+    }
+
+    @Override
+    public Glyph getGlyph() {
+        return this;
     }
 }

@@ -7,11 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.MonoGlyph;
+import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
-import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
-import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
@@ -24,7 +22,7 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 /**
  * Add Menubar to Glyph
  */
-public abstract class MenuBar extends MonoGlyph implements GuiComponent {
+public abstract class MenuBar extends GuiCompenentMonoGlyph {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
@@ -42,10 +40,10 @@ public abstract class MenuBar extends MonoGlyph implements GuiComponent {
      * 
      * @param component
      */
-    protected MenuBar(Glyph parent, Glyph component, Size size) {
+    protected MenuBar(Glyph parent, GuiComponent component, Size size) {
         super(parent, component);
-        component.setParent(this);
-        component.setRelativPosition(new Vector2d(0, menubarHeight));
+        this.component.getGlyph().setParent(this);
+        this.component.getGlyph().setRelativPosition(new Vector2d(0, menubarHeight));
         setSize(size);
         this.menuButtons = new LinkedList<>();
 
@@ -53,14 +51,14 @@ public abstract class MenuBar extends MonoGlyph implements GuiComponent {
     }
 
     public boolean addMenuButton(Button button) {
-        menuButtons.add(button);
+        this.menuButtons.add(button);
 
-        menubarHeight = menuButtons.stream().map(v -> v.getSize().getHeight()).reduce(0, Math::max);
-        if (menubarHeight > 0) {
-            menubarHeight += menubarPadding * 2;
+        this.menubarHeight = this.menuButtons.stream().map(v -> v.getSize().getHeight()).reduce(0, Math::max);
+        if (this.menubarHeight > 0) {
+            this.menubarHeight += this.menubarPadding * 2;
         }
 
-        component.setRelativPosition(new Vector2d(0, menubarHeight));
+        this.component.getGlyph().setRelativPosition(new Vector2d(0, this.menubarHeight));
 
         computeBackground();
         return true;
@@ -105,6 +103,11 @@ public abstract class MenuBar extends MonoGlyph implements GuiComponent {
     }
 
     @Override
+    public boolean isResizeble() {
+        return true;
+    }
+
+    @Override
     public void resizeTo(Size newSize) {
         setSize(newSize);
 
@@ -133,10 +136,7 @@ public abstract class MenuBar extends MonoGlyph implements GuiComponent {
         } else {
             LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY, mouseX,
                     mouseY - menubarHeight);
-            if (component instanceof MouseClickable) {
-                MouseClickable comp = (MouseClickable) component;
-                comp.onMouseClick(mouseX, mouseY - menubarHeight, button);
-            }
+            component.onMouseClick(mouseX, mouseY - menubarHeight, button);
         }
     }
 
@@ -154,38 +154,29 @@ public abstract class MenuBar extends MonoGlyph implements GuiComponent {
 
     @Override
     public void onKeyTyped(Character key) {
-
-        if (component instanceof KeyPressable) {
-            KeyPressable comp = (KeyPressable) component;
-            comp.onKeyTyped(key);
-        }
+        component.onKeyTyped(key);
     }
 
     @Override
     public void onKeyPressed(KeyCode keyCode) {
-
-        if (component instanceof KeyPressable) {
-            KeyPressable comp = (KeyPressable) component;
-            comp.onKeyPressed(keyCode);
-        }
+        component.onKeyPressed(keyCode);
     }
 
     @Override
     public void onKeyReleased(KeyCode keyCode) {
-
-        if (component instanceof KeyPressable) {
-            KeyPressable comp = (KeyPressable) component;
-            comp.onKeyReleased(keyCode);
-        }
+        component.onKeyReleased(keyCode);
     }
 
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
-        return component.getPixels(new Vector2d(position.getX(), position.getY() - menubarHeight), size);
+        // TODO get Pixels from cachedDrawable
+        return component.getGlyph().getPixels(new Vector2d(position.getX(), position.getY() - menubarHeight), size);
     }
 
     @Override
     public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
+        // TODO add Pixels to cachedDrawable
+        cachedDrawable = null;
         if (parent != null) {
             parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
         }

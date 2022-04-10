@@ -7,13 +7,15 @@ import net.eugenpaul.jlexi.utils.Size;
  */
 public interface Resizeable {
 
+    boolean isResizeble();
+
     /**
      * Set new size
      * 
      * @param name - name of the object that will be resized
      * @param size - new size
      */
-    public void resizeTo(Size size);
+    void resizeTo(Size size);
 
     /**
      * Set new width und height
@@ -22,7 +24,7 @@ public interface Resizeable {
      * @param width  - new width
      * @param height - new height
      */
-    public default void resizeTo(int width, int height) {
+    default void resizeTo(int width, int height) {
         resizeTo(new Size(width, height));
     }
 

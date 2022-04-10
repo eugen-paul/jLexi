@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.design.dark;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.border.Border;
 import net.eugenpaul.jlexi.component.button.TextButton;
+import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.component.label.Label;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.menubar.MenuBarColored;
@@ -37,12 +38,12 @@ public class DarkFactory implements GuiFactory {
     }
 
     @Override
-    public MenuBar createMenuBar(Glyph parent, Glyph component, Size size) {
+    public MenuBar createMenuBar(Glyph parent, GuiComponent component, Size size) {
         return new MenuBarColored(parent, component, size, MENU_BACKGROUND_COLOR);
     }
 
     @Override
-    public Border createBorder(Glyph parent, Glyph component) {
+    public Border createBorder(Glyph parent, GuiComponent component) {
         return new Border(parent, component, BORDER_COLOR, BORDER_BACKGROUND_COLOR);
     }
 

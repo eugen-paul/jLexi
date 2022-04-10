@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import net.eugenpaul.jlexi.component.border.Border;
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
@@ -43,15 +42,13 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected void setContent() {
-        TextPane textPane = new TextPane(name, null, storage, controller);
-        Border border = guiFactory.createBorder(null, textPane);
+        var textPane = new TextPane(name, null, storage, controller);
+        var border = guiFactory.createBorder(null, textPane);
 
-        MenuBar menubar = guiFactory.createMenuBar(null, border, size);
+        var menubar = guiFactory.createMenuBar(null, border, size);
         initMenu(menubar, textPane.getCursorName());
         menubar.setParent(this);
         menubar.setRelativPosition(Vector2d.zero());
-
-        border.setParent(menubar);
 
         controller.addTextPane(textPaneName, textPane);
 

@@ -10,13 +10,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.MonoGlyph;
+import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
 import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
-import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
-import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
-import net.eugenpaul.jlexi.component.interfaces.Resizeable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Color;
@@ -28,8 +25,9 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 /**
  * Glyph with a boarder.
+ * 
  */
-public class Border extends MonoGlyph implements GuiComponent {
+public class Border extends GuiCompenentMonoGlyph {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Border.class);
 
@@ -48,21 +46,20 @@ public class Border extends MonoGlyph implements GuiComponent {
      * 
      * @param component component that will be bordered.
      */
-    public Border(Glyph parent, Glyph component, Color borderColor, Color backgroundColor) {
+    public Border(Glyph parent, GuiComponent component, Color borderColor, Color backgroundColor) {
         super(parent, component);
         this.borderColor = borderColor;
         this.backgroundColor = backgroundColor;
 
         this.compositor = new CentralGlypthCompositor<>(backgroundColor);
-        this.component.setParent(this);
-        this.component.setRelativPosition(new Vector2d(borderSize, borderSize));
+        this.component.getGlyph().setParent(this);
+        this.component.getGlyph().setRelativPosition(new Vector2d(borderSize, borderSize));
         resizeTo(Size.ZERO_SIZE);
     }
 
     private void resizeComponent() {
-        if (this.component instanceof Resizeable) {
-            Resizeable child = (Resizeable) this.component;
-            child.resizeTo(//
+        if (component.isResizeble()) {
+            component.resizeTo(//
                     Math.max(0, getSize().getWidth() - this.borderSize * 2), //
                     Math.max(0, getSize().getHeight() - this.borderSize * 2)//
             );
@@ -93,7 +90,7 @@ public class Border extends MonoGlyph implements GuiComponent {
                 size.getHeight() - borderSize * 2 //
         );
 
-        List<Glyph> composedGlyphs = compositor.compose(List.of(component).iterator(), childSize);
+        List<Glyph> composedGlyphs = compositor.compose(List.of(component.getGlyph()).iterator(), childSize);
 
         Drawable childDraw = composedGlyphs.get(0).getPixels();
 
@@ -144,6 +141,11 @@ public class Border extends MonoGlyph implements GuiComponent {
     }
 
     @Override
+    public boolean isResizeble() {
+        return true;
+    }
+
+    @Override
     public void resizeTo(Size size) {
         cachedDrawable = null;
         setSize(size);
@@ -162,10 +164,7 @@ public class Border extends MonoGlyph implements GuiComponent {
         } else {
             LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY,
                     mouseX - BORDER_SIZE, mouseY - BORDER_SIZE);
-            if (component instanceof MouseClickable) {
-                MouseClickable comp = (MouseClickable) component;
-                comp.onMouseClick(mouseX - BORDER_SIZE, mouseY - BORDER_SIZE, button);
-            }
+            component.onMouseClick(mouseX - BORDER_SIZE, mouseY - BORDER_SIZE, button);
         }
     }
 
@@ -183,34 +182,30 @@ public class Border extends MonoGlyph implements GuiComponent {
 
     @Override
     public void onKeyTyped(Character key) {
-        if (component instanceof KeyPressable) {
-            KeyPressable comp = (KeyPressable) component;
-            comp.onKeyTyped(key);
-        }
+        component.onKeyTyped(key);
     }
 
     @Override
     public void onKeyPressed(KeyCode keyCode) {
-        if (component instanceof KeyPressable) {
-            KeyPressable comp = (KeyPressable) component;
-            comp.onKeyPressed(keyCode);
-        }
+        component.onKeyPressed(keyCode);
     }
 
     @Override
     public void onKeyReleased(KeyCode keyCode) {
-        if (component instanceof KeyPressable) {
-            KeyPressable comp = (KeyPressable) component;
-            comp.onKeyReleased(keyCode);
-        }
+        component.onKeyReleased(keyCode);
     }
 
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
         // TODO get Pixels from cachedDrawable
-        return component.getPixels(new Vector2d(position.getX() - borderSize, position.getY() - borderSize), size);
+        return component.getGlyph().getPixels(//
+                new Vector2d(//
+                        position.getX() - borderSize, //
+                        position.getY() - borderSize//
+                ), //
+                size);
     }
-    
+
     @Override
     public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
         // TODO add Pixels to cachedDrawable
@@ -219,4 +214,5 @@ public class Border extends MonoGlyph implements GuiComponent {
             parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
         }
     }
+
 }

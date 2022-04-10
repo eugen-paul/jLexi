@@ -202,6 +202,11 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
     }
 
     @Override
+    public boolean isResizeble() {
+        return true;
+    }
+
+    @Override
     public void onKeyTyped(Character key) {
         LOGGER.trace("Key typed: {}", key);
         editMode = true;
@@ -268,6 +273,11 @@ public class TextPane extends TextStructureFormOfStructures implements GuiCompon
 
     @Override
     public TextStructureForm getTextStructureForm() {
+        return this;
+    }
+
+    @Override
+    public Glyph getGlyph() {
         return this;
     }
 }
