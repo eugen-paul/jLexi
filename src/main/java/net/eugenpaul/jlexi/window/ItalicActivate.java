@@ -18,7 +18,7 @@ public class ItalicActivate implements MouseEventAdapter {
     private AbstractController controller;
 
     @Override
-    public void mouseClicked(MouseButton button) {
+    public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
         if (this.button.getState() == ButtonState.NORMAL) {
             this.button.setState(ButtonState.PUSHED);
             this.button.redraw();

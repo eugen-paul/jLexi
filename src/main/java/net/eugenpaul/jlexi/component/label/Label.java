@@ -6,7 +6,7 @@ import java.util.List;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextStructureFormToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
@@ -19,12 +19,10 @@ import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.event.KeyCode;
-import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public class Label extends Glyph implements GuiComponent {
+public class Label extends GuiGlyph {
 
     @Getter
     private TextFormat textFormat;
@@ -109,50 +107,13 @@ public class Label extends Glyph implements GuiComponent {
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public boolean isResizeble() {
         return false;
     }
 
     @Override
     public void resizeTo(Size size) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onKeyTyped(Character key) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onKeyPressed(KeyCode keyCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onKeyReleased(KeyCode keyCode) {
-        // TODO Auto-generated method stub
-
+        // nothing to do
     }
 
     @Override

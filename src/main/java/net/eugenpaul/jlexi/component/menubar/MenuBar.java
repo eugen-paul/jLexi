@@ -14,7 +14,6 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
@@ -119,52 +118,35 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (mouseY <= menubarHeight) {
-            LOGGER.trace("Click on Menu. Position ({},{}).", mouseX, mouseY);
-            for (Button menuButton : menuButtons) {
-                if (CollisionHelper.isPointOnArea(mouseX, mouseY, menuButton.getRelativPosition(),
-                        menuButton.getSize())) {
-                    menuButton.onMouseClick(//
-                            mouseX - menuButton.getRelativPosition().getX(), //
-                            mouseY - menuButton.getRelativPosition().getY(), //
-                            button //
-                    );
-                    return;
-                }
+    protected boolean isPositionOnComponent(Integer mouseX, Integer mouseY) {
+        return mouseY >= menubarHeight;
+    }
+
+    @Override
+    protected void onMouseClickOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Click on Menu. Position ({},{}).", mouseX, mouseY);
+        for (Button menuButton : menuButtons) {
+            if (CollisionHelper.isPointOnArea(mouseX, mouseY, menuButton.getRelativPosition(), menuButton.getSize())) {
+                menuButton.onMouseClick(//
+                        mouseX - menuButton.getRelativPosition().getX(), //
+                        mouseY - menuButton.getRelativPosition().getY(), //
+                        button //
+                );
+                return;
             }
-        } else {
-            LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY, mouseX,
-                    mouseY - menubarHeight);
-            component.onMouseClick(mouseX, mouseY - menubarHeight, button);
         }
     }
 
     @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+    protected void onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+    protected void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void onKeyTyped(Character key) {
-        component.onKeyTyped(key);
-    }
-
-    @Override
-    public void onKeyPressed(KeyCode keyCode) {
-        component.onKeyPressed(keyCode);
-    }
-
-    @Override
-    public void onKeyReleased(KeyCode keyCode) {
-        component.onKeyReleased(keyCode);
     }
 
     @Override

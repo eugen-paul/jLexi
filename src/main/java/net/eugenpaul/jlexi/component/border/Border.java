@@ -19,7 +19,6 @@ import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
@@ -154,18 +153,27 @@ public class Border extends GuiCompenentMonoGlyph {
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (mouseX < BORDER_SIZE //
-                || mouseX > getSize().getWidth() - BORDER_SIZE //
-                || mouseY < BORDER_SIZE //
-                || mouseY > getSize().getHeight() - BORDER_SIZE //
-        ) {
-            LOGGER.trace("Click on Border. Position ({},{}).", mouseX, mouseY);
-        } else {
-            LOGGER.trace("Click on inner component. Position ({},{}). Item Position ({},{}).", mouseX, mouseY,
-                    mouseX - BORDER_SIZE, mouseY - BORDER_SIZE);
-            component.onMouseClick(mouseX - BORDER_SIZE, mouseY - BORDER_SIZE, button);
-        }
+    protected boolean isPositionOnComponent(Integer mouseX, Integer mouseY) {
+        return mouseX > BORDER_SIZE //
+                && mouseX < getSize().getWidth() - BORDER_SIZE //
+                && mouseY > BORDER_SIZE //
+                && mouseY < getSize().getHeight() - BORDER_SIZE //
+        ;
+    }
+
+    @Override
+    protected void onMouseClickOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Click on Border. Position ({},{}).", mouseX, mouseY);
+    }
+
+    @Override
+    protected void onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Pressed on Border. Position ({},{}).", mouseX, mouseY);
+    }
+
+    @Override
+    protected void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Released on Border. Position ({},{}).", mouseX, mouseY);
     }
 
     @Override
@@ -178,21 +186,6 @@ public class Border extends GuiCompenentMonoGlyph {
     public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void onKeyTyped(Character key) {
-        component.onKeyTyped(key);
-    }
-
-    @Override
-    public void onKeyPressed(KeyCode keyCode) {
-        component.onKeyPressed(keyCode);
-    }
-
-    @Override
-    public void onKeyReleased(KeyCode keyCode) {
-        component.onKeyReleased(keyCode);
     }
 
     @Override

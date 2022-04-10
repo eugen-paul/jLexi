@@ -8,17 +8,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
-import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.event.KeyCode;
-import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public abstract class Button extends Glyph implements GuiComponent {
+public abstract class Button extends GuiGlyph {
 
     @Setter(value = AccessLevel.PROTECTED)
     @Getter(value = AccessLevel.PROTECTED)
@@ -31,37 +28,15 @@ public abstract class Button extends Glyph implements GuiComponent {
     @Setter
     protected ButtonState state;
 
-    @Setter
-    protected MouseEventAdapter mouseEventAdapter;
-
     protected Button(Glyph parent, List<Glyph> elements, GlyphCompositor<Glyph> compositor) {
         super(parent);
         this.state = ButtonState.NORMAL;
         this.elements = elements;
         this.compositor = compositor;
-
-        this.mouseEventAdapter = new MouseEventAdapter() {
-
-        };
     }
 
     protected Button(Glyph parent) {
         this(parent, new LinkedList<>(), null);
-    }
-
-    @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        mouseEventAdapter.mouseClicked(button);
-    }
-
-    @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        mouseEventAdapter.mousePressed(button);
-    }
-
-    @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        mouseEventAdapter.mouseReleased(button);
     }
 
     @Override
@@ -71,24 +46,6 @@ public abstract class Button extends Glyph implements GuiComponent {
 
     @Override
     public void resizeTo(Size size) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onKeyTyped(Character key) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onKeyPressed(KeyCode keyCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onKeyReleased(KeyCode keyCode) {
         // TODO Auto-generated method stub
 
     }
@@ -129,10 +86,5 @@ public abstract class Button extends Glyph implements GuiComponent {
         if (parent != null) {
             parent.notifyRedraw(getPixels(), getRelativPosition(), size);
         }
-    }
-
-    @Override
-    public Glyph getGlyph() {
-        return this;
     }
 }
