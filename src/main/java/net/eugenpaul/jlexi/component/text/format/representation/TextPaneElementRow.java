@@ -62,7 +62,7 @@ public class TextPaneElementRow extends TextStructureForm {
             return null;
         }
 
-        TextElement clickedElement = row.getValue().getCorsorElementAt(//
+        TextElement clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//

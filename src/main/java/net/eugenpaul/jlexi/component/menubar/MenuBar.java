@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
@@ -39,10 +39,10 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
      * 
      * @param component
      */
-    protected MenuBar(Glyph parent, GuiComponent component, Size size) {
+    protected MenuBar(Glyph parent, GuiGlyph component, Size size) {
         super(parent, component);
-        this.component.getGlyph().setParent(this);
-        this.component.getGlyph().setRelativPosition(new Vector2d(0, menubarHeight));
+        this.component.setParent(this);
+        this.component.setRelativPosition(new Vector2d(0, menubarHeight));
         setSize(size);
         this.menuButtons = new LinkedList<>();
 
@@ -57,7 +57,7 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
             this.menubarHeight += this.menubarPadding * 2;
         }
 
-        this.component.getGlyph().setRelativPosition(new Vector2d(0, this.menubarHeight));
+        this.component.setRelativPosition(new Vector2d(0, this.menubarHeight));
 
         computeBackground();
         return true;
@@ -152,7 +152,7 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
         // TODO get Pixels from cachedDrawable
-        return component.getGlyph().getPixels(new Vector2d(position.getX(), position.getY() - menubarHeight), size);
+        return component.getPixels(new Vector2d(position.getX(), position.getY() - menubarHeight), size);
     }
 
     @Override

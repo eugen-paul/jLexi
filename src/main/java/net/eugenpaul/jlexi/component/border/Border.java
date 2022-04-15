@@ -11,9 +11,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Color;
@@ -45,14 +45,14 @@ public class Border extends GuiCompenentMonoGlyph {
      * 
      * @param component component that will be bordered.
      */
-    public Border(Glyph parent, GuiComponent component, Color borderColor, Color backgroundColor) {
+    public Border(Glyph parent, GuiGlyph component, Color borderColor, Color backgroundColor) {
         super(parent, component);
         this.borderColor = borderColor;
         this.backgroundColor = backgroundColor;
 
         this.compositor = new CentralGlypthCompositor<>(backgroundColor);
-        this.component.getGlyph().setParent(this);
-        this.component.getGlyph().setRelativPosition(new Vector2d(borderSize, borderSize));
+        this.component.setParent(this);
+        this.component.setRelativPosition(new Vector2d(borderSize, borderSize));
         resizeTo(Size.ZERO_SIZE);
     }
 
@@ -89,7 +89,7 @@ public class Border extends GuiCompenentMonoGlyph {
                 size.getHeight() - borderSize * 2 //
         );
 
-        List<Glyph> composedGlyphs = compositor.compose(List.of(component.getGlyph()).iterator(), childSize);
+        List<Glyph> composedGlyphs = compositor.compose(List.of((Glyph) component).iterator(), childSize);
 
         Drawable childDraw = composedGlyphs.get(0).getPixels();
 
@@ -191,7 +191,7 @@ public class Border extends GuiCompenentMonoGlyph {
     @Override
     public Drawable getPixels(Vector2d position, Size size) {
         // TODO get Pixels from cachedDrawable
-        return component.getGlyph().getPixels(//
+        return component.getPixels(//
                 new Vector2d(//
                         position.getX() - borderSize, //
                         position.getY() - borderSize//

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Color;
@@ -28,7 +28,7 @@ public class MenuBarColored extends MenuBar {
      * 
      * @param component
      */
-    public MenuBarColored(Glyph parent, GuiComponent component, Size size, Color backgroundColor) {
+    public MenuBarColored(Glyph parent, GuiGlyph component, Size size, Color backgroundColor) {
         super(parent, component, size);
         this.backgroundColor = backgroundColor;
     }

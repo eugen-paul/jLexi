@@ -17,15 +17,12 @@ public class AbstractKeyHandler {
     private KeyHandlerable component;
     private ResourceManager storage;
 
-    private boolean ctrlPressed;
-
     private LinkedList<TextCommand> undoCommands;
     private LinkedList<TextCommand> redoCommands;
 
     protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage) {
         this.component = component;
         this.storage = storage;
-        this.ctrlPressed = false;
 
         this.undoCommands = new LinkedList<>();
         this.redoCommands = new LinkedList<>();
@@ -66,7 +63,6 @@ public class AbstractKeyHandler {
             keyPressedBackSpace();
             break;
         case CTRL:
-            ctrlPressed = true;
             break;
         case F1:
             undo();
@@ -122,13 +118,7 @@ public class AbstractKeyHandler {
     }
 
     public void onKeyReleased(KeyCode keyCode) {
-        switch (keyCode) {
-        case CTRL:
-            ctrlPressed = false;
-            break;
-        default:
-            break;
-        }
+        //TODO
     }
 
     private void keyPressedEnter() {

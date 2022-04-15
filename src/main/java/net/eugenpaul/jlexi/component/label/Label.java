@@ -116,8 +116,4 @@ public class Label extends GuiGlyph {
         // nothing to do
     }
 
-    @Override
-    public Glyph getGlyph() {
-        return this;
-    }
 }

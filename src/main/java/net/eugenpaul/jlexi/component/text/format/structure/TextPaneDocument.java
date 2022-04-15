@@ -3,18 +3,18 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 import java.util.Collections;
 import java.util.List;
 
-import net.eugenpaul.jlexi.component.text.TextPane;
+import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 public class TextPaneDocument extends TextStructureOfStructure {
 
-    private TextPane textPane;
+    private ChangeListener parent;
 
-    public TextPaneDocument(TextFormat format, ResourceManager storage, List<TextElement> data, TextPane textPane) {
+    public TextPaneDocument(TextFormat format, ResourceManager storage, List<TextElement> data, ChangeListener parent) {
         super(null, format, storage);
-        this.textPane = textPane;
+        this.parent = parent;
         initParagraphs(data);
     }
 
@@ -55,7 +55,9 @@ public class TextPaneDocument extends TextStructureOfStructure {
             restructChildren();
         }
         structureForm = null;
-        textPane.notifyChange();
+        if (parent != null) {
+            parent.notifyChange();
+        }
     }
 
     @Override

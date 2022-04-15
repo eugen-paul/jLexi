@@ -1,13 +1,13 @@
 package net.eugenpaul.jlexi.component;
 
 import lombok.Setter;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
+import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 
-public abstract class GuiGlyph extends Glyph implements GuiComponent {
+public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
     @Setter
     protected MouseEventAdapter mouseEventAdapter;
@@ -48,27 +48,22 @@ public abstract class GuiGlyph extends Glyph implements GuiComponent {
     @Override
     public void onKeyTyped(Character key) {
         if (keyEventAdapter != null) {
-            keyEventAdapter.onKeyTyped(key);
+            keyEventAdapter.keyTyped(key);
         }
     }
 
     @Override
     public void onKeyPressed(KeyCode keyCode) {
         if (keyEventAdapter != null) {
-            keyEventAdapter.onKeyPressed(keyCode);
+            keyEventAdapter.keyPressed(keyCode);
         }
     }
 
     @Override
     public void onKeyReleased(KeyCode keyCode) {
         if (keyEventAdapter != null) {
-            keyEventAdapter.onKeyReleased(keyCode);
+            keyEventAdapter.keyReleased(keyCode);
         }
-    }
-
-    @Override
-    public Glyph getGlyph() {
-        return this;
     }
 
 }

@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -16,9 +15,9 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
  */
 public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
 
-    protected GuiComponent component;
+    protected GuiGlyph component;
 
-    protected GuiCompenentMonoGlyph(Glyph parent, GuiComponent component) {
+    protected GuiCompenentMonoGlyph(Glyph parent, GuiGlyph component) {
         super(parent);
         this.component = component;
     }
@@ -28,7 +27,7 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
         if (component == null) {
             return DrawableImpl.EMPTY_DRAWABLE;
         }
-        return component.getGlyph().getPixels();
+        return component.getPixels();
     }
 
     @Override
@@ -36,7 +35,7 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
         if (component == null) {
             return;
         }
-        component.getGlyph().visit(checker);
+        component.visit(checker);
     }
 
     @Override
@@ -44,12 +43,7 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
         if (component == null) {
             return Collections.emptyIterator();
         }
-        return component.getGlyph().iterator();
-    }
-
-    @Override
-    public Glyph getGlyph() {
-        return this;
+        return component.iterator();
     }
 
     protected abstract boolean isPositionOnComponent(Integer mouseX, Integer mouseY);
@@ -64,8 +58,8 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
         if (isPositionOnComponent(mouseX, mouseY)) {
             component.onMouseClick(//
-                    mouseX - component.getGlyph().getRelativPosition().getX(), //
-                    mouseY - component.getGlyph().getRelativPosition().getY(), //
+                    mouseX - component.getRelativPosition().getX(), //
+                    mouseY - component.getRelativPosition().getY(), //
                     button//
             );
         } else {
@@ -77,8 +71,8 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
     public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
         if (isPositionOnComponent(mouseX, mouseY)) {
             component.onMousePressed(//
-                    mouseX - component.getGlyph().getRelativPosition().getX(), //
-                    mouseY - component.getGlyph().getRelativPosition().getY(), //
+                    mouseX - component.getRelativPosition().getX(), //
+                    mouseY - component.getRelativPosition().getY(), //
                     button//
             );
         } else {
@@ -90,8 +84,8 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
     public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         if (isPositionOnComponent(mouseX, mouseY)) {
             component.onMouseReleased(//
-                    mouseX - component.getGlyph().getRelativPosition().getX(), //
-                    mouseY - component.getGlyph().getRelativPosition().getY(), //
+                    mouseX - component.getRelativPosition().getX(), //
+                    mouseY - component.getRelativPosition().getY(), //
                     button//
             );
         } else {

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
-import net.eugenpaul.jlexi.component.interfaces.GuiComponent;
+import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
@@ -41,7 +41,7 @@ public abstract class Window extends MonoGlyph
     protected final ModelController controller;
 
     protected AbstractView view;
-    private GuiComponent mainGlyph;
+    private GuiEvents mainGlyph;
     protected KeyPressable focusOn;
 
     protected Window(String name, Size size, Windowlmp windowlmp, ModelController controller) {
@@ -55,7 +55,7 @@ public abstract class Window extends MonoGlyph
         this.mainGlyph = null;
     }
 
-    protected <T extends Glyph & GuiComponent> void setMainGlyph(T glyph) {
+    protected <T extends Glyph & GuiEvents> void setMainGlyph(T glyph) {
         mainGlyph = glyph;
         component = glyph;
     }

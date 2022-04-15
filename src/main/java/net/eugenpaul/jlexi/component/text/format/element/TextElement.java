@@ -39,7 +39,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
 
     public abstract boolean isCursorHoldable();
 
-    public abstract TextElement getCorsorElementAt(Vector2d pos);
+    public abstract TextElement getCursorElementAt(Vector2d pos);
 
     public void reset() {
         cachedDrawable = null;

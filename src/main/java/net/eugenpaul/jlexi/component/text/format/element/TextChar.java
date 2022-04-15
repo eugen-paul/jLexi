@@ -36,7 +36,7 @@ public class TextChar extends TextElementAbstract {
     }
 
     @Override
-    public TextElement getCorsorElementAt(Vector2d pos) {
+    public TextElement getCursorElementAt(Vector2d pos) {
         return this;
     }
 
