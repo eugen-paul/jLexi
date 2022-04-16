@@ -36,16 +36,10 @@ public class AbstractKeyHandler {
 
         var cursor = component.getMouseCursor();
         var element = cursor.getTextElement();
-        var parentStructure = element.getStructureParent();
-        if (null == parentStructure) {
-            return;
-        }
 
         var addCommand = new TextElementAddBeforeCommand(//
                 TextElementFactory.fromChar(//
-                        null, //
                         storage, //
-                        parentStructure, //
                         key, //
                         cursor.getTextFormat(), //
                         element.getFormatEffect()//
@@ -61,7 +55,7 @@ public class AbstractKeyHandler {
             keyPressedEnter();
             break;
         case RIGHT, LEFT, UP, DOWN:
-            keyPressedCursorMove(keyCode, true);
+            keyPressedCursorMove(keyCode);
             break;
         case DELETE:
             keyPressedDelete();
@@ -131,16 +125,10 @@ public class AbstractKeyHandler {
     private void keyPressedEnter() {
         var cursor = component.getMouseCursor();
         var element = cursor.getTextElement();
-        var parentStructure = element.getStructureParent();
-        if (null == parentStructure) {
-            return;
-        }
 
         var addCommand = new TextElementAddBeforeCommand(//
                 TextElementFactory.genNewLineChar(//
-                        null, //
                         storage, //
-                        parentStructure, //
                         cursor.getTextFormat(), //
                         element.getFormatEffect()//
                 ), //
@@ -168,7 +156,7 @@ public class AbstractKeyHandler {
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
     }
 
-    private boolean keyPressedCursorMove(KeyCode keyCode, boolean moveForDelete) {
+    private boolean keyPressedCursorMove(KeyCode keyCode) {
         var cursor = component.getMouseCursor();
         var structureForm = component.getTextStructureForm();
 
@@ -182,7 +170,7 @@ public class AbstractKeyHandler {
             el = structureForm.getNext(cursor.getTextElement());
             break;
         case LEFT:
-            el = structureForm.getPrevious(cursor.getTextElement(), moveForDelete);
+            el = structureForm.getPrevious(cursor.getTextElement());
             break;
         case UP:
             el = structureForm.getUp(cursor.getTextElement());

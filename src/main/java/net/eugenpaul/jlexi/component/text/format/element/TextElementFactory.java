@@ -22,8 +22,23 @@ public final class TextElementFactory {
         return response;
     }
 
+    public static TextElement fromChar(ResourceManager storage, Character c, TextFormat format,
+            TextFormatEffect formatEffect) {
+        return fromChar(null, storage, null, c, format, formatEffect);
+    }
+
     public static TextElement genNewLineChar(Glyph parent, ResourceManager storage, TextStructure parentStructure,
             TextFormat format, TextFormatEffect formatEffect) {
         return new TextNewLine(parent, storage, parentStructure, format, formatEffect);
+    }
+
+    public static TextElement genNewLineChar(ResourceManager storage, TextFormat format,
+            TextFormatEffect formatEffect) {
+        return genNewLineChar(null, storage, null, format, formatEffect);
+    }
+
+    public static TextElement genNewSectionChar(Glyph parent, ResourceManager storage, TextStructure parentStructure,
+            TextFormat format, TextFormatEffect formatEffect) {
+        return new TextNewSection(parent, storage, parentStructure, format, formatEffect);
     }
 }

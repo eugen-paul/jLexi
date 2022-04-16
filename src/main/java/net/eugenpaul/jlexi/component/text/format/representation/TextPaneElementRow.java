@@ -102,15 +102,12 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public TextElement getPrevious(TextElement element, boolean moveForDelete) {
+    public TextElement getPrevious(TextElement element) {
         var iterator = children.iterator();
         TextElement prevElement = null;
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
             if (currentElement == element) {
-                if (moveForDelete && prevElement != null && prevElement.isCursorHoldable()) {
-                    return null;
-                }
                 if (prevElement != null && prevElement.isCursorHoldable()) {
                     // TODO get first element from inside of prevElement.
                 }

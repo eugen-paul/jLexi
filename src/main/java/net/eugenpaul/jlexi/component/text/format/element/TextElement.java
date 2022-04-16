@@ -37,6 +37,10 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return false;
     }
 
+    public boolean isEndOfSection() {
+        return false;
+    }
+
     public abstract boolean isCursorHoldable();
 
     public abstract TextElement getCursorElementAt(Vector2d pos);
@@ -75,5 +79,34 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
      * @return
      */
     public abstract boolean isRemoveable();
+
+    public boolean addBefore(TextElement element) {
+        if (structureParent == null) {
+            return false;
+        }
+        return structureParent.addBefore(this, element);
+    }
+
+    public TextElement removeElement(TextElement element) {
+        if (structureParent == null) {
+            return null;
+        }
+        return structureParent.removeElement(element);
+    }
+
+    public boolean removeElementBefore(List<TextElement> removedElements) {
+        if (structureParent == null) {
+            return false;
+        }
+
+        return structureParent.removeElementBefore(this, removedElements);
+    }
+
+    public void notifyChange() {
+        if (structureParent == null) {
+            return;
+        }
+        structureParent.notifyChange();
+    }
 
 }

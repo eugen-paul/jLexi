@@ -144,10 +144,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
 
     @Override
     public TextElement removeElement(TextElement elementToRemove) {
-        if (elementToRemove.getStructureParent() != this) {
-            return null;
-        }
-
         var iterator = textElements.iterator();
         TextElement nextElement = null;
         boolean found = false;
@@ -190,10 +186,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
 
     @Override
     public boolean removeElementBefore(TextElement position, List<TextElement> removedElements) {
-        if (position.getStructureParent() != this) {
-            return false;
-        }
-
         var iterator = textElements.listIterator();
         TextElement elementToRemove = null;
         boolean found = false;
@@ -229,10 +221,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
 
     @Override
     public boolean addBefore(TextElement position, TextElement element) {
-        if (position.getStructureParent() != this) {
-            return false;
-        }
-
         var iterator = textElements.listIterator();
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
