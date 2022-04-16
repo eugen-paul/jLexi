@@ -3,7 +3,6 @@ package net.eugenpaul.jlexi.component.text;
 import java.beans.PropertyChangeEvent;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.controller.AbstractController;
@@ -20,7 +19,6 @@ public class Cursor implements ModelPropertyChangeListner {
     private TextElement textElement;
 
     @Getter
-    @Setter
     private TextFormat textFormat;
     private GlyphEffect effect;
     private AbstractController controller;

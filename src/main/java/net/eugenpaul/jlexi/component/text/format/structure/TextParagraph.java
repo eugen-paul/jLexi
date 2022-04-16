@@ -94,7 +94,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         textElements.add(element);
         element.setStructureParent(this);
 
-        setRestructIfNeedet(element);
+        setRestructIfNeeded(element);
     }
 
     private void checkAndMergeWithNext() {
@@ -172,14 +172,14 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                 iterator.add(element);
                 element.setStructureParent(this);
 
-                setRestructIfNeedet(element);
+                setRestructIfNeeded(element);
                 return true;
             }
         }
         return false;
     }
 
-    private void setRestructIfNeedet(TextElement addetElement) {
+    private void setRestructIfNeeded(TextElement addetElement) {
         if (addetElement.isEndOfLine()) {
             needRestruct = true;
         }
