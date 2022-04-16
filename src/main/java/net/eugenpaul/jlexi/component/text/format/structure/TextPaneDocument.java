@@ -50,14 +50,27 @@ public class TextPaneDocument extends TextStructureOfStructure {
     }
 
     @Override
-    public void notifyChange(boolean restructure) {
-        if (restructure) {
-            restructChildren();
-        }
+    public void notifyChange() {
+        restructChildren();
         structureForm = null;
         if (parent != null) {
             parent.notifyChange();
         }
+    }
+
+    @Override
+    protected boolean checkMergeWith(TextStructure element) {
+        return false;
+    }
+
+    @Override
+    protected TextElement mergeWithNext(TextStructure element) {
+        return null;
+    }
+
+    @Override
+    protected TextElement mergeWithPrevious(TextStructure element) {
+        return null;
     }
 
     @Override
@@ -68,11 +81,6 @@ public class TextPaneDocument extends TextStructureOfStructure {
     @Override
     public void clearSplitter() {
         // nothing to do.
-    }
-
-    @Override
-    public boolean childCompleteTest() {
-        return true;
     }
 
 }

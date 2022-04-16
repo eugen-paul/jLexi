@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 import net.eugenpaul.jlexi.component.interfaces.Empty;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
@@ -29,7 +30,94 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         this.splits = new LinkedList<>();
     }
 
-    public abstract boolean childCompleteTest();
+    protected abstract boolean checkMergeWith(TextStructure element);
+
+    protected abstract TextElement mergeWithNext(TextStructure element);
+
+    protected abstract TextElement mergeWithPrevious(TextStructure element);
+
+    protected TextElement mergeChildWithPrevious(TextStructure child) {
+        var previousChild = getPreviousChild(child);
+
+        if (previousChild.isEmpty()) {
+            if (parentStructure != null) {
+                parentStructure.mergeChildWithNext(this);
+            }
+            return null;
+        }
+
+        if (!previousChild.get().checkMergeWith(child)) {
+            return null;
+        }
+
+        TextElement separator = previousChild.get().mergeWithNext(child);
+        if (separator != null) {
+            removeChild(child);
+            return separator;
+        }
+        return null;
+    }
+
+    protected TextElement mergeChildWithNext(TextStructure child) {
+        var nextChild = getNextChild(child);
+
+        if (nextChild.isEmpty()) {
+            if (parentStructure != null) {
+                return parentStructure.mergeChildWithPrevious(this);
+            }
+            return null;
+        }
+
+        if (!nextChild.get().checkMergeWith(child)) {
+            return null;
+        }
+
+        TextElement position = nextChild.get().mergeWithPrevious(child);
+        if (position != null) {
+            removeChild(child);
+            return position;
+        }
+        return null;
+    }
+
+    private Optional<TextStructure> getPreviousChild(TextStructure position) {
+        var iterator = childListIterator();
+        TextStructure previousChild = null;
+        while (iterator.hasNext()) {
+            var currentChild = iterator.next();
+            if (currentChild == position) {
+                break;
+            }
+            previousChild = currentChild;
+        }
+        if (previousChild == null) {
+            return Optional.empty();
+        }
+        return Optional.of(previousChild);
+    }
+
+    private Optional<TextStructure> getNextChild(TextStructure position) {
+        var iterator = childListIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == position) {
+                if (iterator.hasNext()) {
+                    return Optional.of(iterator.next());
+                }
+                break;
+            }
+        }
+        return Optional.empty();
+    }
+
+    private void removeChild(TextStructure child) {
+        var iterator = childListIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == child) {
+                iterator.remove();
+                break;
+            }
+        }
+    }
 
     protected void restructChildren() {
         var iterator = childListIterator();
@@ -46,13 +134,11 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         }
     }
 
-    public void notifyChange(boolean doRestruct) {
-        if (doRestruct) {
-            restructChildren();
-        }
+    public void notifyChange() {
+        restructChildren();
         structureForm = null;
         if (null != parentStructure) {
-            parentStructure.notifyChange(doRestruct);
+            parentStructure.notifyChange();
         }
     }
 
@@ -67,7 +153,13 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         return structureForm;
     }
 
-    public abstract void resetStructure();
+    protected void resetStructure() {
+        structureForm = null;
+        var iterator = childListIterator();
+        while (iterator.hasNext()) {
+            iterator.next().resetStructure();
+        }
+    }
 
     public abstract void clear();
 
@@ -77,6 +169,15 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
             return null;
         }
         return child.removeElement(element);
+    }
+
+    public boolean removeElementBefore(TextElement position, List<TextElement> removedElements) {
+        TextStructure child = getChildWithElement(position);
+        if (null == child) {
+            return false;
+        }
+
+        return child.removeElementBefore(position, removedElements);
     }
 
     public boolean addBefore(TextElement position, TextElement element) {
@@ -126,54 +227,4 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
     protected abstract TextElement getFirstElement();
 
     protected abstract TextElement getLastElement();
-
-    public TextStructure getNextStructure(TextStructure element) {
-        var iterator = childListIterator();
-        while (iterator.hasNext()) {
-            if (iterator.next() == element) {
-                if (iterator.hasNext()) {
-                    return iterator.next();
-                }
-                return getNextStructureFromParent();
-            }
-        }
-        return null;
-    }
-
-    private TextStructure getNextStructureFromParent() {
-        if (parentStructure != null) {
-            var next = parentStructure.getNextStructure(this);
-            if (next != null) {
-                return next.getFirstChild();
-            }
-        }
-        return null;
-    }
-
-    public TextStructure getPreviousStructure(TextStructure element) {
-        var iterator = childListIterator();
-        TextStructure lastElement = null;
-        while (iterator.hasNext()) {
-            var currentElement = iterator.next();
-            if (currentElement == element) {
-                if (lastElement != null) {
-                    return lastElement;
-                } else {
-                    return getPreviousStructureFromParent();
-                }
-            }
-            lastElement = currentElement;
-        }
-        return null;
-    }
-
-    private TextStructure getPreviousStructureFromParent() {
-        if (parentStructure != null) {
-            var next = parentStructure.getPreviousStructure(this);
-            if (next != null) {
-                return next.getLastChild();
-            }
-        }
-        return null;
-    }
 }

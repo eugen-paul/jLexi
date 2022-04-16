@@ -46,6 +46,53 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     }
 
     @Override
+    protected boolean checkMergeWith(TextStructure element) {
+        return element instanceof TextParagraph;
+    }
+
+    @Override
+    protected TextElement mergeWithNext(TextStructure element) {
+        if (!checkMergeWith(element)) {
+            return null;
+        }
+
+        TextParagraph nextParagraph = (TextParagraph) element;
+        TextElement responseSeparator = null;
+        if (textElements.getLast().isEndOfLine()) {
+            responseSeparator = textElements.removeLast();
+        }
+
+        nextParagraph.textElements.stream().forEach(v -> v.setStructureParent(this));
+        textElements.addAll(nextParagraph.textElements);
+
+        structureForm = null;
+
+        return responseSeparator;
+    }
+
+    @Override
+    protected TextElement mergeWithPrevious(TextStructure element) {
+        if (!checkMergeWith(element)) {
+            return null;
+        }
+
+        TextParagraph previousParagraph = (TextParagraph) element;
+
+        previousParagraph.textElements.stream().forEach(v -> v.setStructureParent(this));
+
+        TextElement position = textElements.getFirst();
+
+        var iterator = textElements.listIterator();
+        previousParagraph.textElements.stream()//
+                .filter(v -> !v.isEndOfLine())//
+                .forEach(iterator::add);
+
+        structureForm = null;
+
+        return position;
+    }
+
+    @Override
     public void resetStructure() {
         structureForm = null;
     }
@@ -57,8 +104,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         }
 
         checkAndSplit();
-
-        checkAndMergeWithNext();
 
         needRestruct = false;
     }
@@ -97,65 +142,89 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         setRestructIfNeeded(element);
     }
 
-    private void checkAndMergeWithNext() {
-        if (isEmpty() || textElements.getLast().isEndOfLine()) {
-            return;
-        }
-
-        var nextParagraph = getNextParagraph();
-        if (null == nextParagraph) {
-            return;
-        }
-
-        nextParagraph.textElements.stream().forEach(v -> v.setStructureParent(this));
-        textElements.addAll(nextParagraph.textElements);
-        nextParagraph.clear();
-    }
-
     @Override
-    public TextElement removeElement(TextElement element) {
-        if (element.getStructureParent() != this) {
-            return element;
+    public TextElement removeElement(TextElement elementToRemove) {
+        if (elementToRemove.getStructureParent() != this) {
+            return null;
         }
 
         var iterator = textElements.iterator();
+        TextElement nextElement = null;
+        boolean found = false;
         while (iterator.hasNext()) {
-            if (iterator.next() == element) {
+            if (iterator.next() == elementToRemove) {
+                found = true;
                 if (iterator.hasNext()) {
-                    iterator.remove();
-                    return iterator.next();
-                } else {
-                    return checkNextAndRemove(element, iterator);
+                    nextElement = iterator.next();
                 }
+                break;
             }
         }
-        return null;
+
+        if (!found) {
+            return null;
+        }
+
+        if (nextElement == null) {
+            if (parentStructure != null) {
+                return parentStructure.mergeChildWithNext(this);
+            }
+            return null;
+        }
+
+        removeElementFromText(elementToRemove);
+
+        structureForm = null;
+        return nextElement;
     }
 
-    private TextElement checkNextAndRemove(TextElement element, Iterator<TextElement> iterator) {
-        if (parentStructure == null) {
-            return element;
-        }
-
-        var nextStructure = parentStructure.getNextStructure(this);
-        if (null == nextStructure) {
-            // There is no further structure => EOL cann't be removed.
-            return element;
-        }
-
-        if (!(nextStructure instanceof TextParagraph)) {
-            // The next structure is not a paragraph. EOL can only be deleted if the current structure is empty.
-            if (isEmpty()) {
+    private void removeElementFromText(TextElement elementToRemove) {
+        var iterator = textElements.listIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == elementToRemove) {
                 iterator.remove();
-                return nextStructure.getFirstElement();
+                break;
             }
-            return element;
+        }
+    }
+
+    @Override
+    public boolean removeElementBefore(TextElement position, List<TextElement> removedElements) {
+        if (position.getStructureParent() != this) {
+            return false;
         }
 
-        // The next structure is a paragraph. EOL can be deleted.
-        var nextParagraph = (TextParagraph) nextStructure;
-        iterator.remove();
-        return nextParagraph.getFirstElement();
+        var iterator = textElements.listIterator();
+        TextElement elementToRemove = null;
+        boolean found = false;
+        while (iterator.hasNext()) {
+            var currentChild = iterator.next();
+            if (currentChild == position) {
+                found = true;
+                break;
+            }
+            elementToRemove = currentChild;
+        }
+
+        if (!found) {
+            return false;
+        }
+
+        if (elementToRemove != null) {
+            removeElementFromText(elementToRemove);
+            removedElements.add(elementToRemove);
+            structureForm = null;
+            return true;
+        }
+
+        if (parentStructure != null) {
+            var removedElement = parentStructure.mergeChildWithPrevious(this);
+            if (removedElement != null) {
+                removedElements.add(removedElement);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -179,22 +248,10 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         return false;
     }
 
-    private void setRestructIfNeeded(TextElement addetElement) {
-        if (addetElement.isEndOfLine()) {
+    private void setRestructIfNeeded(TextElement addedElement) {
+        if (addedElement.isEndOfLine()) {
             needRestruct = true;
         }
-    }
-
-    private TextParagraph getNextParagraph() {
-        if (parentStructure == null) {
-            return null;
-        }
-
-        var nextParagraph = parentStructure.getNextStructure(this);
-        if (!(nextParagraph instanceof TextParagraph)) {
-            return null;
-        }
-        return (TextParagraph) nextParagraph;
     }
 
     @Override
@@ -206,11 +263,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     @Override
     public boolean isEmpty() {
         return textElements.isEmpty();
-    }
-
-    @Override
-    public boolean childCompleteTest() {
-        return textElements.peekLast().isEndOfLine();
     }
 
     @Override
