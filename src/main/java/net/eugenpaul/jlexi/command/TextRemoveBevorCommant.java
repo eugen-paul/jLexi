@@ -23,16 +23,11 @@ public class TextRemoveBevorCommant implements TextCommand {
             return;
         }
 
-        var parentStructure = cursorPosition.getStructureParent();
-        if (null == parentStructure) {
-            return;
-        }
-
         var removed = new LinkedList<TextElement>();
-        boolean isRemoved = parentStructure.removeElementBefore(cursorPosition, removed);
+        boolean isRemoved = cursorPosition.removeElementBefore(removed);
 
         if (isRemoved) {
-            cursorPosition.getStructureParent().notifyChange();
+            cursorPosition.notifyChange();
             removedText = removed.getFirst();
         }
     }

@@ -16,19 +16,13 @@ public class TextElementAddBeforeCommand implements TextCommand {
 
     @Override
     public void execute() {
-        var parentStructure = cursorPosition.getStructureParent();
-
-        if (null == parentStructure) {
-            return;
-        }
-
-        parentStructure.addBefore(cursorPosition, addedElement);
-        parentStructure.notifyChange();
+        cursorPosition.addBefore(addedElement);
+        cursorPosition.notifyChange();
     }
 
     @Override
     public void unexecute() {
-        TextElementRemoveCommant undoCommand = new TextElementRemoveCommant(addedElement, cursorPosition);
+        TextElementRemoveCommant undoCommand = new TextElementRemoveCommant(addedElement);
         undoCommand.execute();
     }
 

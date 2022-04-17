@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text.format.element;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
@@ -15,7 +16,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextElement extends Glyph implements EffectHolder, TextDocumentElement {
 
-    @Getter
+    @Getter(value = AccessLevel.PROTECTED)
     @Setter
     protected TextStructure structureParent;
     private List<GlyphEffect> effects;
@@ -80,6 +81,17 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
      */
     public abstract boolean isRemoveable();
 
+    public boolean isChildOf(TextStructure parentToCheck) {
+        var currentParent = structureParent;
+        while (currentParent != null) {
+            if (currentParent == parentToCheck) {
+                return true;
+            }
+            currentParent = currentParent.getParentStructure();
+        }
+        return false;
+    }
+
     public boolean addBefore(TextElement element) {
         if (structureParent == null) {
             return false;
@@ -87,11 +99,11 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return structureParent.addBefore(this, element);
     }
 
-    public TextElement removeElement(TextElement element) {
+    public TextElement removeElement(List<TextElement> removedElements) {
         if (structureParent == null) {
             return null;
         }
-        return structureParent.removeElement(element);
+        return structureParent.removeElement(this, removedElements);
     }
 
     public boolean removeElementBefore(List<TextElement> removedElements) {

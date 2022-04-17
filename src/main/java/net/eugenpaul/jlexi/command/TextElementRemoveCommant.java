@@ -1,48 +1,47 @@
 package net.eugenpaul.jlexi.command;
 
+import java.util.LinkedList;
+
 import lombok.Getter;
 import lombok.var;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
 public class TextElementRemoveCommant implements TextCommand {
 
-    private TextElement elementToRemove;
     private TextElement removedElement;
+    private TextElement positionBeforeRemove;
+    private TextElement positionAfterRemove;
     @Getter
     private TextElement cursorPosition;
 
-    public TextElementRemoveCommant(TextElement elementToRemove, TextElement cursorPosition) {
-        this.elementToRemove = elementToRemove;
+    public TextElementRemoveCommant(TextElement cursorPosition) {
+        this.positionBeforeRemove = cursorPosition;
         this.cursorPosition = cursorPosition;
+        this.positionAfterRemove = null;
         this.removedElement = null;
-    }
-
-    public TextElementRemoveCommant(TextElement elementToRemove) {
-        this(elementToRemove, null);
     }
 
     @Override
     public void execute() {
         TextElement newCursorPosition = null;
-        var parentStructure = elementToRemove.getStructureParent();
-        if (null == parentStructure) {
-            return;
-        }
 
-        newCursorPosition = parentStructure.removeElement(elementToRemove);
-        
+        var removed = new LinkedList<TextElement>();
+        newCursorPosition = positionBeforeRemove.removeElement(removed);
+
         if (newCursorPosition != null) {
-            parentStructure.notifyChange();
-            cursorPosition = newCursorPosition;
-            removedElement = elementToRemove;
+            positionBeforeRemove.notifyChange();
+            positionAfterRemove = newCursorPosition;
+            cursorPosition = positionAfterRemove;
+            removedElement = removed.getFirst();
         }
     }
 
     @Override
     public void unexecute() {
         if (!isEmpty()) {
-            TextElementAddBeforeCommand command = new TextElementAddBeforeCommand(removedElement, cursorPosition);
+            TextElementAddBeforeCommand command = new TextElementAddBeforeCommand(removedElement, positionAfterRemove);
             command.execute();
+            cursorPosition = positionBeforeRemove;
         }
     }
 
@@ -55,5 +54,4 @@ public class TextElementRemoveCommant implements TextCommand {
     public boolean isEmpty() {
         return removedElement == null;
     }
-
 }

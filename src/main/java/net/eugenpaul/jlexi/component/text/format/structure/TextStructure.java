@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
+import lombok.Getter;
 import net.eugenpaul.jlexi.component.interfaces.Empty;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -15,6 +16,7 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public abstract class TextStructure implements TextDocumentElement, Splitable<TextStructure>, Empty {
 
+    @Getter
     protected TextStructure parentStructure;
     protected TextFormat format;
     protected ResourceManager storage;
@@ -163,12 +165,12 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
 
     public abstract void clear();
 
-    public TextElement removeElement(TextElement element) {
+    public TextElement removeElement(TextElement element, List<TextElement> removedElements) {
         TextStructure child = getChildWithElement(element);
         if (null == child) {
             return null;
         }
-        return child.removeElement(element);
+        return child.removeElement(element, removedElements);
     }
 
     public boolean removeElementBefore(TextElement position, List<TextElement> removedElements) {
@@ -189,23 +191,14 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
     }
 
     protected TextStructure getChildWithElement(TextElement element) {
-        TextStructure responseChild = null;
-        TextStructure parentOfElement = element.getStructureParent();
-        boolean found = false;
-
-        while (parentOfElement != null) {
-            if (parentOfElement == this) {
-                found = true;
-                break;
+        var childIterator = childListIterator();
+        while (childIterator.hasNext()) {
+            var child = childIterator.next();
+            if (element.isChildOf(child)) {
+                return child;
             }
-            responseChild = parentOfElement;
-            parentOfElement = parentOfElement.parentStructure;
         }
-
-        if (!found || null == responseChild) {
-            return null;
-        }
-        return responseChild;
+        return null;
     }
 
     @Override

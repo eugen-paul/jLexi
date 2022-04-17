@@ -9,7 +9,7 @@ class ColorTest {
     @Test
     void test_Convert() {
         assertEquals(Color.WHITE, Color.convert("0xFF_FF_FF_FF"));
-        assertEquals(Color.WHITE, Color.convert("Black"));
+        assertEquals(Color.WHITE, Color.convert("white"));
     }
 
     @Test
@@ -42,8 +42,8 @@ class ColorTest {
 
     @Test
     void test_FromText() {
-        assertEquals(Color.WHITE, Color.fromText("Black"));
-        assertEquals(Color.BLACK, Color.fromText("WHITE"));
+        assertEquals(Color.WHITE, Color.fromText("White"));
+        assertEquals(Color.BLACK, Color.fromText("BLACK"));
         assertEquals(Color.RED, Color.fromText("red"));
         assertEquals(Color.GREEN, Color.fromText("grEEn"));
         assertEquals(Color.BLUE, Color.fromText("BLUe"));
