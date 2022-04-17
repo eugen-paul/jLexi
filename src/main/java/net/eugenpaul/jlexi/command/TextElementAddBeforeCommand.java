@@ -1,16 +1,16 @@
 package net.eugenpaul.jlexi.command;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 public class TextElementAddBeforeCommand implements TextCommand {
 
     private TextElement addedElement;
     @Getter
-    private CursorPosition cursorPosition;
+    private TextPosition cursorPosition;
 
-    public TextElementAddBeforeCommand(TextElement addedElement, CursorPosition cursorPosition) {
+    public TextElementAddBeforeCommand(TextElement addedElement, TextPosition cursorPosition) {
         this.addedElement = addedElement;
         this.cursorPosition = cursorPosition;
     }
@@ -23,7 +23,7 @@ public class TextElementAddBeforeCommand implements TextCommand {
 
     @Override
     public void unexecute() {
-        TextElementRemoveCommant undoCommand = new TextElementRemoveCommant(addedElement);
+        TextElementRemoveCommant undoCommand = new TextElementRemoveCommant(addedElement.getTextPosition());
         undoCommand.execute();
     }
 

@@ -8,17 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public class TextPaneElementRow extends TextStructureForm {
+public class TextPaneElementRow extends TextRepresentation {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneElementRow.class);
 
@@ -57,13 +57,13 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public TextElement getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCorsorElementAt(Vector2d pos) {
         var row = xPositionToRow.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
 
-        TextElement clickedElement = row.getValue().getCursorElementAt(//
+        TextPosition clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -77,23 +77,23 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public TextElement getFirstChild() {
-        return children.getFirst();
+    public TextPosition getFirstChild() {
+        return children.getFirst().getTextPosition();
     }
 
     @Override
-    public TextElement getLastChild() {
-        return children.getLast();
+    public TextPosition getLastChild() {
+        return children.getLast().getTextPosition();
     }
 
     @Override
-    public CursorPosition getNext(CursorPosition position) {
+    public TextPosition getNext(TextPosition position) {
         var iterator = children.iterator();
         while (iterator.hasNext()) {
             var e = iterator.next();
-            if (e == position) {
+            if (e == position.getTextElement()) {
                 if (iterator.hasNext()) {
-                    return iterator.next();
+                    return iterator.next().getTextPosition();
                 } else {
                     return null;
                 }
@@ -103,16 +103,20 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public CursorPosition getPrevious(CursorPosition position) {
+    public TextPosition getPrevious(TextPosition position) {
         var iterator = children.iterator();
         TextElement prevElement = null;
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
-            if (currentElement == position) {
+            if (currentElement == position.getTextElement()) {
                 if (prevElement != null && prevElement.isCursorHoldable()) {
                     // TODO get first element from inside of prevElement.
+                    throw new NotYetImplementedException("TODO get first element from inside of prevElement.");
                 }
-                return prevElement;
+                if (prevElement == null) {
+                    return null;
+                }
+                return prevElement.getTextPosition();
             }
             prevElement = currentElement;
         }
@@ -158,18 +162,18 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public Iterator<TextStructureForm> drawableChildIterator() {
+    public Iterator<TextRepresentation> drawableChildIterator() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public TextStructureForm getNextStructureForm(TextStructureForm structure) {
+    public TextRepresentation getNextRepresentation(TextRepresentation structure) {
         return null;
     }
 
     @Override
-    public TextStructureForm getPreviousStructureForm(TextStructureForm structure) {
+    public TextRepresentation getPreviousRepresentation(TextRepresentation structure) {
         return null;
     }
 

@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.command;
 
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 public interface TextCommand extends Command {
-    public abstract CursorPosition getCursorPosition();
+    public abstract TextPosition getCursorPosition();
 }

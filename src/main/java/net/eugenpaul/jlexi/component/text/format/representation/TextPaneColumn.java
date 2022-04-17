@@ -6,19 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class TextPaneColumn extends TextStructureFormOfStructures {
+public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneColumn.class);
 
-    private TreeMap<Integer, TextStructureForm> yPositionToRow;
+    private TreeMap<Integer, TextRepresentation> yPositionToRow;
 
     public TextPaneColumn(Glyph parent) {
         super(parent);
@@ -26,7 +24,7 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
     }
 
     @Override
-    public void add(TextStructureForm child) {
+    public void add(TextRepresentation child) {
         super.add(child);
         Size currentSize = getSize();
         setSize(new Size(//
@@ -36,13 +34,13 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
     }
 
     @Override
-    public TextElement getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCorsorElementAt(Vector2d pos) {
         var row = yPositionToRow.floorEntry(pos.getY());
         if (null == row) {
             return null;
         }
 
-        TextElement clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -82,21 +80,21 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
     }
 
     @Override
-    public CursorPosition getUp(CursorPosition position) {
-        var structure = getChildStructureOfElement(position.getTextElement());
-        if (null == structure) {
+    public TextPosition getUp(TextPosition position) {
+        var representation = position.getRepresentationChild(this);
+        if (null == representation) {
             return null;
         }
 
-        var e = structure.getUp(position);
+        var e = representation.getUp(position);
 
         if (null == e) {
             var pos = position.getTextElement().getRelativPositionTo(this);
-            while (e == null && structure != null && pos != null) {
-                structure = getPreviousStructureForm(structure);
-                if (structure != null) {
+            while (e == null && representation != null && pos != null) {
+                representation = getPreviousRepresentation(representation);
+                if (representation != null) {
                     pos.setY(0);
-                    e = structure.getCorsorElementAt(pos);
+                    e = representation.getCorsorElementAt(pos);
                 }
             }
         }
@@ -105,21 +103,21 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
     }
 
     @Override
-    public CursorPosition getDown(CursorPosition position) {
-        var structure = getChildStructureOfElement(position.getTextElement());
-        if (null == structure) {
+    public TextPosition getDown(TextPosition position) {
+        var representation = position.getRepresentationChild(this);
+        if (null == representation) {
             return null;
         }
 
-        var e = structure.getDown(position);
+        var e = representation.getDown(position);
 
         if (null == e) {
             var pos = position.getTextElement().getRelativPositionTo(this);
-            while (e == null && structure != null && pos != null) {
-                structure = getNextStructureForm(structure);
-                if (structure != null) {
+            while (e == null && representation != null && pos != null) {
+                representation = getNextRepresentation(representation);
+                if (representation != null) {
                     pos.setY(0);
-                    e = structure.getCorsorElementAt(pos);
+                    e = representation.getCorsorElementAt(pos);
                 }
             }
         }

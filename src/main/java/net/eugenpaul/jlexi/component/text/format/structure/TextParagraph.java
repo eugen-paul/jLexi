@@ -12,11 +12,11 @@ import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextElementToRowCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
-public class TextParagraph extends TextStructure implements GlyphIterable<TextStructureForm> {
+public class TextParagraph extends TextStructure implements GlyphIterable<TextRepresentation> {
 
     protected TextCompositor<TextElement> compositor;
     private LinkedList<TextElement> textElements;
@@ -30,19 +30,19 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
     }
 
     @Override
-    public Iterator<TextStructureForm> drawableChildIterator() {
-        if (null == structureForm) {
+    public Iterator<TextRepresentation> drawableChildIterator() {
+        if (null == representation) {
             return Collections.emptyIterator();
         }
-        return new ListOfListIterator<>(structureForm);
+        return new ListOfListIterator<>(representation);
     }
 
     @Override
-    public List<TextStructureForm> getRows(Size size) {
-        if (null == structureForm) {
-            structureForm = compositor.compose(textElements.iterator(), size);
+    public List<TextRepresentation> getRows(Size size) {
+        if (null == representation) {
+            representation = compositor.compose(textElements.iterator(), size);
         }
-        return structureForm;
+        return representation;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         nextParagraph.textElements.stream().forEach(v -> v.setStructureParent(this));
         textElements.addAll(nextParagraph.textElements);
 
-        structureForm = null;
+        representation = null;
 
         return responseSeparator;
     }
@@ -87,14 +87,14 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
                 .filter(v -> !v.isEndOfLine())//
                 .forEach(iterator::add);
 
-        structureForm = null;
+        representation = null;
 
         return position;
     }
 
     @Override
     public void resetStructure() {
-        structureForm = null;
+        representation = null;
     }
 
     @Override
@@ -174,7 +174,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
 
         removeElementFromText(elementToRemove);
 
-        structureForm = null;
+        representation = null;
         removedElements.add(elementToRemove);
         return nextElement;
     }
@@ -210,7 +210,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextSt
         if (elementToRemove != null) {
             removeElementFromText(elementToRemove);
             removedElements.add(elementToRemove);
-            structureForm = null;
+            representation = null;
             return true;
         }
 

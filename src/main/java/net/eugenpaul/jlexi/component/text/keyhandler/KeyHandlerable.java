@@ -2,7 +2,7 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.Cursor;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
@@ -23,5 +23,5 @@ public interface KeyHandlerable {
 
     public void doCursorMove(CursorMove cursorMove);
 
-    public TextStructureForm getTextStructureForm();
+    public TextRepresentation getTextRepresentation();
 }

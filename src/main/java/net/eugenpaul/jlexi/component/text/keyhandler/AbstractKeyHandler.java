@@ -7,8 +7,8 @@ import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
 import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextRemoveBevorCommant;
 import net.eugenpaul.jlexi.command.TextElementRemoveCommant;
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
@@ -155,25 +155,25 @@ public class AbstractKeyHandler {
 
     private boolean keyPressedCursorMove(KeyCode keyCode) {
         var cursor = component.getMouseCursor();
-        var structureForm = component.getTextStructureForm();
+        var representation = component.getTextRepresentation();
 
-        if (null == structureForm) {
+        if (null == representation) {
             return false;
         }
 
-        CursorPosition cursorPosition = null;
+        TextPosition cursorPosition = null;
         switch (keyCode) {
         case RIGHT:
-            cursorPosition = structureForm.getNext(cursor.getPosition());
+            cursorPosition = representation.getNext(cursor.getPosition());
             break;
         case LEFT:
-            cursorPosition = structureForm.getPrevious(cursor.getPosition());
+            cursorPosition = representation.getPrevious(cursor.getPosition());
             break;
         case UP:
-            cursorPosition = structureForm.getUp(cursor.getPosition());
+            cursorPosition = representation.getUp(cursor.getPosition());
             break;
         case DOWN:
-            cursorPosition = structureForm.getDown(cursor.getPosition());
+            cursorPosition = representation.getDown(cursor.getPosition());
             break;
         default:
             break;

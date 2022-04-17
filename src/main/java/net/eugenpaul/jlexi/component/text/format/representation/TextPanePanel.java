@@ -16,7 +16,7 @@ import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextStructureFormToColumnCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
@@ -38,16 +38,16 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public class TextPanePanel extends TextStructureFormOfStructures
+public class TextPanePanel extends TextRepresentationOfRepresentation
         implements ChangeListener, GuiEvents, TextUpdateable, KeyHandlerable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPanePanel.class);
 
     private TextPaneDocument document;
 
-    private TextCompositor<TextStructureForm> compositor;
+    private TextCompositor<TextRepresentation> compositor;
 
-    private TreeMap<Integer, TextStructureForm> yPositionToSite;
+    private TreeMap<Integer, TextRepresentation> yPositionToSite;
 
     private AbstractKeyHandler keyHandler;
 
@@ -65,7 +65,7 @@ public class TextPanePanel extends TextStructureFormOfStructures
     public TextPanePanel(String cursorPrefix, Glyph parent, ResourceManager storage, AbstractController controller) {
         super(parent);
         this.storage = storage;
-        this.compositor = new TextStructureFormToColumnCompositor();
+        this.compositor = new TextRepresentationToColumnCompositor();
         this.cursorName = cursorPrefix + "textPaneCursor";
 
         this.document = new TextPaneDocument(//
@@ -140,13 +140,13 @@ public class TextPanePanel extends TextStructureFormOfStructures
     }
 
     @Override
-    public TextElement getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCorsorElementAt(Vector2d pos) {
         var row = yPositionToSite.floorEntry(pos.getY());
         if (null == row) {
             return null;
         }
 
-        TextElement clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -207,7 +207,7 @@ public class TextPanePanel extends TextStructureFormOfStructures
             return;
         }
 
-        TextElement clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
                 new Vector2d(//
                         mouseX - row.getValue().getRelativPosition().getX(), //
                         mouseY - row.getValue().getRelativPosition().getY() //
@@ -267,7 +267,7 @@ public class TextPanePanel extends TextStructureFormOfStructures
     }
 
     @Override
-    public TextStructureForm getTextStructureForm() {
+    public TextRepresentation getTextRepresentation() {
         return this;
     }
 }

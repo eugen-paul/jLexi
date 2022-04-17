@@ -45,14 +45,14 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     @Override
     public void resetStructure() {
-        structureForm = null;
+        representation = null;
         children.stream().forEach(TextStructure::resetStructure);
     }
 
     @Override
     public void notifyChange() {
         restructChildren();
-        structureForm = null;
+        representation = null;
         if (parent != null) {
             parent.notifyChange();
         }

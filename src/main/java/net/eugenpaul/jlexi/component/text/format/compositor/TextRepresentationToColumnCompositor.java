@@ -5,20 +5,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneColumn;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.utils.Size;
 
-public class TextStructureFormToColumnCompositor implements TextCompositor<TextStructureForm> {
+public class TextRepresentationToColumnCompositor implements TextCompositor<TextRepresentation> {
 
     @Override
-    public List<TextStructureForm> compose(Iterator<TextStructureForm> iterator, Size maxSize) {
-        List<TextStructureForm> responseRows = new LinkedList<>();
+    public List<TextRepresentation> compose(Iterator<TextRepresentation> iterator, Size maxSize) {
+        List<TextRepresentation> responseRows = new LinkedList<>();
 
         TextPaneColumn column = new TextPaneColumn(null);
         int currentHeight = 0;
 
         while (iterator.hasNext()) {
-            TextStructureForm element = iterator.next();
+            TextRepresentation element = iterator.next();
 
             if (currentHeight + element.getSize().getHeight() <= maxSize.getHeight()) {
                 column.add(element);

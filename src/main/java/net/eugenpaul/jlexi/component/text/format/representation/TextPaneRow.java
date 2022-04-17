@@ -6,17 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class TextPaneRow extends TextStructureFormOfStructures {
+public class TextPaneRow extends TextRepresentationOfRepresentation {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneRow.class);
 
-    private TreeMap<Integer, TextStructureForm> xPositionToRow;
+    private TreeMap<Integer, TextRepresentation> xPositionToRow;
 
     public TextPaneRow(Glyph parent) {
         super(parent);
@@ -24,13 +23,13 @@ public class TextPaneRow extends TextStructureFormOfStructures {
     }
 
     @Override
-    public TextElement getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCorsorElementAt(Vector2d pos) {
         var row = xPositionToRow.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
 
-        TextElement clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//

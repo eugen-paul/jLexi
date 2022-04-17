@@ -1,25 +1,25 @@
 package net.eugenpaul.jlexi.component.text.format;
 
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 public interface CursorControl {
-    public CursorPosition getNext(CursorPosition position);
+    public TextPosition getNext(TextPosition position);
 
-    public CursorPosition getPrevious(CursorPosition position);
+    public TextPosition getPrevious(TextPosition position);
 
-    public CursorPosition getUp(CursorPosition position);
+    public TextPosition getUp(TextPosition position);
 
-    public CursorPosition getDown(CursorPosition position);
+    public TextPosition getDown(TextPosition position);
 
-    public CursorPosition getEol(CursorPosition position);
+    public TextPosition getEol(TextPosition position);
 
-    public CursorPosition getBol(CursorPosition position);
+    public TextPosition getBol(TextPosition position);
 
-    public CursorPosition getStart(CursorPosition position);
+    public TextPosition getStart(TextPosition position);
 
-    public CursorPosition getEnd(CursorPosition position);
+    public TextPosition getEnd(TextPosition position);
 
-    public CursorPosition getPageUp(CursorPosition position);
+    public TextPosition getPageUp(TextPosition position);
 
-    public CursorPosition getPageDown(CursorPosition position);
+    public TextPosition getPageDown(TextPosition position);
 }

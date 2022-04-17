@@ -7,15 +7,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public abstract class TextElement extends Glyph implements EffectHolder, TextDocumentElement, CursorPosition {
+public abstract class TextElement extends Glyph implements EffectHolder, TextDocumentElement {
 
     @Getter(value = AccessLevel.PROTECTED)
     @Setter
@@ -25,6 +25,8 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     private TextFormat format;
     @Getter
     private TextFormatEffect formatEffect;
+    @Getter
+    private TextPosition textPosition;
 
     protected TextElement(Glyph parent, TextStructure structureParent, TextFormat format,
             TextFormatEffect formatEffect) {
@@ -33,6 +35,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         this.format = format;
         this.formatEffect = formatEffect;
         this.effects = new LinkedList<>();
+        this.textPosition = new TextPosition(this);
     }
 
     public boolean isEndOfLine() {
@@ -45,7 +48,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
 
     public abstract boolean isCursorHoldable();
 
-    public abstract TextElement getCursorElementAt(Vector2d pos);
+    public abstract TextPosition getCursorElementAt(Vector2d pos);
 
     public void reset() {
         cachedDrawable = null;
@@ -93,32 +96,28 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return false;
     }
 
-    @Override
     public boolean addBefore(TextElement element) {
         if (structureParent == null) {
             return false;
         }
         return structureParent.addBefore(this, element);
     }
-    
-    @Override
+
     public TextElement removeElement(List<TextElement> removedElements) {
         if (structureParent == null) {
             return null;
         }
         return structureParent.removeElement(this, removedElements);
     }
-    
-    @Override
+
     public boolean removeElementBefore(List<TextElement> removedElements) {
         if (structureParent == null) {
             return false;
         }
-        
+
         return structureParent.removeElementBefore(this, removedElements);
     }
-    
-    @Override
+
     public void notifyChange() {
         if (structureParent == null) {
             return;
@@ -126,7 +125,6 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         structureParent.notifyChange();
     }
 
-    @Override
     public TextElement getTextElement() {
         return this;
     }

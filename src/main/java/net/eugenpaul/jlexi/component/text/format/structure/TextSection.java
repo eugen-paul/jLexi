@@ -5,17 +5,17 @@ import java.util.Iterator;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
-public class TextSection extends TextStructureOfStructure implements GlyphIterable<TextStructureForm> {
+public class TextSection extends TextStructureOfStructure implements GlyphIterable<TextRepresentation> {
 
     public TextSection(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
         super(parentStructure, format, storage);
     }
 
     @Override
-    public Iterator<TextStructureForm> drawableChildIterator() {
+    public Iterator<TextRepresentation> drawableChildIterator() {
         // TODO
         return null;
     }

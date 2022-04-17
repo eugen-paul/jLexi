@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.element;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -38,8 +39,8 @@ public class TextNewLine extends TextElementAbstract {
     }
 
     @Override
-    public TextElement getCursorElementAt(Vector2d pos) {
-        return this;
+    public TextPosition getCursorElementAt(Vector2d pos) {
+        return getTextPosition();
     }
 
     @Override

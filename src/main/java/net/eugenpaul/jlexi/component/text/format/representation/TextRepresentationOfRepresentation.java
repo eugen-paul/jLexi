@@ -9,16 +9,16 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public abstract class TextStructureFormOfStructures extends TextStructureForm {
+public abstract class TextRepresentationOfRepresentation extends TextRepresentation {
 
-    protected LinkedList<TextStructureForm> children;
+    protected LinkedList<TextRepresentation> children;
 
-    protected TextStructureFormOfStructures(Glyph parent) {
+    protected TextRepresentationOfRepresentation(Glyph parent) {
         super(parent);
         this.children = new LinkedList<>();
     }
 
-    public void add(TextStructureForm child) {
+    public void add(TextRepresentation child) {
         children.add(child);
     }
 
@@ -40,12 +40,12 @@ public abstract class TextStructureFormOfStructures extends TextStructureForm {
     }
 
     @Override
-    public TextElement getFirstChild() {
+    public TextPosition getFirstChild() {
         return children.getFirst().getFirstChild();
     }
 
     @Override
-    public TextElement getLastChild() {
+    public TextPosition getLastChild() {
         return children.getLast().getLastChild();
     }
 
@@ -62,17 +62,17 @@ public abstract class TextStructureFormOfStructures extends TextStructureForm {
     }
 
     @Override
-    public Iterator<TextStructureForm> drawableChildIterator() {
+    public Iterator<TextRepresentation> drawableChildIterator() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public TextStructureForm getNextStructureForm(TextStructureForm structure) {
+    public TextRepresentation getNextRepresentation(TextRepresentation representation) {
         var iterator = children.iterator();
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
-            if (currentElement == structure) {
+            if (currentElement == representation) {
                 if (iterator.hasNext()) {
                     return iterator.next();
                 } else {
@@ -84,12 +84,12 @@ public abstract class TextStructureFormOfStructures extends TextStructureForm {
     }
 
     @Override
-    public TextStructureForm getPreviousStructureForm(TextStructureForm structure) {
+    public TextRepresentation getPreviousRepresentation(TextRepresentation representation) {
         var iterator = children.iterator();
-        TextStructureForm lastElement = null;
+        TextRepresentation lastElement = null;
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
-            if (currentElement == structure) {
+            if (currentElement == representation) {
                 return lastElement;
             }
             lastElement = currentElement;

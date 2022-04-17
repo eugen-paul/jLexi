@@ -6,14 +6,14 @@ import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneElementRow;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextElementToRowCompositor<T extends TextElement> implements TextCompositor<T> {
 
     @Override
-    public List<TextStructureForm> compose(Iterator<T> iterator, Size maxSize) {
-        List<TextStructureForm> responseRows = new LinkedList<>();
+    public List<TextRepresentation> compose(Iterator<T> iterator, Size maxSize) {
+        List<TextRepresentation> responseRows = new LinkedList<>();
 
         TextPaneElementRow row = new TextPaneElementRow(null);
         int currentLength = 0;

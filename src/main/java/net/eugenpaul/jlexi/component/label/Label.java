@@ -8,11 +8,11 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextStructureFormToColumnCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -32,7 +32,7 @@ public class Label extends GuiGlyph {
     private String text;
     private TextParagraph textElement;
 
-    private TextCompositor<TextStructureForm> compositor;
+    private TextCompositor<TextRepresentation> compositor;
 
     public Label(Glyph parent, String text, TextFormat textFormat, ResourceManager storage) {
         super(parent);
@@ -40,7 +40,7 @@ public class Label extends GuiGlyph {
         this.storage = storage;
         this.text = text;
         this.textElement = new TextParagraph(null, textFormat, storage);
-        compositor = new TextStructureFormToColumnCompositor();
+        compositor = new TextRepresentationToColumnCompositor();
         setText(text);
     }
 
@@ -77,9 +77,9 @@ public class Label extends GuiGlyph {
             return cachedDrawable;
         }
 
-        List<TextStructureForm> rows = textElement.getRows(size);
+        List<TextRepresentation> rows = textElement.getRows(size);
 
-        List<TextStructureForm> column = compositor.compose(rows.iterator(), size);
+        List<TextRepresentation> column = compositor.compose(rows.iterator(), size);
 
         if (column.isEmpty()) {
             return DrawableImpl.EMPTY_DRAWABLE;

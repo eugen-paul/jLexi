@@ -10,7 +10,7 @@ import net.eugenpaul.jlexi.component.interfaces.Empty;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.component.text.format.representation.TextStructureForm;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -20,7 +20,7 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
     protected TextStructure parentStructure;
     protected TextFormat format;
     protected ResourceManager storage;
-    protected List<TextStructureForm> structureForm;
+    protected List<TextRepresentation> representation;
 
     protected List<TextStructure> splits;
 
@@ -28,7 +28,7 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         this.parentStructure = parentStructure;
         this.format = format;
         this.storage = storage;
-        this.structureForm = null;
+        this.representation = null;
         this.splits = new LinkedList<>();
     }
 
@@ -138,25 +138,25 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
 
     public void notifyChange() {
         restructChildren();
-        structureForm = null;
+        representation = null;
         if (null != parentStructure) {
             parentStructure.notifyChange();
         }
     }
 
-    public List<TextStructureForm> getRows(Size size) {
-        if (null == structureForm) {
-            structureForm = new LinkedList<>();
+    public List<TextRepresentation> getRows(Size size) {
+        if (null == representation) {
+            representation = new LinkedList<>();
             var iterator = childListIterator();
             while (iterator.hasNext()) {
-                structureForm.addAll(iterator.next().getRows(size));
+                representation.addAll(iterator.next().getRows(size));
             }
         }
-        return structureForm;
+        return representation;
     }
 
     protected void resetStructure() {
-        structureForm = null;
+        representation = null;
         var iterator = childListIterator();
         while (iterator.hasNext()) {
             iterator.next().resetStructure();

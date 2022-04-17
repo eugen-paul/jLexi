@@ -3,10 +3,10 @@ package net.eugenpaul.jlexi.component.text;
 import java.beans.PropertyChangeEvent;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
@@ -36,11 +36,11 @@ public class Cursor implements ModelPropertyChangeListner {
         this.controller.addView(this);
     }
 
-    public CursorPosition getPosition() {
-        return textElement;
+    public TextPosition getPosition() {
+        return textElement.getTextPosition();
     }
 
-    public void moveCursorTo(CursorPosition cursorPosition) {
+    public void moveCursorTo(TextPosition cursorPosition) {
         if (null != this.textElement && null != effect) {
             this.textElement.removeEffect(effect);
             this.controller.removeEffectFromController(effect);
@@ -51,8 +51,10 @@ public class Cursor implements ModelPropertyChangeListner {
         }
 
         this.textElement = cursorPosition.getTextElement();
-        this.textFormat = cursorPosition.getTextElement().getFormat();
-        this.effect = new CursorEffect(cursorPosition.getTextElement());
+        this.textFormat = this.textElement.getFormat();
+        this.textFormatEffect = this.textElement.getFormatEffect();
+
+        this.effect = new CursorEffect(this.textElement);
         this.controller.addEffectToController(effect);
 
         this.controller.propertyChange(new PropertyChangeEvent(//
