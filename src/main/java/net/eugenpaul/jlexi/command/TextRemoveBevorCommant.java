@@ -4,15 +4,16 @@ import java.util.LinkedList;
 
 import lombok.Getter;
 import lombok.var;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
 public class TextRemoveBevorCommant implements TextCommand {
 
     @Getter
-    private TextElement cursorPosition;
+    private CursorPosition cursorPosition;
     private TextElement removedText;
 
-    public TextRemoveBevorCommant(TextElement cursorPosition) {
+    public TextRemoveBevorCommant(CursorPosition cursorPosition) {
         this.cursorPosition = cursorPosition;
         this.removedText = null;
     }

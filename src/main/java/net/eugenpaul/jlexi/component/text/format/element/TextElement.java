@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
@@ -14,7 +15,7 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public abstract class TextElement extends Glyph implements EffectHolder, TextDocumentElement {
+public abstract class TextElement extends Glyph implements EffectHolder, TextDocumentElement, CursorPosition {
 
     @Getter(value = AccessLevel.PROTECTED)
     @Setter
@@ -92,33 +93,42 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return false;
     }
 
+    @Override
     public boolean addBefore(TextElement element) {
         if (structureParent == null) {
             return false;
         }
         return structureParent.addBefore(this, element);
     }
-
+    
+    @Override
     public TextElement removeElement(List<TextElement> removedElements) {
         if (structureParent == null) {
             return null;
         }
         return structureParent.removeElement(this, removedElements);
     }
-
+    
+    @Override
     public boolean removeElementBefore(List<TextElement> removedElements) {
         if (structureParent == null) {
             return false;
         }
-
+        
         return structureParent.removeElementBefore(this, removedElements);
     }
-
+    
+    @Override
     public void notifyChange() {
         if (structureParent == null) {
             return;
         }
         structureParent.notifyChange();
+    }
+
+    @Override
+    public TextElement getTextElement() {
+        return this;
     }
 
 }

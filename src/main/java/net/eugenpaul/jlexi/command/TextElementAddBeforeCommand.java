@@ -1,15 +1,16 @@
 package net.eugenpaul.jlexi.command;
 
 import lombok.Getter;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
 public class TextElementAddBeforeCommand implements TextCommand {
 
     private TextElement addedElement;
     @Getter
-    private TextElement cursorPosition;
+    private CursorPosition cursorPosition;
 
-    public TextElementAddBeforeCommand(TextElement addedElement, TextElement cursorPosition) {
+    public TextElementAddBeforeCommand(TextElement addedElement, CursorPosition cursorPosition) {
         this.addedElement = addedElement;
         this.cursorPosition = cursorPosition;
     }

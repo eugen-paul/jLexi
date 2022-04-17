@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text;
 import java.beans.PropertyChangeEvent;
 
 import lombok.Getter;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.controller.AbstractController;
@@ -32,22 +33,22 @@ public class Cursor implements ModelPropertyChangeListner {
         this.controller.addView(this);
     }
 
-    public void moveCursorTo(TextElement textElement) {
+    public void moveCursorTo(CursorPosition cursorPosition) {
         if (null != this.textElement && null != effect) {
             this.textElement.removeEffect(effect);
-            controller.removeEffectFromController(effect);
+            this.controller.removeEffectFromController(effect);
         }
 
-        if (null == textElement) {
+        if (null == cursorPosition) {
             return;
         }
 
-        this.textElement = textElement;
-        this.textFormat = textElement.getFormat();
-        effect = new CursorEffect(textElement);
-        controller.addEffectToController(effect);
+        this.textElement = cursorPosition.getTextElement();
+        this.textFormat = cursorPosition.getTextElement().getFormat();
+        this.effect = new CursorEffect(cursorPosition.getTextElement());
+        this.controller.addEffectToController(effect);
 
-        controller.propertyChange(new PropertyChangeEvent(//
+        this.controller.propertyChange(new PropertyChangeEvent(//
                 name, //
                 ViewPropertyChangeType.CURSOR_MOVE.getTypeName(), //
                 null, //
