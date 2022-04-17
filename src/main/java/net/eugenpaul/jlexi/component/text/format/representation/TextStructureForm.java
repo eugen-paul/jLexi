@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.CursorControl;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -27,13 +28,13 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
     public abstract TextElement getLastChild();
 
     @Override
-    public TextElement getNext(TextElement element) {
-        var structure = getChildStructureOfElement(element);
+    public CursorPosition getNext(CursorPosition position) {
+        var structure = getChildStructureOfElement(position.getTextElement());
         if (null == structure) {
             return null;
         }
 
-        var e = structure.getNext(element);
+        var e = structure.getNext(position);
 
         while (e == null && structure != null) {
             structure = getNextStructureForm(structure);
@@ -48,13 +49,13 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
     public abstract TextStructureForm getNextStructureForm(TextStructureForm structure);
 
     @Override
-    public TextElement getPrevious(TextElement element) {
-        var structure = getChildStructureOfElement(element);
+    public CursorPosition getPrevious(CursorPosition position) {
+        var structure = getChildStructureOfElement(position.getTextElement());
         if (null == structure) {
             return null;
         }
 
-        var e = structure.getPrevious(element);
+        var e = structure.getPrevious(position);
         while (e == null && structure != null) {
             structure = getPreviousStructureForm(structure);
             if (structure != null) {
@@ -82,57 +83,57 @@ public abstract class TextStructureForm extends Glyph implements CursorControl, 
     }
 
     @Override
-    public TextElement getUp(TextElement element) {
-        var structure = getChildStructureOfElement(element);
+    public CursorPosition getUp(CursorPosition position) {
+        var structure = getChildStructureOfElement(position.getTextElement());
         if (null == structure) {
             return null;
         }
 
-        return structure.getUp(element);
+        return structure.getUp(position);
     }
 
     @Override
-    public TextElement getDown(TextElement element) {
-        var structure = getChildStructureOfElement(element);
+    public CursorPosition getDown(CursorPosition position) {
+        var structure = getChildStructureOfElement(position.getTextElement());
         if (null == structure) {
             return null;
         }
 
-        return structure.getDown(element);
+        return structure.getDown(position);
     }
 
     @Override
-    public TextElement getEol(TextElement element) {
+    public CursorPosition getEol(CursorPosition element) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public TextElement getBol(TextElement element) {
+    public CursorPosition getBol(CursorPosition element) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public TextElement getStart(TextElement element) {
+    public CursorPosition getStart(CursorPosition element) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public TextElement getEnd(TextElement element) {
+    public CursorPosition getEnd(CursorPosition element) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public TextElement getPageUp(TextElement element) {
+    public CursorPosition getPageUp(CursorPosition element) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public TextElement getPageDown(TextElement element) {
+    public CursorPosition getPageDown(CursorPosition element) {
         // TODO Auto-generated method stub
         return null;
     }

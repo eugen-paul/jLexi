@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -86,11 +87,11 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public TextElement getNext(TextElement element) {
+    public CursorPosition getNext(CursorPosition position) {
         var iterator = children.iterator();
         while (iterator.hasNext()) {
             var e = iterator.next();
-            if (e == element) {
+            if (e == position) {
                 if (iterator.hasNext()) {
                     return iterator.next();
                 } else {
@@ -102,12 +103,12 @@ public class TextPaneElementRow extends TextStructureForm {
     }
 
     @Override
-    public TextElement getPrevious(TextElement element) {
+    public CursorPosition getPrevious(CursorPosition position) {
         var iterator = children.iterator();
         TextElement prevElement = null;
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
-            if (currentElement == element) {
+            if (currentElement == position) {
                 if (prevElement != null && prevElement.isCursorHoldable()) {
                     // TODO get first element from inside of prevElement.
                 }

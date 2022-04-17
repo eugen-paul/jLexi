@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
@@ -16,11 +17,13 @@ public class Cursor implements ModelPropertyChangeListner {
 
     private final String name;
 
-    @Getter
     private TextElement textElement;
 
     @Getter
     private TextFormat textFormat;
+    @Getter
+    private TextFormatEffect textFormatEffect;
+
     private GlyphEffect effect;
     private AbstractController controller;
 
@@ -31,6 +34,10 @@ public class Cursor implements ModelPropertyChangeListner {
         this.controller = controller;
 
         this.controller.addView(this);
+    }
+
+    public CursorPosition getPosition() {
+        return textElement;
     }
 
     public void moveCursorTo(CursorPosition cursorPosition) {

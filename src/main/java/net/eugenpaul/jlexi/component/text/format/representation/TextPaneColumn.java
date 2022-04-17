@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
@@ -81,16 +82,16 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
     }
 
     @Override
-    public TextElement getUp(TextElement element) {
-        var structure = getChildStructureOfElement(element);
+    public CursorPosition getUp(CursorPosition position) {
+        var structure = getChildStructureOfElement(position.getTextElement());
         if (null == structure) {
             return null;
         }
 
-        var e = structure.getUp(element);
+        var e = structure.getUp(position);
 
         if (null == e) {
-            var pos = element.getRelativPositionTo(this);
+            var pos = position.getTextElement().getRelativPositionTo(this);
             while (e == null && structure != null && pos != null) {
                 structure = getPreviousStructureForm(structure);
                 if (structure != null) {
@@ -104,16 +105,16 @@ public class TextPaneColumn extends TextStructureFormOfStructures {
     }
 
     @Override
-    public TextElement getDown(TextElement element) {
-        var structure = getChildStructureOfElement(element);
+    public CursorPosition getDown(CursorPosition position) {
+        var structure = getChildStructureOfElement(position.getTextElement());
         if (null == structure) {
             return null;
         }
 
-        var e = structure.getDown(element);
+        var e = structure.getDown(position);
 
         if (null == e) {
-            var pos = element.getRelativPositionTo(this);
+            var pos = position.getTextElement().getRelativPositionTo(this);
             while (e == null && structure != null && pos != null) {
                 structure = getNextStructureForm(structure);
                 if (structure != null) {

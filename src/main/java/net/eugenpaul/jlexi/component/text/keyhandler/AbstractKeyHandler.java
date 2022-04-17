@@ -7,7 +7,7 @@ import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
 import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextRemoveBevorCommant;
 import net.eugenpaul.jlexi.command.TextElementRemoveCommant;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.interfaces.CursorPosition;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -35,16 +35,15 @@ public class AbstractKeyHandler {
         }
 
         var cursor = component.getMouseCursor();
-        var element = cursor.getTextElement();
 
         var addCommand = new TextElementAddBeforeCommand(//
                 TextElementFactory.fromChar(//
                         storage, //
                         key, //
                         cursor.getTextFormat(), //
-                        element.getFormatEffect()//
+                        cursor.getTextFormatEffect()//
                 ), //
-                element);
+                cursor.getPosition());
 
         doTextCommant(addCommand);
     }
@@ -124,15 +123,14 @@ public class AbstractKeyHandler {
 
     private void keyPressedEnter() {
         var cursor = component.getMouseCursor();
-        var element = cursor.getTextElement();
 
         var addCommand = new TextElementAddBeforeCommand(//
                 TextElementFactory.genNewLineChar(//
                         storage, //
                         cursor.getTextFormat(), //
-                        element.getFormatEffect()//
+                        cursor.getTextFormatEffect()//
                 ), //
-                element);
+                cursor.getPosition());
 
         doTextCommant(addCommand);
     }
@@ -140,7 +138,7 @@ public class AbstractKeyHandler {
     private void keyPressedBackSpace() {
         var cursor = component.getMouseCursor();
 
-        var deleteCommand = new TextRemoveBevorCommant(cursor.getTextElement());
+        var deleteCommand = new TextRemoveBevorCommant(cursor.getPosition());
         doTextCommant(deleteCommand);
 
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
@@ -148,9 +146,8 @@ public class AbstractKeyHandler {
 
     private void keyPressedDelete() {
         var cursor = component.getMouseCursor();
-        var element = cursor.getTextElement();
 
-        var deleteCommand = new TextElementRemoveCommant(element);
+        var deleteCommand = new TextElementRemoveCommant(cursor.getPosition());
         doTextCommant(deleteCommand);
 
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
@@ -164,29 +161,29 @@ public class AbstractKeyHandler {
             return false;
         }
 
-        TextElement el = null;
+        CursorPosition cursorPosition = null;
         switch (keyCode) {
         case RIGHT:
-            el = structureForm.getNext(cursor.getTextElement());
+            cursorPosition = structureForm.getNext(cursor.getPosition());
             break;
         case LEFT:
-            el = structureForm.getPrevious(cursor.getTextElement());
+            cursorPosition = structureForm.getPrevious(cursor.getPosition());
             break;
         case UP:
-            el = structureForm.getUp(cursor.getTextElement());
+            cursorPosition = structureForm.getUp(cursor.getPosition());
             break;
         case DOWN:
-            el = structureForm.getDown(cursor.getTextElement());
+            cursorPosition = structureForm.getDown(cursor.getPosition());
             break;
         default:
             break;
         }
 
-        if (el == null) {
+        if (cursorPosition == null) {
             return false;
         }
 
-        cursor.moveCursorTo(el);
+        cursor.moveCursorTo(cursorPosition);
 
         return true;
     }
