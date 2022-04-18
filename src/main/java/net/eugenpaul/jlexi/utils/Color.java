@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Color {
+public final class Color {
     private static final String EXCEPTION_TEXT = "unsuported Format ";
 
     public static final Color WHITE = new Color(0xFF_FF_FF_FF);
@@ -26,7 +26,7 @@ public class Color {
     private static final Pattern HEX_ARGB = Pattern
             .compile("^0x([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})$");
 
-    private int value;
+    private final int value;
 
     public int getARGB() {
         return value;

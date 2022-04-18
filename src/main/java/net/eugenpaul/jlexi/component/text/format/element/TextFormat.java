@@ -14,7 +14,7 @@ import net.eugenpaul.jlexi.utils.Color;
 @Builder
 @Getter
 @EqualsAndHashCode
-public class TextFormat {
+public final class TextFormat {
 
     public static final TextFormat DEFAULT = TextFormat.builder().build();
 

@@ -21,7 +21,7 @@ import net.eugenpaul.jlexi.utils.Color;
 @Builder
 @Getter
 @EqualsAndHashCode
-public class TextFormatEffect {
+public final class TextFormatEffect {
 
     public static final FormatUnderlineType DEFAULT_UNDERLINE = FormatUnderlineType.NONE;
     public static final Color DEFAULT_UNDERLINE_COLOR = Color.BLACK;

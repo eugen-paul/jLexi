@@ -9,17 +9,17 @@ import lombok.With;
  */
 @Getter
 @EqualsAndHashCode
-public class Size {
+public final class Size {
 
     public static final Size ZERO_SIZE = new Size(0, 0);
     public static final Size ZERO_MAX = new Size(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     /** width of the element */
     @With
-    private int width;
+    private final int width;
     /** height of the element */
     @With
-    private int height;
+    private final int height;
 
     public Size(int width, int height) {
         this.width = Math.max(0, width);
