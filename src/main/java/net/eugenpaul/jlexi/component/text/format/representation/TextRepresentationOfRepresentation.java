@@ -4,9 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public abstract class TextRepresentationOfRepresentation extends TextRepresentation {
@@ -25,18 +22,6 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
     @Override
     public boolean isEmpty() {
         return children.isEmpty();
-    }
-
-    @Override
-    public void notifyUpdate(TextElement element, Drawable draw, Area area) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void notifyResize(TextElement element) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -95,5 +80,12 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
             lastElement = currentElement;
         }
         return null;
+    }
+
+    @Override
+    public void notifyChange() {
+        super.notifyChange();
+        children.forEach(v -> v.setParent(null));
+        children.clear();
     }
 }

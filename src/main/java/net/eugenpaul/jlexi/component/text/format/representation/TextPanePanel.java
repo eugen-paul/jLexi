@@ -86,14 +86,9 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         if (cachedDrawable != null) {
             return cachedDrawable;
         }
-
-        var sites = compositor.compose(document.getRows(getSize()).iterator(), getSize());
-
         children.clear();
 
-        for (var el : sites) {
-            children.add(el);
-        }
+        children.addAll(compositor.compose(document.getRows(getSize()).iterator(), getSize()));
 
         // we must always draw the full area to override removed objects
         Size pixelSize = getSize();
@@ -105,7 +100,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         yPositionToSite.clear();
 
         Vector2d position = Vector2d.zero();
-        for (var el : sites) {
+        for (var el : children) {
             ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
             var yPosition = position.getY();
 
@@ -169,8 +164,8 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     @Override
     public void resizeTo(Size size) {
+        notifyChange();
         setSize(size);
-        cachedDrawable = null;
         document.resetStructure();
     }
 

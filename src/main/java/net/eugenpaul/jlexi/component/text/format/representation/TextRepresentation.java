@@ -3,9 +3,6 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.CursorControl;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextRepresentation extends Glyph implements CursorControl, GlyphIterable<TextRepresentation> {
@@ -15,10 +12,6 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
     }
 
     public abstract boolean isEmpty();
-
-    public abstract void notifyUpdate(TextElement element, Drawable draw, Area area);
-
-    public abstract void notifyResize(TextElement element);
 
     public abstract TextPosition getCorsorElementAt(Vector2d pos);
 
