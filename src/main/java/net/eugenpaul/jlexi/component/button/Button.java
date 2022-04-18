@@ -60,7 +60,7 @@ public abstract class Button extends GuiGlyph {
             return DrawableImpl.EMPTY_DRAWABLE;
         }
 
-        List<Glyph> glyph = compositor.compose(elements.iterator(), size);
+        List<Glyph> glyph = compositor.compose(elements.iterator(), getSize());
 
         if (glyph.isEmpty()) {
             return DrawableImpl.EMPTY_DRAWABLE;
@@ -79,12 +79,5 @@ public abstract class Button extends GuiGlyph {
     public void visit(Visitor checker) {
         // TODO Auto-generated method stub
 
-    }
-
-    public void redraw() {
-        cachedDrawable = null;
-        if (parent != null) {
-            parent.notifyRedraw(getPixels(), getRelativPosition(), size);
-        }
     }
 }

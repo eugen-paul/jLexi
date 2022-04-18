@@ -36,6 +36,8 @@ public class JLexi {
 
         mainWindow.loadFile((new File("src/main/resources/Progress.json")).toPath());
 
+        mainWindow.redraw();
+
         mainWindow.setTitle("jLexi: Made by Eugen!");
     }
 }

@@ -12,19 +12,23 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-@Getter
-@Setter
 public abstract class Glyph {
-    
+
+    @Getter
+    @Setter
     protected Glyph parent;
+
+    @Getter
+    @Setter
     protected Vector2d relativPosition;
-    
-    @Setter(value = AccessLevel.PROTECTED)
+
     @Getter(value = AccessLevel.PROTECTED)
-    protected Drawable cachedDrawable;
-    
     @Setter(value = AccessLevel.PROTECTED)
-    protected Size size;
+    protected Drawable cachedDrawable;
+
+    @Getter
+    @Setter(value = AccessLevel.PROTECTED)
+    private Size size;
 
     /**
      * C'tor
@@ -120,9 +124,7 @@ public abstract class Glyph {
             return;
         }
 
-        if (cachedDrawable == null) {
-            getPixels();
-        }
+        getPixels();
 
         ImageArrayHelper.copyRectangle(//
                 drawData, //
@@ -134,4 +136,21 @@ public abstract class Glyph {
 
         parent.notifyRedraw(drawData, position.addNew(this.relativPosition), size);
     }
+
+    public void redraw() {
+        if (parent == null) {
+            return;
+        }
+
+        parent.redraw();
+    }
+
+    public void notifyChange() {
+        cachedDrawable = null;
+        if (parent == null) {
+            return;
+        }
+        parent.notifyChange();
+    }
+
 }

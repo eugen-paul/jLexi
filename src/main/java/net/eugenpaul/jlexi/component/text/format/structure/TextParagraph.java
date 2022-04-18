@@ -167,6 +167,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
                 if (newCursorPosition != null) {
                     removedElements.add(elementToRemove);
                 }
+                notifyChange();
                 return newCursorPosition;
             }
             return null;
@@ -176,6 +177,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
         representation = null;
         removedElements.add(elementToRemove);
+        notifyChange();
         return nextElement;
     }
 
@@ -211,6 +213,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
             removeElementFromText(elementToRemove);
             removedElements.add(elementToRemove);
             representation = null;
+            notifyChange();
             return true;
         }
 
@@ -218,6 +221,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
             var removedElement = parentStructure.mergeChildWithPrevious(this);
             if (removedElement != null) {
                 removedElements.add(removedElement);
+                notifyChange();
                 return true;
             }
         }
@@ -235,6 +239,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
                 element.setStructureParent(this);
 
                 setRestructIfNeeded(element);
+
+                notifyChange();
                 return true;
             }
         }

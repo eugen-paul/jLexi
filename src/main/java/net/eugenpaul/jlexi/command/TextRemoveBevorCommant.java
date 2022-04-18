@@ -28,7 +28,6 @@ public class TextRemoveBevorCommant implements TextCommand {
         boolean isRemoved = cursorPosition.removeElementBefore(removed);
 
         if (isRemoved) {
-            cursorPosition.notifyChange();
             removedText = removed.getFirst();
         }
     }

@@ -77,9 +77,9 @@ public class Label extends GuiGlyph {
             return cachedDrawable;
         }
 
-        List<TextRepresentation> rows = textElement.getRows(size);
+        List<TextRepresentation> rows = textElement.getRows(getSize());
 
-        List<TextRepresentation> column = compositor.compose(rows.iterator(), size);
+        List<TextRepresentation> column = compositor.compose(rows.iterator(), getSize());
 
         if (column.isEmpty()) {
             return DrawableImpl.EMPTY_DRAWABLE;

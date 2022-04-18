@@ -25,10 +25,6 @@ public class TextPosition {
         return this.textElement.removeElementBefore(removedElements);
     }
 
-    public void notifyChange() {
-        this.textElement.notifyChange();
-    }
-
     public TextElement getTextElement() {
         return textElement;
     }

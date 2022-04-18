@@ -86,6 +86,8 @@ public class AbstractKeyHandler {
 
         var cursor = component.getMouseCursor();
         cursor.moveCursorTo(command.getCursorPosition());
+
+        component.getTextRepresentation().redraw();
     }
 
     public void redo() {
@@ -99,6 +101,8 @@ public class AbstractKeyHandler {
 
         var cursor = component.getMouseCursor();
         cursor.moveCursorTo(command.getCursorPosition());
+
+        component.getTextRepresentation().redraw();
     }
 
     private void doTextCommant(TextCommand command) {
@@ -107,6 +111,8 @@ public class AbstractKeyHandler {
         if (command.isEmpty()) {
             return;
         }
+
+        component.getTextRepresentation().redraw();
 
         if (command.reversible()) {
             undoCommands.add(command);

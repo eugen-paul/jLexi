@@ -30,7 +30,6 @@ public class TextElementRemoveCommant implements TextCommand {
         newCursorPosition = positionBeforeRemove.removeElement(removed);
 
         if (newCursorPosition != null) {
-            positionBeforeRemove.notifyChange();
             positionAfterRemove = newCursorPosition;
             cursorPosition = positionAfterRemove;
             removedElement = removed.getFirst();

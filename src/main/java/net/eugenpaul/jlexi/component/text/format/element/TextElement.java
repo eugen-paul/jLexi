@@ -118,6 +118,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return structureParent.removeElementBefore(this, removedElements);
     }
 
+    @Override
     public void notifyChange() {
         if (structureParent == null) {
             return;

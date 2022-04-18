@@ -41,7 +41,6 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
      */
     protected MenuBar(Glyph parent, GuiGlyph component, Size size) {
         super(parent, component);
-        this.component.setParent(this);
         this.component.setRelativPosition(new Vector2d(0, menubarHeight));
         setSize(size);
         this.menuButtons = new LinkedList<>();

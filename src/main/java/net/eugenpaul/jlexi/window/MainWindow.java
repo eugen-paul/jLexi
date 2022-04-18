@@ -45,9 +45,8 @@ public class MainWindow extends ApplicationWindow {
         var textPane = new TextPane(name, null, storage, controller);
         var border = guiFactory.createBorder(null, textPane);
 
-        var menubar = guiFactory.createMenuBar(null, border, size);
+        var menubar = guiFactory.createMenuBar(this, border, getSize());
         initMenu(menubar, textPane.getCursorName());
-        menubar.setParent(this);
         menubar.setRelativPosition(Vector2d.zero());
 
         controller.addTextPane(textPaneName, textPane);
@@ -104,7 +103,7 @@ public class MainWindow extends ApplicationWindow {
                 new PropertyChangeEvent(name, //
                         ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
                         null, //
-                        size//
+                        getSize()//
                 )//
         );
 

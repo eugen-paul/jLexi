@@ -37,7 +37,7 @@ public class SimpleGlyph extends Glyph {
     }
 
     public void setDrawable(Drawable drawable) {
-        size = drawable.getPixelSize();
+        setSize(drawable.getPixelSize());
         cachedDrawable = drawable;
     }
 

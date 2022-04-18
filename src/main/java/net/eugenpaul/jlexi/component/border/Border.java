@@ -51,7 +51,6 @@ public class Border extends GuiCompenentMonoGlyph {
         this.backgroundColor = backgroundColor;
 
         this.compositor = new CentralGlypthCompositor<>(backgroundColor);
-        this.component.setParent(this);
         this.component.setRelativPosition(new Vector2d(borderSize, borderSize));
         resizeTo(Size.ZERO_SIZE);
     }
@@ -85,8 +84,8 @@ public class Border extends GuiCompenentMonoGlyph {
         }
 
         Size childSize = new Size(//
-                size.getWidth() - borderSize * 2, //
-                size.getHeight() - borderSize * 2 //
+                getSize().getWidth() - borderSize * 2, //
+                getSize().getHeight() - borderSize * 2 //
         );
 
         List<Glyph> composedGlyphs = compositor.compose(List.of((Glyph) component).iterator(), childSize);

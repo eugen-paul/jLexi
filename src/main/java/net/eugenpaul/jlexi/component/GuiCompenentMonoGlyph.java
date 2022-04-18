@@ -20,6 +20,7 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
     protected GuiCompenentMonoGlyph(Glyph parent, GuiGlyph component) {
         super(parent);
         this.component = component;
+        this.component.setParent(this);
     }
 
     @Override

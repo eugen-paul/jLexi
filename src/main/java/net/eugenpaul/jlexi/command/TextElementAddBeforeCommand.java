@@ -18,7 +18,6 @@ public class TextElementAddBeforeCommand implements TextCommand {
     @Override
     public void execute() {
         cursorPosition.addBefore(addedElement);
-        cursorPosition.notifyChange();
     }
 
     @Override

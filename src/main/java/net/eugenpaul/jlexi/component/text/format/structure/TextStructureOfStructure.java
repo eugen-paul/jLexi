@@ -58,4 +58,23 @@ public abstract class TextStructureOfStructure extends TextStructure {
         return children.peekLast().getLastElement();
     }
 
+    @Override
+    protected void restructChildren() {
+        var iterator = childListIterator();
+
+        while (iterator.hasNext()) {
+            var child = iterator.next();
+            if (child.isEmpty()) {
+                iterator.remove();
+            } else {
+                child.restructChildren();
+                if (!child.getSplits().isEmpty()) {
+                    child.getSplits().stream()//
+                            .forEach(iterator::add);
+                    child.clearSplitter();
+                }
+            }
+        }
+    }
+
 }

@@ -48,7 +48,7 @@ public abstract class Window extends MonoGlyph
         super(null, null);
         this.windowlmp = windowlmp;
         this.name = name;
-        this.size = size;
+        setSize(size);
         this.controller = controller;
         this.view = null;
         this.focusOn = null;
@@ -75,17 +75,24 @@ public abstract class Window extends MonoGlyph
         }
 
         setContent();
-        view = windowlmp.deviceCreateMainWindow(size, name);
+        view = windowlmp.deviceCreateMainWindow(getSize(), name);
+
+        redraw();
+
+        return view;
+    }
+
+    @Override
+    public void redraw() {
+        getPixels();
 
         view.modelPropertyChange(//
                 new PropertyChangeEvent(name, //
                         ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
                         null, //
-                        size//
+                        getSize()//
                 )//
         );
-
-        return view;
     }
 
     protected abstract void setContent();

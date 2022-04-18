@@ -21,9 +21,6 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-/**
- * Display Rows.
- */
 public class TextPane extends GuiGlyph implements TextUpdateable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
@@ -63,8 +60,8 @@ public class TextPane extends GuiGlyph implements TextUpdateable {
 
     @Override
     public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
+        LOGGER.trace("Recive Redraw from child");
         super.notifyRedraw(drawData, position, size);
-        LOGGER.trace("Recive Redraw from schild");
     }
 
     @Override
@@ -75,6 +72,11 @@ public class TextPane extends GuiGlyph implements TextUpdateable {
     @Override
     public void resizeTo(Size size) {
         textPanel.resizeTo(size);
+    }
+
+    @Override
+    public Size getSize() {
+        return textPanel.getSize();
     }
 
     @Override

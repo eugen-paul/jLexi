@@ -23,13 +23,11 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
-import net.eugenpaul.jlexi.component.text.keyhandler.CursorMove;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -54,9 +52,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Getter
     private Cursor mouseCursor;
 
-    private boolean editMode = false;
-
-    @Getter
     private ResourceManager storage;
 
     @Getter
@@ -72,9 +67,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
                 TextFormat.DEFAULT, //
                 storage, //
                 List.of(TextElementFactory.genNewLineChar(//
-                        null, //
                         storage, //
-                        null, //
                         TextFormat.DEFAULT, //
                         TextFormatEffect.DEFAULT_FORMAT_EFFECT//
                 )), //
@@ -90,6 +83,10 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     @Override
     public Drawable getPixels() {
+        if (cachedDrawable != null) {
+            return cachedDrawable;
+        }
+
         var sites = compositor.compose(document.getRows(getSize()).iterator(), getSize());
 
         children.clear();
@@ -99,7 +96,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         }
 
         // we must always draw the full area to override removed objects
-        Size pixelSize = size;
+        Size pixelSize = getSize();
         int[] pixels = new int[(int) pixelSize.compArea()];
         Arrays.fill(pixels, 0);
 
@@ -107,7 +104,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         yPositionToSite.clear();
 
-        Vector2d position = new Vector2d(0, 0);
+        Vector2d position = Vector2d.zero();
         for (var el : sites) {
             ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
             var yPosition = position.getY();
@@ -135,8 +132,12 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     @Override
     public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
-        super.notifyRedraw(drawData, position, size);
-        LOGGER.trace("Recive Redraw from schild");
+        if (cachedDrawable != null) {
+            LOGGER.trace("Recive Redraw from child");
+            super.notifyRedraw(drawData, position, size);
+        } else {
+            LOGGER.trace("Recive Redraw from child are ignored");
+        }
     }
 
     @Override
@@ -160,18 +161,9 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     }
 
     @Override
-    public void notifyChange() {
-        cachedDrawable = null;
-        if (!editMode) {
-            parent.notifyRedraw(getPixels(), relativPosition, size);
-        }
-    }
-
-    @Override
     public void setText(List<TextElement> text) {
         LOGGER.trace("Set Document.text from List<TextElement>");
         document = new TextPaneDocument(TextFormat.DEFAULT, storage, text, this);
-        getPixels();
         notifyChange();
     }
 
@@ -224,13 +216,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Override
     public void onKeyTyped(Character key) {
         LOGGER.trace("Key typed: {}", key);
-        editMode = true;
-        try {
-            keyHandler.onKeyTyped(key);
-        } finally {
-            editMode = false;
-        }
-        parent.notifyRedraw(getPixels(), relativPosition, size);
+        keyHandler.onKeyTyped(key);
     }
 
     @Override
@@ -243,27 +229,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     public void onKeyReleased(KeyCode keyCode) {
         LOGGER.trace("Key released: {}", keyCode);
         keyHandler.onKeyReleased(keyCode);
-    }
-
-    @Override
-    public Glyph getThis() {
-        return this;
-    }
-
-    @Override
-    public void doCursorMove(CursorMove cursorMove) {
-        LOGGER.trace("do cursor move: {}", cursorMove);
-    }
-
-    @Override
-    public void keyUpdate() {
-        parent.notifyRedraw(getPixels(), relativPosition, size);
-    }
-
-    @Override
-    public EffectController getEffectHandler() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override

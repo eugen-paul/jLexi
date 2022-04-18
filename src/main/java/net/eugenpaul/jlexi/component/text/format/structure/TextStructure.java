@@ -121,42 +121,29 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         }
     }
 
-    protected void restructChildren() {
-        var iterator = childListIterator();
-
-        while (iterator.hasNext()) {
-            var child = iterator.next();
-            if (child.isEmpty()) {
-                iterator.remove();
-            } else if (!child.getSplits().isEmpty()) {
-                child.getSplits().stream()//
-                        .forEach(iterator::add);
-                child.clearSplitter();
-            }
-        }
-    }
+    protected abstract void restructChildren();
 
     public void notifyChange() {
-        restructChildren();
-        representation = null;
-        if (null != parentStructure) {
-            parentStructure.notifyChange();
+        this.representation = null;
+        if (null != this.parentStructure) {
+            this.parentStructure.notifyChange();
         }
     }
 
     public List<TextRepresentation> getRows(Size size) {
-        if (null == representation) {
-            representation = new LinkedList<>();
+        if (null == this.representation) {
+            restructChildren();
+            this.representation = new LinkedList<>();
             var iterator = childListIterator();
             while (iterator.hasNext()) {
-                representation.addAll(iterator.next().getRows(size));
+                this.representation.addAll(iterator.next().getRows(size));
             }
         }
-        return representation;
+        return this.representation;
     }
 
     protected void resetStructure() {
-        representation = null;
+        this.representation = null;
         var iterator = childListIterator();
         while (iterator.hasNext()) {
             iterator.next().resetStructure();
