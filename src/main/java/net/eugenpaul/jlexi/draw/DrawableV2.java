@@ -13,14 +13,14 @@ public interface DrawableV2 {
      * 
      * @return ARBG Data
      */
-    public int[] asARGBPixels();
+    public int[] asArgbPixels();
     
     /**
      * Get copy of the Element as RBGA Data.
      * 
      * @return RBGA Data
      */
-    public int[] asRGBAPixels();
+    public int[] asRgbaPixels();
     
     /**
      * Get copy of the Element as Color Data.

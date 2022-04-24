@@ -95,10 +95,10 @@ public class Border extends GuiCompenentMonoGlyph {
         int[] componentPixels = childDraw.getPixels();
         int[] borderPixels = new int[(int) getSize().compArea()];
 
-        Arrays.fill(borderPixels, 0, (int) getSize().compArea(), backgroundColor.getARGB());
+        Arrays.fill(borderPixels, 0, (int) getSize().compArea(), backgroundColor.getArgb());
 
         if (borderSize > 0) {
-            Arrays.fill(borderPixels, 0, getSize().getWidth() * borderSize, borderColor.getARGB());
+            Arrays.fill(borderPixels, 0, getSize().getWidth() * borderSize, borderColor.getArgb());
         }
 
         ImageArrayHelper.copyRectangle(//
@@ -114,7 +114,7 @@ public class Border extends GuiCompenentMonoGlyph {
         if (borderSize > 0) {
             int targetPosition = getSize().getWidth() * borderSize - borderSize;
             for (int i = borderSize; i < getSize().getHeight() - borderSize + 1; i++) {
-                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize * 2, borderColor.getARGB());
+                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize * 2, borderColor.getArgb());
                 targetPosition += getSize().getWidth();
             }
         }
@@ -124,7 +124,7 @@ public class Border extends GuiCompenentMonoGlyph {
                     borderPixels, //
                     borderPixels.length - 1 - getSize().getWidth() * borderSize, //
                     borderPixels.length, //
-                    borderColor.getARGB()//
+                    borderColor.getArgb()//
             );
         }
 
@@ -134,7 +134,7 @@ public class Border extends GuiCompenentMonoGlyph {
 
     private int[] generateBlackBorder() {
         int[] responsePixels = new int[(int) getSize().compArea()];
-        Arrays.fill(responsePixels, borderColor.getARGB());
+        Arrays.fill(responsePixels, borderColor.getArgb());
         return responsePixels;
     }
 

@@ -26,8 +26,8 @@ public class TextFormatSerializer extends StdSerializer<TextFormat> {
         gen.writeBooleanField("italic", value.getItalic());
         gen.writeNumberField("fontsize", value.getFontsize());
         gen.writeStringField("fontName", value.getFontName());
-        gen.writeStringField("fontColor", value.getFontColor().getHexARGB());
-        gen.writeStringField("backgroundColor", value.getBackgroundColor().getHexARGB());
+        gen.writeStringField("fontColor", value.getFontColor().getHexArgb());
+        gen.writeStringField("backgroundColor", value.getBackgroundColor().getHexArgb());
 
         gen.writeEndObject();
     }

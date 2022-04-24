@@ -23,7 +23,7 @@ public class TextFormatEffectSerializer extends StdSerializer<TextFormatEffect> 
         gen.writeStartObject();
 
         gen.writeStringField("underline", value.getUnderline().toString());
-        gen.writeStringField("underlineColor", value.getUnderlineColor().getHexARGB());
+        gen.writeStringField("underlineColor", value.getUnderlineColor().getHexArgb());
 
         gen.writeEndObject();
     }

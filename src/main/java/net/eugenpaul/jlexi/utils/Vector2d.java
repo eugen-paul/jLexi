@@ -84,4 +84,8 @@ public class Vector2d {
     public Size toSize() {
         return new Size(x, y);
     }
+
+    public Vector2d copy(){
+        return new Vector2d(x, y);
+    }
 }

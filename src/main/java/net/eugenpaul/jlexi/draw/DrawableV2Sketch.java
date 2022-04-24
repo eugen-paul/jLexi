@@ -20,14 +20,15 @@ public interface DrawableV2Sketch {
     public void addDrawable(DrawableV2 drawable, int x, int y, int z);
 
     /**
-     * Add DrawableV2Sketch to Sketch at <code>(x,y)</code>.
+     * Add Drawable to Sketch at <code>(x,y)</code> with z = 0.
      * 
-     * @param sketch - sketch to add
-     * @param x      - x position of added element
-     * @param y      - y position of added element
-     * @param z      - order of added element
+     * @param drawable - drawable to add
+     * @param x        - x position of added element
+     * @param y        - y position of added element
      */
-    public void addDrawableV2Sketch(DrawableV2Sketch sketch, int x, int y, int z);
+    public default void addDrawable(DrawableV2 drawable, int x, int y) {
+        addDrawable(drawable, x, y, 0);
+    }
 
     /**
      * set default Background
@@ -48,9 +49,7 @@ public interface DrawableV2Sketch {
      * 
      * @return complete Drawable element
      */
-    public default DrawableV2 draw() {
-        return draw(getArea());
-    }
+    public DrawableV2 draw();
 
     /**
      * generate Drawable element on area
@@ -81,12 +80,5 @@ public interface DrawableV2Sketch {
      * @return size
      */
     public Size getSize();
-
-    /**
-     * get Area of this Element
-     * 
-     * @return area
-     */
-    public Area getArea();
 
 }

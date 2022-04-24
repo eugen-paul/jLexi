@@ -51,7 +51,7 @@ public class MenuBarColored extends MenuBar {
         }
 
         int[] responsePixels = new int[h * w];
-        Arrays.fill(responsePixels, backgroundColor.getARGB());
+        Arrays.fill(responsePixels, backgroundColor.getArgb());
         return new DrawableImpl(responsePixels, new Size(w, h));
     }
 

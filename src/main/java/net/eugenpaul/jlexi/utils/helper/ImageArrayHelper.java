@@ -175,7 +175,7 @@ public class ImageArrayHelper {
                     dest.getPixels(), //
                     targetPosition, //
                     targetPosition + realCopyWidth, //
-                    color.getARGB()//
+                    color.getArgb()//
             );
             targetPosition += dest.getPixelSize().getWidth();
         }

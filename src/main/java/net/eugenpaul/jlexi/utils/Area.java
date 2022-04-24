@@ -8,4 +8,8 @@ import lombok.Data;
 public class Area {
     private Vector2d position;
     private Size size;
+
+    public Area copy() {
+        return new Area(this.position.copy(), this.size);
+    }
 }

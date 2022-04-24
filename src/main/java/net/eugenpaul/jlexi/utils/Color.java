@@ -6,10 +6,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
-@AllArgsConstructor
 @EqualsAndHashCode
 public final class Color {
     private static final String EXCEPTION_TEXT = "unsuported Format ";
@@ -23,43 +21,49 @@ public final class Color {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Color.class);
 
-    private static final Pattern HEX_ARGB = Pattern
+    private static final Pattern HEX_PATTERN = Pattern
             .compile("^0x([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})$");
 
-    private final int value;
+    private final int valueArgb;
+    private final int valueRgbA;
 
-    public int getARGB() {
-        return value;
+    public Color(int valueArgb) {
+        this.valueArgb = valueArgb;
+        this.valueRgbA = valueArgb << 8 | valueArgb >>> 24;
     }
 
-    public String getHexARGB() {
+    public int getArgb() {
+        return valueArgb;
+    }
+
+    public String getHexArgb() {
         return String.format("0x%02X_%02X_%02X_%02X", //
-                value >>> 24, //
-                (value >>> 16) & 0xFF, //
-                (value >>> 8) & 0xFF, //
-                value & 0xFF //
+                valueArgb >>> 24, //
+                (valueArgb >>> 16) & 0xFF, //
+                (valueArgb >>> 8) & 0xFF, //
+                valueArgb & 0xFF //
         );
     }
 
     public int getA() {
-        return (value & 0xFF_00_00_00) >>> 24;
+        return (valueArgb & 0xFF_00_00_00) >>> 24;
     }
 
     public int getR() {
-        return (value & 0x00_FF_00_00) >>> 16;
+        return (valueArgb & 0x00_FF_00_00) >>> 16;
     }
 
     public int getG() {
-        return (value & 0x00_00_FF_00) >>> 8;
+        return (valueArgb & 0x00_00_FF_00) >>> 8;
     }
 
     public int getB() {
-        return (value & 0x00_00_00_FF);
+        return (valueArgb & 0x00_00_00_FF);
     }
 
     public static Color convert(String input) throws IllegalArgumentException {
         try {
-            return fromHexARGB(input);
+            return fromHexArgb(input);
         } catch (Exception e) {
             LOGGER.trace("not ARGB", e);
         }
@@ -91,11 +95,21 @@ public final class Color {
         throw new IllegalArgumentException(EXCEPTION_TEXT + input);
     }
 
-    public static Color fromHexARGB(String input) throws IllegalArgumentException {
-        Matcher matcher = HEX_ARGB.matcher(input);
+    public static Color fromHexArgb(String input) throws IllegalArgumentException {
+        Matcher matcher = HEX_PATTERN.matcher(input);
         if (matcher.find()) {
-            Long value = Long.parseLong(matcher.group(1) + matcher.group(2) + matcher.group(3) + matcher.group(4), 16);
-            return new Color(value.intValue());
+            Long argb = Long.parseLong(matcher.group(1) + matcher.group(2) + matcher.group(3) + matcher.group(4), 16);
+            return new Color(argb.intValue());
+        } else {
+            throw new IllegalArgumentException(EXCEPTION_TEXT + input);
+        }
+    }
+
+    public static Color fromHexRgba(String input) throws IllegalArgumentException {
+        Matcher matcher = HEX_PATTERN.matcher(input);
+        if (matcher.find()) {
+            Long argb = Long.parseLong(matcher.group(4) + matcher.group(1) + matcher.group(2) + matcher.group(3), 16);
+            return new Color(argb.intValue());
         } else {
             throw new IllegalArgumentException(EXCEPTION_TEXT + input);
         }

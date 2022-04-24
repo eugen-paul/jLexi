@@ -30,7 +30,7 @@ public class FormatUnderline implements PixelsFormatter {
         if (type == FormatUnderlineType.SINGLE) {
             size = new Size(draw.getPixelSize().getWidth(), 1);
             pixels = new int[size.getWidth() * size.getHeight()];
-            Arrays.fill(pixels, color.getARGB());
+            Arrays.fill(pixels, color.getArgb());
             ImageArrayHelper.copyRectangle(pixels, size, draw, new Vector2d(0, draw.getPixelSize().getHeight() - 1));
         } else if (type == FormatUnderlineType.DOUBLE) {
             size = new Size(draw.getPixelSize().getWidth(), 3);
@@ -39,13 +39,13 @@ public class FormatUnderline implements PixelsFormatter {
                     pixels, //
                     pixels.length - 3 * size.getWidth(), //
                     pixels.length - 2 * size.getWidth(), //
-                    color.getARGB()//
+                    color.getArgb()//
             );
             Arrays.fill(//
                     pixels, //
                     pixels.length - 1 * size.getWidth(), //
                     pixels.length, //
-                    color.getARGB() //
+                    color.getArgb() //
             );
             ImageArrayHelper.copyRectangle(pixels, size, draw, new Vector2d(0, draw.getPixelSize().getHeight() - 3));
         }
