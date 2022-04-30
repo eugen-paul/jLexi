@@ -21,9 +21,19 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
 
     private TreeMap<Integer, TextRepresentation> xPositionToRow;
 
+    private int maxHeight;
+
     public TextPaneRow(Glyph parent) {
         super(parent);
         this.xPositionToRow = new TreeMap<>();
+        this.maxHeight = 0;
+    }
+
+    @Override
+    public void add(TextRepresentation child) {
+        super.add(child);
+
+        maxHeight = Math.max(maxHeight, child.getSize().getHeight());
     }
 
     @Override
@@ -74,11 +84,6 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
     public DrawableV2 getDrawable() {
         cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
         xPositionToRow.clear();
-
-        int maxHeight = 0;
-        for (var el : children) {
-            maxHeight = Math.max(maxHeight, el.getSize().getHeight());
-        }
 
         int currentX = 0;
         for (var el : children) {

@@ -15,21 +15,23 @@ class DrawableV2SketchImplTest {
 
     private DrawableV2SketchImpl sketch;
 
-    private DrawableV2 element1;
-    private DrawableV2 element2;
+    private DrawableV2SketchImpl innerSketch;
+    private DrawableV2 blackGreenPipe;
+    private DrawableV2 redDot;
 
     @BeforeEach
     void init() {
         sketch = new DrawableV2SketchImpl(Color.BLUE);
+        innerSketch = new DrawableV2SketchImpl(Color.WHITE);
 
         int[] pixelsElememt1 = new int[] { Color.BLACK.getArgb(), Color.GREEN.getArgb() };
-        element1 = DrawableV2PixelsImpl.builderArgb()//
+        blackGreenPipe = DrawableV2PixelsImpl.builderArgb()//
                 .argbPixels(pixelsElememt1)//
                 .size(new Size(1, 2))//
                 .build();
 
         int[] pixelsElememt2 = new int[] { Color.RED.getArgb() };
-        element2 = DrawableV2PixelsImpl.builderArgb()//
+        redDot = DrawableV2PixelsImpl.builderArgb()//
                 .argbPixels(pixelsElememt2)//
                 .size(new Size(1, 1))//
                 .build();
@@ -37,8 +39,8 @@ class DrawableV2SketchImplTest {
 
     @Test
     void test_draw_argb() {
-        sketch.addDrawable(element1, 0, 0);
-        sketch.addDrawable(element2, 1, 1);
+        sketch.addDrawable(blackGreenPipe, 0, 0);
+        sketch.addDrawable(redDot, 1, 1);
 
         DrawableV2 draw = sketch.draw();
 
@@ -52,9 +54,46 @@ class DrawableV2SketchImplTest {
     }
 
     @Test
+    void test_draw_argb_with_innerSketh() {
+        innerSketch.addDrawable(blackGreenPipe, 0, 0);
+        innerSketch.addDrawable(redDot, 1, 1);
+
+        sketch.addDrawable(innerSketch.draw(), 0, 0);
+
+        DrawableV2 draw = sketch.draw();
+
+        assertArrayEquals(//
+                new int[] { //
+                        Color.BLACK.getArgb(), Color.WHITE.getArgb(), //
+                        Color.GREEN.getArgb(), Color.RED.getArgb() //
+                }, //
+                draw.asArgbPixels()//
+        );
+    }
+
+    @Test
+    void test_draw_argb_with_innerSketh_and_bg() {
+        innerSketch.addDrawable(blackGreenPipe, 0, 0);
+        innerSketch.addDrawable(redDot, 2, 1);
+
+        sketch.addDrawable(innerSketch.draw(), 1, 1);
+
+        DrawableV2 draw = sketch.draw();
+
+        assertArrayEquals(//
+                new int[] { //
+                        Color.BLUE.getArgb(), Color.BLUE.getArgb(), Color.BLUE.getArgb(), Color.BLUE.getArgb(), //
+                        Color.BLUE.getArgb(), Color.BLACK.getArgb(), Color.WHITE.getArgb(), Color.WHITE.getArgb(), //
+                        Color.BLUE.getArgb(), Color.GREEN.getArgb(), Color.WHITE.getArgb(), Color.RED.getArgb() //
+                }, //
+                draw.asArgbPixels()//
+        );
+    }
+
+    @Test
     void test_draw_toArgbArray() {
-        sketch.addDrawable(element1, 0, 0);
-        sketch.addDrawable(element2, 1, 1);
+        sketch.addDrawable(blackGreenPipe, 0, 0);
+        sketch.addDrawable(redDot, 1, 1);
 
         DrawableV2 draw = sketch.draw();
         int[] output = new int[4];
@@ -72,8 +111,8 @@ class DrawableV2SketchImplTest {
 
     @Test
     void test_draw_rgba() {
-        sketch.addDrawable(element1, 0, 0);
-        sketch.addDrawable(element2, 1, 1);
+        sketch.addDrawable(blackGreenPipe, 0, 0);
+        sketch.addDrawable(redDot, 1, 1);
 
         DrawableV2 draw = sketch.draw();
 

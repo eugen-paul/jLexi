@@ -2,13 +2,16 @@ package net.eugenpaul.jlexi.utils.helper;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-class ImageArraysTest {
+class ImageArraysHelperTest {
 
     private int[] srcBlock;
     private Size srcSize;
@@ -37,7 +40,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangleCopy_Complete() {
+    void test_CopyRectangle_Copy_Complete() {
         int[] expectedArray = new int[] { //
                 11, 12, 13, 14, 15, 16, 17, 18, 19, //
                 21, 22, 23, 24, 25, 26, 27, 28, 29, //
@@ -52,7 +55,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_From_X_Offset_() {
+    void test_CopyRectangle_Copy_From_X_Offset() {
         int[] expectedArray = new int[] { //
                 12, 13, 14, 15, 16, 17, 18, 19, 0, //
                 22, 23, 24, 25, 26, 27, 28, 29, 0, //
@@ -67,7 +70,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_From_Y_Offset_() {
+    void test_CopyRectangle_Copy_From_Y_Offset() {
         int[] expectedArray = new int[] { //
                 21, 22, 23, 24, 25, 26, 27, 28, 29, //
                 31, 32, 33, 34, 35, 36, 37, 38, 39, //
@@ -82,7 +85,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_From_XY_Offset_() {
+    void test_CopyRectangle_Copy_From_XY_Offset() {
         int[] expectedArray = new int[] { //
                 22, 23, 24, 25, 26, 27, 28, 29, 0, //
                 32, 33, 34, 35, 36, 37, 38, 39, 0, //
@@ -97,7 +100,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_To_X_Offset_() {
+    void test_CopyRectangle_Copy_To_X_Offset() {
         int[] expectedArray = new int[] { //
                 0, 11, 12, 13, 14, 15, 16, 17, 18, //
                 0, 21, 22, 23, 24, 25, 26, 27, 28, //
@@ -112,7 +115,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_To_Y_Offset_() {
+    void test_CopyRectangle_Copy_To_Y_Offset() {
         int[] expectedArray = new int[] { //
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
                 11, 12, 13, 14, 15, 16, 17, 18, 19, //
@@ -127,7 +130,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_To_XY_Offset_() {
+    void test_CopyRectangle_Copy_To_XY_Offset() {
         int[] expectedArray = new int[] { //
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
                 0, 11, 12, 13, 14, 15, 16, 17, 18, //
@@ -142,7 +145,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_From_XY_Offset_To_XY_Offset() {
+    void test_CopyRectangle_Copy_From_XY_Offset_To_XY_Offset() {
         int[] expectedArray = new int[] { //
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
                 0, 22, 23, 24, 25, 26, 27, 28, 29, //
@@ -157,7 +160,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_Copy_From_XY_Offset_To_XY_Offset_SmallSize() {
+    void test_CopyRectangle_Copy_From_XY_Offset_To_XY_Offset_SmallSize() {
         int[] expectedArray = new int[] { //
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
                 0, 22, 23, 0, 0, 0, 0, 0, 0, //
@@ -172,7 +175,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_EmptySrc() {
+    void test_CopyRectangle_EmptySrc() {
         int[] expectedArray = new int[] { //
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
@@ -187,7 +190,7 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_EmptyDest() {
+    void test_CopyRectangle_EmptyDest() {
         int[] expectedArray = new int[] {};
         int[] emtyDest = new int[] {};
 
@@ -198,11 +201,141 @@ class ImageArraysTest {
     }
 
     @Test
-    void testCopyRectangle_EmptyBlock() {
+    void test_CopyRectangle_EmptyBlock() {
         int[] expectedArray = destBlock.clone();
 
         ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Vector2d(0, 0), Size.ZERO_SIZE, destBlock, destSize,
                 new Vector2d(0, 0));
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_fill_complete() {
+        int[] expectedArray = destBlock.clone();
+        Arrays.fill(expectedArray, Color.BLUE.getArgb());
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, destSize, Vector2d.zero());
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_small_rectangle() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                c, c, c, 0, 0, 0, 0, 0, 0, //
+                c, c, c, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), Vector2d.zero());
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_with_x_offset() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                0, 0, c, c, c, 0, 0, 0, 0, //
+                0, 0, c, c, c, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(2, 0));
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_with_y_offset() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                c, c, c, 0, 0, 0, 0, 0, 0, //
+                c, c, c, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, 1));
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_with_negativ_x_offset() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                c, c, 0, 0, 0, 0, 0, 0, 0, //
+                c, c, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(-1, 0));
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_with_negativ_y_offset() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                c, c, c, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, -1));
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_with_x_overflow() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                0, 0, 0, 0, 0, 0, 0, c, c, //
+                0, 0, 0, 0, 0, 0, 0, c, c, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(7, 0));
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_with_y_overflow() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                0, 0, 0, 0, 0, 0, 0, 0, 0, //
+                c, c, c, 0, 0, 0, 0, 0, 0, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, 3));
+
+        assertArrayEquals(expectedArray, destBlock);
+    }
+
+    @Test
+    void test_fillRectangle_complete_overflow() {
+        int c = Color.BLUE.getArgb();
+        int[] expectedArray = new int[] { //
+                c, c, c, c, c, c, c, c, c, //
+                c, c, c, c, c, c, c, c, c, //
+                c, c, c, c, c, c, c, c, c, //
+                c, c, c, c, c, c, c, c, c, //
+        };
+
+        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(20, 30), new Vector2d(-1, -1));
 
         assertArrayEquals(expectedArray, destBlock);
     }

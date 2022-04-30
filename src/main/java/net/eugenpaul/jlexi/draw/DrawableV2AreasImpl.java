@@ -52,6 +52,15 @@ public class DrawableV2AreasImpl implements DrawableV2 {
 
     @Override
     public void toArgbPixels(int[] dest, Size destSize, Vector2d position) {
+
+        ImageArrayHelper.fillRectangle(//
+                background, //
+                dest, //
+                destSize, //
+                this.area.getSize(), //
+                this.area.getPosition().addNew(position) //
+        );
+
         if (this.argbPixels != null) {
             ImageArrayHelper.copyRectangle(//
                     this.argbPixels, //

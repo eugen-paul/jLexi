@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
@@ -55,8 +58,6 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
     @Override
     public Drawable getPixels() {
-        var sites = children;
-
         int[] pixels = new int[getSize().getWidth() * getSize().getHeight()];
 
         cachedDrawable = new DrawableImpl(pixels, getSize());
@@ -64,7 +65,7 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
         yPositionToRow.clear();
 
         Vector2d position = new Vector2d(0, 0);
-        for (var el : sites) {
+        for (var el : children) {
             ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
 
             var yPosition = position.getY();
@@ -77,6 +78,26 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
         }
 
         return cachedDrawable;
+    }
+
+    @Override
+    public DrawableV2 getDrawable() {
+        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+
+        yPositionToRow.clear();
+
+        int currentY = 0;
+        for (var el : children) {
+            cachedDrawableV2.addDrawable(el.getDrawable(), 0, currentY);
+
+            yPositionToRow.put(currentY, el);
+
+            el.setRelativPosition(new Vector2d(0, currentY));
+
+            currentY += el.getSize().getHeight();
+        }
+
+        return cachedDrawableV2.draw();
     }
 
     @Override

@@ -131,54 +131,59 @@ public final class ImageArrayHelper {
         );
     }
 
-    public static void fillRectangle(Color color, Drawable dest, Size size, Vector2d position) {
-        if (size.isZero() // destSize is Empty
-                || position.getX() + size.getWidth() < 0 //
-                || position.getY() + size.getHeight() < 0 //
-                || position.getX() > dest.getPixelSize().getWidth() //
-                || position.getY() > dest.getPixelSize().getHeight() //
+    public static void fillRectangle(Color color, int[] dest, Size destSize, Size rectangleSize,
+            Vector2d rectangleposition) {
+        if (rectangleSize.isZero() // destSize is Empty
+                || rectangleposition.getX() + rectangleSize.getWidth() < 0 //
+                || rectangleposition.getY() + rectangleSize.getHeight() < 0 //
+                || rectangleposition.getX() > destSize.getWidth() //
+                || rectangleposition.getY() > destSize.getHeight() //
         ) {
             // Out of range or nothing to do
             return;
         }
 
-        int targetPosition = position.getX() + position.getY() * size.getWidth();
+        int targetPosition = Math.max(0, rectangleposition.getX() + rectangleposition.getY() * destSize.getWidth());
 
         int realCopyWidth;
-        if (position.getX() < 0) {
+        if (rectangleposition.getX() < 0) {
             realCopyWidth = Math.min(//
-                    size.getWidth() + position.getX(), //
-                    dest.getPixelSize().getWidth() //
+                    rectangleSize.getWidth() + rectangleposition.getX(), //
+                    destSize.getWidth() //
             );
         } else {
             realCopyWidth = Math.min(//
-                    size.getWidth(), //
-                    dest.getPixelSize().getWidth() - position.getX() //
+                    rectangleSize.getWidth(), //
+                    destSize.getWidth() - rectangleposition.getX() //
             );
         }
 
         int realCopyHeight;
-        if (position.getY() < 0) {
+        if (rectangleposition.getY() < 0) {
             realCopyHeight = Math.min(//
-                    size.getHeight() + position.getY(), //
-                    dest.getPixelSize().getHeight() //
+                    rectangleSize.getHeight() + rectangleposition.getY(), //
+                    destSize.getHeight() //
             );
         } else {
             realCopyHeight = Math.min(//
-                    size.getHeight(), //
-                    dest.getPixelSize().getHeight() - position.getY() //
+                    rectangleSize.getHeight(), //
+                    destSize.getHeight() - rectangleposition.getY() //
             );
         }
 
         for (int i = 0; i < realCopyHeight; i++) {
             Arrays.fill(//
-                    dest.getPixels(), //
+                    dest, //
                     targetPosition, //
                     targetPosition + realCopyWidth, //
                     color.getArgb()//
             );
-            targetPosition += dest.getPixelSize().getWidth();
+            targetPosition += destSize.getWidth();
         }
+    }
+
+    public static void fillRectangle(Color color, Drawable dest, Size rectangleSize, Vector2d rectangleposition) {
+        fillRectangle(color, dest.getPixels(), dest.getPixelSize(), rectangleSize, rectangleposition);
     }
 
     public static void fillRectangle(Color color, Drawable dest, Area area) {
