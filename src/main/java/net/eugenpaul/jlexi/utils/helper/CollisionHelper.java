@@ -3,7 +3,7 @@ package net.eugenpaul.jlexi.utils.helper;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public class CollisionHelper {
+public final class CollisionHelper {
     private CollisionHelper() {
     }
 

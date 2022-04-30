@@ -1,6 +1,6 @@
 package net.eugenpaul.jlexi.utils.helper;
 
-public class CharacterHelper {
+public final class CharacterHelper {
     private CharacterHelper() {
     }
 

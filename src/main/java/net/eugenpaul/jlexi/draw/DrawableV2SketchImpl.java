@@ -1,21 +1,17 @@
 package net.eugenpaul.jlexi.draw;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeMap;
-
 import lombok.Getter;
 import lombok.Setter;
+import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class DrawableV2SketchImpl implements DrawableV2Sketch {
 
-    private TreeMap<Integer, // z
-            TreeMap<Integer, // x
-                    TreeMap<Integer, // y
-                            List<DrawableV2>>>> data;
+    private DrawableV2Storage data;
+
     @Getter
     @Setter
     private Color background;
@@ -26,7 +22,8 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     private int maxY;
 
     public DrawableV2SketchImpl() {
-        data = new TreeMap<>();
+        data = new DrawableV2StorageImpl();
+
         minX = 0;
         maxX = 0;
         minY = 0;
@@ -35,34 +32,44 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
 
     @Override
     public void addDrawable(DrawableV2 drawable, int x, int y, int z) {
-        this.data.computeIfAbsent(z, k -> new TreeMap<>())//
-                .computeIfAbsent(x, k -> new TreeMap<>())//
-                .computeIfAbsent(y, k -> new LinkedList<>())//
-                .add(drawable);
+        this.data.add(drawable, x, y, z);
+
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x + drawable.getSize().getWidth());
+
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y + drawable.getSize().getHeight());
     }
 
     @Override
     public DrawableV2 draw() {
-        // TODO Auto-generated method stub
-        return null;
+        return new DrawableV2AreasImpl(//
+                data.copy(), //
+                new Area(//
+                        new Vector2d(minX, minY), //
+                        new Size(maxX - minX + 1, maxY - minY + 1)//
+                )//
+        );
     }
 
     @Override
     public DrawableV2 draw(Area area) {
-        // TODO Auto-generated method stub
-        return null;
+        return new DrawableV2AreasImpl(//
+                data.copy(), //
+                area//
+        );
     }
 
     @Override
     public DrawableV2Sketch sketchAt(Area area) {
         // TODO Auto-generated method stub
-        return null;
+        throw new NotYetImplementedException();
     }
 
     @Override
     public DrawableV2Sketch copy() {
         // TODO Auto-generated method stub
-        return null;
+        throw new NotYetImplementedException();
     }
 
     @Override

@@ -1,10 +1,14 @@
 package net.eugenpaul.jlexi.draw;
 
 import lombok.Getter;
+import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayConverter;
 
 public class DrawableV2PixelsImpl implements DrawableV2 {
+
+    public static final DrawableV2 EMPTY = new DrawableV2PixelsImpl(Size.ZERO_SIZE);
 
     private int[] argbPixels;
     private int[] rgbaPixels;
@@ -16,22 +20,43 @@ public class DrawableV2PixelsImpl implements DrawableV2 {
 
     }
 
+    private DrawableV2PixelsImpl(Size size) {
+        this.argbPixels = new int[0];
+        this.rgbaPixels = new int[0];
+        this.colorPixels = new Color[0];
+        this.size = size;
+    }
+
     @Override
     public int[] asArgbPixels() {
-        //TODO convert if null
-        return argbPixels;
+        if (this.argbPixels == null) {
+            if (this.rgbaPixels != null) {
+                this.argbPixels = ImageArrayConverter.rgbaToArgb(this.rgbaPixels);
+            } else if (this.colorPixels != null) {
+                // TODO
+                throw new NotYetImplementedException();
+            }
+        }
+        return this.argbPixels;
     }
-    
+
     @Override
     public int[] asRgbaPixels() {
-        //TODO convert if null
-        return rgbaPixels;
+        if (this.rgbaPixels == null) {
+            if (this.argbPixels != null) {
+                this.rgbaPixels = ImageArrayConverter.argbToRgba(this.argbPixels);
+            } else if (this.colorPixels != null) {
+                // TODO
+                throw new NotYetImplementedException();
+            }
+        }
+        return this.rgbaPixels;
     }
-    
+
     @Override
     public Color[] asColorPixels() {
-        //TODO convert if null
-        return colorPixels;
+        // TODO
+        throw new NotYetImplementedException();
     }
 
     public static DrawableV2ImplArgbBuilder builderArgb() {

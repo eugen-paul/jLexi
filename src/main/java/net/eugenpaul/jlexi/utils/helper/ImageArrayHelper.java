@@ -11,7 +11,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 /**
  * Helper functions for ImageArrays
  */
-public class ImageArrayHelper {
+public final class ImageArrayHelper {
 
     private static final Vector2d ZERO_VECTOR = Vector2d.zero();
 

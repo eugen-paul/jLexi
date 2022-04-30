@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.resourcesmanager.font;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.draw.DrawableV2;
 
 /**
  * Interface for Pixel-Array-Generator for chars.
@@ -15,6 +16,15 @@ public interface FontPixelsGenerator {
      * @return Pixel-Array
      */
     public int[] ofChar(Character c, TextFormat format);
+
+    /**
+     * Get Drawable-Representation of char
+     * 
+     * @param c      - character
+     * @param format - format of character
+     * @return Drawable
+     */
+    public DrawableV2 ofChar2(Character c, TextFormat format);
 
     /**
      * Get max Size of char

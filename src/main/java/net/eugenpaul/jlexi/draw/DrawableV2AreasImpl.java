@@ -1,13 +1,8 @@
 package net.eugenpaul.jlexi.draw;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import lombok.Getter;
 import lombok.Setter;
-import lombok.var;
+import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
@@ -16,85 +11,66 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class DrawableV2AreasImpl implements DrawableV2 {
 
-    private TreeMap<Integer, // z
-            TreeMap<Integer, // x
-                    TreeMap<Integer, // y
-                            List<DrawableV2>>>> data;
+    private DrawableV2Storage data;
     @Getter
     @Setter
     private Color background;
 
+    private int[] argbPixels = null;
+    private int[] rgbaPixels = null;
+
     private Area area;
 
-    public DrawableV2AreasImpl(//
-            Map<Integer, Map<Integer, Map<Integer, List<DrawableV2>>>> data, //
-            Area area //
-    ) {
-        this.area = area.copy();
-
-        this.data = new TreeMap<>();
-        for (var zData : data.entrySet()) {
-            for (var xData : zData.getValue().entrySet()) {
-                for (var yData : xData.getValue().entrySet()) {
-                    this.data.computeIfAbsent(zData.getKey(), k -> new TreeMap<>())//
-                            .computeIfAbsent(xData.getKey(), k -> new TreeMap<>())//
-                            .computeIfAbsent(yData.getKey(), k -> new LinkedList<>())//
-                            .addAll(yData.getValue());
-                }
-            }
-        }
+    public DrawableV2AreasImpl(DrawableV2Storage data, Area area) {
+        this.area = area;
+        this.data = data;
     }
 
     @Override
     public int[] asArgbPixels() {
-        int[] response = new int[(int) this.area.getSize().compArea()];
-        for (var zData : data.entrySet()) {
-            for (var xData : zData.getValue().entrySet()) {
-                for (var yData : xData.getValue().entrySet()) {
-                    for (var drawable : yData.getValue()) {
-                        ImageArrayHelper.copyRectangle(//
-                                drawable.asArgbPixels(), //
-                                drawable.getSize(), //
-                                Vector2d.zero(), //
-                                drawable.getSize(), //
-                                response, //
-                                this.area.getSize(), //
-                                new Vector2d(xData.getKey(), yData.getKey()) //
-                        );
-                    }
-                }
-            }
+        if (this.argbPixels != null) {
+            return this.argbPixels;
         }
-        return response;
+
+        this.argbPixels = new int[(int) this.area.getSize().compArea()];
+
+        data.forEach((d, v) -> ImageArrayHelper.copyRectangle(//
+                d.asArgbPixels(), //
+                d.getSize(), //
+                Vector2d.zero(), //
+                d.getSize(), //
+                this.argbPixels, //
+                this.area.getSize(), //
+                v //
+        ));
+
+        return this.argbPixels.clone();
     }
 
     @Override
     public int[] asRgbaPixels() {
-        int[] response = new int[(int) this.area.getSize().compArea()];
-        for (var zData : data.entrySet()) {
-            for (var xData : zData.getValue().entrySet()) {
-                for (var yData : xData.getValue().entrySet()) {
-                    for (var drawable : yData.getValue()) {
-                        ImageArrayHelper.copyRectangle(//
-                                drawable.asRgbaPixels(), //
-                                drawable.getSize(), //
-                                Vector2d.zero(), //
-                                drawable.getSize(), //
-                                response, //
-                                this.area.getSize(), //
-                                new Vector2d(xData.getKey(), yData.getKey()) //
-                        );
-                    }
-                }
-            }
+        if (this.rgbaPixels != null) {
+            return this.rgbaPixels;
         }
-        return response;
+
+        this.rgbaPixels = new int[(int) this.area.getSize().compArea()];
+
+        data.forEach((d, v) -> ImageArrayHelper.copyRectangle(//
+                d.asRgbaPixels(), //
+                d.getSize(), //
+                Vector2d.zero(), //
+                d.getSize(), //
+                this.rgbaPixels, //
+                this.area.getSize(), //
+                v //
+        ));
+        return this.rgbaPixels.clone();
     }
 
     @Override
     public Color[] asColorPixels() {
         // TODO
-        return null;
+        throw new NotYetImplementedException();
     }
 
     @Override

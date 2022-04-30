@@ -10,13 +10,50 @@ import java.awt.image.DataBufferByte;
 import javax.swing.JLabel;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.resourcesmanager.font.FontPixelsGenerator;
+import net.eugenpaul.jlexi.utils.Size;
 
 public class FontGenerator implements FontPixelsGenerator {
 
     @Override
     public int[] ofChar(Character c, TextFormat format) {
         return extractedChar(c, format);
+    }
+
+    @Override
+    public DrawableV2 ofChar2(Character c, TextFormat format) {
+
+        Font font = new Font(//
+                format.getFontName(), //
+                getStyle(format), //
+                format.getFontsize() //
+        );
+
+        // use a JLabel to get a FontMetrics object
+        FontMetrics metrics = new JLabel().getFontMetrics(font);
+        int width = metrics.stringWidth(c + "");
+        int height = metrics.getMaxAscent();
+
+        // use ARGB or the background will be black as well
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+
+        // create a Graphics2D object from the BufferedImage
+        Graphics2D g2d = bi.createGraphics();
+        g2d.setFont(font);
+        g2d.setColor(convertColor(format.getBackgroundColor()));
+        g2d.fillRect(0, 0, width, height);
+        g2d.setColor(convertColor(format.getFontColor()));
+        g2d.drawString(c + "", 0, height - metrics.getDescent() + 1);
+        g2d.dispose();
+
+        int[] pixels = convertBufferedImageToPixelArray(bi);
+
+        return DrawableV2PixelsImpl.builderArgb()//
+                .argbPixels(pixels)//
+                .size(new Size(width, height))//
+                .build();
     }
 
     @Override
@@ -98,12 +135,7 @@ public class FontGenerator implements FontPixelsGenerator {
     }
 
     private Color convertColor(net.eugenpaul.jlexi.utils.Color color) {
-        return new Color(//
-                color.getR(), //
-                color.getG(), //
-                color.getB(), //
-                color.getA() //
-        );
+        return new Color(color.getArgb(), true);
     }
 
 }
