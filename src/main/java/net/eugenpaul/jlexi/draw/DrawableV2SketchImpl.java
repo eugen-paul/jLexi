@@ -21,42 +21,46 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     private int minY;
     private int maxY;
 
-    public DrawableV2SketchImpl() {
-        data = new DrawableV2StorageImpl();
+    public DrawableV2SketchImpl(Color background) {
+        this.data = new DrawableV2StorageImpl();
 
-        minX = 0;
-        maxX = 0;
-        minY = 0;
-        maxY = 0;
+        this.minX = 0;
+        this.maxX = 0;
+        this.minY = 0;
+        this.maxY = 0;
+
+        this.background = background;
     }
 
     @Override
     public void addDrawable(DrawableV2 drawable, int x, int y, int z) {
         this.data.add(drawable, x, y, z);
 
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x + drawable.getSize().getWidth());
+        this.minX = Math.min(this.minX, x);
+        this.maxX = Math.max(this.maxX, x + drawable.getSize().getWidth() - 1);
 
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y + drawable.getSize().getHeight());
+        this.minY = Math.min(this.minY, y);
+        this.maxY = Math.max(this.maxY, y + drawable.getSize().getHeight() - 1);
     }
 
     @Override
     public DrawableV2 draw() {
         return new DrawableV2AreasImpl(//
-                data.copy(), //
+                this.data.copy(), //
                 new Area(//
-                        new Vector2d(minX, minY), //
-                        new Size(maxX - minX + 1, maxY - minY + 1)//
-                )//
+                        new Vector2d(this.minX, this.minY), //
+                        new Size(this.maxX - this.minX + 1, this.maxY - this.minY + 1)//
+                ), //
+                this.background //
         );
     }
 
     @Override
     public DrawableV2 draw(Area area) {
         return new DrawableV2AreasImpl(//
-                data.copy(), //
-                area//
+                this.data.copy(), //
+                area, //
+                this.background //
         );
     }
 
@@ -74,7 +78,7 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
 
     @Override
     public Size getSize() {
-        return new Size(maxX - minX, maxY - minY);
+        return new Size(this.maxX - this.minX + 1, this.maxY - this.minY + 1);
     }
 
 }

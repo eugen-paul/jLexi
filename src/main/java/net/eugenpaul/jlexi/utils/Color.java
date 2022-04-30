@@ -36,6 +36,10 @@ public final class Color {
         return valueArgb;
     }
 
+    public int getRgba() {
+        return valueRgbA;
+    }
+
     public String getHexArgb() {
         return String.format("0x%02X_%02X_%02X_%02X", //
                 valueArgb >>> 24, //

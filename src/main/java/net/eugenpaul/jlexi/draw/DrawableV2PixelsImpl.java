@@ -4,7 +4,9 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayConverter;
+import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class DrawableV2PixelsImpl implements DrawableV2 {
 
@@ -38,6 +40,12 @@ public class DrawableV2PixelsImpl implements DrawableV2 {
             }
         }
         return this.argbPixels;
+    }
+
+    @Override
+    public void toArgbPixels(int[] dest, Size destSize, Vector2d position) {
+        int[] pixels = asArgbPixels();
+        ImageArrayHelper.copyRectangle(pixels, size, Vector2d.zero(), size, dest, destSize, position);
     }
 
     @Override

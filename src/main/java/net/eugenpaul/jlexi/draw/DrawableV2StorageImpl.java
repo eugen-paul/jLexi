@@ -33,7 +33,7 @@ public class DrawableV2StorageImpl implements DrawableV2Storage {
         for (var zData : this.storage.entrySet()) {
             for (var xData : zData.getValue().entrySet()) {
                 for (var yData : xData.getValue().entrySet()) {
-                    this.storage.computeIfAbsent(zData.getKey(), k -> new TreeMap<>())//
+                    response.storage.computeIfAbsent(zData.getKey(), k -> new TreeMap<>())//
                             .computeIfAbsent(xData.getKey(), k -> new TreeMap<>())//
                             .computeIfAbsent(yData.getKey(), k -> new LinkedList<>())//
                             .addAll(yData.getValue());

@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
@@ -72,6 +75,21 @@ public class CursorEffect extends GlyphEffect {
         LOGGER.trace("terminate Cursor on {}.", getGlyph());
         getGlyph().removeEffect(this);
         getGlyph().updateEffect(null);
+    }
+
+    @Override
+    public void addToDrawable(DrawableV2Sketch drawable) {
+        if (showCursor) {
+            int[] cursorsPixels = new int[drawable.getSize().getHeight()];
+            Arrays.fill(cursorsPixels, CURSOR_COLOR);
+
+            DrawableV2 cursorDrawable = DrawableV2PixelsImpl.builderArgb()//
+                    .argbPixels(cursorsPixels)//
+                    .size(new Size(1, cursorsPixels.length))//
+                    .build();
+
+            drawable.addDrawable(cursorDrawable, 0, 0, 1);
+        }
     }
 
 }

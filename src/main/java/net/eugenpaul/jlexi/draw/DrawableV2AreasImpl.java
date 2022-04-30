@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.draw;
 
+import java.util.Arrays;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
@@ -16,14 +18,18 @@ public class DrawableV2AreasImpl implements DrawableV2 {
     @Setter
     private Color background;
 
-    private int[] argbPixels = null;
-    private int[] rgbaPixels = null;
+    private int[] argbPixels;
+    private int[] rgbaPixels;
 
     private Area area;
 
-    public DrawableV2AreasImpl(DrawableV2Storage data, Area area) {
+    public DrawableV2AreasImpl(DrawableV2Storage data, Area area, Color background) {
         this.area = area;
         this.data = data;
+        this.background = background;
+
+        this.argbPixels = null;
+        this.rgbaPixels = null;
     }
 
     @Override
@@ -33,12 +39,9 @@ public class DrawableV2AreasImpl implements DrawableV2 {
         }
 
         this.argbPixels = new int[(int) this.area.getSize().compArea()];
+        Arrays.fill(this.argbPixels, this.background.getArgb());
 
-        data.forEach((d, v) -> ImageArrayHelper.copyRectangle(//
-                d.asArgbPixels(), //
-                d.getSize(), //
-                Vector2d.zero(), //
-                d.getSize(), //
+        this.data.forEach((d, v) -> d.toArgbPixels(//
                 this.argbPixels, //
                 this.area.getSize(), //
                 v //
@@ -48,14 +51,36 @@ public class DrawableV2AreasImpl implements DrawableV2 {
     }
 
     @Override
+    public void toArgbPixels(int[] dest, Size destSize, Vector2d position) {
+        if (this.argbPixels != null) {
+            ImageArrayHelper.copyRectangle(//
+                    this.argbPixels, //
+                    this.area.getSize(), //
+                    this.area.getPosition(), //
+                    this.area.getSize(), //
+                    dest, //
+                    destSize, //
+                    position //
+            );
+        }
+
+        this.data.forEach((d, v) -> d.toArgbPixels(//
+                dest, //
+                destSize, //
+                position.addNew(v) //
+        ));
+    }
+
+    @Override
     public int[] asRgbaPixels() {
         if (this.rgbaPixels != null) {
             return this.rgbaPixels;
         }
 
         this.rgbaPixels = new int[(int) this.area.getSize().compArea()];
+        Arrays.fill(this.rgbaPixels, this.background.getRgba());
 
-        data.forEach((d, v) -> ImageArrayHelper.copyRectangle(//
+        this.data.forEach((d, v) -> ImageArrayHelper.copyRectangle(//
                 d.asRgbaPixels(), //
                 d.getSize(), //
                 Vector2d.zero(), //

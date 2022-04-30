@@ -5,9 +5,13 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.var;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
@@ -44,8 +48,6 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
 
     @Override
     public Drawable getPixels() {
-        var sites = children;
-
         int[] pixels = new int[getSize().getWidth() * getSize().getHeight()];
 
         cachedDrawable = new DrawableImpl(pixels, getSize());
@@ -53,7 +55,7 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
         xPositionToRow.clear();
 
         Vector2d position = new Vector2d(0, 0);
-        for (var el : sites) {
+        for (var el : children) {
             ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
 
             var xPosition = position.getX();
@@ -66,6 +68,32 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
         }
 
         return cachedDrawable;
+    }
+
+    @Override
+    public DrawableV2 getDrawable() {
+        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+        xPositionToRow.clear();
+
+        int maxHeight = 0;
+        for (var el : children) {
+            maxHeight = Math.max(maxHeight, el.getSize().getHeight());
+        }
+
+        int currentX = 0;
+        for (var el : children) {
+            int currentY = maxHeight - el.getSize().getHeight();
+
+            cachedDrawableV2.addDrawable(el.getDrawable(), currentX, currentY);
+
+            xPositionToRow.put(currentX, el);
+
+            el.setRelativPosition(new Vector2d(currentX, currentY));
+
+            currentX += el.getSize().getWidth();
+        }
+
+        return cachedDrawableV2.draw();
     }
 
 }

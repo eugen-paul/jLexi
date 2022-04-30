@@ -12,6 +12,7 @@ import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -20,11 +21,15 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     @Getter(value = AccessLevel.PROTECTED)
     @Setter
     protected TextStructure structureParent;
+
     private List<GlyphEffect> effects;
+
     @Getter
     private TextFormat format;
+
     @Getter
     private TextFormatEffect formatEffect;
+
     @Getter
     private TextPosition textPosition;
 
@@ -68,6 +73,11 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         effects.stream()//
                 .forEach(v -> v.editDrawable(element));
         return element;
+    }
+
+    protected void doEffects(DrawableV2Sketch element) {
+        effects.stream()//
+                .forEach(v -> v.addToDrawable(element));
     }
 
     @Override

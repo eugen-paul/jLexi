@@ -8,6 +8,8 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
@@ -26,6 +28,10 @@ public abstract class Glyph {
     @Setter(value = AccessLevel.PROTECTED)
     protected Drawable cachedDrawable;
 
+    @Getter(value = AccessLevel.PROTECTED)
+    @Setter(value = AccessLevel.PROTECTED)
+    protected DrawableV2Sketch cachedDrawableV2;
+
     @Getter
     @Setter(value = AccessLevel.PROTECTED)
     private Size size;
@@ -40,6 +46,7 @@ public abstract class Glyph {
         this.relativPosition = new Vector2d(0, 0);
         this.size = Size.ZERO_SIZE;
         this.cachedDrawable = null;
+        this.cachedDrawableV2 = null;
     }
 
     /**
@@ -48,6 +55,11 @@ public abstract class Glyph {
      * @return drawable data
      */
     public abstract Drawable getPixels();
+
+    // public abstract DrawableV2 getDrawable();
+    public DrawableV2 getDrawable() {
+        return null;
+    }
 
     /**
      * Get drawable data of this element on given area.
@@ -147,6 +159,7 @@ public abstract class Glyph {
 
     public void notifyChange() {
         cachedDrawable = null;
+        cachedDrawableV2 = null;
         if (parent == null) {
             return;
         }
