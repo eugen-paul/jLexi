@@ -95,27 +95,27 @@ public class Border extends GuiCompenentMonoGlyph {
 
         cachedDrawable.addDrawable(childDraw, borderSize, borderSize, 0);
 
-        int[] borderPixelsVertical = new int[getSize().getWidth()];
-        Arrays.fill(borderPixelsVertical, 0, borderPixelsVertical.length, backgroundColor.getArgb());
+        int[] borderPixelsVertical = new int[getSize().getWidth() * borderSize];
+        Arrays.fill(borderPixelsVertical, 0, borderPixelsVertical.length, borderColor.getArgb());
 
         DrawablePixelsImpl borderVertical = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(borderPixelsVertical)//
-                .size(new Size(getSize().getWidth(), 1))//
+                .size(new Size(getSize().getWidth(), borderSize))//
                 .build();
 
         cachedDrawable.addDrawable(borderVertical, 0, 0, 1);
-        cachedDrawable.addDrawable(borderVertical, 0, getSize().getHeight() - 1, 1);
+        cachedDrawable.addDrawable(borderVertical, 0, getSize().getHeight() - borderSize, 1);
 
-        int[] borderPixelsHorizontal = new int[getSize().getHeight()];
-        Arrays.fill(borderPixelsHorizontal, 0, borderPixelsHorizontal.length, backgroundColor.getArgb());
+        int[] borderPixelsHorizontal = new int[getSize().getHeight() * borderSize];
+        Arrays.fill(borderPixelsHorizontal, 0, borderPixelsHorizontal.length, borderColor.getArgb());
 
         DrawablePixelsImpl borderHorizontal = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(borderPixelsHorizontal)//
-                .size(new Size(1, getSize().getHeight()))//
+                .size(new Size(borderSize, getSize().getHeight()))//
                 .build();
 
         cachedDrawable.addDrawable(borderHorizontal, 0, 0, 1);
-        cachedDrawable.addDrawable(borderHorizontal, getSize().getWidth() - 1, 0, 1);
+        cachedDrawable.addDrawable(borderHorizontal, getSize().getWidth() - borderSize, 0, 1);
 
         return cachedDrawable.draw();
     }
