@@ -21,11 +21,11 @@ import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public class TextPane extends GuiGlyph implements TextUpdateable {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
 
     private TextPanePanel textPanel;
@@ -66,12 +66,6 @@ public class TextPane extends GuiGlyph implements TextUpdateable {
     @Override
     public void visit(Visitor checker) {
         // Nothing to do
-    }
-
-    @Override
-    public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
-        LOGGER.trace("Recive Redraw from child");
-        super.notifyRedraw(drawData, position, size);
     }
 
     @Override

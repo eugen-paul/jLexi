@@ -36,8 +36,9 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
         }
 
         LOGGER.trace("do Redraw ");
-        getPixels();
-        parent.notifyRedraw(cachedDrawable, this.relativPosition, getSize());
+        cachedDrawable = null;
+        cachedDrawableV2 = null;
+        parent.redraw();
     }
 
     @Override

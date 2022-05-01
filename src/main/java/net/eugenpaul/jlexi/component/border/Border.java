@@ -252,14 +252,4 @@ public class Border extends GuiCompenentMonoGlyph {
                 ), //
                 size);
     }
-
-    @Override
-    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
-        // TODO add Pixels to cachedDrawable
-        cachedDrawable = null;
-        if (parent != null) {
-            parent.notifyRedraw(drawData, relativPosition.addNew(this.relativPosition), size);
-        }
-    }
-
 }

@@ -84,7 +84,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     public void updateEffect(GlyphEffect effect) {
         if (null != parent) {
             cachedDrawable = null;
-            parent.notifyRedraw(getPixels(), getRelativPosition(), getSize());
+            parent.notifyChange();
         }
     }
 

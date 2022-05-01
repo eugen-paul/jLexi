@@ -159,16 +159,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     }
 
     @Override
-    public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
-        if (cachedDrawable != null) {
-            LOGGER.trace("Recive Redraw from child");
-            super.notifyRedraw(drawData, position, size);
-        } else {
-            LOGGER.trace("Recive Redraw from child are ignored");
-        }
-    }
-
-    @Override
     public TextPosition getCorsorElementAt(Vector2d pos) {
         var row = yPositionToSite.floorEntry(pos.getY());
         if (null == row) {

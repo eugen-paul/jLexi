@@ -122,31 +122,10 @@ public abstract class Glyph {
      */
     public abstract void visit(Visitor checker);
 
-    /**
-     * 
-     * @param drawData
-     * @param position
-     * @param size
-     */
-    public void notifyRedraw(Drawable drawData, Vector2d position, Size size) {
-        if (parent == null) {
-            return;
-        }
-
-        getPixels();
-
-        ImageArrayHelper.copyRectangle(//
-                drawData, //
-                Vector2d.zero(), //
-                size, //
-                cachedDrawable, //
-                position //
-        );
-
-        parent.notifyRedraw(drawData, position.addNew(this.relativPosition), size);
-    }
-
     public void redraw() {
+        this.cachedDrawable = null;
+        this.cachedDrawableV2 = null;
+
         if (parent == null) {
             return;
         }
@@ -155,8 +134,9 @@ public abstract class Glyph {
     }
 
     public void notifyChange() {
-        cachedDrawable = null;
-        cachedDrawableV2 = null;
+        this.cachedDrawable = null;
+        this.cachedDrawableV2 = null;
+
         if (parent == null) {
             return;
         }

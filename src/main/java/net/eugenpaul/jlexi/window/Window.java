@@ -12,13 +12,9 @@ import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.RedrawData;
 import net.eugenpaul.jlexi.exception.NotInitializedException;
 import net.eugenpaul.jlexi.model.InterfaceModel;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.window.interfaces.WindowsKeyPressable;
@@ -32,6 +28,7 @@ import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
 public abstract class Window extends MonoGlyph
         implements WindowsKeyPressable, WindowsMouseClickable, WindowsResizeable, InterfaceModel {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(Window.class);
 
     @Setter
@@ -151,22 +148,6 @@ public abstract class Window extends MonoGlyph
         if (mainGlyph != null) {
             mainGlyph.resizeTo(size);
         }
-    }
-
-    @Override
-    public void notifyRedraw(Drawable drawData, Vector2d relativPosition, Size size) {
-        LOGGER.trace("Window send notifyRedraw Data to window-impl");
-
-        controller.propertyChange(new PropertyChangeEvent(//
-                name, //
-                ViewPropertyChangeType.DRAW_AREA.getTypeName(), //
-                null, //
-                new RedrawData(//
-                        name, //
-                        drawData, //
-                        new Area(relativPosition.addNew(this.relativPosition), size)//
-                ) //
-        ));
     }
 
 }
