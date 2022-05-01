@@ -9,6 +9,9 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -43,6 +46,11 @@ public class MenuBarColored extends MenuBar {
                 getSize().getWidth(), //
                 Math.min(getSize().getHeight(), menubarHeight)//
         );
+
+        this.menuBackground2 = generateMenuBackground2(//
+                getSize().getWidth(), //
+                Math.min(getSize().getHeight(), menubarHeight)//
+        );
     }
 
     private Drawable generateMenuBackground(int w, int h) {
@@ -53,6 +61,15 @@ public class MenuBarColored extends MenuBar {
         int[] responsePixels = new int[h * w];
         Arrays.fill(responsePixels, backgroundColor.getArgb());
         return new DrawableImpl(responsePixels, new Size(w, h));
+    }
+
+    private DrawableV2 generateMenuBackground2(int w, int h) {
+        if (0 == w || 0 == h) {
+            return DrawableV2PixelsImpl.EMPTY;
+        }
+
+        var responseMenu = new DrawableV2SketchImpl(backgroundColor, new Size(w, h));
+        return responseMenu.draw();
     }
 
 }

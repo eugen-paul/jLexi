@@ -21,8 +21,25 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     private int minY;
     private int maxY;
 
+    private Size size;
+
     public DrawableV2SketchImpl(Color background) {
         this.data = new DrawableV2StorageImpl();
+
+        this.size = null;
+
+        this.minX = 0;
+        this.maxX = 0;
+        this.minY = 0;
+        this.maxY = 0;
+
+        this.background = background;
+    }
+
+    public DrawableV2SketchImpl(Color background, Size size) {
+        this.data = new DrawableV2StorageImpl();
+
+        this.size = size;
 
         this.minX = 0;
         this.maxX = 0;
@@ -36,27 +53,41 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     public void addDrawable(DrawableV2 drawable, int x, int y, int z) {
         this.data.add(drawable, x, y, z);
 
-        this.minX = Math.min(this.minX, x);
-        this.maxX = Math.max(this.maxX, x + drawable.getSize().getWidth() - 1);
+        if (size != null) {
+            this.minX = Math.min(this.minX, x);
+            this.maxX = Math.max(this.maxX, x + drawable.getSize().getWidth() - 1);
 
-        this.minY = Math.min(this.minY, y);
-        this.maxY = Math.max(this.maxY, y + drawable.getSize().getHeight() - 1);
+            this.minY = Math.min(this.minY, y);
+            this.maxY = Math.max(this.maxY, y + drawable.getSize().getHeight() - 1);
+        }
     }
 
     @Override
     public DrawableV2 draw() {
-        return new DrawableV2AreasImpl(//
-                this.data.copy(), //
-                new Area(//
-                        new Vector2d(this.minX, this.minY), //
-                        new Size(this.maxX - this.minX + 1, this.maxY - this.minY + 1)//
-                ), //
-                this.background //
-        );
+        if (size != null) {
+            return new DrawableV2AreasImpl(//
+                    this.data.copy(), //
+                    new Area(//
+                            new Vector2d(this.minX, this.minY), //
+                            size //
+                    ), //
+                    this.background //
+            );
+        } else {
+            return new DrawableV2AreasImpl(//
+                    this.data.copy(), //
+                    new Area(//
+                            new Vector2d(this.minX, this.minY), //
+                            new Size(this.maxX - this.minX + 1, this.maxY - this.minY + 1)//
+                    ), //
+                    this.background //
+            );
+        }
     }
 
     @Override
     public DrawableV2 draw(Area area) {
+        // TODO edit size
         return new DrawableV2AreasImpl(//
                 this.data.copy(), //
                 area, //
@@ -78,6 +109,9 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
 
     @Override
     public Size getSize() {
+        if (size != null) {
+            return size;
+        }
         return new Size(this.maxX - this.minX + 1, this.maxY - this.minY + 1);
     }
 

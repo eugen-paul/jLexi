@@ -16,6 +16,9 @@ import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -59,7 +62,7 @@ public class Border extends GuiCompenentMonoGlyph {
         if (component.isResizeble()) {
             component.resizeTo(//
                     Math.max(0, getSize().getWidth() - this.borderSize * 2), //
-                    Math.max(0, getSize().getHeight() - this.borderSize * 2)//
+                    Math.max(0, getSize().getHeight() - this.borderSize * 2) //
             );
         }
     }
@@ -68,6 +71,7 @@ public class Border extends GuiCompenentMonoGlyph {
         this.backgroundColor = backgroundColor;
         this.compositor.setBackgroundColor(backgroundColor);
         this.cachedDrawable = null;
+        this.cachedDrawableV2 = null;
     }
 
     @Override
@@ -132,6 +136,56 @@ public class Border extends GuiCompenentMonoGlyph {
         return cachedDrawable;
     }
 
+    @Override
+    public DrawableV2 getDrawable() {
+        if (cachedDrawableV2 != null) {
+            return cachedDrawableV2.draw();
+        }
+
+        if (getSize().getHeight() <= borderSize * 2 //
+                || getSize().getWidth() <= borderSize * 2 //
+        ) {
+            cachedDrawableV2 = new DrawableV2SketchImpl(borderColor, getSize());
+            return cachedDrawableV2.draw();
+        }
+
+        Size childSize = new Size(//
+                getSize().getWidth() - borderSize * 2, //
+                getSize().getHeight() - borderSize * 2 //
+        );
+
+        List<Glyph> composedGlyphs = compositor.compose(List.of((Glyph) component).iterator(), childSize);
+
+        cachedDrawableV2 = new DrawableV2SketchImpl(backgroundColor);
+        var childDraw = composedGlyphs.get(0).getDrawable();
+
+        cachedDrawableV2.addDrawable(childDraw, borderSize, borderSize, 0);
+
+        int[] borderPixelsVertical = new int[getSize().getWidth()];
+        Arrays.fill(borderPixelsVertical, 0, borderPixelsVertical.length, backgroundColor.getArgb());
+
+        DrawableV2PixelsImpl borderVertical = DrawableV2PixelsImpl.builderArgb()//
+                .argbPixels(borderPixelsVertical)//
+                .size(new Size(getSize().getWidth(), 1))//
+                .build();
+
+        cachedDrawableV2.addDrawable(borderVertical, 0, 0, 1);
+        cachedDrawableV2.addDrawable(borderVertical, 0, getSize().getHeight() - 1, 1);
+
+        int[] borderPixelsHorizontal = new int[getSize().getHeight()];
+        Arrays.fill(borderPixelsHorizontal, 0, borderPixelsHorizontal.length, backgroundColor.getArgb());
+
+        DrawableV2PixelsImpl borderHorizontal = DrawableV2PixelsImpl.builderArgb()//
+                .argbPixels(borderPixelsHorizontal)//
+                .size(new Size(1, getSize().getHeight()))//
+                .build();
+
+        cachedDrawableV2.addDrawable(borderHorizontal, 0, 0, 1);
+        cachedDrawableV2.addDrawable(borderHorizontal, getSize().getWidth() - 1, 0, 1);
+
+        return cachedDrawableV2.draw();
+    }
+
     private int[] generateBlackBorder() {
         int[] responsePixels = new int[(int) getSize().compArea()];
         Arrays.fill(responsePixels, borderColor.getArgb());
@@ -146,6 +200,7 @@ public class Border extends GuiCompenentMonoGlyph {
     @Override
     public void resizeTo(Size size) {
         cachedDrawable = null;
+        cachedDrawableV2 = null;
         setSize(size);
         resizeComponent();
         getPixels();

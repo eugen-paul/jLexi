@@ -28,7 +28,10 @@ import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -113,6 +116,36 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         }
 
         return cachedDrawable;
+    }
+
+    @Override
+    public DrawableV2 getDrawable() {
+        if (cachedDrawableV2 != null) {
+            return cachedDrawableV2.draw();
+        }
+
+        children.clear();
+
+        children.addAll(compositor.compose(document.getRows(getSize()).iterator(), getSize()));
+
+        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE, getSize());
+
+        yPositionToSite.clear();
+
+        int currentY = 0;
+
+        for (var el : children) {
+            cachedDrawableV2.addDrawable(el.getDrawable(), 0, currentY);
+
+            yPositionToSite.put(currentY, el);
+
+            el.setRelativPosition(new Vector2d(0, currentY));
+            el.setParent(this);
+
+            currentY += el.getSize().getHeight();
+        }
+
+        return cachedDrawableV2.draw();
     }
 
     @Override

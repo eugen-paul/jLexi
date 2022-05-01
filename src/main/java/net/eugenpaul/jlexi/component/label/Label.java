@@ -16,6 +16,9 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentati
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -93,6 +96,27 @@ public class Label extends GuiGlyph {
         ImageArrayHelper.copyRectangle(column.get(0).getPixels(), cachedDrawable, Vector2d.zero());
 
         return cachedDrawable;
+    }
+
+    @Override
+    public DrawableV2 getDrawable() {
+        if (cachedDrawableV2 != null) {
+            return cachedDrawableV2.draw();
+        }
+
+        List<TextRepresentation> rows = textElement.getRows(getSize());
+
+        List<TextRepresentation> column = compositor.compose(rows.iterator(), getSize());
+
+        if (column.isEmpty()) {
+            return DrawableV2PixelsImpl.EMPTY;
+        }
+
+        cachedDrawableV2 = new DrawableV2SketchImpl(textFormat.getBackgroundColor());
+        var drawable = column.get(0).getDrawable();
+        cachedDrawableV2.addDrawable(drawable, 0, 0);
+
+        return cachedDrawableV2.draw();
     }
 
     @Override

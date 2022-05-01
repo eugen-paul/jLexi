@@ -12,6 +12,10 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
@@ -26,8 +30,10 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
     private static final Drawable EMPTY_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
+    private static final DrawableV2 EMPTY_DRAWABLE_V2 = DrawableV2PixelsImpl.EMPTY;
 
     protected Drawable menuBackground;
+    protected DrawableV2 menuBackground2;
 
     protected int menubarHeight = 0;
     private int menubarPadding = 2;
@@ -98,6 +104,34 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
         );
 
         return cachedDrawable;
+    }
+
+    @Override
+    public DrawableV2 getDrawable() {
+        if (cachedDrawableV2 != null) {
+            return cachedDrawableV2.draw();
+        }
+
+        if (getSize().isZero()) {
+            return EMPTY_DRAWABLE_V2;
+        }
+
+        DrawableV2 componentDrawable = super.getDrawable();
+
+        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE, getSize());
+
+        cachedDrawableV2.addDrawable(menuBackground2, 0, 0);
+
+        Vector2d pos = new Vector2d(menubarPadding, menubarPadding);
+        for (Button button : menuButtons) {
+            cachedDrawableV2.addDrawable(button.getDrawable(), pos.getX(), pos.getY(), 1);
+            button.setRelativPosition(new Vector2d(pos));
+            pos.setX(pos.getX() + button.getSize().getWidth() + menubarPadding);
+        }
+
+        cachedDrawableV2.addDrawable(componentDrawable, 0, menuBackground2.getSize().getHeight(), 1);
+
+        return cachedDrawableV2.draw();
     }
 
     @Override

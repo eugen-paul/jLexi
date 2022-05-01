@@ -16,7 +16,10 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePanel;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
@@ -46,6 +49,13 @@ public class TextPane extends GuiGlyph implements TextUpdateable {
     public Drawable getPixels() {
         cachedDrawable = textPanel.getPixels();
         return cachedDrawable;
+    }
+
+    @Override
+    public DrawableV2 getDrawable() {
+        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+        cachedDrawableV2.addDrawable(textPanel.getDrawable(), 0, 0);
+        return cachedDrawableV2.draw();
     }
 
     @Override

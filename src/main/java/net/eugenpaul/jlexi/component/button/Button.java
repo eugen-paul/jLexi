@@ -12,6 +12,10 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
@@ -68,6 +72,29 @@ public abstract class Button extends GuiGlyph {
 
         cachedDrawable = glyph.get(0).getPixels();
         return cachedDrawable;
+    }
+
+    @Override
+    public DrawableV2 getDrawable() {
+        if (cachedDrawableV2 != null) {
+            return cachedDrawableV2.draw();
+        }
+
+        if (compositor == null) {
+            return DrawableV2PixelsImpl.EMPTY;
+        }
+
+        List<Glyph> glyph = compositor.compose(elements.iterator(), getSize());
+
+        if (glyph.isEmpty()) {
+            return DrawableV2PixelsImpl.EMPTY;
+        }
+
+        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+        var drawable = glyph.get(0).getDrawable();
+        cachedDrawableV2.addDrawable(drawable, 0, 0);
+
+        return cachedDrawableV2.draw();
     }
 
     @Override

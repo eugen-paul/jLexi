@@ -56,10 +56,7 @@ public abstract class Glyph {
      */
     public abstract Drawable getPixels();
 
-    // public abstract DrawableV2 getDrawable();
-    public DrawableV2 getDrawable() {
-        return null;
-    }
+    public abstract DrawableV2 getDrawable();
 
     /**
      * Get drawable data of this element on given area.
