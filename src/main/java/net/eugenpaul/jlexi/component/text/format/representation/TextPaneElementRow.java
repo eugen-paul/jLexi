@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
@@ -111,8 +111,8 @@ public class TextPaneElementRow extends TextRepresentation {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
-        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+    public Drawable getDrawable() {
+        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
         xPositionToRow.clear();
 
         int maxHeight = 0;
@@ -124,7 +124,7 @@ public class TextPaneElementRow extends TextRepresentation {
         for (var el : children) {
             int currentY = maxHeight - el.getSize().getHeight();
 
-            cachedDrawableV2.addDrawable(el.getDrawable(), currentX, currentY);
+            cachedDrawable.addDrawable(el.getDrawable(), currentX, currentY);
 
             xPositionToRow.put(currentX, el);
 
@@ -133,7 +133,7 @@ public class TextPaneElementRow extends TextRepresentation {
             currentX += el.getSize().getWidth();
         }
 
-        return cachedDrawableV2.draw();
+        return cachedDrawable.draw();
     }
 
     @Override

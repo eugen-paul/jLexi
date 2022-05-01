@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.window.Window;
@@ -92,7 +92,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
         registeredModels.add(model);
     }
 
-    public Mono<DrawableV2> getDrawable(String source) {
+    public Mono<Drawable> getDrawable(String source) {
         return Mono.fromCallable(() -> {
             Glyph destinationGlyph = windowsMap.get(source).getGlyph();
             if (destinationGlyph != null) {

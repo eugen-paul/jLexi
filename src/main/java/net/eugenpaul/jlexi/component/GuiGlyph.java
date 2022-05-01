@@ -36,7 +36,7 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
             return;
         }
 
-        cachedDrawableV2 = null;
+        cachedDrawable = null;
         parent.redraw();
     }
 

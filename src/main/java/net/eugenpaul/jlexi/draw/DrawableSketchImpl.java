@@ -8,9 +8,9 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public class DrawableV2SketchImpl implements DrawableV2Sketch {
+public class DrawableSketchImpl implements DrawableSketch {
 
-    private DrawableV2Storage data;
+    private DrawableStorage data;
 
     @Getter
     @Setter
@@ -23,8 +23,8 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
 
     private Size size;
 
-    public DrawableV2SketchImpl(Color background) {
-        this.data = new DrawableV2StorageImpl();
+    public DrawableSketchImpl(Color background) {
+        this.data = new DrawableStorageImpl();
 
         this.size = null;
 
@@ -36,8 +36,8 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
         this.background = background;
     }
 
-    public DrawableV2SketchImpl(Color background, Size size) {
-        this.data = new DrawableV2StorageImpl();
+    public DrawableSketchImpl(Color background, Size size) {
+        this.data = new DrawableStorageImpl();
 
         this.size = size;
 
@@ -50,7 +50,7 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     }
 
     @Override
-    public void addDrawable(DrawableV2 drawable, int x, int y, int z) {
+    public void addDrawable(Drawable drawable, int x, int y, int z) {
         this.data.add(drawable, x, y, z);
 
         if (size == null) {
@@ -63,9 +63,9 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     }
 
     @Override
-    public DrawableV2 draw() {
+    public Drawable draw() {
         if (size != null) {
-            return new DrawableV2AreasImpl(//
+            return new DrawableAreasImpl(//
                     this.data.copy(), //
                     new Area(//
                             new Vector2d(this.minX, this.minY), //
@@ -74,7 +74,7 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
                     this.background //
             );
         } else {
-            return new DrawableV2AreasImpl(//
+            return new DrawableAreasImpl(//
                     this.data.copy(), //
                     new Area(//
                             new Vector2d(this.minX, this.minY), //
@@ -86,9 +86,9 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     }
 
     @Override
-    public DrawableV2 draw(Area area) {
+    public Drawable draw(Area area) {
         // TODO edit size
-        return new DrawableV2AreasImpl(//
+        return new DrawableAreasImpl(//
                 this.data.copy(), //
                 area, //
                 this.background //
@@ -96,13 +96,13 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     }
 
     @Override
-    public DrawableV2Sketch sketchAt(Area area) {
+    public DrawableSketch sketchAt(Area area) {
         // TODO Auto-generated method stub
         throw new NotYetImplementedException();
     }
 
     @Override
-    public DrawableV2Sketch copy() {
+    public DrawableSketch copy() {
         // TODO Auto-generated method stub
         throw new NotYetImplementedException();
     }

@@ -11,7 +11,7 @@ import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
-import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
+import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -55,7 +55,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     public abstract TextPosition getCursorElementAt(Vector2d pos);
 
     public void reset() {
-        cachedDrawableV2 = null;
+        cachedDrawable = null;
     }
 
     @Override
@@ -68,7 +68,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         effects.remove(effect);
     }
 
-    protected void doEffects(DrawableV2Sketch element) {
+    protected void doEffects(DrawableSketch element) {
         effects.stream()//
                 .forEach(v -> v.addToDrawable(element));
     }
@@ -76,7 +76,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     @Override
     public void updateEffect(GlyphEffect effect) {
         if (null != parent) {
-            cachedDrawableV2 = null;
+            cachedDrawable = null;
             parent.redraw();
         }
     }

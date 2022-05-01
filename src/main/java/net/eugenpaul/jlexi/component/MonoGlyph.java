@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 
 /**
  * Abstract Class for Glyph that cann have just one child
@@ -20,9 +20,9 @@ public abstract class MonoGlyph extends Glyph {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
+    public Drawable getDrawable() {
         if (component == null) {
-            return DrawableV2PixelsImpl.EMPTY;
+            return DrawablePixelsImpl.EMPTY;
         }
         return component.getDrawable();
     }

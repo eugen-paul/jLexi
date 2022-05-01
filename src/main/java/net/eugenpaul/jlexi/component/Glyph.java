@@ -5,8 +5,8 @@ import java.util.Iterator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
@@ -23,7 +23,7 @@ public abstract class Glyph {
 
     @Getter(value = AccessLevel.PROTECTED)
     @Setter(value = AccessLevel.PROTECTED)
-    protected DrawableV2Sketch cachedDrawableV2;
+    protected DrawableSketch cachedDrawable;
 
     @Getter
     @Setter(value = AccessLevel.PROTECTED)
@@ -38,7 +38,7 @@ public abstract class Glyph {
         this.parent = parent;
         this.relativPosition = new Vector2d(0, 0);
         this.size = Size.ZERO_SIZE;
-        this.cachedDrawableV2 = null;
+        this.cachedDrawable = null;
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class Glyph {
      * 
      * @return drawable data
      */
-    public abstract DrawableV2 getDrawable();
+    public abstract Drawable getDrawable();
 
     /**
      * get a Iterator to iterate over children
@@ -86,7 +86,7 @@ public abstract class Glyph {
     public abstract void visit(Visitor checker);
 
     public void redraw() {
-        this.cachedDrawableV2 = null;
+        this.cachedDrawable = null;
 
         if (parent == null) {
             return;
@@ -96,7 +96,7 @@ public abstract class Glyph {
     }
 
     public void notifyChange() {
-        this.cachedDrawableV2 = null;
+        this.cachedDrawable = null;
 
         if (parent == null) {
             return;

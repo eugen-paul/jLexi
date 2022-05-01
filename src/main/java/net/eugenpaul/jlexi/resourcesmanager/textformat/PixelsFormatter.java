@@ -1,7 +1,7 @@
 package net.eugenpaul.jlexi.resourcesmanager.textformat;
 
-import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
+import net.eugenpaul.jlexi.draw.DrawableSketch;
 
 public interface PixelsFormatter {
-    public void doFormat(DrawableV2Sketch draw);
+    public void doFormat(DrawableSketch draw);
 }

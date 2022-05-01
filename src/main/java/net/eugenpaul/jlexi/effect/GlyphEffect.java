@@ -4,7 +4,7 @@ import java.time.Duration;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
+import net.eugenpaul.jlexi.draw.DrawableSketch;
 
 public abstract class GlyphEffect {
 
@@ -15,7 +15,7 @@ public abstract class GlyphEffect {
         this.glyph = glyph;
     }
 
-    public abstract void addToDrawable(DrawableV2Sketch drawable);
+    public abstract void addToDrawable(DrawableSketch drawable);
 
     public abstract boolean isDone();
 

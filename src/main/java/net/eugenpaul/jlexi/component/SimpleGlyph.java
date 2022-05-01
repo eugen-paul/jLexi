@@ -5,8 +5,8 @@ import java.util.Iterator;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 @Getter
@@ -23,8 +23,8 @@ public class SimpleGlyph extends Glyph {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
-        return cachedDrawableV2.draw();
+    public Drawable getDrawable() {
+        return cachedDrawable.draw();
     }
 
     @Override
@@ -37,9 +37,9 @@ public class SimpleGlyph extends Glyph {
         // TODO Auto-generated method stub
     }
 
-    public void setDrawable(DrawableV2Sketch drawable) {
+    public void setDrawable(DrawableSketch drawable) {
         setSize(drawable.getSize());
-        cachedDrawableV2 = drawable;
+        cachedDrawable = drawable;
     }
 
 }

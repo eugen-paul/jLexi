@@ -8,10 +8,10 @@ import java.awt.image.MemoryImageSource;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.Drawable;
 
 public class ImagePanel extends JPanel {
-    private transient DrawableV2 currentDrawable;
+    private transient Drawable currentDrawable;
     private transient Image currentImage;
 
     private final transient Object imgSynch = new Object();
@@ -45,7 +45,7 @@ public class ImagePanel extends JPanel {
         }
     }
 
-    public void update(DrawableV2 drawable) {
+    public void update(Drawable drawable) {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
                 currentDrawable = drawable;

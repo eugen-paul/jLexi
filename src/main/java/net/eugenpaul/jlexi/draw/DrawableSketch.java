@@ -7,7 +7,7 @@ import net.eugenpaul.jlexi.utils.Size;
 /**
  * Collection of Drawable Elements.
  */
-public interface DrawableV2Sketch {
+public interface DrawableSketch {
 
     /**
      * Add Drawable to Sketch at <code>(x,y)</code>.
@@ -17,7 +17,7 @@ public interface DrawableV2Sketch {
      * @param y        - y position of added element
      * @param z        - order of added element
      */
-    public void addDrawable(DrawableV2 drawable, int x, int y, int z);
+    public void addDrawable(Drawable drawable, int x, int y, int z);
 
     /**
      * Add Drawable to Sketch at <code>(x,y)</code> with z = 0.
@@ -26,7 +26,7 @@ public interface DrawableV2Sketch {
      * @param x        - x position of added element
      * @param y        - y position of added element
      */
-    public default void addDrawable(DrawableV2 drawable, int x, int y) {
+    public default void addDrawable(Drawable drawable, int x, int y) {
         addDrawable(drawable, x, y, 0);
     }
 
@@ -49,7 +49,7 @@ public interface DrawableV2Sketch {
      * 
      * @return complete Drawable element
      */
-    public DrawableV2 draw();
+    public Drawable draw();
 
     /**
      * generate Drawable element on area
@@ -57,22 +57,22 @@ public interface DrawableV2Sketch {
      * @param area - area of generated element
      * @return Drawable element
      */
-    public DrawableV2 draw(Area area);
+    public Drawable draw(Area area);
 
     /**
-     * return DrawableV2Sketch at area
+     * return DrawableSketch at area
      * 
      * @param area - area of generated element
-     * @return DrawableV2Sketch element
+     * @return DrawableSketch element
      */
-    public DrawableV2Sketch sketchAt(Area area);
+    public DrawableSketch sketchAt(Area area);
 
     /**
      * Create copy of this Element
      * 
      * @return
      */
-    public DrawableV2Sketch copy();
+    public DrawableSketch copy();
 
     /**
      * get Bounts of this Element

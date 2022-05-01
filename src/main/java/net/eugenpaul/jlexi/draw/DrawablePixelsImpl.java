@@ -8,9 +8,9 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayConverter;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class DrawableV2PixelsImpl implements DrawableV2 {
+public class DrawablePixelsImpl implements Drawable {
 
-    public static final DrawableV2 EMPTY = new DrawableV2PixelsImpl(Size.ZERO_SIZE);
+    public static final Drawable EMPTY = new DrawablePixelsImpl(Size.ZERO_SIZE);
 
     private int[] argbPixels;
     private int[] rgbaPixels;
@@ -18,11 +18,11 @@ public class DrawableV2PixelsImpl implements DrawableV2 {
     @Getter
     private Size size;
 
-    private DrawableV2PixelsImpl() {
+    private DrawablePixelsImpl() {
 
     }
 
-    private DrawableV2PixelsImpl(Size size) {
+    private DrawablePixelsImpl(Size size) {
         this.argbPixels = new int[0];
         this.rgbaPixels = new int[0];
         this.colorPixels = new Color[0];
@@ -67,64 +67,64 @@ public class DrawableV2PixelsImpl implements DrawableV2 {
         throw new NotYetImplementedException();
     }
 
-    public static DrawableV2ImplArgbBuilder builderArgb() {
-        return new DrawableV2ImplArgbBuilder();
+    public static DrawableImplArgbBuilder builderArgb() {
+        return new DrawableImplArgbBuilder();
     }
 
-    public static DrawableV2ImplRgbaBuilder buildeRgba() {
-        return new DrawableV2ImplRgbaBuilder();
+    public static DrawableImplRgbaBuilder buildeRgba() {
+        return new DrawableImplRgbaBuilder();
     }
 
-    public static DrawableV2ImplColorBuilder builderColor() {
-        return new DrawableV2ImplColorBuilder();
+    public static DrawableImplColorBuilder builderColor() {
+        return new DrawableImplColorBuilder();
     }
 
-    public static class DrawableV2ImplArgbBuilder {
-        private DrawableV2ImplArgbBuilder() {
+    public static class DrawableImplArgbBuilder {
+        private DrawableImplArgbBuilder() {
         }
 
-        public DrawableV2ImplSizeBuilder argbPixels(int[] argbPixels) {
-            DrawableV2ImplSizeBuilder response = new DrawableV2ImplSizeBuilder();
+        public DrawableImplSizeBuilder argbPixels(int[] argbPixels) {
+            DrawableImplSizeBuilder response = new DrawableImplSizeBuilder();
             response.argbPixels = argbPixels.clone();
             return response;
         }
     }
 
-    public static class DrawableV2ImplRgbaBuilder {
-        private DrawableV2ImplRgbaBuilder() {
+    public static class DrawableImplRgbaBuilder {
+        private DrawableImplRgbaBuilder() {
         }
 
-        public DrawableV2ImplSizeBuilder rgbAPixels(int[] rgbaPixels) {
-            DrawableV2ImplSizeBuilder response = new DrawableV2ImplSizeBuilder();
+        public DrawableImplSizeBuilder rgbAPixels(int[] rgbaPixels) {
+            DrawableImplSizeBuilder response = new DrawableImplSizeBuilder();
             response.rgbaPixels = rgbaPixels.clone();
             return response;
         }
     }
 
-    public static class DrawableV2ImplColorBuilder {
-        private DrawableV2ImplColorBuilder() {
+    public static class DrawableImplColorBuilder {
+        private DrawableImplColorBuilder() {
         }
 
-        public DrawableV2ImplSizeBuilder rgbAPixels(Color[] colorPixels) {
-            DrawableV2ImplSizeBuilder response = new DrawableV2ImplSizeBuilder();
+        public DrawableImplSizeBuilder rgbAPixels(Color[] colorPixels) {
+            DrawableImplSizeBuilder response = new DrawableImplSizeBuilder();
             response.colorPixels = colorPixels.clone();
             return response;
         }
     }
 
-    public static class DrawableV2ImplSizeBuilder {
+    public static class DrawableImplSizeBuilder {
         private int[] argbPixels;
         private int[] rgbaPixels;
         private Color[] colorPixels;
 
-        private DrawableV2ImplSizeBuilder() {
+        private DrawableImplSizeBuilder() {
             argbPixels = null;
             rgbaPixels = null;
             colorPixels = null;
         }
 
-        public DrawableV2ImplBuilderEnd size(Size size) {
-            DrawableV2ImplBuilderEnd response = new DrawableV2ImplBuilderEnd();
+        public DrawableImplBuilderEnd size(Size size) {
+            DrawableImplBuilderEnd response = new DrawableImplBuilderEnd();
             response.argbPixels = this.argbPixels;
             response.rgbaPixels = this.rgbaPixels;
             response.colorPixels = this.colorPixels;
@@ -134,17 +134,17 @@ public class DrawableV2PixelsImpl implements DrawableV2 {
 
     }
 
-    public static class DrawableV2ImplBuilderEnd {
+    public static class DrawableImplBuilderEnd {
         private int[] argbPixels;
         private int[] rgbaPixels;
         private Color[] colorPixels;
         private Size size;
 
-        private DrawableV2ImplBuilderEnd() {
+        private DrawableImplBuilderEnd() {
         }
 
-        public DrawableV2PixelsImpl build() {
-            DrawableV2PixelsImpl response = new DrawableV2PixelsImpl();
+        public DrawablePixelsImpl build() {
+            DrawablePixelsImpl response = new DrawablePixelsImpl();
             response.argbPixels = this.argbPixels;
             response.rgbaPixels = this.rgbaPixels;
             response.colorPixels = this.colorPixels;

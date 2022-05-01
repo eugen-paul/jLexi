@@ -15,8 +15,8 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePanel;
 import net.eugenpaul.jlexi.controller.AbstractController;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
@@ -45,10 +45,10 @@ public class TextPane extends GuiGlyph implements TextUpdateable {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
-        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
-        cachedDrawableV2.addDrawable(textPanel.getDrawable(), 0, 0);
-        return cachedDrawableV2.draw();
+    public Drawable getDrawable() {
+        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        cachedDrawable.addDrawable(textPanel.getDrawable(), 0, 0);
+        return cachedDrawable.draw();
     }
 
     @Override

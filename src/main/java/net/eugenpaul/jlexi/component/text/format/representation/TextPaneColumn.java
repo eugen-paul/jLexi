@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -54,14 +54,14 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
-        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+    public Drawable getDrawable() {
+        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
 
         yPositionToRow.clear();
 
         int currentY = 0;
         for (var el : children) {
-            cachedDrawableV2.addDrawable(el.getDrawable(), 0, currentY);
+            cachedDrawable.addDrawable(el.getDrawable(), 0, currentY);
 
             yPositionToRow.put(currentY, el);
 
@@ -70,7 +70,7 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
             currentY += el.getSize().getHeight();
         }
 
-        return cachedDrawableV2.draw();
+        return cachedDrawable.draw();
     }
 
     @Override

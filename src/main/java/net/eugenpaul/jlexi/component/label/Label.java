@@ -14,9 +14,9 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.visitor.Visitor;
@@ -60,9 +60,9 @@ public class Label extends GuiGlyph {
             );
         }
         setSize(Size.ZERO_MAX);
-        cachedDrawableV2 = null;
+        cachedDrawable = null;
         getDrawable();
-        setSize(cachedDrawableV2.getSize());
+        setSize(cachedDrawable.getSize());
     }
 
     public void setTextFormat(TextFormat format) {
@@ -71,9 +71,9 @@ public class Label extends GuiGlyph {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
-        if (cachedDrawableV2 != null) {
-            return cachedDrawableV2.draw();
+    public Drawable getDrawable() {
+        if (cachedDrawable != null) {
+            return cachedDrawable.draw();
         }
 
         List<TextRepresentation> rows = textElement.getRows(getSize());
@@ -81,14 +81,14 @@ public class Label extends GuiGlyph {
         List<TextRepresentation> column = compositor.compose(rows.iterator(), getSize());
 
         if (column.isEmpty()) {
-            return DrawableV2PixelsImpl.EMPTY;
+            return DrawablePixelsImpl.EMPTY;
         }
 
-        cachedDrawableV2 = new DrawableV2SketchImpl(textFormat.getBackgroundColor());
+        cachedDrawable = new DrawableSketchImpl(textFormat.getBackgroundColor());
         var drawable = column.get(0).getDrawable();
-        cachedDrawableV2.addDrawable(drawable, 0, 0);
+        cachedDrawable.addDrawable(drawable, 0, 0);
 
-        return cachedDrawableV2.draw();
+        return cachedDrawable.draw();
     }
 
     @Override

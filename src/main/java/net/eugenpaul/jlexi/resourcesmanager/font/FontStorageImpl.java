@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.draw.DrawableV2;
+import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.utils.Color;
@@ -27,7 +27,7 @@ public class FontStorageImpl extends FontStorage {
                             Map<Integer, // Size
                                     Map<Color, // FontColor
                                             Map<Color, // BackgroundColor
-                                                    DrawableV2>>>>>> drawableStorage;
+                                                    Drawable>>>>>> drawableStorage;
 
     public FontStorageImpl(FontPixelsGenerator fontGenerator) {
         this.fontGenerator = fontGenerator;
@@ -40,7 +40,7 @@ public class FontStorageImpl extends FontStorage {
     }
 
     @Override
-    public DrawableV2 ofChar2(Character c, TextFormat format) {
+    public Drawable ofChar2(Character c, TextFormat format) {
         if (!CharacterHelper.isPrintable(c)) {
             return DEFAULT_DRAWABLE_2;
         }

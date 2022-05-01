@@ -11,9 +11,9 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
-public class DrawableV2AreasImpl implements DrawableV2 {
+public class DrawableAreasImpl implements Drawable {
 
-    private DrawableV2Storage data;
+    private DrawableStorage data;
     @Getter
     @Setter
     private Color background;
@@ -23,7 +23,7 @@ public class DrawableV2AreasImpl implements DrawableV2 {
 
     private Area area;
 
-    public DrawableV2AreasImpl(DrawableV2Storage data, Area area, Color background) {
+    public DrawableAreasImpl(DrawableStorage data, Area area, Color background) {
         this.area = area;
         this.data = data;
         this.background = background;

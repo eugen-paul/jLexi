@@ -10,9 +10,9 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -26,9 +26,9 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
-    private static final DrawableV2 EMPTY_DRAWABLE_V2 = DrawableV2PixelsImpl.EMPTY;
+    private static final Drawable EMPTY_DRAWABLE = DrawablePixelsImpl.EMPTY;
 
-    protected DrawableV2 menuBackground2;
+    protected Drawable menuBackground;
 
     protected int menubarHeight = 0;
     private int menubarPadding = 2;
@@ -66,31 +66,31 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
     protected abstract void computeBackground();
 
     @Override
-    public DrawableV2 getDrawable() {
-        if (cachedDrawableV2 != null) {
-            return cachedDrawableV2.draw();
+    public Drawable getDrawable() {
+        if (cachedDrawable != null) {
+            return cachedDrawable.draw();
         }
 
         if (getSize().isZero()) {
-            return EMPTY_DRAWABLE_V2;
+            return EMPTY_DRAWABLE;
         }
 
-        DrawableV2 componentDrawable = super.getDrawable();
+        Drawable componentDrawable = super.getDrawable();
 
-        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE, getSize());
+        cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
 
-        cachedDrawableV2.addDrawable(menuBackground2, 0, 0);
+        cachedDrawable.addDrawable(menuBackground, 0, 0);
 
         Vector2d pos = new Vector2d(menubarPadding, menubarPadding);
         for (Button button : menuButtons) {
-            cachedDrawableV2.addDrawable(button.getDrawable(), pos.getX(), pos.getY(), 1);
+            cachedDrawable.addDrawable(button.getDrawable(), pos.getX(), pos.getY(), 1);
             button.setRelativPosition(new Vector2d(pos));
             pos.setX(pos.getX() + button.getSize().getWidth() + menubarPadding);
         }
 
-        cachedDrawableV2.addDrawable(componentDrawable, 0, menuBackground2.getSize().getHeight(), 1);
+        cachedDrawable.addDrawable(componentDrawable, 0, menuBackground.getSize().getHeight(), 1);
 
-        return cachedDrawableV2.draw();
+        return cachedDrawable.draw();
     }
 
     @Override

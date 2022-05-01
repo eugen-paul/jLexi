@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import lombok.var;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -55,15 +55,15 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
-        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+    public Drawable getDrawable() {
+        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
         xPositionToRow.clear();
 
         int currentX = 0;
         for (var el : children) {
             int currentY = getSize().getHeight() - el.getSize().getHeight();
 
-            cachedDrawableV2.addDrawable(el.getDrawable(), currentX, currentY);
+            cachedDrawable.addDrawable(el.getDrawable(), currentX, currentY);
 
             xPositionToRow.put(currentX, el);
 
@@ -72,7 +72,7 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
             currentX += el.getSize().getWidth();
         }
 
-        return cachedDrawableV2.draw();
+        return cachedDrawable.draw();
     }
 
 }

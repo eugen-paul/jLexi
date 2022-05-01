@@ -3,9 +3,9 @@ package net.eugenpaul.jlexi.component.text.format.element;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
@@ -22,9 +22,9 @@ public class TextNewSection extends TextElementAbstract {
     }
 
     @Override
-    public DrawableV2 getDrawable() {
-        if (null != cachedDrawableV2) {
-            return cachedDrawableV2.draw();
+    public Drawable getDrawable() {
+        if (null != cachedDrawable) {
+            return cachedDrawable.draw();
         }
 
         int[] pixels = new int[storage.getFonts().getMaxAscent(//
@@ -32,20 +32,20 @@ public class TextNewSection extends TextElementAbstract {
                 getFormat().getFontsize() //
         )];
 
-        cachedDrawableV2 = new DrawableV2SketchImpl(Color.WHITE);
+        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
 
-        DrawableV2 newLineDrawable = DrawableV2PixelsImpl.builderArgb()//
+        Drawable newLineDrawable = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(pixels)//
                 .size(new Size(1, pixels.length))//
                 .build();
 
-        cachedDrawableV2.addDrawable(newLineDrawable, 0, 0, 0);
+        cachedDrawable.addDrawable(newLineDrawable, 0, 0, 0);
 
-        setSize(cachedDrawableV2.getSize());
+        setSize(cachedDrawable.getSize());
 
-        doEffects(cachedDrawableV2);
+        doEffects(cachedDrawable);
 
-        return cachedDrawableV2.draw();
+        return cachedDrawable.draw();
     }
 
     @Override

@@ -7,7 +7,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 /**
  * Interface for immutable drawable Element.
  */
-public interface DrawableV2 {
+public interface Drawable {
 
     /**
      * Get copy of the Element as ARBG Data.

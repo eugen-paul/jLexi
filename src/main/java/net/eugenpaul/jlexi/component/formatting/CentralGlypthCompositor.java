@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.SimpleGlyph;
-import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -29,7 +29,7 @@ public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor
     public List<Glyph> compose(Iterator<T> iterator, Size maxSize) {
         Vector2d elementSize = Vector2d.zero();
 
-        DrawableV2SketchImpl innerSketch = new DrawableV2SketchImpl(backgroundColor);
+        DrawableSketchImpl innerSketch = new DrawableSketchImpl(backgroundColor);
 
         int currentY = 0;
         while (iterator.hasNext()) {
@@ -40,7 +40,7 @@ public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor
             elementSize.add(elementDrawable.getSize());
         }
 
-        DrawableV2SketchImpl responseSketch = new DrawableV2SketchImpl(backgroundColor, maxSize);
+        DrawableSketchImpl responseSketch = new DrawableSketchImpl(backgroundColor, maxSize);
         responseSketch.addDrawable(//
                 innerSketch.draw(), //
                 maxSize.getWidth() / 2 - elementSize.getX() / 2, //

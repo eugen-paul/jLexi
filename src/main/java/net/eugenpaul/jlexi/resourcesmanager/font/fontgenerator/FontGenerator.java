@@ -10,8 +10,8 @@ import java.awt.image.DataBufferByte;
 import javax.swing.JLabel;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.resourcesmanager.font.FontPixelsGenerator;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -23,7 +23,7 @@ public class FontGenerator implements FontPixelsGenerator {
     }
 
     @Override
-    public DrawableV2 ofChar2(Character c, TextFormat format) {
+    public Drawable ofChar2(Character c, TextFormat format) {
 
         Font font = new Font(//
                 format.getFontName(), //
@@ -50,7 +50,7 @@ public class FontGenerator implements FontPixelsGenerator {
 
         int[] pixels = convertBufferedImageToPixelArray(bi);
 
-        return DrawableV2PixelsImpl.builderArgb()//
+        return DrawablePixelsImpl.builderArgb()//
                 .argbPixels(pixels)//
                 .size(new Size(width, height))//
                 .build();

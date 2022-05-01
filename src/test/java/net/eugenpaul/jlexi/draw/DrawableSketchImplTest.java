@@ -11,27 +11,27 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-class DrawableV2SketchImplTest {
+class DrawableSketchImplTest {
 
-    private DrawableV2SketchImpl sketch;
+    private DrawableSketchImpl sketch;
 
-    private DrawableV2SketchImpl innerSketch;
-    private DrawableV2 blackGreenPipe;
-    private DrawableV2 redDot;
+    private DrawableSketchImpl innerSketch;
+    private Drawable blackGreenPipe;
+    private Drawable redDot;
 
     @BeforeEach
     void init() {
-        sketch = new DrawableV2SketchImpl(Color.BLUE);
-        innerSketch = new DrawableV2SketchImpl(Color.WHITE);
+        sketch = new DrawableSketchImpl(Color.BLUE);
+        innerSketch = new DrawableSketchImpl(Color.WHITE);
 
         int[] pixelsElememt1 = new int[] { Color.BLACK.getArgb(), Color.GREEN.getArgb() };
-        blackGreenPipe = DrawableV2PixelsImpl.builderArgb()//
+        blackGreenPipe = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(pixelsElememt1)//
                 .size(new Size(1, 2))//
                 .build();
 
         int[] pixelsElememt2 = new int[] { Color.RED.getArgb() };
-        redDot = DrawableV2PixelsImpl.builderArgb()//
+        redDot = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(pixelsElememt2)//
                 .size(new Size(1, 1))//
                 .build();
@@ -42,7 +42,7 @@ class DrawableV2SketchImplTest {
         sketch.addDrawable(blackGreenPipe, 0, 0);
         sketch.addDrawable(redDot, 1, 1);
 
-        DrawableV2 draw = sketch.draw();
+        Drawable draw = sketch.draw();
 
         assertArrayEquals(//
                 new int[] { //
@@ -60,7 +60,7 @@ class DrawableV2SketchImplTest {
 
         sketch.addDrawable(innerSketch.draw(), 0, 0);
 
-        DrawableV2 draw = sketch.draw();
+        Drawable draw = sketch.draw();
 
         assertArrayEquals(//
                 new int[] { //
@@ -78,7 +78,7 @@ class DrawableV2SketchImplTest {
 
         sketch.addDrawable(innerSketch.draw(), 1, 1);
 
-        DrawableV2 draw = sketch.draw();
+        Drawable draw = sketch.draw();
 
         assertArrayEquals(//
                 new int[] { //
@@ -95,7 +95,7 @@ class DrawableV2SketchImplTest {
         sketch.addDrawable(blackGreenPipe, 0, 0);
         sketch.addDrawable(redDot, 1, 1);
 
-        DrawableV2 draw = sketch.draw();
+        Drawable draw = sketch.draw();
         int[] output = new int[4];
         Arrays.fill(output, Color.BLUE.getArgb());
         draw.toArgbPixels(output, new Size(2, 2), new Vector2d(0, 0));
@@ -114,7 +114,7 @@ class DrawableV2SketchImplTest {
         sketch.addDrawable(blackGreenPipe, 0, 0);
         sketch.addDrawable(redDot, 1, 1);
 
-        DrawableV2 draw = sketch.draw();
+        Drawable draw = sketch.draw();
 
         assertArrayEquals(//
                 new int[] { //
