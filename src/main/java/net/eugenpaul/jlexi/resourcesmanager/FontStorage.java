@@ -1,8 +1,6 @@
 package net.eugenpaul.jlexi.resourcesmanager;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 
@@ -15,17 +13,7 @@ public abstract class FontStorage implements Resource {
     public static final String DEFAULT_FONT_NAME = "Monospaced";
     public static final int DEFAULT_FONT_SIZE = 12;
 
-    protected static final Drawable DEFAULT_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
     protected static final DrawableV2 DEFAULT_DRAWABLE_2 = DrawableV2PixelsImpl.EMPTY;
-
-    /**
-     * Return Pixel-Array of char
-     * 
-     * @param c      - character
-     * @param format - Format of the character
-     * @return Drawable of the char
-     */
-    public abstract Drawable ofChar(Character c, TextFormat format);
 
     /**
      * Return Drawablr of char

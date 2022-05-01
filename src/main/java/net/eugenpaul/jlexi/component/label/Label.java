@@ -14,15 +14,11 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public class Label extends GuiGlyph {
@@ -64,38 +60,14 @@ public class Label extends GuiGlyph {
             );
         }
         setSize(Size.ZERO_MAX);
-        cachedDrawable = null;
-        getPixels();
-        setSize(cachedDrawable.getPixelSize());
+        cachedDrawableV2 = null;
+        getDrawable();
+        setSize(cachedDrawableV2.getSize());
     }
 
     public void setTextFormat(TextFormat format) {
         this.textFormat = storage.getFormats().add(format);
         setText(text);
-    }
-
-    @Override
-    public Drawable getPixels() {
-        if (cachedDrawable != null) {
-            return cachedDrawable;
-        }
-
-        List<TextRepresentation> rows = textElement.getRows(getSize());
-
-        List<TextRepresentation> column = compositor.compose(rows.iterator(), getSize());
-
-        if (column.isEmpty()) {
-            return DrawableImpl.EMPTY_DRAWABLE;
-        }
-
-        Size pixelSize = column.get(0).getSize();
-        int[] pixels = new int[(int) pixelSize.compArea()];
-
-        cachedDrawable = new DrawableImpl(pixels, pixelSize);
-
-        ImageArrayHelper.copyRectangle(column.get(0).getPixels(), cachedDrawable, Vector2d.zero());
-
-        return cachedDrawable;
     }
 
     @Override

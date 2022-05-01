@@ -6,14 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
@@ -54,30 +51,6 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
             LOGGER.trace("Column Click on Element: NONE.");
         }
         return clickedElement;
-    }
-
-    @Override
-    public Drawable getPixels() {
-        int[] pixels = new int[getSize().getWidth() * getSize().getHeight()];
-
-        cachedDrawable = new DrawableImpl(pixels, getSize());
-
-        yPositionToRow.clear();
-
-        Vector2d position = new Vector2d(0, 0);
-        for (var el : children) {
-            ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
-
-            var yPosition = position.getY();
-
-            yPositionToRow.put(yPosition, el);
-
-            el.setRelativPosition(new Vector2d(0, yPosition));
-
-            position.setY(yPosition + el.getSize().getHeight());
-        }
-
-        return cachedDrawable;
     }
 
     @Override

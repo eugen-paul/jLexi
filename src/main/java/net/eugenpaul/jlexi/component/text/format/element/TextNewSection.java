@@ -3,8 +3,6 @@ package net.eugenpaul.jlexi.component.text.format.element;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
@@ -20,26 +18,7 @@ public class TextNewSection extends TextElementAbstract {
         super(parent, storage, parentStructure, format, formatEffect);
 
         // we must compute pixels to set size of element
-        getPixels();
-    }
-
-    @Override
-    public Drawable getPixels() {
-        if (null != cachedDrawable) {
-            return cachedDrawable;
-        }
-
-        int[] pixels = new int[storage.getFonts().getMaxAscent(//
-                getFormat().getFontName(), //
-                getFormat().getFontsize() //
-        )];
-        setSize(new Size(1, pixels.length));
-
-        cachedDrawable = new DrawableImpl(pixels, getSize());
-
-        cachedDrawable = doEffects(cachedDrawable);
-
-        return cachedDrawable;
+        getDrawable();
     }
 
     @Override

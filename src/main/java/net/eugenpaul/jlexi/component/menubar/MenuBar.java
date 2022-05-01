@@ -10,8 +10,6 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
@@ -20,7 +18,6 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 /**
  * Add Menubar to Glyph
@@ -29,10 +26,8 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
-    private static final Drawable EMPTY_DRAWABLE = DrawableImpl.EMPTY_DRAWABLE;
     private static final DrawableV2 EMPTY_DRAWABLE_V2 = DrawableV2PixelsImpl.EMPTY;
 
-    protected Drawable menuBackground;
     protected DrawableV2 menuBackground2;
 
     protected int menubarHeight = 0;
@@ -69,42 +64,6 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
     }
 
     protected abstract void computeBackground();
-
-    @Override
-    public Drawable getPixels() {
-        if (getSize().isZero()) {
-            return EMPTY_DRAWABLE;
-        }
-
-        Drawable componentPixels = super.getPixels();
-
-        int[] responsePixels = new int[getSize().getHeight() * getSize().getWidth()];
-
-        System.arraycopy(menuBackground.getPixels(), 0, responsePixels, 0, menuBackground.getPixels().length);
-
-        cachedDrawable = new DrawableImpl(responsePixels, getSize());
-
-        Vector2d pos = new Vector2d(menubarPadding, menubarPadding);
-        for (Button button : menuButtons) {
-            ImageArrayHelper.copyRectangle(//
-                    button.getPixels(), //
-                    cachedDrawable, //
-                    pos//
-            );
-            button.setRelativPosition(new Vector2d(pos));
-            pos.setX(pos.getX() + button.getSize().getWidth() + menubarPadding);
-        }
-
-        System.arraycopy(//
-                componentPixels.getPixels(), //
-                0, //
-                responsePixels, //
-                menuBackground.getPixels().length, //
-                componentPixels.getPixels().length//
-        );
-
-        return cachedDrawable;
-    }
 
     @Override
     public DrawableV2 getDrawable() {
@@ -145,7 +104,7 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
 
         computeBackground();
 
-        getPixels();
+        getDrawable();
 
         redraw();
     }
@@ -180,12 +139,6 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
     protected void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public Drawable getPixels(Vector2d position, Size size) {
-        // TODO get Pixels from cachedDrawable
-        return component.getPixels(new Vector2d(position.getX(), position.getY() - menubarHeight), size);
     }
 
 }

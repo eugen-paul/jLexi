@@ -53,7 +53,7 @@ public class DrawableV2SketchImpl implements DrawableV2Sketch {
     public void addDrawable(DrawableV2 drawable, int x, int y, int z) {
         this.data.add(drawable, x, y, z);
 
-        if (size != null) {
+        if (size == null) {
             this.minX = Math.min(this.minX, x);
             this.maxX = Math.max(this.maxX, x + drawable.getSize().getWidth() - 1);
 

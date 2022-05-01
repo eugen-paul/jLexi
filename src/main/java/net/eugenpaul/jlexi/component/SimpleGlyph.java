@@ -5,9 +5,8 @@ import java.util.Iterator;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableV2;
-import net.eugenpaul.jlexi.exception.NotYetImplementedException;
+import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 @Getter
@@ -24,14 +23,8 @@ public class SimpleGlyph extends Glyph {
     }
 
     @Override
-    public Drawable getPixels() {
-        return cachedDrawable;
-    }
-
-    @Override
     public DrawableV2 getDrawable() {
-        // TODO Auto-generated method stub
-        throw new NotYetImplementedException();
+        return cachedDrawableV2.draw();
     }
 
     @Override
@@ -44,9 +37,9 @@ public class SimpleGlyph extends Glyph {
         // TODO Auto-generated method stub
     }
 
-    public void setDrawable(Drawable drawable) {
-        setSize(drawable.getPixelSize());
-        cachedDrawable = drawable;
+    public void setDrawable(DrawableV2Sketch drawable) {
+        setSize(drawable.getSize());
+        cachedDrawableV2 = drawable;
     }
 
 }

@@ -19,10 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.model.InterfaceModel;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.window.Window;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
@@ -93,23 +92,11 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
         registeredModels.add(model);
     }
 
-    public Mono<Drawable> getDrawable(String source) {
+    public Mono<DrawableV2> getDrawable(String source) {
         return Mono.fromCallable(() -> {
             Glyph destinationGlyph = windowsMap.get(source).getGlyph();
             if (destinationGlyph != null) {
-                return destinationGlyph.getPixels();
-            }
-            throw new IllegalArgumentException("cann't find glyph: " + source);
-        }) //
-                .publishOn(modelScheduler)//
-        ;
-    }
-
-    public Mono<Drawable> getDrawableArea(String source, Area area) {
-        return Mono.fromCallable(() -> {
-            Glyph destinationGlyph = windowsMap.get(source).getGlyph();
-            if (destinationGlyph != null) {
-                return destinationGlyph.getPixels(area.getPosition(), area.getSize());
+                return destinationGlyph.getDrawable();
             }
             throw new IllegalArgumentException("cann't find glyph: " + source);
         }) //

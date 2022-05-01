@@ -3,7 +3,6 @@ package net.eugenpaul.jlexi.component.text.format.element;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
-import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -19,24 +18,7 @@ public class TextChar extends TextElementAbstract {
         super(parent, storage, parentStructure, format, formatEffect);
         this.c = c;
 
-        getPixels();
-    }
-
-    @Override
-    public Drawable getPixels() {
-        if (null != cachedDrawable) {
-            return cachedDrawable;
-        }
-
-        cachedDrawable = storage.getFonts().ofChar(c, getFormat());
-
-        setSize(cachedDrawable.getPixelSize());
-        cachedDrawable = doEffects(cachedDrawable);
-
-        getFormatEffect().getFormatter(storage.getFormats()).stream()//
-                .forEach(f -> f.doFormat(cachedDrawable));
-
-        return cachedDrawable;
+        getDrawable();
     }
 
     @Override

@@ -14,8 +14,6 @@ import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
@@ -23,7 +21,6 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 /**
  * Glyph with a boarder.
@@ -70,70 +67,7 @@ public class Border extends GuiCompenentMonoGlyph {
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
         this.compositor.setBackgroundColor(backgroundColor);
-        this.cachedDrawable = null;
         this.cachedDrawableV2 = null;
-    }
-
-    @Override
-    public Drawable getPixels() {
-        if (cachedDrawable != null) {
-            return cachedDrawable;
-        }
-
-        if (getSize().getHeight() <= borderSize * 2 //
-                || getSize().getWidth() <= borderSize * 2 //
-        ) {
-            cachedDrawable = new DrawableImpl(generateBlackBorder(), getSize());
-            return cachedDrawable;
-        }
-
-        Size childSize = new Size(//
-                getSize().getWidth() - borderSize * 2, //
-                getSize().getHeight() - borderSize * 2 //
-        );
-
-        List<Glyph> composedGlyphs = compositor.compose(List.of((Glyph) component).iterator(), childSize);
-
-        Drawable childDraw = composedGlyphs.get(0).getPixels();
-
-        int[] componentPixels = childDraw.getPixels();
-        int[] borderPixels = new int[(int) getSize().compArea()];
-
-        Arrays.fill(borderPixels, 0, (int) getSize().compArea(), backgroundColor.getArgb());
-
-        if (borderSize > 0) {
-            Arrays.fill(borderPixels, 0, getSize().getWidth() * borderSize, borderColor.getArgb());
-        }
-
-        ImageArrayHelper.copyRectangle(//
-                componentPixels, //
-                childDraw.getPixelSize(), //
-                new Vector2d(0, 0), //
-                childDraw.getPixelSize(), //
-                borderPixels, //
-                getSize(), //
-                new Vector2d(borderSize, borderSize) //
-        );
-
-        if (borderSize > 0) {
-            int targetPosition = getSize().getWidth() * borderSize - borderSize;
-            for (int i = borderSize; i < getSize().getHeight() - borderSize + 1; i++) {
-                Arrays.fill(borderPixels, targetPosition, targetPosition + borderSize * 2, borderColor.getArgb());
-                targetPosition += getSize().getWidth();
-            }
-        }
-
-        if (borderSize > 0) {
-            Arrays.fill(//
-                    borderPixels, //
-                    borderPixels.length - 1 - getSize().getWidth() * borderSize, //
-                    borderPixels.length, //
-                    borderColor.getArgb()//
-            );
-        }
-
-        cachedDrawable = new DrawableImpl(borderPixels, getSize());
-        return cachedDrawable;
     }
 
     @Override
@@ -186,12 +120,6 @@ public class Border extends GuiCompenentMonoGlyph {
         return cachedDrawableV2.draw();
     }
 
-    private int[] generateBlackBorder() {
-        int[] responsePixels = new int[(int) getSize().compArea()];
-        Arrays.fill(responsePixels, borderColor.getArgb());
-        return responsePixels;
-    }
-
     @Override
     public boolean isResizeble() {
         return true;
@@ -199,11 +127,10 @@ public class Border extends GuiCompenentMonoGlyph {
 
     @Override
     public void resizeTo(Size size) {
-        cachedDrawable = null;
         cachedDrawableV2 = null;
         setSize(size);
         resizeComponent();
-        getPixels();
+        getDrawable();
     }
 
     @Override
@@ -240,16 +167,5 @@ public class Border extends GuiCompenentMonoGlyph {
     public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public Drawable getPixels(Vector2d position, Size size) {
-        // TODO get Pixels from cachedDrawable
-        return component.getPixels(//
-                new Vector2d(//
-                        position.getX() - borderSize, //
-                        position.getY() - borderSize//
-                ), //
-                size);
     }
 }

@@ -8,15 +8,10 @@ import java.awt.image.MemoryImageSource;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
-import net.eugenpaul.jlexi.utils.Area;
-import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
+import net.eugenpaul.jlexi.draw.DrawableV2;
 
 public class ImagePanel extends JPanel {
-    private transient Drawable currentDrawable;
+    private transient DrawableV2 currentDrawable;
     private transient Image currentImage;
 
     private final transient Object imgSynch = new Object();
@@ -37,11 +32,11 @@ public class ImagePanel extends JPanel {
 
                 if (null == currentImage) {
                     currentImage = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(//
-                            currentDrawable.getPixelSize().getWidth(), //
-                            currentDrawable.getPixelSize().getHeight(), //
-                            currentDrawable.getPixels(), //
+                            currentDrawable.getSize().getWidth(), //
+                            currentDrawable.getSize().getHeight(), //
+                            currentDrawable.asArgbPixels(), //
                             0, //
-                            currentDrawable.getPixelSize().getWidth()//
+                            currentDrawable.getSize().getWidth()//
                     ));
                 }
 
@@ -50,74 +45,14 @@ public class ImagePanel extends JPanel {
         }
     }
 
-    public void update(Drawable drawable) {
+    public void update(DrawableV2 drawable) {
         SwingUtilities.invokeLater(() -> {
             synchronized (imgSynch) {
-                if (null == currentDrawable //
-                        || currentDrawable.getPixelSize().getHeight() != getHeight()//
-                        || currentDrawable.getPixelSize().getWidth() != getWidth()//
-                ) {
-                    currentDrawable = createNewDrawable(drawable, new Area(Vector2d.zero(), drawable.getPixelSize()));
-                } else {
-                    ImageArrayHelper.copyRectangle(//
-                            drawable, //
-                            Vector2d.zero(), //
-                            drawable.getPixelSize(), //
-                            currentDrawable, //
-                            Vector2d.zero() //
-                    );
-                }
-
+                currentDrawable = drawable;
                 currentImage = null;
                 repaint();
             }
         });
     }
 
-    public void updateArea(Drawable drawable, Area area) {
-        SwingUtilities.invokeLater(() -> {
-            synchronized (imgSynch) {
-                if (null == currentDrawable //
-                        || currentDrawable.getPixelSize().getHeight() != getHeight()//
-                        || currentDrawable.getPixelSize().getWidth() != getWidth()//
-                ) {
-                    currentDrawable = createNewDrawable(drawable, area);
-                } else {
-                    ImageArrayHelper.copyRectangle(//
-                            drawable, //
-                            Vector2d.zero(), //
-                            area.getSize(), //
-                            currentDrawable, //
-                            area.getPosition() //
-                    );
-                }
-
-                currentImage = null;
-                repaint(//
-                        area.getPosition().getX(), //
-                        area.getPosition().getY(), //
-                        area.getSize().getWidth(), //
-                        area.getSize().getHeight() //
-                );
-            }
-        });
-    }
-
-    private Drawable createNewDrawable(Drawable drawable, Area area) {
-        int h = getHeight();
-        int w = getWidth();
-        int[] pixels = new int[w * h];
-        Size pixelSize = new Size(w, h);
-        Drawable response = new DrawableImpl(pixels, pixelSize);
-
-        ImageArrayHelper.copyRectangle(//
-                drawable, //
-                Vector2d.zero(), //
-                area.getSize(), //
-                response, //
-                area.getPosition() //
-        );
-
-        return response;
-    }
 }

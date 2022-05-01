@@ -10,8 +10,6 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
@@ -52,26 +50,6 @@ public abstract class Button extends GuiGlyph {
     public void resizeTo(Size size) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public Drawable getPixels() {
-        if (cachedDrawable != null) {
-            return cachedDrawable;
-        }
-
-        if (compositor == null) {
-            return DrawableImpl.EMPTY_DRAWABLE;
-        }
-
-        List<Glyph> glyph = compositor.compose(elements.iterator(), getSize());
-
-        if (glyph.isEmpty()) {
-            return DrawableImpl.EMPTY_DRAWABLE;
-        }
-
-        cachedDrawable = glyph.get(0).getPixels();
-        return cachedDrawable;
     }
 
     @Override

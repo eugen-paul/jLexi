@@ -8,12 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.SimpleGlyph;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
+import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 /**
  * Put all elements to one column and set the column to center of returned glyph.
@@ -31,40 +29,26 @@ public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor
     public List<Glyph> compose(Iterator<T> iterator, Size maxSize) {
         Vector2d elementSize = Vector2d.zero();
 
-        Drawable tempDrawable = new DrawableImpl(maxSize);
-        ImageArrayHelper.fillRectangle(//
-                backgroundColor, //
-                tempDrawable, //
-                maxSize, //
-                Vector2d.zero() //
-        );
+        DrawableV2SketchImpl innerSketch = new DrawableV2SketchImpl(backgroundColor);
 
+        int currentY = 0;
         while (iterator.hasNext()) {
             Glyph element = iterator.next();
-            var elementDrawable = element.getPixels();
-            ImageArrayHelper.copyRectangle(elementDrawable, tempDrawable, elementSize);
-            elementSize.add(elementDrawable.getPixelSize());
+            var elementDrawable = element.getDrawable();
+            innerSketch.addDrawable(elementDrawable, 0, currentY);
+            currentY += elementDrawable.getSize().getHeight();
+            elementSize.add(elementDrawable.getSize());
         }
 
+        DrawableV2SketchImpl responseSketch = new DrawableV2SketchImpl(backgroundColor, maxSize);
+        responseSketch.addDrawable(//
+                innerSketch.draw(), //
+                maxSize.getWidth() / 2 - elementSize.getX() / 2, //
+                maxSize.getHeight() / 2 - elementSize.getY() / 2 //
+        );
+
         SimpleGlyph responseGlyph = new SimpleGlyph();
-        Drawable glyphDrawable = new DrawableImpl(maxSize);
-
-        ImageArrayHelper.fillRectangle(//
-                backgroundColor, //
-                glyphDrawable, //
-                maxSize, //
-                Vector2d.zero() //
-        );
-
-        ImageArrayHelper.copyRectangle(//
-                tempDrawable, //
-                glyphDrawable, //
-                new Vector2d( //
-                        maxSize.getWidth() / 2 - elementSize.getX() / 2, //
-                        maxSize.getHeight() / 2 - elementSize.getY() / 2 //
-                ) //
-        );
-        responseGlyph.setDrawable(glyphDrawable);
+        responseGlyph.setDrawable(responseSketch);
 
         return List.of(responseGlyph);
     }

@@ -1,14 +1,10 @@
 package net.eugenpaul.jlexi.component.menubar;
 
-import java.util.Arrays;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
@@ -42,25 +38,10 @@ public class MenuBarColored extends MenuBar {
             component.resizeTo(getSize().getWidth(), Math.max(0, getSize().getHeight() - menubarHeight));
         }
 
-        this.menuBackground = generateMenuBackground(//
-                getSize().getWidth(), //
-                Math.min(getSize().getHeight(), menubarHeight)//
-        );
-
         this.menuBackground2 = generateMenuBackground2(//
                 getSize().getWidth(), //
                 Math.min(getSize().getHeight(), menubarHeight)//
         );
-    }
-
-    private Drawable generateMenuBackground(int w, int h) {
-        if (0 == w || 0 == h) {
-            return DrawableImpl.EMPTY_DRAWABLE;
-        }
-
-        int[] responsePixels = new int[h * w];
-        Arrays.fill(responsePixels, backgroundColor.getArgb());
-        return new DrawableImpl(responsePixels, new Size(w, h));
     }
 
     private DrawableV2 generateMenuBackground2(int w, int h) {

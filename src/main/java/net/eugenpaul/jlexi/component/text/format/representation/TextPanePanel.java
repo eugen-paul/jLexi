@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -26,8 +25,6 @@ import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.controller.AbstractController;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -36,7 +33,6 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public class TextPanePanel extends TextRepresentationOfRepresentation
@@ -82,40 +78,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         this.yPositionToSite = new TreeMap<>();
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
-    }
-
-    @Override
-    public Drawable getPixels() {
-        if (cachedDrawable != null) {
-            return cachedDrawable;
-        }
-        children.clear();
-
-        children.addAll(compositor.compose(document.getRows(getSize()).iterator(), getSize()));
-
-        // we must always draw the full area to override removed objects
-        Size pixelSize = getSize();
-        int[] pixels = new int[(int) pixelSize.compArea()];
-        Arrays.fill(pixels, 0);
-
-        cachedDrawable = new DrawableImpl(pixels, pixelSize);
-
-        yPositionToSite.clear();
-
-        Vector2d position = Vector2d.zero();
-        for (var el : children) {
-            ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
-            var yPosition = position.getY();
-
-            yPositionToSite.put(yPosition, el);
-
-            el.setRelativPosition(new Vector2d(0, yPosition));
-            el.setParent(this);
-
-            position.setY(yPosition + el.getSize().getHeight());
-        }
-
-        return cachedDrawable;
     }
 
     @Override

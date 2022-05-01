@@ -5,14 +5,11 @@ import java.util.Iterator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2Sketch;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
+import net.eugenpaul.jlexi.visitor.Visitor;
 
 public abstract class Glyph {
 
@@ -23,10 +20,6 @@ public abstract class Glyph {
     @Getter
     @Setter
     protected Vector2d relativPosition;
-
-    @Getter(value = AccessLevel.PROTECTED)
-    @Setter(value = AccessLevel.PROTECTED)
-    protected Drawable cachedDrawable;
 
     @Getter(value = AccessLevel.PROTECTED)
     @Setter(value = AccessLevel.PROTECTED)
@@ -45,7 +38,6 @@ public abstract class Glyph {
         this.parent = parent;
         this.relativPosition = new Vector2d(0, 0);
         this.size = Size.ZERO_SIZE;
-        this.cachedDrawable = null;
         this.cachedDrawableV2 = null;
     }
 
@@ -54,36 +46,7 @@ public abstract class Glyph {
      * 
      * @return drawable data
      */
-    public abstract Drawable getPixels();
-
     public abstract DrawableV2 getDrawable();
-
-    /**
-     * Get drawable data of this element on given area.
-     * 
-     * @param position
-     * @param size
-     * @return
-     */
-    public Drawable getPixels(Vector2d position, Size size) {
-        if (cachedDrawable == null) {
-            getPixels();
-        }
-
-        int[] pixels = new int[size.getWidth() * size.getHeight()];
-
-        ImageArrayHelper.copyRectangle(//
-                cachedDrawable.getPixels(), //
-                cachedDrawable.getPixelSize(), //
-                position, //
-                size, //
-                pixels, //
-                size, //
-                Vector2d.zero() //
-        );
-
-        return new DrawableImpl(pixels, size);
-    }
 
     /**
      * get a Iterator to iterate over children
@@ -123,7 +86,6 @@ public abstract class Glyph {
     public abstract void visit(Visitor checker);
 
     public void redraw() {
-        this.cachedDrawable = null;
         this.cachedDrawableV2 = null;
 
         if (parent == null) {
@@ -134,7 +96,6 @@ public abstract class Glyph {
     }
 
     public void notifyChange() {
-        this.cachedDrawable = null;
         this.cachedDrawableV2 = null;
 
         if (parent == null) {

@@ -12,6 +12,7 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 
 public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(GuiGlyph.class);
 
     @Setter
@@ -35,8 +36,6 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
             return;
         }
 
-        LOGGER.trace("do Redraw ");
-        cachedDrawable = null;
         cachedDrawableV2 = null;
         parent.redraw();
     }

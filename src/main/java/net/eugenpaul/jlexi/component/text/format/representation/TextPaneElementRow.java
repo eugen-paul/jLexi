@@ -9,15 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
-import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public class TextPaneElementRow extends TextRepresentation {
@@ -111,30 +108,6 @@ public class TextPaneElementRow extends TextRepresentation {
             prevElement = currentElement;
         }
         return null;
-    }
-
-    @Override
-    public Drawable getPixels() {
-        int[] pixels = new int[getSize().getWidth() * getSize().getHeight()];
-
-        cachedDrawable = new DrawableImpl(pixels, getSize());
-
-        xPositionToRow.clear();
-
-        Vector2d position = new Vector2d(0, 0);
-        for (var el : children) {
-            ImageArrayHelper.copyRectangle(el.getPixels(), cachedDrawable, position);
-
-            var xPosition = position.getX();
-
-            xPositionToRow.put(xPosition, el);
-
-            el.setRelativPosition(new Vector2d(xPosition, 0));
-
-            position.setX(xPosition + el.getSize().getWidth());
-        }
-
-        return cachedDrawable;
     }
 
     @Override

@@ -2,8 +2,6 @@ package net.eugenpaul.jlexi.utils.helper;
 
 import java.util.Arrays;
 
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -12,8 +10,6 @@ import net.eugenpaul.jlexi.utils.Vector2d;
  * Helper functions for ImageArrays
  */
 public final class ImageArrayHelper {
-
-    private static final Vector2d ZERO_VECTOR = Vector2d.zero();
 
     private ImageArrayHelper() {
 
@@ -71,66 +67,6 @@ public final class ImageArrayHelper {
         }
     }
 
-    /**
-     * Copy rectangle of size copySize from src on position (srcPosition.getX(), srxPosY) of size srcSize to dest to
-     * position (destPosition.getX(), destPosition.getY()).
-     * 
-     * @param src
-     * @param srcPosition
-     * @param copySize
-     * @param dest
-     * @param destPosition
-     */
-    public static void copyRectangle(Drawable src, Vector2d srcPosition, Size copySize, Drawable dest,
-            Vector2d destPosition) {
-        copyRectangle(//
-                src.getPixels(), //
-                src.getPixelSize(), //
-                srcPosition, //
-                copySize, //
-                dest.getPixels(), //
-                dest.getPixelSize(), //
-                destPosition //
-        );
-    }
-
-    public static void copyRectangle(Drawable src, Drawable dest, Vector2d destPosition) {
-        copyRectangle(//
-                src.getPixels(), //
-                src.getPixelSize(), //
-                ZERO_VECTOR, //
-                src.getPixelSize(), //
-                dest.getPixels(), //
-                dest.getPixelSize(), //
-                destPosition //
-        );
-    }
-
-    public static void copyRectangle(int[] src, Size srcSize, Vector2d srcPosition, Size copySize, Drawable dest,
-            Vector2d destPosition) {
-        copyRectangle(//
-                src, //
-                srcSize, //
-                srcPosition, //
-                copySize, //
-                dest.getPixels(), //
-                dest.getPixelSize(), //
-                destPosition //
-        );
-    }
-
-    public static void copyRectangle(int[] src, Size srcSize, Drawable dest, Vector2d destPosition) {
-        copyRectangle(//
-                src, //
-                srcSize, //
-                ZERO_VECTOR, //
-                srcSize, //
-                dest.getPixels(), //
-                dest.getPixelSize(), //
-                destPosition //
-        );
-    }
-
     public static void fillRectangle(Color color, int[] dest, Size destSize, Size rectangleSize,
             Vector2d rectangleposition) {
         if (rectangleSize.isZero() // destSize is Empty
@@ -180,13 +116,5 @@ public final class ImageArrayHelper {
             );
             targetPosition += destSize.getWidth();
         }
-    }
-
-    public static void fillRectangle(Color color, Drawable dest, Size rectangleSize, Vector2d rectangleposition) {
-        fillRectangle(color, dest.getPixels(), dest.getPixelSize(), rectangleSize, rectangleposition);
-    }
-
-    public static void fillRectangle(Color color, Drawable dest, Area area) {
-        fillRectangle(color, dest, area.getSize(), area.getPosition());
     }
 }

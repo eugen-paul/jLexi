@@ -15,7 +15,6 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePanel;
 import net.eugenpaul.jlexi.controller.AbstractController;
-import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2SketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -43,12 +42,6 @@ public class TextPane extends GuiGlyph implements TextUpdateable {
 
     public String getCursorName() {
         return textPanel.getCursorName();
-    }
-
-    @Override
-    public Drawable getPixels() {
-        cachedDrawable = textPanel.getPixels();
-        return cachedDrawable;
     }
 
     @Override

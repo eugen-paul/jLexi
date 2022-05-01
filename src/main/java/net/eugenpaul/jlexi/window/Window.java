@@ -81,7 +81,7 @@ public abstract class Window extends MonoGlyph
 
     @Override
     public void redraw() {
-        getPixels();
+        getDrawable();
 
         view.modelPropertyChange(//
                 new PropertyChangeEvent(name, //

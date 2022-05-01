@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImpl;
 import net.eugenpaul.jlexi.draw.DrawableV2;
 import net.eugenpaul.jlexi.draw.DrawableV2PixelsImpl;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -23,14 +21,6 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
         super(parent);
         this.component = component;
         this.component.setParent(this);
-    }
-
-    @Override
-    public Drawable getPixels() {
-        if (component == null) {
-            return DrawableImpl.EMPTY_DRAWABLE;
-        }
-        return component.getPixels();
     }
 
     @Override
