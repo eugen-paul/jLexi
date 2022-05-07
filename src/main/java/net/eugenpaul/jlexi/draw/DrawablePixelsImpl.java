@@ -1,6 +1,7 @@
 package net.eugenpaul.jlexi.draw;
 
 import lombok.Getter;
+import lombok.NonNull;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
@@ -46,29 +47,7 @@ public class DrawablePixelsImpl implements Drawable {
 
     @Override
     public void toArgbPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos) {
-        int[] pixels = asArgbPixels();
-
-        Vector2d absolutDrawPosition = drawArea.getPosition().addNew(relativePos);
-
-        Area finalDrawArea = CollisionHelper.getOverlapping(//
-                drawArea.getPosition(), //
-                drawArea.getSize(), //
-                absolutDrawPosition, //
-                size //
-        );
-
-        int xPos = Math.max(0, drawArea.getPosition().getX() - finalDrawArea.getPosition().getX());
-        int yPos = Math.max(0, drawArea.getPosition().getY() - finalDrawArea.getPosition().getY());
-
-        ImageArrayHelper.copyRectangle(//
-                pixels, //
-                size, //
-                new Vector2d(xPos, yPos), //
-                finalDrawArea.getSize(), //
-                dest, //
-                destSize, //
-                finalDrawArea.getPosition() //
-        );
+        toPixelArray(dest, destSize, drawArea, relativePos, asArgbPixels());
     }
 
     @Override
@@ -82,6 +61,35 @@ public class DrawablePixelsImpl implements Drawable {
             }
         }
         return this.rgbaPixels;
+    }
+
+    @Override
+    public void toRgbaPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos) {
+        toPixelArray(dest, destSize, drawArea, relativePos, asRgbaPixels());
+    }
+
+    private void toPixelArray(int[] dest, Size destSize, Area drawArea, Vector2d relativePos, int[] pixelsToDraw) {
+        Vector2d absolutDrawPosition = drawArea.getPosition().addNew(relativePos);
+
+        Area finalDrawArea = CollisionHelper.getOverlapping(//
+                drawArea.getPosition(), //
+                drawArea.getSize(), //
+                absolutDrawPosition, //
+                size //
+        );
+
+        int xPos = Math.max(0, drawArea.getPosition().getX() - finalDrawArea.getPosition().getX());
+        int yPos = Math.max(0, drawArea.getPosition().getY() - finalDrawArea.getPosition().getY());
+
+        ImageArrayHelper.copyRectangle(//
+                pixelsToDraw, //
+                size, //
+                new Vector2d(xPos, yPos), //
+                finalDrawArea.getSize(), //
+                dest, //
+                destSize, //
+                finalDrawArea.getPosition() //
+        );
     }
 
     @Override
@@ -106,7 +114,7 @@ public class DrawablePixelsImpl implements Drawable {
         private DrawableImplArgbBuilder() {
         }
 
-        public DrawableImplSizeBuilder argbPixels(int[] argbPixels) {
+        public DrawableImplSizeBuilder argbPixels(@NonNull int[] argbPixels) {
             DrawableImplSizeBuilder response = new DrawableImplSizeBuilder();
             response.argbPixels = argbPixels.clone();
             return response;
@@ -117,7 +125,7 @@ public class DrawablePixelsImpl implements Drawable {
         private DrawableImplRgbaBuilder() {
         }
 
-        public DrawableImplSizeBuilder rgbAPixels(int[] rgbaPixels) {
+        public DrawableImplSizeBuilder rgbAPixels(@NonNull int[] rgbaPixels) {
             DrawableImplSizeBuilder response = new DrawableImplSizeBuilder();
             response.rgbaPixels = rgbaPixels.clone();
             return response;
@@ -128,7 +136,7 @@ public class DrawablePixelsImpl implements Drawable {
         private DrawableImplColorBuilder() {
         }
 
-        public DrawableImplSizeBuilder rgbAPixels(Color[] colorPixels) {
+        public DrawableImplSizeBuilder rgbAPixels(@NonNull Color[] colorPixels) {
             DrawableImplSizeBuilder response = new DrawableImplSizeBuilder();
             response.colorPixels = colorPixels.clone();
             return response;
@@ -146,11 +154,26 @@ public class DrawablePixelsImpl implements Drawable {
             colorPixels = null;
         }
 
-        public DrawableImplBuilderEnd size(Size size) {
+        public DrawableImplBuilderEnd size(@NonNull Size size) {
             DrawableImplBuilderEnd response = new DrawableImplBuilderEnd();
             response.argbPixels = this.argbPixels;
             response.rgbaPixels = this.rgbaPixels;
             response.colorPixels = this.colorPixels;
+
+            long area = size.compArea();
+            if (argbPixels != null && area != argbPixels.length) {
+                throw new IllegalArgumentException("Invalid size of argbPixels. Size: " + size.toString()
+                        + ". argbPixels.length = " + argbPixels.length);
+            }
+            if (rgbaPixels != null && area != rgbaPixels.length) {
+                throw new IllegalArgumentException("Invalid size of rgbaPixels. Size: " + size.toString()
+                        + ". rgbaPixels.length = " + rgbaPixels.length);
+            }
+            if (colorPixels != null && area != colorPixels.length) {
+                throw new IllegalArgumentException("Invalid size of colorPixels. Size: " + size.toString()
+                        + ". colorPixels.length = " + colorPixels.length);
+            }
+
             response.size = size;
             return response;
         }

@@ -67,7 +67,7 @@ public final class ImageArrayHelper {
         }
     }
 
-    public static void fillRectangle(Color color, int[] dest, Size destSize, Size rectangleSize,
+    public static void fillRectangle(int color, int[] dest, Size destSize, Size rectangleSize,
             Vector2d rectangleposition) {
         if (rectangleSize.isZero() // destSize is Empty
                 || rectangleposition.getX() + rectangleSize.getWidth() < 0 //
@@ -112,9 +112,20 @@ public final class ImageArrayHelper {
                     dest, //
                     targetPosition, //
                     targetPosition + realCopyWidth, //
-                    color.getArgb()//
+                    color//
             );
             targetPosition += destSize.getWidth();
         }
     }
+
+    public static void fillRectangleArgb(Color color, int[] dest, Size destSize, Size rectangleSize,
+            Vector2d rectangleposition) {
+        fillRectangle(color.getArgb(), dest, destSize, rectangleSize, rectangleposition);
+    }
+
+    public static void fillRectangleRgba(Color color, int[] dest, Size destSize, Size rectangleSize,
+            Vector2d rectangleposition) {
+        fillRectangle(color.getRgba(), dest, destSize, rectangleSize, rectangleposition);
+    }
+
 }

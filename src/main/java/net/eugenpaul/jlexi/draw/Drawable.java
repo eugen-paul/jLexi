@@ -18,14 +18,14 @@ public interface Drawable {
     public int[] asArgbPixels();
 
     /**
-     * Draw Element on given dest-Array an given drawArea at position
+     * Draw Element on given dest-Array an given drawArea and position
      * 
      * @param dest
      * @param destSize
      * @param drawArea
-     * @param positionOnDrawArea
+     * @param relativePos - relativ to drawArea
      */
-    public void toArgbPixels(int[] dest, Size destSize, Area drawArea, Vector2d positionOnDrawArea);
+    public void toArgbPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos);
 
     /**
      * Get copy of the Element as RBGA Data.
@@ -33,6 +33,16 @@ public interface Drawable {
      * @return RBGA Data
      */
     public int[] asRgbaPixels();
+
+    /**
+     * Draw Element on given dest-Array an given drawArea and position
+     * 
+     * @param dest
+     * @param destSize
+     * @param drawArea
+     * @param relativePos - relativ to drawArea
+     */
+    public void toRgbaPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos);
 
     /**
      * Get copy of the Element as Color Data.

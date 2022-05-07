@@ -63,7 +63,7 @@ public class DrawableAreasImpl implements Drawable {
                 getSize() //
         );
 
-        ImageArrayHelper.fillRectangle(//
+        ImageArrayHelper.fillRectangleArgb(//
                 background, //
                 dest, //
                 destSize, //
@@ -86,18 +86,43 @@ public class DrawableAreasImpl implements Drawable {
         }
 
         this.rgbaPixels = new int[(int) this.area.getSize().compArea()];
-        Arrays.fill(this.rgbaPixels, this.background.getRgba());
+        Arrays.fill(this.rgbaPixels, this.background.getArgb());
 
-        this.data.forEach((d, v) -> ImageArrayHelper.copyRectangle(//
-                d.asRgbaPixels(), //
-                d.getSize(), //
-                Vector2d.zero(), //
-                d.getSize(), //
+        this.data.forEach((d, v) -> d.toRgbaPixels(//
                 this.rgbaPixels, //
-                this.area.getSize(), //
+                getSize(), //
+                this.area, //
                 v //
         ));
+
         return this.rgbaPixels.clone();
+    }
+
+    @Override
+    public void toRgbaPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos) {
+        Vector2d absolutDrawPosition = drawArea.getPosition().addNew(relativePos);
+
+        Area finalDrawArea = CollisionHelper.getOverlapping(//
+                drawArea.getPosition(), //
+                drawArea.getSize(), //
+                absolutDrawPosition, //
+                getSize() //
+        );
+
+        ImageArrayHelper.fillRectangleRgba(//
+                background, //
+                dest, //
+                destSize, //
+                finalDrawArea.getSize(), //
+                finalDrawArea.getPosition() //
+        );
+
+        this.data.forEach((d, v) -> d.toRgbaPixels(//
+                dest, //
+                destSize, //
+                finalDrawArea, //
+                v //
+        ));
     }
 
     @Override

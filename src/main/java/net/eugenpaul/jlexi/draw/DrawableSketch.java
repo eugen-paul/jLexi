@@ -17,7 +17,7 @@ public interface DrawableSketch {
      * @param y        - y position of added element
      * @param z        - order of added element
      */
-    public void addDrawable(Drawable drawable, int x, int y, int z);
+    void addDrawable(Drawable drawable, int x, int y, int z);
 
     /**
      * Add Drawable to Sketch at <code>(x,y)</code> with z = 0.
@@ -26,7 +26,7 @@ public interface DrawableSketch {
      * @param x        - x position of added element
      * @param y        - y position of added element
      */
-    public default void addDrawable(Drawable drawable, int x, int y) {
+    default void addDrawable(Drawable drawable, int x, int y) {
         addDrawable(drawable, x, y, 0);
     }
 
@@ -35,21 +35,21 @@ public interface DrawableSketch {
      * 
      * @param color
      */
-    public void setBackground(Color color);
+    void setBackground(Color color);
 
     /**
      * get default Background
      * 
      * @return Background
      */
-    public Color getBackground();
+    Color getBackground();
 
     /**
      * generate complete Drawable element
      * 
      * @return complete Drawable element
      */
-    public Drawable draw();
+    Drawable draw();
 
     /**
      * generate Drawable element on area
@@ -57,7 +57,7 @@ public interface DrawableSketch {
      * @param area - area of generated element
      * @return Drawable element
      */
-    public Drawable draw(Area area);
+    Drawable draw(Area area);
 
     /**
      * return DrawableSketch at area
@@ -65,20 +65,20 @@ public interface DrawableSketch {
      * @param area - area of generated element
      * @return DrawableSketch element
      */
-    public DrawableSketch sketchAt(Area area);
+    DrawableSketch sketchAt(Area area);
 
     /**
      * Create copy of this Element
      * 
      * @return
      */
-    public DrawableSketch copy();
+    DrawableSketch copy();
 
     /**
      * get Bounts of this Element
      * 
      * @return size
      */
-    public Size getSize();
+    Size getSize();
 
 }

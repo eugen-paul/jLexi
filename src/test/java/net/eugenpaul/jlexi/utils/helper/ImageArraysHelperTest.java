@@ -215,7 +215,7 @@ class ImageArraysHelperTest {
         int[] expectedArray = destBlock.clone();
         Arrays.fill(expectedArray, Color.BLUE.getArgb());
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, destSize, Vector2d.zero());
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, destSize, Vector2d.zero());
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -230,7 +230,7 @@ class ImageArraysHelperTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), Vector2d.zero());
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(3, 2), Vector2d.zero());
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -245,7 +245,7 @@ class ImageArraysHelperTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(2, 0));
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(2, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -260,7 +260,7 @@ class ImageArraysHelperTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, 1));
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, 1));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -275,7 +275,7 @@ class ImageArraysHelperTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(-1, 0));
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(-1, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -290,7 +290,7 @@ class ImageArraysHelperTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, -1));
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, -1));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -305,7 +305,7 @@ class ImageArraysHelperTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(7, 0));
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(7, 0));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -320,7 +320,7 @@ class ImageArraysHelperTest {
                 c, c, c, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, 3));
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(3, 2), new Vector2d(0, 3));
 
         assertArrayEquals(expectedArray, destBlock);
     }
@@ -335,7 +335,7 @@ class ImageArraysHelperTest {
                 c, c, c, c, c, c, c, c, c, //
         };
 
-        ImageArrayHelper.fillRectangle(Color.BLUE, destBlock, destSize, new Size(20, 30), new Vector2d(-1, -1));
+        ImageArrayHelper.fillRectangleArgb(Color.BLUE, destBlock, destSize, new Size(20, 30), new Vector2d(-1, -1));
 
         assertArrayEquals(expectedArray, destBlock);
     }

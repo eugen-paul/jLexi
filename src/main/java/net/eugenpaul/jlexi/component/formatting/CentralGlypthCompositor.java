@@ -29,7 +29,7 @@ public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor
     public List<Glyph> compose(Iterator<T> iterator, Size maxSize) {
         Vector2d elementSize = Vector2d.zero();
 
-        DrawableSketchImpl innerSketch = new DrawableSketchImpl(backgroundColor, maxSize);
+        DrawableSketchImpl innerSketch = new DrawableSketchImpl(backgroundColor);
 
         int currentY = 0;
         while (iterator.hasNext()) {
