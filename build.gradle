@@ -35,6 +35,7 @@ dependencies {
 
     testImplementation      commonDependencies.junit_api
     testRuntimeOnly         commonDependencies.junit_engine
+    testImplementation      commonDependencies.junit_params
 
     testImplementation      commonDependencies.mockito
 }

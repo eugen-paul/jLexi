@@ -46,6 +46,7 @@ class ColorTest {
         assertEquals(Color.BLACK, Color.fromText("BLACK"));
         assertEquals(Color.RED, Color.fromText("red"));
         assertEquals(Color.GREEN, Color.fromText("grEEn"));
+        assertEquals(Color.YELLOW, Color.fromText("YelLow"));
         assertEquals(Color.BLUE, Color.fromText("BLUe"));
     }
 

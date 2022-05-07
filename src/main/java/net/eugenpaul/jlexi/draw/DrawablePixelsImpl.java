@@ -2,9 +2,11 @@ package net.eugenpaul.jlexi.draw;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
+import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayConverter;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
@@ -43,9 +45,30 @@ public class DrawablePixelsImpl implements Drawable {
     }
 
     @Override
-    public void toArgbPixels(int[] dest, Size destSize, Vector2d position) {
+    public void toArgbPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos) {
         int[] pixels = asArgbPixels();
-        ImageArrayHelper.copyRectangle(pixels, size, Vector2d.zero(), size, dest, destSize, position);
+
+        Vector2d absolutDrawPosition = drawArea.getPosition().addNew(relativePos);
+
+        Area finalDrawArea = CollisionHelper.getOverlapping(//
+                drawArea.getPosition(), //
+                drawArea.getSize(), //
+                absolutDrawPosition, //
+                size //
+        );
+
+        int xPos = Math.max(0, drawArea.getPosition().getX() - finalDrawArea.getPosition().getX());
+        int yPos = Math.max(0, drawArea.getPosition().getY() - finalDrawArea.getPosition().getY());
+
+        ImageArrayHelper.copyRectangle(//
+                pixels, //
+                size, //
+                new Vector2d(xPos, yPos), //
+                finalDrawArea.getSize(), //
+                dest, //
+                destSize, //
+                finalDrawArea.getPosition() //
+        );
     }
 
     @Override

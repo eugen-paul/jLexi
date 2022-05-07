@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.utils;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,8 +17,19 @@ public final class Color {
     public static final Color BLACK = new Color(0xFF_00_00_00);
     public static final Color RED = new Color(0xFF_FF_00_00);
     public static final Color GREEN = new Color(0xFF_00_FF_00);
+    public static final Color YELLOW = new Color(0xFF_FF_FF_00);
     public static final Color BLUE = new Color(0xFF_00_00_FF);
     public static final Color INVISIBLE = new Color(0x00_00_00_00);
+
+    private static final Map<String, Color> stringToColor = Map.ofEntries(//
+            Map.entry("white", WHITE), //
+            Map.entry("black", BLACK), //
+            Map.entry("red", RED), //
+            Map.entry("green", GREEN), //
+            Map.entry("yellow", YELLOW), //
+            Map.entry("blue", BLUE), //
+            Map.entry("invisible", INVISIBLE)//
+    );
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Color.class);
 
@@ -82,19 +94,9 @@ public final class Color {
     }
 
     public static Color fromText(String input) throws IllegalArgumentException {
-        switch (input.toLowerCase()) {
-        case "black":
-            return Color.BLACK;
-        case "white":
-            return Color.WHITE;
-        case "red":
-            return Color.RED;
-        case "green":
-            return Color.GREEN;
-        case "blue":
-            return Color.BLUE;
-        default:
-            break;
+        var response = stringToColor.get(input.toLowerCase());
+        if (response != null) {
+            return response;
         }
         throw new IllegalArgumentException(EXCEPTION_TEXT + input);
     }

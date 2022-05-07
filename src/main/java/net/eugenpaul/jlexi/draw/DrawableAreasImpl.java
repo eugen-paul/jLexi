@@ -9,6 +9,7 @@ import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class DrawableAreasImpl implements Drawable {
@@ -43,7 +44,8 @@ public class DrawableAreasImpl implements Drawable {
 
         this.data.forEach((d, v) -> d.toArgbPixels(//
                 this.argbPixels, //
-                this.area.getSize(), //
+                getSize(), //
+                this.area, //
                 v //
         ));
 
@@ -51,32 +53,29 @@ public class DrawableAreasImpl implements Drawable {
     }
 
     @Override
-    public void toArgbPixels(int[] dest, Size destSize, Vector2d position) {
+    public void toArgbPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos) {
+        Vector2d absolutDrawPosition = drawArea.getPosition().addNew(relativePos);
+
+        Area finalDrawArea = CollisionHelper.getOverlapping(//
+                drawArea.getPosition(), //
+                drawArea.getSize(), //
+                absolutDrawPosition, //
+                getSize() //
+        );
 
         ImageArrayHelper.fillRectangle(//
                 background, //
                 dest, //
                 destSize, //
-                this.area.getSize(), //
-                this.area.getPosition().addNew(position) //
+                finalDrawArea.getSize(), //
+                finalDrawArea.getPosition() //
         );
-
-        if (this.argbPixels != null) {
-            ImageArrayHelper.copyRectangle(//
-                    this.argbPixels, //
-                    this.area.getSize(), //
-                    this.area.getPosition(), //
-                    this.area.getSize(), //
-                    dest, //
-                    destSize, //
-                    position //
-            );
-        }
 
         this.data.forEach((d, v) -> d.toArgbPixels(//
                 dest, //
                 destSize, //
-                position.addNew(v) //
+                finalDrawArea, //
+                v //
         ));
     }
 

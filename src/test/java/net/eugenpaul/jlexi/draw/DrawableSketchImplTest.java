@@ -2,14 +2,11 @@ package net.eugenpaul.jlexi.draw;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
-import net.eugenpaul.jlexi.utils.Vector2d;
 
 class DrawableSketchImplTest {
 
@@ -19,18 +16,24 @@ class DrawableSketchImplTest {
     private Drawable blackGreenPipe;
     private Drawable redDot;
 
+    private final int b = Color.BLACK.getArgb();
+    private final int y = Color.YELLOW.getArgb();
+    private final int g = Color.GREEN.getArgb();
+    private final int w = Color.WHITE.getArgb();
+    private final int r = Color.RED.getArgb();
+
     @BeforeEach
     void init() {
-        sketch = new DrawableSketchImpl(Color.BLUE);
+        sketch = new DrawableSketchImpl(Color.YELLOW);
         innerSketch = new DrawableSketchImpl(Color.WHITE);
 
-        int[] pixelsElememt1 = new int[] { Color.BLACK.getArgb(), Color.GREEN.getArgb() };
+        int[] pixelsElememt1 = new int[] { b, g };
         blackGreenPipe = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(pixelsElememt1)//
                 .size(new Size(1, 2))//
                 .build();
 
-        int[] pixelsElememt2 = new int[] { Color.RED.getArgb() };
+        int[] pixelsElememt2 = new int[] { r };
         redDot = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(pixelsElememt2)//
                 .size(new Size(1, 1))//
@@ -46,8 +49,8 @@ class DrawableSketchImplTest {
 
         assertArrayEquals(//
                 new int[] { //
-                        Color.BLACK.getArgb(), Color.BLUE.getArgb(), //
-                        Color.GREEN.getArgb(), Color.RED.getArgb() //
+                        b, y, //
+                        g, r //
                 }, //
                 draw.asArgbPixels()//
         );
@@ -62,13 +65,13 @@ class DrawableSketchImplTest {
 
         Drawable draw = sketch.draw();
 
-        assertArrayEquals(//
-                new int[] { //
-                        Color.BLACK.getArgb(), Color.WHITE.getArgb(), //
-                        Color.GREEN.getArgb(), Color.RED.getArgb() //
-                }, //
-                draw.asArgbPixels()//
-        );
+        int[] argbPixels = draw.asArgbPixels();
+        int[] expectedPixels = new int[] { //
+                b, w, //
+                g, r //
+        };
+
+        assertArrayEquals(expectedPixels, argbPixels);
     }
 
     @Test
@@ -80,34 +83,34 @@ class DrawableSketchImplTest {
 
         Drawable draw = sketch.draw();
 
-        assertArrayEquals(//
-                new int[] { //
-                        Color.BLUE.getArgb(), Color.BLUE.getArgb(), Color.BLUE.getArgb(), Color.BLUE.getArgb(), //
-                        Color.BLUE.getArgb(), Color.BLACK.getArgb(), Color.WHITE.getArgb(), Color.WHITE.getArgb(), //
-                        Color.BLUE.getArgb(), Color.GREEN.getArgb(), Color.WHITE.getArgb(), Color.RED.getArgb() //
-                }, //
-                draw.asArgbPixels()//
-        );
+        int[] argbPixels = draw.asArgbPixels();
+        int[] expectedPixels = new int[] { //
+                y, y, y, y, //
+                y, b, w, w, //
+                y, g, w, r //
+        }; //
+
+        assertArrayEquals(expectedPixels, argbPixels);
     }
 
-    @Test
-    void test_draw_toArgbArray() {
-        sketch.addDrawable(blackGreenPipe, 0, 0);
-        sketch.addDrawable(redDot, 1, 1);
+    // @Test
+    // void test_draw_toArgbArray() {
+    // sketch.addDrawable(blackGreenPipe, 0, 0);
+    // sketch.addDrawable(redDot, 1, 1);
 
-        Drawable draw = sketch.draw();
-        int[] output = new int[4];
-        Arrays.fill(output, Color.BLUE.getArgb());
-        draw.toArgbPixels(output, new Size(2, 2), new Vector2d(0, 0));
+    // Drawable draw = sketch.draw();
+    // int[] output = new int[4];
+    // Arrays.fill(output, y);
+    // draw.toArgbPixels(output, new Size(2, 2), new Vector2d(0, 0));
 
-        assertArrayEquals(//
-                new int[] { //
-                        Color.BLACK.getArgb(), Color.BLUE.getArgb(), //
-                        Color.GREEN.getArgb(), Color.RED.getArgb() //
-                }, //
-                output//
-        );
-    }
+    // assertArrayEquals(//
+    // new int[] { //
+    // b(), y, //
+    // g, r //
+    // }, //
+    // output//
+    // );
+    // }
 
     @Test
     void test_draw_rgba() {
@@ -118,7 +121,7 @@ class DrawableSketchImplTest {
 
         assertArrayEquals(//
                 new int[] { //
-                        Color.BLACK.getRgba(), Color.BLUE.getRgba(), //
+                        Color.BLACK.getRgba(), Color.YELLOW.getRgba(), //
                         Color.GREEN.getRgba(), Color.RED.getRgba() //
                 }, //
                 draw.asRgbaPixels()//

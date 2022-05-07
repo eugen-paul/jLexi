@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.draw;
 
+import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -17,13 +18,14 @@ public interface Drawable {
     public int[] asArgbPixels();
 
     /**
-     * Draw Element on given dest-Array at position
+     * Draw Element on given dest-Array an given drawArea at position
      * 
      * @param dest
      * @param destSize
-     * @param position
+     * @param drawArea
+     * @param positionOnDrawArea
      */
-    public void toArgbPixels(int[] dest, Size destSize, Vector2d position);
+    public void toArgbPixels(int[] dest, Size destSize, Area drawArea, Vector2d positionOnDrawArea);
 
     /**
      * Get copy of the Element as RBGA Data.

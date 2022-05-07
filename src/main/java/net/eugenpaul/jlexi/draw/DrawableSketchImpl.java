@@ -16,24 +16,13 @@ public class DrawableSketchImpl implements DrawableSketch {
     @Setter
     private Color background;
 
-    private int minX;
     private int maxX;
-    private int minY;
     private int maxY;
 
     private Size size;
 
     public DrawableSketchImpl(Color background) {
-        this.data = new DrawableStorageImpl();
-
-        this.size = null;
-
-        this.minX = 0;
-        this.maxX = 0;
-        this.minY = 0;
-        this.maxY = 0;
-
-        this.background = background;
+        this(background, null);
     }
 
     public DrawableSketchImpl(Color background, Size size) {
@@ -41,9 +30,7 @@ public class DrawableSketchImpl implements DrawableSketch {
 
         this.size = size;
 
-        this.minX = 0;
         this.maxX = 0;
-        this.minY = 0;
         this.maxY = 0;
 
         this.background = background;
@@ -54,35 +41,21 @@ public class DrawableSketchImpl implements DrawableSketch {
         this.data.add(drawable, x, y, z);
 
         if (size == null) {
-            this.minX = Math.min(this.minX, x);
             this.maxX = Math.max(this.maxX, x + drawable.getSize().getWidth() - 1);
-
-            this.minY = Math.min(this.minY, y);
             this.maxY = Math.max(this.maxY, y + drawable.getSize().getHeight() - 1);
         }
     }
 
     @Override
     public Drawable draw() {
-        if (size != null) {
-            return new DrawableAreasImpl(//
-                    this.data.copy(), //
-                    new Area(//
-                            new Vector2d(this.minX, this.minY), //
-                            size //
-                    ), //
-                    this.background //
-            );
-        } else {
-            return new DrawableAreasImpl(//
-                    this.data.copy(), //
-                    new Area(//
-                            new Vector2d(this.minX, this.minY), //
-                            new Size(this.maxX - this.minX + 1, this.maxY - this.minY + 1)//
-                    ), //
-                    this.background //
-            );
-        }
+        return new DrawableAreasImpl(//
+                this.data.copy(), //
+                new Area(//
+                        Vector2d.zero(), //
+                        getSize() //
+                ), //
+                this.background //
+        );
     }
 
     @Override
@@ -112,7 +85,7 @@ public class DrawableSketchImpl implements DrawableSketch {
         if (size != null) {
             return size;
         }
-        return new Size(this.maxX - this.minX + 1, this.maxY - this.minY + 1);
+        return new Size(this.maxX + 1, this.maxY + 1);
     }
 
 }
