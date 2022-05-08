@@ -56,6 +56,10 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
 
     @Override
     public Drawable getDrawable() {
+        if (cachedDrawable != null) {
+            return cachedDrawable.draw();
+        }
+
         cachedDrawable = new DrawableSketchImpl(Color.WHITE);
         xPositionToRow.clear();
 

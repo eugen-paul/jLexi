@@ -15,6 +15,7 @@ public final class Color {
 
     public static final Color WHITE = new Color(0xFF_FF_FF_FF);
     public static final Color BLACK = new Color(0xFF_00_00_00);
+    public static final Color GREY = new Color(0xFF_BE_BE_BE);
     public static final Color RED = new Color(0xFF_FF_00_00);
     public static final Color GREEN = new Color(0xFF_00_FF_00);
     public static final Color YELLOW = new Color(0xFF_FF_FF_00);
@@ -24,6 +25,7 @@ public final class Color {
     private static final Map<String, Color> stringToColor = Map.ofEntries(//
             Map.entry("white", WHITE), //
             Map.entry("black", BLACK), //
+            Map.entry("grey", GREY), //
             Map.entry("red", RED), //
             Map.entry("green", GREEN), //
             Map.entry("yellow", YELLOW), //

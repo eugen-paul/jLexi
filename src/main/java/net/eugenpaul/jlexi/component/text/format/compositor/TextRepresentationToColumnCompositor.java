@@ -20,7 +20,7 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
         while (iterator.hasNext()) {
             TextRepresentation element = iterator.next();
 
-            if (currentHeight + element.getSize().getHeight() <= maxSize.getHeight()) {
+            if (column.isEmpty() || currentHeight + element.getSize().getHeight() <= maxSize.getHeight()) {
                 column.add(element);
                 element.setParent(column);
                 currentHeight += element.getSize().getHeight();

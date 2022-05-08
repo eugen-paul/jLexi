@@ -1,25 +1,69 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
+import net.eugenpaul.jlexi.utils.Color;
+import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextPaneSite extends TextRepresentationOfRepresentation {
 
-    public TextPaneSite(Glyph parent) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneSite.class);
+
+    private TreeMap<Integer, TextRepresentation> xPositionToColumn;
+
+    public TextPaneSite(Glyph parent, Size size) {
         super(parent);
+        setSize(size);
+        this.xPositionToColumn = new TreeMap<>();
     }
 
     @Override
     public TextPosition getCorsorElementAt(Vector2d pos) {
-        // TODO Auto-generated method stub
-        return null;
+        var row = xPositionToColumn.floorEntry(pos.getX());
+        if (null == row) {
+            return null;
+        }
+
+        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
+                new Vector2d(//
+                        pos.sub(row.getValue().getRelativPosition())//
+                )//
+        );
+        if (clickedElement != null) {
+            LOGGER.trace("Site Click on Element: {}.", clickedElement);
+        } else {
+            LOGGER.trace("Site Click on Element: NONE.");
+        }
+        return clickedElement;
     }
 
     @Override
     public Drawable getDrawable() {
-        // TODO Auto-generated method stub
-        return null;
+        if (cachedDrawable != null) {
+            return cachedDrawable.draw();
+        }
+
+        cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
+        xPositionToColumn.clear();
+
+        for (var el : children) {
+            cachedDrawable.addDrawable(//
+                    el.getDrawable(), //
+                    el.getRelativPosition().getX(), //
+                    el.getRelativPosition().getY() //
+            );
+
+            xPositionToColumn.put(el.getRelativPosition().getX(), el);
+        }
+
+        return cachedDrawable.draw();
     }
 
 }

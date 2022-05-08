@@ -90,7 +90,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         children.addAll(compositor.compose(document.getRows(getSize()).iterator(), getSize()));
 
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
+        cachedDrawable = new DrawableSketchImpl(Color.GREY, getSize());
 
         yPositionToSite.clear();
 
@@ -104,7 +104,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
             el.setRelativPosition(new Vector2d(0, currentY));
             el.setParent(this);
 
-            currentY += el.getSize().getHeight();
+            currentY += el.getSize().getHeight() + 5;
         }
 
         return cachedDrawable.draw();

@@ -175,7 +175,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
         removeElementFromText(elementToRemove);
 
-        representation = null;
         removedElements.add(elementToRemove);
         notifyChange();
         return nextElement;
@@ -293,6 +292,17 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     @Override
     protected TextStructure getLastChild() {
         return null;
+    }
+
+    public boolean isEndOfSection() {
+        return !textElements.isEmpty() && textElements.getLast().isEndOfSection();
+    }
+
+    public TextElement removeEndOfSection() {
+        if (isEndOfSection()) {
+            return textElements.pollLast();
+        }
+        throw new NullPointerException("Paragraph has no EndOfSection");
     }
 
 }

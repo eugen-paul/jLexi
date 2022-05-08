@@ -6,6 +6,7 @@ import java.util.ListIterator;
 import java.util.Optional;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.Empty;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -17,6 +18,7 @@ import net.eugenpaul.jlexi.utils.Size;
 public abstract class TextStructure implements TextDocumentElement, Splitable<TextStructure>, Empty {
 
     @Getter
+    @Setter
     protected TextStructure parentStructure;
     protected TextFormat format;
     protected ResourceManager storage;

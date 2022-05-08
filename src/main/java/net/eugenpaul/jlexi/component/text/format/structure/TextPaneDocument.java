@@ -15,17 +15,18 @@ public class TextPaneDocument extends TextStructureOfStructure {
     public TextPaneDocument(TextFormat format, ResourceManager storage, List<TextElement> data, ChangeListener parent) {
         super(null, format, storage);
         this.parent = parent;
-        initParagraphs(data);
+        initTextStructure(data);
     }
 
     public TextPaneDocument(TextFormat format, ResourceManager storage) {
         super(null, format, storage);
     }
 
-    private void initParagraphs(List<TextElement> data) {
+    private void initTextStructure(List<TextElement> data) {
         children.clear();
 
-        var currentParagraph = new TextParagraph(this, format, storage);
+        var currentSection = new TextSection(this, format, storage);
+        var currentParagraph = new TextParagraph(currentSection, format, storage);
 
         var iterator = data.iterator();
         while (iterator.hasNext()) {
@@ -33,13 +34,22 @@ public class TextPaneDocument extends TextStructureOfStructure {
             currentParagraph.add(element);
 
             if (element.isEndOfLine()) {
-                children.add(currentParagraph);
-                currentParagraph = new TextParagraph(this, format, storage);
+                currentSection.add(currentParagraph);
+                currentParagraph = new TextParagraph(currentSection, format, storage);
+            }
+
+            if (element.isEndOfSection()) {
+                children.add(currentSection);
+                currentSection = new TextSection(this, format, storage);
             }
         }
-
+        
         if (!currentParagraph.isEmpty()) {
-            children.add(currentParagraph);
+            currentSection.add(currentParagraph);
+        }
+
+        if (!currentSection.isEmpty()) {
+            children.add(currentSection);
         }
     }
 
