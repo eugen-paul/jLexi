@@ -39,7 +39,7 @@ public class Label extends GuiGlyph {
         this.storage = storage;
         this.text = text;
         this.textElement = new TextParagraph(null, textFormat, storage);
-        compositor = new TextRepresentationToColumnCompositor(textFormat.getBackgroundColor());
+        compositor = new TextRepresentationToColumnCompositor(textFormat.getBackgroundColor(), 0, 0);
         setText(text);
     }
 
@@ -76,7 +76,7 @@ public class Label extends GuiGlyph {
             return cachedDrawable.draw();
         }
 
-        List<TextRepresentation> rows = textElement.getRows(getSize());
+        List<TextRepresentation> rows = textElement.getRepresentation(getSize());
 
         List<TextRepresentation> column = compositor.compose(rows.iterator(), getSize());
 

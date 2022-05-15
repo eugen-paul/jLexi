@@ -41,14 +41,13 @@ public class TextRepresentationToSiteCompositor implements TextCompositor<TextRe
     public List<TextRepresentation> compose(Iterator<TextRepresentation> iterator, Size maxSize) {
         List<TextRepresentation> responseSites = new LinkedList<>();
 
-        TextPaneSite site = new TextPaneSite(null, siteSize.addNew(0, 10));
+        TextPaneSite site = new TextPaneSite(null, siteSize);
 
         int currentColumn = 1;
         while (iterator.hasNext()) {
             var column = iterator.next();
 
             site.add(column);
-            column.setParent(site);
 
             column.setRelativPosition(new Vector2d(paddingLeft * currentColumn, paddingTop));
 

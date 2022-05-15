@@ -32,11 +32,14 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
     public void add(TextRepresentation child) {
         this.children.add(child);
+        child.setParent(this);
+
         Size currentSize = getSize();
         setSize(new Size(//
                 Math.max(currentSize.getWidth(), child.getSize().getWidth()), //
                 currentSize.getHeight() + child.getSize().getHeight()//
         ));
+
         this.cachedDrawable = null;
         this.yPositionToRow.put(child.getRelativPosition().getY(), child);
     }

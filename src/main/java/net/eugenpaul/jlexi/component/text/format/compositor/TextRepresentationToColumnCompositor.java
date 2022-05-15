@@ -20,32 +20,33 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
     @Setter
     private Color background;
 
+    @Getter
+    @Setter
+    private int marginTop;
+
+    @Getter
+    @Setter
+    private int marginBottom;
+
     @Override
     public List<TextRepresentation> compose(Iterator<TextRepresentation> iterator, Size maxSize) {
         List<TextRepresentation> responseRows = new LinkedList<>();
 
-        TextPaneColumn column = new TextPaneColumn(null);
-        column.setBackground(background);
+        TextPaneColumn column = createColumn();
         int currentHeight = 0;
 
         while (iterator.hasNext()) {
             TextRepresentation element = iterator.next();
+            currentHeight += element.getMarginTop();
+
             if (column.isEmpty() || currentHeight + element.getSize().getHeight() <= maxSize.getHeight()) {
-                element.setParent(column);
-                element.setRelativPosition(new Vector2d(0, currentHeight));
-                column.add(element);
-                column.setMarginTop(element.getMarginTop());
-                column.setMarginBottom(element.getMarginBottom());
-                currentHeight += element.getSize().getHeight();
+                currentHeight = addToColumn(column, currentHeight, element);
             } else {
                 responseRows.add(column);
-                element.setParent(column);
-                element.setRelativPosition(new Vector2d(0, 0));
-                column = new TextPaneColumn(null);
-                column.add(element);
-                column.setMarginTop(element.getMarginTop());
-                column.setMarginBottom(element.getMarginBottom());
-                currentHeight = element.getSize().getHeight();
+                column = createColumn();
+                currentHeight = element.getMarginTop();
+
+                currentHeight = addToColumn(column, currentHeight, element);
             }
         }
 
@@ -54,6 +55,21 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
         }
 
         return responseRows;
+    }
+
+    private int addToColumn(TextPaneColumn column, int currentHeight, TextRepresentation element) {
+        element.setRelativPosition(new Vector2d(0, currentHeight));
+        column.add(element);
+        currentHeight += element.getSize().getHeight() + element.getMarginBottom();
+        return currentHeight;
+    }
+
+    private TextPaneColumn createColumn() {
+        TextPaneColumn column = new TextPaneColumn(null);
+        column.setBackground(background);
+        column.setMarginTop(marginTop);
+        column.setMarginBottom(marginBottom);
+        return column;
     }
 
 }

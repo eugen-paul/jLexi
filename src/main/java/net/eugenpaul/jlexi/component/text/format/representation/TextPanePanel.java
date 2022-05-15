@@ -16,7 +16,6 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
@@ -45,7 +44,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     private TextPaneDocument document;
 
     private TextCompositor<TextRepresentation> compositor;
-    private TextCompositor<TextRepresentation> alignmentCompositor;
 
     private TreeMap<Integer, TextRepresentation> yPositionToSite;
 
@@ -65,8 +63,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         super(parent);
         this.storage = storage;
         this.backgroundColor = Color.GREY;
-        this.compositor = new TextRepresentationToColumnCompositor(backgroundColor);
-        this.alignmentCompositor = new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER);
+        this.compositor = new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER);
         this.cursorName = cursorPrefix + "textPaneCursor";
 
         this.document = new TextPaneDocument(//
@@ -95,9 +92,9 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         this.children.clear();
 
-        var sites = compositor.compose(document.getRows(getSize()).iterator(), getSize());
+        var sites = compositor.compose(document.getRepresentation(getSize()).iterator(), getSize());
 
-        this.children.addAll(alignmentCompositor.compose(sites.iterator(), getSize()));
+        this.children.addAll(sites);
 
         this.cachedDrawable = new DrawableSketchImpl(backgroundColor, getSize());
 

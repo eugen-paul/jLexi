@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneElementRow;
@@ -11,7 +14,24 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentati
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
+@AllArgsConstructor
 public class TextElementToRowCompositor<T extends TextElement> implements TextCompositor<T> {
+
+    @Getter
+    @Setter
+    private int firstRowMarginTop;
+
+    @Getter
+    @Setter
+    private int lastRowMarginBottom;
+
+    @Getter
+    @Setter
+    private int rowMarginTop;
+
+    @Getter
+    @Setter
+    private int rowMarginBottom;
 
     @Override
     public List<TextRepresentation> compose(Iterator<T> iterator, Size maxSize) {
@@ -21,8 +41,12 @@ public class TextElementToRowCompositor<T extends TextElement> implements TextCo
         int currentLength = 0;
         int currentHeight = 0;
 
+        boolean firstRow = true;
+
         while (iterator.hasNext()) {
             T element = iterator.next();
+
+            // TODO get and use margin of elements
 
             if (currentLength + element.getSize().getWidth() <= maxSize.getWidth() || elementsToRow.isEmpty()) {
                 elementsToRow.add(element);
@@ -30,8 +54,9 @@ public class TextElementToRowCompositor<T extends TextElement> implements TextCo
                 currentHeight = Math.max(currentHeight, element.getSize().getHeight());
             } else {
                 setRelativPositions(elementsToRow, currentHeight);
-                TextPaneElementRow row = new TextPaneElementRow(null, elementsToRow);
+                TextPaneElementRow row = createRow(elementsToRow, firstRow, false);
                 responseRows.add(row);
+                firstRow = false;
 
                 elementsToRow.clear();
                 elementsToRow.add(element);
@@ -42,11 +67,27 @@ public class TextElementToRowCompositor<T extends TextElement> implements TextCo
 
         if (!elementsToRow.isEmpty()) {
             setRelativPositions(elementsToRow, currentHeight);
-            TextPaneElementRow row = new TextPaneElementRow(null, elementsToRow);
+            TextPaneElementRow row = createRow(elementsToRow, firstRow, true);
             responseRows.add(row);
         }
 
         return responseRows;
+    }
+
+    private TextPaneElementRow createRow(List<TextElement> elementsToRow, boolean isFirst, boolean isLast) {
+        TextPaneElementRow row = new TextPaneElementRow(null, elementsToRow);
+        if (isFirst) {
+            row.setMarginTop(firstRowMarginTop);
+        } else {
+            row.setMarginTop(rowMarginTop);
+        }
+
+        if (isLast) {
+            row.setMarginBottom(lastRowMarginBottom);
+        } else {
+            row.setMarginBottom(rowMarginBottom);
+        }
+        return row;
     }
 
     private void setRelativPositions(List<TextElement> elementsToRow, int maxHeight) {

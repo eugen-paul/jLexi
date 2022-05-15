@@ -26,7 +26,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
         super(parentStructure, format, storage);
         this.textElements = new LinkedList<>();
-        this.compositor = new TextElementToRowCompositor<>();
+        // TODO get margin from paragraph konfiguration
+        this.compositor = new TextElementToRowCompositor<>(0, 0, 0, 0);
     }
 
     @Override
@@ -38,7 +39,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     }
 
     @Override
-    public List<TextRepresentation> getRows(Size size) {
+    public List<TextRepresentation> getRepresentation(Size size) {
         if (null == representation) {
             representation = compositor.compose(textElements.iterator(), size);
         }

@@ -15,7 +15,7 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 /**
- * Put all Rows to one column and set horizontal alignment.
+ * Put all elements to one column and set horizontal alignment.
  * 
  * @param <T>
  */
@@ -46,7 +46,7 @@ public class HorizontalAlignmentRepresentationCompositor implements TextComposit
 
         int currentY = 0;
         for (var element : listOfElements) {
-            currentY = Math.max(currentY, element.getMarginTop());
+            currentY += element.getMarginTop();
             element.setParent(responseColumn);
             switch (aligment) {
             case CENTER:

@@ -132,13 +132,13 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         }
     }
 
-    public List<TextRepresentation> getRows(Size size) {
+    public List<TextRepresentation> getRepresentation(Size size) {
         if (null == this.representation) {
             restructChildren();
             this.representation = new LinkedList<>();
             var iterator = childListIterator();
             while (iterator.hasNext()) {
-                this.representation.addAll(iterator.next().getRows(size));
+                this.representation.addAll(iterator.next().getRepresentation(size));
             }
         }
         return this.representation;

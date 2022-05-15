@@ -26,11 +26,14 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
 
     public void add(TextRepresentation child) {
         this.children.add(child);
+        child.setParent(this);
+
         Size currentSize = getSize();
         setSize(new Size(//
                 currentSize.getWidth() + child.getSize().getWidth(), //
                 Math.max(currentSize.getHeight(), child.getSize().getHeight()) //
         ));
+
         cachedDrawable = null;
     }
 
