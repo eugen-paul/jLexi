@@ -32,4 +32,22 @@ public abstract class FontStorage implements Resource {
      * @return max Pixel Ascent
      */
     public abstract int getMaxAscent(String fontName, int size);
+
+    /**
+     * Return pixel ascent of font of given size (distance from top to baseline)
+     * 
+     * @param fontName - name of font
+     * @param size     - size of font
+     * @return ascent
+     */
+    public abstract int getAscent(String fontName, int size);
+
+    /**
+     * Return pixel descent of font of given size (distance from baseline to bottom)
+     * 
+     * @param fontName - name of font
+     * @param size     - size of font
+     * @return descent
+     */
+    public abstract int getDescent(String fontName, int size);
 }

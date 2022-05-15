@@ -2,11 +2,13 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.var;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -24,28 +26,29 @@ public class TextPaneElementRow extends TextRepresentation {
     private LinkedList<TextElement> children;
     private TreeMap<Integer, TextElement> xPositionToRow;
 
-    public TextPaneElementRow(Glyph parent) {
+    public TextPaneElementRow(Glyph parent, List<TextElement> children) {
         super(parent);
         this.xPositionToRow = new TreeMap<>();
-        this.children = new LinkedList<>();
-    }
+        this.children = new LinkedList<>(children);
 
-    public void add(TextElement child) {
-        children.add(child);
-        Size currentSize = getSize();
-        setSize(new Size(//
-                currentSize.getWidth() + child.getSize().getWidth(), //
-                Math.max(currentSize.getHeight(), child.getSize().getHeight())//
-        ));
+        Size currentSize = Size.ZERO_SIZE;
+        for (var child : this.children) {
+            child.setParent(this);
+            setSize(new Size(//
+                    currentSize.getWidth() + child.getSize().getWidth(), //
+                    Math.max(currentSize.getHeight(), child.getSize().getHeight())//
+            ));
+            this.xPositionToRow.put(child.getRelativPosition().getX(), child);
+        }
     }
 
     public boolean isEmpty() {
-        return children.isEmpty();
+        return this.children.isEmpty();
     }
 
     @Override
     public TextPosition getCorsorElementAt(Vector2d pos) {
-        var row = xPositionToRow.floorEntry(pos.getX());
+        var row = this.xPositionToRow.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
@@ -112,28 +115,21 @@ public class TextPaneElementRow extends TextRepresentation {
 
     @Override
     public Drawable getDrawable() {
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        xPositionToRow.clear();
-
-        int maxHeight = 0;
-        for (TextElement textElement : children) {
-            maxHeight = Math.max(maxHeight, textElement.getSize().getHeight());
+        if (this.cachedDrawable != null) {
+            return this.cachedDrawable.draw();
         }
 
-        int currentX = 0;
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+
         for (var el : children) {
-            int currentY = maxHeight - el.getSize().getHeight();
-
-            cachedDrawable.addDrawable(el.getDrawable(), currentX, currentY);
-
-            xPositionToRow.put(currentX, el);
-
-            el.setRelativPosition(new Vector2d(currentX, currentY));
-
-            currentX += el.getSize().getWidth();
+            this.cachedDrawable.addDrawable(//
+                    el.getDrawable(), //
+                    el.getRelativPosition().getX(), //
+                    el.getRelativPosition().getY()//
+            );
         }
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
     @Override

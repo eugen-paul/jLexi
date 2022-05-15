@@ -51,4 +51,9 @@ public class TextChar extends TextElementAbstract {
         return Character.toString(c);
     }
 
+    @Override
+    public int getDescent() {
+        return storage.getFonts().getDescent(getFormat().getFontName(), getFormat().getFontsize());
+    }
+
 }

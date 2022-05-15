@@ -24,9 +24,14 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
         this.xPositionToColumn = new TreeMap<>();
     }
 
+    public void add(TextRepresentation child) {
+        this.children.add(child);
+        this.cachedDrawable = null;
+    }
+
     @Override
     public TextPosition getCorsorElementAt(Vector2d pos) {
-        var row = xPositionToColumn.floorEntry(pos.getX());
+        var row = this.xPositionToColumn.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
@@ -46,24 +51,24 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
 
     @Override
     public Drawable getDrawable() {
-        if (cachedDrawable != null) {
-            return cachedDrawable.draw();
+        if (this.cachedDrawable != null) {
+            return this.cachedDrawable.draw();
         }
 
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
-        xPositionToColumn.clear();
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
+        this.xPositionToColumn.clear();
 
         for (var el : children) {
-            cachedDrawable.addDrawable(//
+            this.cachedDrawable.addDrawable(//
                     el.getDrawable(), //
                     el.getRelativPosition().getX(), //
                     el.getRelativPosition().getY() //
             );
 
-            xPositionToColumn.put(el.getRelativPosition().getX(), el);
+            this.xPositionToColumn.put(el.getRelativPosition().getX(), el);
         }
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
 }

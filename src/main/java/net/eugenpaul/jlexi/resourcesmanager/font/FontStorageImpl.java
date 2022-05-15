@@ -21,6 +21,14 @@ public class FontStorageImpl extends FontStorage {
             Map<Integer, // FontSize
                     Integer>> maxAscentStorage;
 
+    private Map<String, // FontName
+            Map<Integer, // FontSize
+                    Integer>> ascentStorage;
+
+    private Map<String, // FontName
+            Map<Integer, // FontSize
+                    Integer>> descentStorage;
+
     private Map<Character, // Character
             Map<Integer, // Style
                     Map<String, // FontName
@@ -32,6 +40,8 @@ public class FontStorageImpl extends FontStorage {
     public FontStorageImpl(FontPixelsGenerator fontGenerator) {
         this.fontGenerator = fontGenerator;
         this.maxAscentStorage = new HashMap<>();
+        this.ascentStorage = new HashMap<>();
+        this.descentStorage = new HashMap<>();
         this.drawableStorage = new HashMap<>();
     }
 
@@ -62,6 +72,20 @@ public class FontStorageImpl extends FontStorage {
         return maxAscentStorage//
                 .computeIfAbsent(fontName, key -> new HashMap<>())//
                 .computeIfAbsent(fontSize, key -> fontGenerator.getMaxAscent(fontName, fontSize));
+    }
+
+    @Override
+    public int getAscent(String fontName, int fontSize) {
+        return ascentStorage//
+                .computeIfAbsent(fontName, key -> new HashMap<>())//
+                .computeIfAbsent(fontSize, key -> fontGenerator.getAscent(fontName, fontSize));
+    }
+
+    @Override
+    public int getDescent(String fontName, int fontSize) {
+        return descentStorage//
+                .computeIfAbsent(fontName, key -> new HashMap<>())//
+                .computeIfAbsent(fontSize, key -> fontGenerator.getDescent(fontName, fontSize));
     }
 
 }

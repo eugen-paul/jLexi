@@ -23,19 +23,20 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
         this.yPositionToRow = new TreeMap<>();
     }
 
-    @Override
     public void add(TextRepresentation child) {
-        super.add(child);
+        this.children.add(child);
         Size currentSize = getSize();
         setSize(new Size(//
                 Math.max(currentSize.getWidth(), child.getSize().getWidth()), //
                 currentSize.getHeight() + child.getSize().getHeight()//
         ));
+        this.cachedDrawable = null;
+        this.yPositionToRow.put(child.getRelativPosition().getY(), child);
     }
 
     @Override
     public TextPosition getCorsorElementAt(Vector2d pos) {
-        var row = yPositionToRow.floorEntry(pos.getY());
+        var row = this.yPositionToRow.floorEntry(pos.getY());
         if (null == row) {
             return null;
         }
@@ -55,22 +56,21 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
     @Override
     public Drawable getDrawable() {
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-
-        yPositionToRow.clear();
-
-        int currentY = 0;
-        for (var el : children) {
-            cachedDrawable.addDrawable(el.getDrawable(), 0, currentY);
-
-            yPositionToRow.put(currentY, el);
-
-            el.setRelativPosition(new Vector2d(0, currentY));
-
-            currentY += el.getSize().getHeight();
+        if (this.cachedDrawable != null) {
+            return this.cachedDrawable.draw();
         }
 
-        return cachedDrawable.draw();
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+
+        for (var el : this.children) {
+            this.cachedDrawable.addDrawable( //
+                    el.getDrawable(), //
+                    el.getRelativPosition().getX(), //
+                    el.getRelativPosition().getY() //
+            );
+        }
+
+        return this.cachedDrawable.draw();
     }
 
     @Override

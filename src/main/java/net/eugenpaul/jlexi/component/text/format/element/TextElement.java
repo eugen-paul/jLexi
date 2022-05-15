@@ -133,4 +133,8 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return this;
     }
 
+    public int getDescent() {
+        return 0;
+    }
+
 }

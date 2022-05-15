@@ -7,6 +7,7 @@ import java.util.List;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneColumn;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextRepresentationToColumnCompositor implements TextCompositor<TextRepresentation> {
 
@@ -21,14 +22,16 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
             TextRepresentation element = iterator.next();
 
             if (column.isEmpty() || currentHeight + element.getSize().getHeight() <= maxSize.getHeight()) {
-                column.add(element);
                 element.setParent(column);
+                element.setRelativPosition(new Vector2d(0, currentHeight));
+                column.add(element);
                 currentHeight += element.getSize().getHeight();
             } else {
                 responseRows.add(column);
+                element.setParent(column);
+                element.setRelativPosition(new Vector2d(0, 0));
                 column = new TextPaneColumn(null);
                 column.add(element);
-                element.setParent(column);
                 currentHeight = element.getSize().getHeight();
             }
         }

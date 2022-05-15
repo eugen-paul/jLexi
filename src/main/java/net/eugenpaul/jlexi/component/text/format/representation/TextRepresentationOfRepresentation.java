@@ -15,10 +15,6 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
         this.children = new LinkedList<>();
     }
 
-    public void add(TextRepresentation child) {
-        children.add(child);
-    }
-
     @Override
     public boolean isEmpty() {
         return children.isEmpty();

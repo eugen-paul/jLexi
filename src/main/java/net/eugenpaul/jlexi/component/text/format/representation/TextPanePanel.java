@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
+import net.eugenpaul.jlexi.component.formatting.HorizontalAlignmentGlypthCompositor;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
@@ -28,6 +30,7 @@ import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.AligmentH;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -43,6 +46,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     private TextPaneDocument document;
 
     private TextCompositor<TextRepresentation> compositor;
+    private GlyphCompositor<TextRepresentation> alignmentCompositor;
 
     private TreeMap<Integer, TextRepresentation> yPositionToSite;
 
@@ -60,6 +64,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         super(parent);
         this.storage = storage;
         this.compositor = new TextRepresentationToColumnCompositor();
+        this.alignmentCompositor = new HorizontalAlignmentGlypthCompositor<>(Color.GREY, AligmentH.CENTER);
         this.cursorName = cursorPrefix + "textPaneCursor";
 
         this.document = new TextPaneDocument(//
@@ -86,20 +91,22 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
             return cachedDrawable.draw();
         }
 
-        children.clear();
+        this.children.clear();
 
-        children.addAll(compositor.compose(document.getRows(getSize()).iterator(), getSize()));
+        this.children.addAll(compositor.compose(document.getRows(getSize()).iterator(), getSize()));
 
-        cachedDrawable = new DrawableSketchImpl(Color.GREY, getSize());
+        var drawElement = alignmentCompositor.compose(this.children.iterator(), getSize());
 
-        yPositionToSite.clear();
+        this.cachedDrawable = new DrawableSketchImpl(Color.GREY, getSize());
+
+        this.yPositionToSite.clear();
 
         int currentY = 0;
 
         for (var el : children) {
-            cachedDrawable.addDrawable(el.getDrawable(), 0, currentY);
+            this.cachedDrawable.addDrawable(el.getDrawable(), 0, currentY);
 
-            yPositionToSite.put(currentY, el);
+            this.yPositionToSite.put(currentY, el);
 
             el.setRelativPosition(new Vector2d(0, currentY));
             el.setParent(this);
@@ -107,7 +114,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
             currentY += el.getSize().getHeight() + 5;
         }
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
     @Override
@@ -122,7 +129,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     @Override
     public TextPosition getCorsorElementAt(Vector2d pos) {
-        var row = yPositionToSite.floorEntry(pos.getY());
+        var row = this.yPositionToSite.floorEntry(pos.getY());
         if (null == row) {
             return null;
         }
@@ -174,7 +181,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
 
-        var row = yPositionToSite.floorEntry(mouseY);
+        var row = this.yPositionToSite.floorEntry(mouseY);
         if (null == row) {
             return;
         }
@@ -196,19 +203,19 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Override
     public void onKeyTyped(Character key) {
         LOGGER.trace("Key typed: {}", key);
-        keyHandler.onKeyTyped(key);
+        this.keyHandler.onKeyTyped(key);
     }
 
     @Override
     public void onKeyPressed(KeyCode keyCode) {
         LOGGER.trace("Key pressed: {}", keyCode);
-        keyHandler.onKeyPressed(keyCode);
+        this.keyHandler.onKeyPressed(keyCode);
     }
 
     @Override
     public void onKeyReleased(KeyCode keyCode) {
         LOGGER.trace("Key released: {}", keyCode);
-        keyHandler.onKeyReleased(keyCode);
+        this.keyHandler.onKeyReleased(keyCode);
     }
 
     @Override

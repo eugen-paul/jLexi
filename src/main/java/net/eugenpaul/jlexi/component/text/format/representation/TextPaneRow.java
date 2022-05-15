@@ -24,14 +24,14 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
         this.xPositionToRow = new TreeMap<>();
     }
 
-    @Override
     public void add(TextRepresentation child) {
-        super.add(child);
+        this.children.add(child);
         Size currentSize = getSize();
         setSize(new Size(//
                 currentSize.getWidth() + child.getSize().getWidth(), //
                 Math.max(currentSize.getHeight(), child.getSize().getHeight()) //
         ));
+        cachedDrawable = null;
     }
 
     @Override
