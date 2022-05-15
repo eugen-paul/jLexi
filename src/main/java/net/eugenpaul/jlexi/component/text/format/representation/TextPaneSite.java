@@ -16,11 +16,17 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneSite.class);
 
+    private static final int DEFAULT_MARGIN_TOP = 5;
+    private static final int DEFAULT_MARGIN_BOTTOM = 5;
+
     private TreeMap<Integer, TextRepresentation> xPositionToColumn;
 
     public TextPaneSite(Glyph parent, Size size) {
         super(parent);
         setSize(size);
+        setMarginTop(DEFAULT_MARGIN_TOP);
+        setMarginBottom(DEFAULT_MARGIN_BOTTOM);
+
         this.xPositionToColumn = new TreeMap<>();
     }
 

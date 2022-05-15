@@ -39,7 +39,7 @@ public class Label extends GuiGlyph {
         this.storage = storage;
         this.text = text;
         this.textElement = new TextParagraph(null, textFormat, storage);
-        compositor = new TextRepresentationToColumnCompositor();
+        compositor = new TextRepresentationToColumnCompositor(textFormat.getBackgroundColor());
         setText(text);
     }
 

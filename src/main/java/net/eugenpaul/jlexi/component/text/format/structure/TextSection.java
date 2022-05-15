@@ -15,21 +15,23 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextSection extends TextStructureOfStructure implements GlyphIterable<TextRepresentation> {
 
     protected TextCompositor<TextRepresentation> compositor;
 
-    private final Size siteSize = new Size(595, 842);
-    private final int siteMarginLeft = 20;
-    private final int siteMarginRight = 20;
-    private final int siteMarginTop = 40;
-    private final int siteMarginBottom = 40;
-    private final int columnPerSite = 1;
+    private Size siteSize = new Size(595, 842);
+    private int sitePaddingLeft = 20;
+    private int sitePaddingRight = 20;
+    private int sitePaddingTop = 40;
+    private int sitePaddingBottom = 40;
+    private int columnPerSite = 1;
+
     private final Size siteDrawSize = new Size(//
-            (siteSize.getWidth() - siteMarginLeft - siteMarginRight) / columnPerSite, //
-            siteSize.getHeight() - siteMarginTop - siteMarginBottom //
+            (siteSize.getWidth() - sitePaddingLeft - sitePaddingRight) / columnPerSite, //
+            siteSize.getHeight() - sitePaddingTop - sitePaddingBottom //
     );
 
     private boolean needRestruct = true;
@@ -39,8 +41,9 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         this.compositor = new TextRepresentationToSiteCompositor(//
                 siteSize, //
                 columnPerSite, //
-                siteMarginLeft, //
-                siteMarginTop //
+                sitePaddingLeft, //
+                sitePaddingTop, //
+                Color.GREEN //
         );
     }
 
@@ -55,7 +58,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     @Override
     public List<TextRepresentation> getRows(Size size) {
         if (null == representation) {
-            var columnCompositor = new TextRepresentationToColumnCompositor();
+            var columnCompositor = new TextRepresentationToColumnCompositor(Color.WHITE);
 
             var allRows = new LinkedList<TextRepresentation>();
             for (var paragraph : children) {

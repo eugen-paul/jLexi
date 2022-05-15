@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.text.format.CursorControl;
@@ -7,8 +9,26 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextRepresentation extends Glyph implements CursorControl, GlyphIterable<TextRepresentation> {
 
+    @Getter
+    @Setter
+    private int marginLeft;
+    @Getter
+    @Setter
+    private int marginRight;
+    @Getter
+    @Setter
+    private int marginTop;
+    @Getter
+    @Setter
+    private int marginBottom;
+
     protected TextRepresentation(Glyph parent) {
         super(parent);
+
+        this.marginLeft = 0;
+        this.marginRight = 0;
+        this.marginTop = 0;
+        this.marginBottom = 0;
     }
 
     public abstract boolean isEmpty();

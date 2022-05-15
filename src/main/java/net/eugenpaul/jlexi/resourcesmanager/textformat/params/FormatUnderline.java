@@ -30,6 +30,7 @@ public class FormatUnderline implements PixelsFormatter {
         if (type == FormatUnderlineType.SINGLE) {
             size = new Size(draw.getSize().getWidth(), 1);
             pixels = new int[(int) size.compArea()];
+            Arrays.fill(pixels, color.getArgb());
             DrawablePixelsImpl underline = DrawablePixelsImpl.builderArgb().argbPixels(pixels).size(size).build();
             draw.addDrawable(underline, 0, draw.getSize().getHeight() - 1);
         } else if (type == FormatUnderlineType.DOUBLE) {

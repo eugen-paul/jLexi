@@ -13,10 +13,6 @@
         },
         {
             "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced",
                 "fontColor": "RED"
             },
             "text": "   - simple text formatting by reading a file: ",
@@ -31,21 +27,19 @@
                 "fontColor": "black",
                 "backgroundColor": "white"
             },
-            "text": "bold",
-            "eol": true
+            "text": "bold"
         },
         {
-            "text": "         "
+            "text": ", "
         },
         {
             "format": {
                 "italic": true
             },
-            "text": "italic",
-            "eol": true
+            "text": "italic"
         },
         {
-            "text": "         "
+            "text": ", "
         },
         {
             "format": {
@@ -59,15 +53,32 @@
             "text": "         "
         },
         {
-            "format": {
-                "bold": true,
-                "italic": true
+            "text": "Underline: "
+        },
+        {
+            "formatEffect": {
+                "underline": "SINGLE"
             },
+            "text": "single"
+        },
+        {
+            "text": ", "
+        },
+        {
+            "formatEffect": {
+                "underline": "DOUBLE"
+            },
+            "text": "double"
+        },
+        {
+            "text": ", "
+        },
+        {
             "formatEffect": {
                 "underline": "SINGLE",
                 "underlineColor": "green"
             },
-            "text": "single underline",
+            "text": "colored",
             "eol": true
         },
         {
@@ -75,22 +86,6 @@
         },
         {
             "format": {
-                "bold": true,
-                "italic": true
-            },
-            "formatEffect": {
-                "underline": "DOUBLE"
-            },
-            "text": "bold and italic and double underline",
-            "eol": true
-        },
-        {
-            "text": "         "
-        },
-        {
-            "format": {
-                "bold": false,
-                "italic": false,
                 "fontsize": 30,
                 "fontName": "Monospaced"
             },
@@ -98,13 +93,37 @@
             "eol": true
         },
         {
-            "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
             "text": "   - undo and redo by F1 and F2",
+            "eol": true
+        },
+        {
+            "text": "   - "
+        },
+        {
+            "format": {
+                "bold": true
+            },
+            "text": "Bold"
+        },
+        {
+            "text": " and/or "
+        },
+        {
+            "format": {
+                "italic": true
+            },
+            "text": "italic"
+        },
+        {
+            "text": " text can be entered.",
+            "eol": true
+        },
+        {
+            "text": "   - new menubar.",
+            "eol": true
+        },
+        {
+            "text": "   - new site layout.",
             "eol": true
         },
         {
@@ -119,33 +138,27 @@
             "eol": true
         },
         {
-            "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
             "text": "   - save file",
             "eol": true
         },
         {
-            "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
             "text": "   - text formatting",
             "eol": true
         },
         {
-            "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
             "text": "   - GUI (menu, buttons, ...)",
+            "eol": true
+        },
+        {
+            "text": "   - Textscroll",
+            "eol": true
+        },
+        {
+            "text": "   - Keyboard shortcuts",
+            "eol": true
+        },
+        {
+            "text": "   - Try to take over the world!",
             "eol": true
         }
     ]

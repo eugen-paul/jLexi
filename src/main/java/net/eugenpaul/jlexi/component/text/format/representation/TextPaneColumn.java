@@ -5,6 +5,8 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -18,9 +20,14 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
     private TreeMap<Integer, TextRepresentation> yPositionToRow;
 
+    @Getter
+    @Setter
+    private Color background;
+
     public TextPaneColumn(Glyph parent) {
         super(parent);
         this.yPositionToRow = new TreeMap<>();
+        this.background = Color.WHITE;
     }
 
     public void add(TextRepresentation child) {
@@ -60,7 +67,7 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
             return this.cachedDrawable.draw();
         }
 
-        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        this.cachedDrawable = new DrawableSketchImpl(background);
 
         for (var el : this.children) {
             this.cachedDrawable.addDrawable( //

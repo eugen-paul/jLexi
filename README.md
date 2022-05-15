@@ -30,3 +30,8 @@ Colored text can be read from file.
 Bold and italic text can be entered.
 
 ![Progress_3](doc/img/Progress_3.png).
+
+## Step 3
+A few classes for better representation of the objects.
+
+![Progress_4](doc/img/Progress_4.png).

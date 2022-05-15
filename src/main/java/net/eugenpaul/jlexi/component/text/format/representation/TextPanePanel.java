@@ -10,12 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
-import net.eugenpaul.jlexi.component.formatting.HorizontalAlignmentGlypthCompositor;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.Cursor;
+import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -46,7 +45,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     private TextPaneDocument document;
 
     private TextCompositor<TextRepresentation> compositor;
-    private GlyphCompositor<TextRepresentation> alignmentCompositor;
+    private TextCompositor<TextRepresentation> alignmentCompositor;
 
     private TreeMap<Integer, TextRepresentation> yPositionToSite;
 
@@ -57,14 +56,17 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     private ResourceManager storage;
 
+    private Color backgroundColor;
+
     @Getter
     private final String cursorName;
 
     public TextPanePanel(String cursorPrefix, Glyph parent, ResourceManager storage, AbstractController controller) {
         super(parent);
         this.storage = storage;
-        this.compositor = new TextRepresentationToColumnCompositor();
-        this.alignmentCompositor = new HorizontalAlignmentGlypthCompositor<>(Color.GREY, AligmentH.CENTER);
+        this.backgroundColor = Color.GREY;
+        this.compositor = new TextRepresentationToColumnCompositor(backgroundColor);
+        this.alignmentCompositor = new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER);
         this.cursorName = cursorPrefix + "textPaneCursor";
 
         this.document = new TextPaneDocument(//
@@ -93,11 +95,11 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         this.children.clear();
 
-        this.children.addAll(compositor.compose(document.getRows(getSize()).iterator(), getSize()));
+        var sites = compositor.compose(document.getRows(getSize()).iterator(), getSize());
 
-        var drawElement = alignmentCompositor.compose(this.children.iterator(), getSize());
+        this.children.addAll(alignmentCompositor.compose(sites.iterator(), getSize()));
 
-        this.cachedDrawable = new DrawableSketchImpl(Color.GREY, getSize());
+        this.cachedDrawable = new DrawableSketchImpl(backgroundColor, getSize());
 
         this.yPositionToSite.clear();
 
@@ -111,7 +113,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
             el.setRelativPosition(new Vector2d(0, currentY));
             el.setParent(this);
 
-            currentY += el.getSize().getHeight() + 5;
+            currentY += el.getSize().getHeight();
         }
 
         return this.cachedDrawable.draw();

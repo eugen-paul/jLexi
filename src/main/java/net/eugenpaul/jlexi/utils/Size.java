@@ -51,4 +51,12 @@ public final class Size {
         response.append(height);
         return response.toString();
     }
+
+    public Size addNew(Size a) {
+        return addNew(a.width, a.height);
+    }
+
+    public Size addNew(int width, int height) {
+        return new Size(width + this.width, height + this.height);
+    }
 }
