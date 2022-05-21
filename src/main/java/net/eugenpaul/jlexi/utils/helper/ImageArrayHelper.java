@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.utils.helper;
 import java.util.Arrays;
 
 import net.eugenpaul.jlexi.utils.Color;
+import net.eugenpaul.jlexi.utils.ColorType;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -126,6 +127,20 @@ public final class ImageArrayHelper {
     public static void fillRectangleRgba(Color color, int[] dest, Size destSize, Size rectangleSize,
             Vector2d rectangleposition) {
         fillRectangle(color.getRgba(), dest, destSize, rectangleSize, rectangleposition);
+    }
+
+    public static void fillRectangle(Color color, ColorType colorType, int[] dest, Size destSize, Size rectangleSize,
+            Vector2d rectangleposition) {
+        switch (colorType) {
+        case ARGB:
+            fillRectangle(color.getArgb(), dest, destSize, rectangleSize, rectangleposition);
+            break;
+        case RBGA:
+            fillRectangle(color.getRgba(), dest, destSize, rectangleSize, rectangleposition);
+            break;
+        default:
+            throw new IllegalArgumentException(colorType.toString() + " is not supported");
+        }
     }
 
 }

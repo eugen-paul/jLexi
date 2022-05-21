@@ -5,6 +5,7 @@ import lombok.NonNull;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
+import net.eugenpaul.jlexi.utils.ColorType;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
@@ -66,6 +67,20 @@ public class DrawablePixelsImpl implements Drawable {
     @Override
     public void toRgbaPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos) {
         toPixelArray(dest, destSize, drawArea, relativePos, asRgbaPixels());
+    }
+
+    @Override
+    public void toPixels(ColorType colorType, int[] dest, Size destSize, Area drawArea, Vector2d relativePos) {
+        switch (colorType) {
+        case ARGB:
+            toPixelArray(dest, destSize, drawArea, relativePos, asArgbPixels());
+            break;
+        case RBGA:
+            toPixelArray(dest, destSize, drawArea, relativePos, asRgbaPixels());
+            break;
+        default:
+            throw new IllegalArgumentException(colorType.toString() + " is not supported");
+        }
     }
 
     private void toPixelArray(int[] dest, Size destSize, Area drawArea, Vector2d relativePos, int[] pixelsToDraw) {
@@ -198,4 +213,5 @@ public class DrawablePixelsImpl implements Drawable {
             return response;
         }
     }
+
 }

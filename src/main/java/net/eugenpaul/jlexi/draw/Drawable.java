@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.draw;
 
 import net.eugenpaul.jlexi.utils.Area;
 import net.eugenpaul.jlexi.utils.Color;
+import net.eugenpaul.jlexi.utils.ColorType;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -43,6 +44,17 @@ public interface Drawable {
      * @param relativePos - relativ to drawArea
      */
     public void toRgbaPixels(int[] dest, Size destSize, Area drawArea, Vector2d relativePos);
+
+    /**
+     * Draw Element on given dest-Array an given drawArea and position
+     * 
+     * @param colorType - type of color to be written to destination
+     * @param dest
+     * @param destSize
+     * @param drawArea
+     * @param relativePos - relativ to drawArea
+     */
+    public void toPixels(ColorType colorType, int[] dest, Size destSize, Area drawArea, Vector2d relativePos);
 
     /**
      * Get copy of the Element as Color Data.
