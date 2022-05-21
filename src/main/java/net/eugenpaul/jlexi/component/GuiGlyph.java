@@ -9,6 +9,7 @@ import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 
 public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
@@ -58,6 +59,13 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
     public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         if (mouseEventAdapter != null) {
             mouseEventAdapter.mouseReleased(mouseX, mouseY, button);
+        }
+    }
+
+    @Override
+    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
+        if (mouseEventAdapter != null) {
+            mouseEventAdapter.mouseWhellMoved(mouseX, mouseY, direction);
         }
     }
 

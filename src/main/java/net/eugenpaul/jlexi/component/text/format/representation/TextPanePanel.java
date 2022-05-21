@@ -34,6 +34,7 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public class TextPanePanel extends TextRepresentationOfRepresentation
@@ -199,6 +200,11 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         } else {
             LOGGER.trace("Document Click on Element: NONE.");
         }
+    }
+
+    @Override
+    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
+        // TODO
     }
 
     @Override

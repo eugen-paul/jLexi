@@ -28,10 +28,13 @@ public class MainPanel extends AbstractView {
         this.panel = new ImagePanel();
         this.panel.setDoubleBuffered(true);
         this.panel.addComponentListener(new ResizeListner(name, controller));
-        this.panel.addMouseListener(new MouseListner(name, controller));
-        this.panel.addKeyListener(new KeyListener(name, controller));
         this.panel.setPreferredSize(new Dimension(defaultSize.getWidth(), defaultSize.getHeight()));
         this.panel.setFocusable(true);
+
+        var mouseListner = new MouseListner(name, controller);
+        this.panel.addMouseListener(mouseListner);
+        this.panel.addMouseWheelListener(mouseListner);
+        this.panel.addKeyListener(new KeyListener(name, controller));
     }
 
     @Override

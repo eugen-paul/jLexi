@@ -17,8 +17,10 @@ import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.window.interfaces.WindowsKeyPressable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseClickable;
+import net.eugenpaul.jlexi.window.interfaces.WindowsMouseWheel;
 import net.eugenpaul.jlexi.window.interfaces.WindowsResizeable;
 import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
 
@@ -26,7 +28,7 @@ import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
  * Abstraction of a Window.
  */
 public abstract class Window extends MonoGlyph
-        implements WindowsKeyPressable, WindowsMouseClickable, WindowsResizeable, InterfaceModel {
+        implements WindowsKeyPressable, WindowsMouseClickable, WindowsResizeable, WindowsMouseWheel, InterfaceModel {
 
     @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(Window.class);
@@ -140,6 +142,13 @@ public abstract class Window extends MonoGlyph
     public void onMouseReleased(String name, Integer mouseX, Integer mouseY, MouseButton button) {
         if (mainGlyph != null) {
             mainGlyph.onMouseReleased(mouseX, mouseY, button);
+        }
+    }
+
+    @Override
+    public void onMouseWheelMooved(String name, Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
+        if (mainGlyph != null) {
+            mainGlyph.onMouseWhellMoved(mouseX, mouseY, direction);
         }
     }
 

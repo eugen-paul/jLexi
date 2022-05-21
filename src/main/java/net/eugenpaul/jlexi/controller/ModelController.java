@@ -11,6 +11,7 @@ import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import reactor.core.publisher.Mono;
 import reactor.core.Disposable;
 
@@ -53,6 +54,10 @@ public class ModelController extends AbstractController {
 
     public void mouseReleasedOnWindow(String name, int mouseX, int mouseY, MouseButton button) {
         setModelProperty(ModelPropertyChangeType.MOUSE_RELEASED, name, mouseX, mouseY, button);
+    }
+
+    public void mouseWheelMoved(String name, int mouseX, int mouseY, MouseWheelDirection direction) {
+        setModelProperty(ModelPropertyChangeType.MOUSE_WHEEL, name, mouseX, mouseY, direction);
     }
 
     public void keyTyped(String name, Character key) {

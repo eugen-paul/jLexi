@@ -16,6 +16,7 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 /**
@@ -185,6 +186,19 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
             vScrollPosition += 50;
             redraw();
         } else if (mouseY >= getSize().getHeight() / 2) {
+            LOGGER.trace("Scroll DOWN.");
+            vScrollPosition -= 50;
+            redraw();
+        }
+    }
+
+    @Override
+    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
+        if (direction == MouseWheelDirection.UP) {
+            LOGGER.trace("Scroll UP.");
+            vScrollPosition += 50;
+            redraw();
+        } else {
             LOGGER.trace("Scroll DOWN.");
             vScrollPosition -= 50;
             redraw();

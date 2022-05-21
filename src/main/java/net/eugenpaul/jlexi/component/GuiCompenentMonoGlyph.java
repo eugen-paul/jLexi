@@ -8,6 +8,7 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 
 /**
  * Abstract Class for Gui-Glyph that cann have just one GuiComponent-Child
@@ -91,6 +92,17 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
             );
         } else {
             onMouseReleasedOutsideComponent(mouseX, mouseY, button);
+        }
+    }
+
+    @Override
+    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
+        if (isPositionOnComponent(mouseX, mouseY)) {
+            component.onMouseWhellMoved(//
+                    mouseX - component.getRelativPosition().getX(), //
+                    mouseY - component.getRelativPosition().getY(), //
+                    direction//
+            );
         }
     }
 
