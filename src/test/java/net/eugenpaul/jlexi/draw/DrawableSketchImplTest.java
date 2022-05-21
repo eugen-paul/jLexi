@@ -93,6 +93,25 @@ class DrawableSketchImplTest {
         assertArrayEquals(expectedPixels, argbPixels);
     }
 
+    @Test
+    void test_draw_argb_with_negativ_position() {
+        innerSketch.addDrawable(blackGreenPipe, 0, -1);
+        innerSketch.addDrawable(redDot, 2, 1);
+
+        sketch.addDrawable(innerSketch.draw(), 1, 1);
+
+        Drawable draw = sketch.draw();
+
+        int[] argbPixels = draw.asArgbPixels();
+        int[] expectedPixels = new int[] { //
+                y, y, y, y, //
+                y, g, w, w, //
+                y, w, w, r //
+        }; //
+
+        assertArrayEquals(expectedPixels, argbPixels);
+    }
+
     // @Test
     // void test_draw_toArgbArray() {
     // sketch.addDrawable(blackGreenPipe, 0, 0);
@@ -112,19 +131,19 @@ class DrawableSketchImplTest {
     // );
     // }
 
-    @Test
-    void test_draw_rgba() {
-        sketch.addDrawable(blackGreenPipe, 0, 0);
-        sketch.addDrawable(redDot, 1, 1);
+    // @Test
+    // void test_draw_rgba() {
+    //     sketch.addDrawable(blackGreenPipe, 0, 0);
+    //     sketch.addDrawable(redDot, 1, 1);
 
-        Drawable draw = sketch.draw();
+    //     Drawable draw = sketch.draw();
 
-        assertArrayEquals(//
-                new int[] { //
-                        Color.BLACK.getRgba(), Color.YELLOW.getRgba(), //
-                        Color.GREEN.getRgba(), Color.RED.getRgba() //
-                }, //
-                draw.asRgbaPixels()//
-        );
-    }
+    //     assertArrayEquals(//
+    //             new int[] { //
+    //                     Color.BLACK.getRgba(), Color.YELLOW.getRgba(), //
+    //                     Color.GREEN.getRgba(), Color.RED.getRgba() //
+    //             }, //
+    //             draw.asRgbaPixels()//
+    //     );
+    // }
 }

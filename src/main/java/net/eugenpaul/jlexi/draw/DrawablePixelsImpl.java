@@ -78,8 +78,8 @@ public class DrawablePixelsImpl implements Drawable {
                 size //
         );
 
-        int xPos = Math.max(0, drawArea.getPosition().getX() - finalDrawArea.getPosition().getX());
-        int yPos = Math.max(0, drawArea.getPosition().getY() - finalDrawArea.getPosition().getY());
+        int xPos = Math.max(0, finalDrawArea.getPosition().getX() - drawArea.getPosition().getX() - relativePos.getX());
+        int yPos = Math.max(0, finalDrawArea.getPosition().getY() - drawArea.getPosition().getY() - relativePos.getY());
 
         ImageArrayHelper.copyRectangle(//
                 pixelsToDraw, //

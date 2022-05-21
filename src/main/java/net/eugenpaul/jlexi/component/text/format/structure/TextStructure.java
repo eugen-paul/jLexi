@@ -15,6 +15,13 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentati
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
+/**
+ * Basic structure of a document element, such as a paragraph, a section, or the similar.
+ * 
+ * The object is the component object of the composite pattern. The object can be a part of other
+ * <code>TextStructure</code> and/or contain other <code>TextStructure</code>. It provides the direct child objects with
+ * the functions to split, merge and access previous/next objects.
+ */
 public abstract class TextStructure implements TextDocumentElement, Splitable<TextStructure>, Empty {
 
     @Getter
@@ -34,18 +41,36 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         this.splits = new LinkedList<>();
     }
 
+    /**
+     * Check whether the object can be merged with the given element.
+     * 
+     * @param element
+     * @return
+     */
     protected abstract boolean checkMergeWith(TextStructure element);
 
+    /**
+     * The specified element is added to the end of the object.
+     * 
+     * @param element
+     * @return Separator deleted at the end of the object when the element was added.
+     */
     protected abstract TextElement mergeWithNext(TextStructure element);
 
+    /**
+     * The specified element is added to the beginning of the object.
+     * 
+     * @param element
+     * @return The first element of current object (before the merge).
+     */
     protected abstract TextElement mergeWithPrevious(TextStructure element);
 
     protected TextElement mergeChildWithPrevious(TextStructure child) {
         var previousChild = getPreviousChild(child);
 
         if (previousChild.isEmpty()) {
-            if (parentStructure != null) {
-                parentStructure.mergeChildWithNext(this);
+            if (this.parentStructure != null) {
+                return this.parentStructure.mergeChildWithPrevious(this);
             }
             return null;
         }
@@ -67,7 +92,7 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
 
         if (nextChild.isEmpty()) {
             if (parentStructure != null) {
-                return parentStructure.mergeChildWithPrevious(this);
+                return parentStructure.mergeChildWithNext(this);
             }
             return null;
         }

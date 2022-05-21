@@ -92,11 +92,13 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         this.children.clear();
 
-        var sites = compositor.compose(document.getRepresentation(getSize()).iterator(), getSize());
+        Size fullAreaSize = new Size(getSize().getWidth(), Integer.MAX_VALUE);
+
+        var sites = compositor.compose(document.getRepresentation(fullAreaSize).iterator(), fullAreaSize);
 
         this.children.addAll(sites);
 
-        this.cachedDrawable = new DrawableSketchImpl(backgroundColor, getSize());
+        this.cachedDrawable = new DrawableSketchImpl(backgroundColor, fullAreaSize);
 
         this.yPositionToSite.clear();
 

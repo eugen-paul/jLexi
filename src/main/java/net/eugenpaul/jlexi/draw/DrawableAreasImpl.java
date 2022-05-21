@@ -75,7 +75,11 @@ public class DrawableAreasImpl implements Drawable {
                 dest, //
                 destSize, //
                 finalDrawArea, //
-                v //
+                new Vector2d(//
+                        (relativePos.getX() > 0) ? v.getX() : v.getX() + relativePos.getX(), //
+                        (relativePos.getY() > 0) ? v.getY() : v.getY() + relativePos.getY() //
+                )
+        // v.addNew(relativePos) //
         ));
     }
 
