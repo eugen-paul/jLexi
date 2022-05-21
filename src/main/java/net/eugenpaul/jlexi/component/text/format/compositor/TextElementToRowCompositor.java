@@ -19,14 +19,6 @@ public class TextElementToRowCompositor<T extends TextElement> implements TextCo
 
     @Getter
     @Setter
-    private int firstRowMarginTop;
-
-    @Getter
-    @Setter
-    private int lastRowMarginBottom;
-
-    @Getter
-    @Setter
     private int rowMarginTop;
 
     @Getter
@@ -41,8 +33,6 @@ public class TextElementToRowCompositor<T extends TextElement> implements TextCo
         int currentLength = 0;
         int currentHeight = 0;
 
-        boolean firstRow = true;
-
         while (iterator.hasNext()) {
             T element = iterator.next();
 
@@ -54,9 +44,8 @@ public class TextElementToRowCompositor<T extends TextElement> implements TextCo
                 currentHeight = Math.max(currentHeight, element.getSize().getHeight());
             } else {
                 setRelativPositions(elementsToRow, currentHeight);
-                TextPaneElementRow row = createRow(elementsToRow, firstRow, false);
+                TextPaneElementRow row = createRow(elementsToRow);
                 responseRows.add(row);
-                firstRow = false;
 
                 elementsToRow.clear();
                 elementsToRow.add(element);
@@ -67,26 +56,17 @@ public class TextElementToRowCompositor<T extends TextElement> implements TextCo
 
         if (!elementsToRow.isEmpty()) {
             setRelativPositions(elementsToRow, currentHeight);
-            TextPaneElementRow row = createRow(elementsToRow, firstRow, true);
+            TextPaneElementRow row = createRow(elementsToRow);
             responseRows.add(row);
         }
 
         return responseRows;
     }
 
-    private TextPaneElementRow createRow(List<TextElement> elementsToRow, boolean isFirst, boolean isLast) {
+    private TextPaneElementRow createRow(List<TextElement> elementsToRow) {
         TextPaneElementRow row = new TextPaneElementRow(null, elementsToRow);
-        if (isFirst) {
-            row.setMarginTop(firstRowMarginTop);
-        } else {
-            row.setMarginTop(rowMarginTop);
-        }
-
-        if (isLast) {
-            row.setMarginBottom(lastRowMarginBottom);
-        } else {
-            row.setMarginBottom(rowMarginBottom);
-        }
+        row.setMarginTop(rowMarginTop);
+        row.setMarginBottom(rowMarginBottom);
         return row;
     }
 

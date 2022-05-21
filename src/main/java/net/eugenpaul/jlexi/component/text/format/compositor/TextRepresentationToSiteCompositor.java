@@ -21,17 +21,18 @@ public class TextRepresentationToSiteCompositor implements TextCompositor<TextRe
     private Size siteSize;
     private int columnPerSite;
 
+    private final int columnSpacing;
     private final int paddingLeft;
     private final int paddingTop;
 
-    public TextRepresentationToSiteCompositor(Size siteSize, int columnPerSite, Color background) {
-        this(siteSize, columnPerSite, 20, 40, background);
-    }
+    private final int columnWidth;
 
-    public TextRepresentationToSiteCompositor(Size siteSize, int columnPerSite, int paddingLeft, int paddingTop,
-            Color background) {
+    public TextRepresentationToSiteCompositor(Size siteSize, int columnPerSite, int columnWidth, int columnSpacing,
+            int paddingLeft, int paddingTop, Color background) {
         this.siteSize = siteSize;
         this.columnPerSite = columnPerSite;
+        this.columnSpacing = columnSpacing;
+        this.columnWidth = columnWidth;
         this.paddingLeft = paddingLeft;
         this.paddingTop = paddingTop;
         this.background = background;
@@ -43,18 +44,19 @@ public class TextRepresentationToSiteCompositor implements TextCompositor<TextRe
 
         TextPaneSite site = new TextPaneSite(null, siteSize);
 
-        int currentColumn = 1;
+        int currentColumn = 0;
         while (iterator.hasNext()) {
             var column = iterator.next();
 
             site.add(column);
 
-            column.setRelativPosition(new Vector2d(paddingLeft * currentColumn, paddingTop));
+            column.setRelativPosition(new Vector2d(
+                    paddingLeft + (currentColumn + columnWidth + columnSpacing) * currentColumn, paddingTop));
 
             currentColumn++;
 
-            if (currentColumn > columnPerSite) {
-                currentColumn = 1;
+            if (currentColumn > columnPerSite - 1) {
+                currentColumn = 0;
                 responseSites.add(site);
                 site = new TextPaneSite(null, siteSize);
             }

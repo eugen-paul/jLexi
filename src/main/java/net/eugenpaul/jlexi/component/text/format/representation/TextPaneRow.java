@@ -34,12 +34,12 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
                 Math.max(currentSize.getHeight(), child.getSize().getHeight()) //
         ));
 
-        cachedDrawable = null;
+        this.cachedDrawable = null;
     }
 
     @Override
     public TextPosition getCorsorElementAt(Vector2d pos) {
-        var row = xPositionToRow.floorEntry(pos.getX());
+        var row = this.xPositionToRow.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
@@ -59,27 +59,27 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
 
     @Override
     public Drawable getDrawable() {
-        if (cachedDrawable != null) {
-            return cachedDrawable.draw();
+        if (this.cachedDrawable != null) {
+            return this.cachedDrawable.draw();
         }
 
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        xPositionToRow.clear();
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        this.xPositionToRow.clear();
 
         int currentX = 0;
         for (var el : children) {
             int currentY = getSize().getHeight() - el.getSize().getHeight();
 
-            cachedDrawable.addDrawable(el.getDrawable(), currentX, currentY);
+            this.cachedDrawable.addDrawable(el.getDrawable(), currentX, currentY);
 
-            xPositionToRow.put(currentX, el);
+            this.xPositionToRow.put(currentX, el);
 
             el.setRelativPosition(new Vector2d(currentX, currentY));
 
             currentX += el.getSize().getWidth();
         }
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
 }

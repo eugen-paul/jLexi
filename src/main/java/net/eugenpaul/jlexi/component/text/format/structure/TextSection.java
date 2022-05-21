@@ -27,6 +27,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     private int sitePaddingRight = 20;
     private int sitePaddingTop = 40;
     private int sitePaddingBottom = 40;
+    private int columnSpacing = 10;
     private int columnPerSite = 1;
 
     private final Size siteDrawSize = new Size(//
@@ -38,9 +39,15 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     public TextSection(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
         super(parentStructure, format, storage);
+
+        int columnWidth = (siteSize.getWidth() - sitePaddingLeft - sitePaddingRight
+                - (columnPerSite - 1) * columnSpacing) / columnPerSite;
+
         this.compositor = new TextRepresentationToSiteCompositor(//
                 siteSize, //
                 columnPerSite, //
+                columnWidth, //
+                columnSpacing, //
                 sitePaddingLeft, //
                 sitePaddingTop, //
                 Color.GREEN //

@@ -27,23 +27,23 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         super(parentStructure, format, storage);
         this.textElements = new LinkedList<>();
         // TODO get margin from paragraph konfiguration
-        this.compositor = new TextElementToRowCompositor<>(0, 0, 0, 0);
+        this.compositor = new TextElementToRowCompositor<>(0, 0);
     }
 
     @Override
     public Iterator<TextRepresentation> drawableChildIterator() {
-        if (null == representation) {
+        if (null == this.representation) {
             return Collections.emptyIterator();
         }
-        return new ListOfListIterator<>(representation);
+        return new ListOfListIterator<>(this.representation);
     }
 
     @Override
     public List<TextRepresentation> getRepresentation(Size size) {
-        if (null == representation) {
-            representation = compositor.compose(textElements.iterator(), size);
+        if (null == this.representation) {
+            this.representation = this.compositor.compose(this.textElements.iterator(), size);
         }
-        return representation;
+        return this.representation;
     }
 
     @Override
@@ -59,14 +59,14 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
         TextParagraph nextParagraph = (TextParagraph) element;
         TextElement responseSeparator = null;
-        if (textElements.getLast().isEndOfLine()) {
-            responseSeparator = textElements.removeLast();
+        if (this.textElements.getLast().isEndOfLine()) {
+            responseSeparator = this.textElements.removeLast();
         }
 
         nextParagraph.textElements.stream().forEach(v -> v.setStructureParent(this));
-        textElements.addAll(nextParagraph.textElements);
+        this.textElements.addAll(nextParagraph.textElements);
 
-        representation = null;
+        this.representation = null;
 
         return responseSeparator;
     }
@@ -81,37 +81,37 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
         previousParagraph.textElements.stream().forEach(v -> v.setStructureParent(this));
 
-        TextElement position = textElements.getFirst();
+        TextElement position = this.textElements.getFirst();
 
-        var iterator = textElements.listIterator();
+        var iterator = this.textElements.listIterator();
         previousParagraph.textElements.stream()//
                 .filter(v -> !v.isEndOfLine())//
                 .forEach(iterator::add);
 
-        representation = null;
+        this.representation = null;
 
         return position;
     }
 
     @Override
     public void resetStructure() {
-        representation = null;
+        this.representation = null;
     }
 
     @Override
     protected void restructChildren() {
-        if (!needRestruct) {
+        if (!this.needRestruct) {
             return;
         }
 
         checkAndSplit();
 
-        needRestruct = false;
+        this.needRestruct = false;
     }
 
     private void checkAndSplit() {
-        var iterator = textElements.listIterator();
-        var newParagraph = new TextParagraph(parentStructure, format, storage);
+        var iterator = this.textElements.listIterator();
+        var newParagraph = new TextParagraph(this.parentStructure, this.format, this.storage);
 
         clearSplitter();
 
@@ -130,14 +130,14 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
                 if (!newParagraph.isEmpty()) {
                     splits.add(newParagraph);
                 }
-                newParagraph = new TextParagraph(parentStructure, format, storage);
+                newParagraph = new TextParagraph(this.parentStructure, this.format, this.storage);
                 doSplit = true;
             }
         }
     }
 
     public void add(TextElement element) {
-        textElements.add(element);
+        this.textElements.add(element);
         element.setStructureParent(this);
 
         setRestructIfNeeded(element);
@@ -145,7 +145,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     @Override
     public TextElement removeElement(TextElement elementToRemove, List<TextElement> removedElements) {
-        var iterator = textElements.iterator();
+        var iterator = this.textElements.iterator();
         TextElement nextElement = null;
         boolean found = false;
         while (iterator.hasNext()) {
@@ -163,8 +163,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         }
 
         if (nextElement == null) {
-            if (parentStructure != null) {
-                var newCursorPosition = parentStructure.mergeChildWithNext(this);
+            if (this.parentStructure != null) {
+                var newCursorPosition = this.parentStructure.mergeChildWithNext(this);
                 if (newCursorPosition != null) {
                     removedElements.add(elementToRemove);
                 }
@@ -182,7 +182,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     }
 
     private void removeElementFromText(TextElement elementToRemove) {
-        var iterator = textElements.listIterator();
+        var iterator = this.textElements.listIterator();
         while (iterator.hasNext()) {
             if (iterator.next() == elementToRemove) {
                 iterator.remove();
@@ -193,7 +193,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     @Override
     public boolean removeElementBefore(TextElement position, List<TextElement> removedElements) {
-        var iterator = textElements.listIterator();
+        var iterator = this.textElements.listIterator();
         TextElement elementToRemove = null;
         boolean found = false;
         while (iterator.hasNext()) {
@@ -212,13 +212,13 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         if (elementToRemove != null) {
             removeElementFromText(elementToRemove);
             removedElements.add(elementToRemove);
-            representation = null;
+            this.representation = null;
             notifyChange();
             return true;
         }
 
-        if (parentStructure != null) {
-            var removedElement = parentStructure.mergeChildWithPrevious(this);
+        if (this.parentStructure != null) {
+            var removedElement = this.parentStructure.mergeChildWithPrevious(this);
             if (removedElement != null) {
                 removedElements.add(removedElement);
                 notifyChange();
@@ -230,7 +230,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     @Override
     public boolean addBefore(TextElement position, TextElement element) {
-        var iterator = textElements.listIterator();
+        var iterator = this.textElements.listIterator();
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
             if (currentElement == position) {
@@ -249,19 +249,19 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     private void setRestructIfNeeded(TextElement addedElement) {
         if (addedElement.isEndOfLine()) {
-            needRestruct = true;
+            this.needRestruct = true;
         }
     }
 
     @Override
     public void clear() {
-        textElements.clear();
+        this.textElements.clear();
         resetStructure();
     }
 
     @Override
     public boolean isEmpty() {
-        return textElements.isEmpty();
+        return this.textElements.isEmpty();
     }
 
     @Override
@@ -269,7 +269,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         if (isEmpty()) {
             return null;
         }
-        return textElements.peekFirst();
+        return this.textElements.peekFirst();
     }
 
     @Override
@@ -277,7 +277,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         if (isEmpty()) {
             return null;
         }
-        return textElements.peekLast();
+        return this.textElements.peekLast();
     }
 
     @Override
@@ -296,12 +296,12 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     }
 
     public boolean isEndOfSection() {
-        return !textElements.isEmpty() && textElements.getLast().isEndOfSection();
+        return !this.textElements.isEmpty() && this.textElements.getLast().isEndOfSection();
     }
 
     public TextElement removeEndOfSection() {
         if (isEndOfSection()) {
-            return textElements.pollLast();
+            return this.textElements.pollLast();
         }
         throw new NullPointerException("Paragraph has no EndOfSection");
     }

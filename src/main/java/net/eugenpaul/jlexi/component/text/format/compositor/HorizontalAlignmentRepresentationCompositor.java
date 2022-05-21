@@ -15,7 +15,7 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 /**
- * Put all elements to one column and set horizontal alignment.
+ * Put all elements to one column. Set horizontal alignment of the all elements in the column.
  * 
  * @param <T>
  */

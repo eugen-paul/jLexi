@@ -16,7 +16,7 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 
 /**
- * Put all elements to one column and set horizontal alignment of the column of returned glyph.
+ * Put all elements to one column. Set horizontal alignment of the all elements in the column.
  * 
  * @param <T>
  */
