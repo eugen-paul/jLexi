@@ -122,4 +122,8 @@ public final class Color {
             throw new IllegalArgumentException(EXCEPTION_TEXT + input);
         }
     }
+
+    public boolean isInvisible() {
+        return (valueRgbA & 0xFF) == 0;
+    }
 }

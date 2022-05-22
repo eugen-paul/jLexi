@@ -64,7 +64,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         super(parent);
         this.storage = storage;
         this.backgroundColor = Color.GREY;
-        this.compositor = new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER);
+        this.compositor = new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER_POSITIV);
         this.cursorName = cursorPrefix + "textPaneCursor";
 
         this.document = new TextPaneDocument(//

@@ -50,7 +50,13 @@ public class DarkFactory implements GuiFactory {
 
     @Override
     public Scrollpane createScrollpane(Glyph parent, GuiGlyph component) {
-        return new Scrollpane(parent, component, BORDER_COLOR, BORDER_BACKGROUND_COLOR);
+
+        return Scrollpane.builder()//
+                .parent(parent)//
+                .component(component)//
+                .scrollbarColor(MENU_BACKGROUND_COLOR)//
+                .backgroundColor(BORDER_BACKGROUND_COLOR)//
+                .build();
     }
 
 }

@@ -1,5 +1,5 @@
 package net.eugenpaul.jlexi.utils;
 
 public enum AligmentH {
-    LEFT, RIGHT, CENTER
+    LEFT, RIGHT, CENTER, CENTER_POSITIV
 }

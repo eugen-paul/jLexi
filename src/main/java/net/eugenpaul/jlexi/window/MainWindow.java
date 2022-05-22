@@ -7,7 +7,6 @@ import java.nio.file.Path;
 
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
-import net.eugenpaul.jlexi.component.scrollpane.Scrollpane;
 import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
 import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
@@ -17,7 +16,6 @@ import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
-import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -45,7 +43,7 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected void setContent() {
         var textPane = new TextPane(name, null, storage, controller);
-        var scrollPane = new Scrollpane(null, textPane, Color.BLACK, Color.GREY);
+        var scrollPane = guiFactory.createScrollpane(null, textPane);
         var border = guiFactory.createBorder(null, scrollPane);
 
         var menubar = guiFactory.createMenuBar(this, border, getSize());
