@@ -59,15 +59,15 @@ public class FontGenerator implements FontPixelsGenerator {
     @Override
     public int getMaxAscent(String fontName, int fontSize) {
         Font font = new Font(//
-        fontName, //
-        Font.PLAIN, //
-        fontSize //
+                fontName, //
+                Font.PLAIN, //
+                fontSize //
         );
-        
+
         FontMetrics metrics = new JLabel().getFontMetrics(font);
         return metrics.getMaxAscent();
     }
-    
+
     @Override
     public int getAscent(String fontName, int fontSize) {
         Font font = new Font(//
@@ -79,7 +79,7 @@ public class FontGenerator implements FontPixelsGenerator {
         FontMetrics metrics = new JLabel().getFontMetrics(font);
         return metrics.getAscent();
     }
-    
+
     @Override
     public int getDescent(String fontName, int fontSize) {
         Font font = new Font(//

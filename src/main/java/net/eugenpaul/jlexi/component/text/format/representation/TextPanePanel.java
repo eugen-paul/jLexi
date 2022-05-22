@@ -99,7 +99,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         this.children.addAll(sites);
 
-        this.cachedDrawable = new DrawableSketchImpl(backgroundColor, fullAreaSize);
+        this.cachedDrawable = new DrawableSketchImpl(backgroundColor);
 
         this.yPositionToSite.clear();
 

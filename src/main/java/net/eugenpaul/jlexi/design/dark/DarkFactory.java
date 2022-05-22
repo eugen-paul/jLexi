@@ -7,6 +7,7 @@ import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.label.Label;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.menubar.MenuBarColored;
+import net.eugenpaul.jlexi.component.scrollpane.Scrollpane;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -45,6 +46,11 @@ public class DarkFactory implements GuiFactory {
     @Override
     public Border createBorder(Glyph parent, GuiGlyph component) {
         return new Border(parent, component, BORDER_COLOR, BORDER_BACKGROUND_COLOR);
+    }
+
+    @Override
+    public Scrollpane createScrollpane(Glyph parent, GuiGlyph component) {
+        return new Scrollpane(parent, component, BORDER_COLOR, BORDER_BACKGROUND_COLOR);
     }
 
 }
