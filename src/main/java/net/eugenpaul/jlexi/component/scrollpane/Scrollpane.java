@@ -1,8 +1,5 @@
 package net.eugenpaul.jlexi.component.scrollpane;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,11 +7,10 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.ScrollGlypthCompositor;
+import net.eugenpaul.jlexi.component.scrollpane.Scrollbar.ScrollbarType;
 import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.draw.DrawableImageImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
-import net.eugenpaul.jlexi.draw.DrawableImageImpl.DrawableImageImplBufferBuilder;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -26,11 +22,6 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
  */
 public class Scrollpane extends GuiCompenentMonoGlyph {
 
-    private static final String ARROW_UP_DEFAULT = "src/main/resources/textures/gui/arrow_up.jpg";
-    private static final String ARROW_DOWN_DEFAULT = "src/main/resources/textures/gui/arrow_down.jpg";
-    private static final String ARROW_LEFT_DEFAULT = "src/main/resources/textures/gui/arrow_left.jpg";
-    private static final String ARROW_RIGHT_DEFAULT = "src/main/resources/textures/gui/arrow_right.jpg";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Scrollpane.class);
 
     private static final int V_BAR_WIDTH = 11;
@@ -41,6 +32,9 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
 
     private ScrollGlypthCompositor<Glyph> compositor;
 
+    private Scrollbar vBar;
+    private Scrollbar hBar;
+
     private int vBarWidth = V_BAR_WIDTH;
     private int hBarHeight = H_BAR_HEIGHT;
 
@@ -49,11 +43,6 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
 
     private int vScrollPosition = 0;
     private int hScrollPosition = 0;
-
-    private DrawableImageImplBufferBuilder arrowUpBuffer;
-    private DrawableImageImplBufferBuilder arrowDownBuffer;
-    private DrawableImageImplBufferBuilder arrowLeftBuffer;
-    private DrawableImageImplBufferBuilder arrowRightBuffer;
 
     /**
      * C'tor
@@ -84,11 +73,6 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
         private ScrollBarShow showVBar = ScrollBarShow.AT_NEED;
         private ScrollBarShow showHBar = ScrollBarShow.AT_NEED;
 
-        private String arrowUpPath = ARROW_UP_DEFAULT;
-        private String arrowDownPath = ARROW_DOWN_DEFAULT;
-        private String arrowLeftPath = ARROW_LEFT_DEFAULT;
-        private String arrowRightPath = ARROW_RIGHT_DEFAULT;
-
         private ScrollpaneBuilder() {
 
         }
@@ -113,59 +97,47 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
             return this;
         }
 
-        public ScrollpaneBuilder arrowUpPath(String arrowUpPath) {
-            this.arrowUpPath = arrowUpPath;
-            return this;
-        }
-
-        public ScrollpaneBuilder arrowDownPath(String arrowDownPath) {
-            this.arrowDownPath = arrowDownPath;
-            return this;
-        }
-
-        public ScrollpaneBuilder arrowLeftPath(String arrowLeftPath) {
-            this.arrowLeftPath = arrowLeftPath;
-            return this;
-        }
-
-        public ScrollpaneBuilder arrowRightPath(String arrowRightPath) {
-            this.arrowRightPath = arrowRightPath;
-            return this;
-        }
-
         public Scrollpane build() {
             Scrollpane response = new Scrollpane(parent, component, scrollbarColor, backgroundColor);
 
-            initArrows(response);
+            response.vBar = ScrollbarImage.builder() //
+                    .type(ScrollbarType.VERTICAL) //
+                    .parent(parent) //
+                    .build();
+
+            response.hBar = ScrollbarImage.builder() //
+                    .type(ScrollbarType.HORIZONTAL) //
+                    .parent(parent) //
+                    .build();
 
             response.showVBar = showVBar;
             response.showHBar = showHBar;
 
             return response;
         }
-
-        private void initArrows(Scrollpane scrollPane) {
-            try {
-                scrollPane.arrowUpBuffer = DrawableImageImpl.builder().fromPath(Paths.get(arrowUpPath));
-                scrollPane.arrowDownBuffer = DrawableImageImpl.builder().fromPath(Paths.get(arrowDownPath));
-                scrollPane.arrowLeftBuffer = DrawableImageImpl.builder().fromPath(Paths.get(arrowLeftPath));
-                scrollPane.arrowRightBuffer = DrawableImageImpl.builder().fromPath(Paths.get(arrowRightPath));
-            } catch (IOException e) {
-                scrollPane.arrowUpBuffer = null;
-                scrollPane.arrowDownBuffer = null;
-                scrollPane.arrowLeftBuffer = null;
-                scrollPane.arrowRightBuffer = null;
-                LOGGER.error("Cann't load arrow image", e);
-            }
-        }
     }
 
     private void resizeComponent() {
-        if (component.isResizeble()) {
-            component.resizeTo(//
+        if (this.component.isResizeble()) {
+            this.component.resizeTo(//
                     Math.max(0, getSize().getWidth() - this.vBarWidth), //
                     Math.max(0, getSize().getHeight() - this.hBarHeight) //
             );
+
+            if (this.vBar != null) {
+                if (isHBarVisible()) {
+                    this.vBar.resizeTo(this.vBarWidth, Math.max(0, getSize().getHeight() - this.hBarHeight));
+                } else {
+                    this.vBar.resizeTo(this.vBarWidth, getSize().getHeight());
+                }
+            }
+            if (this.hBar != null) {
+                if (isVBarVisible()) {
+                    this.hBar.resizeTo(Math.max(0, getSize().getWidth() - this.vBarWidth), this.hBarHeight);
+                } else {
+                    this.hBar.resizeTo(getSize().getWidth(), this.hBarHeight);
+                }
+            }
         }
     }
 
@@ -196,6 +168,8 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
         if (!isHBarVisible()) {
             hScrollPosition = 0;
         }
+        hBar.setIntervalOffset(hScrollPosition);
+        vBar.setIntervalOffset(vScrollPosition);
 
         this.compositor.setHOffset(hScrollPosition);
         this.compositor.setVOffset(vScrollPosition);
@@ -230,31 +204,18 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
             return;
         }
 
-        int barHeight = compVBarHeight();
+        int componentHeight = component.getDrawable().getSize().getHeight();
+        int paneHeight = getSize().getHeight();
+        vBar.setIntervalTotal(componentHeight);
+        vBar.setIntervalDisplayed(paneHeight);
+        vBar.setIntervalOffset(vScrollPosition * (-1L));
 
-        DrawableSketch bar = new DrawableSketchImpl(//
-                scrollbarColor, //
-                new Size(//
-                        this.vBarWidth, //
-                        barHeight//
-                )//
+        this.cachedDrawable.addDrawable(//
+                vBar.getDrawable(), //
+                getSize().getWidth() - this.vBarWidth, //
+                0, //
+                1 //
         );
-
-        if (arrowUpBuffer != null) {
-            Drawable arrowUp = arrowUpBuffer//
-                    .size(new Size(this.vBarWidth, this.vBarWidth))//
-                    .build();
-            bar.addDrawable(arrowUp, 0, 0, 0);
-        }
-
-        if (arrowDownBuffer != null) {
-            Drawable arrowDown = arrowDownBuffer//
-                    .size(new Size(this.vBarWidth, this.vBarWidth))//
-                    .build();
-            bar.addDrawable(arrowDown, 0, barHeight - this.vBarWidth, 0);
-        }
-
-        this.cachedDrawable.addDrawable(bar.draw(), getSize().getWidth() - this.vBarWidth, 0, 1);
     }
 
     private void addScrollbarDeadSpace() {
@@ -295,31 +256,18 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
             return;
         }
 
-        int barWidth = compHBarWidth();
+        int componentWidth = component.getDrawable().getSize().getWidth();
+        int paneWidth = getSize().getWidth();
+        hBar.setIntervalTotal(componentWidth);
+        hBar.setIntervalDisplayed(paneWidth);
+        hBar.setIntervalOffset(hScrollPosition * (-1L));
 
-        DrawableSketch bar = new DrawableSketchImpl(//
-                scrollbarColor, //
-                new Size(//
-                        barWidth, //
-                        this.hBarHeight //
-                )//
+        this.cachedDrawable.addDrawable(//
+                hBar.getDrawable(), //
+                0, //
+                getSize().getHeight() - this.hBarHeight, //
+                1 //
         );
-
-        if (arrowLeftBuffer != null) {
-            Drawable arrowLeft = arrowLeftBuffer//
-                    .size(new Size(this.hBarHeight, this.hBarHeight))//
-                    .build();
-            bar.addDrawable(arrowLeft, 0, 0, 0);
-        }
-
-        if (arrowRightBuffer != null) {
-            Drawable arrowRight = arrowRightBuffer//
-                    .size(new Size(this.vBarWidth, this.vBarWidth))//
-                    .build();
-            bar.addDrawable(arrowRight, barWidth - this.hBarHeight, 0, 0);
-        }
-
-        this.cachedDrawable.addDrawable(bar.draw(), 0, getSize().getHeight() - this.hBarHeight, 1);
     }
 
     @Override

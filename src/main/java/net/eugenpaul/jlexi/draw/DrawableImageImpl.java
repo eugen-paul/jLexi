@@ -89,22 +89,28 @@ public class DrawableImageImpl implements Drawable {
         }
 
         public DrawableImplBuilderEnd size(@NonNull Size size) {
-            BufferedImage newResizedImage = new BufferedImage(size.getWidth(), size.getHeight(), image.getType());
-
-            Graphics2D g = newResizedImage.createGraphics();
-
-            // background transparent
-            g.setComposite(AlphaComposite.Src);
-            g.fillRect(0, 0, size.getWidth(), size.getHeight());
-
-            // configure RenderingHints
-            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-            // puts the original image into the newResizedImage
-            g.drawImage(image, 0, 0, size.getWidth(), size.getHeight(), null);
-
             DrawableImplBuilderEnd responseBuilder = new DrawableImplBuilderEnd();
-            responseBuilder.argbPixels = convertBufferedImageToPixelArray(newResizedImage);
+
+            if (size.getHeight() > 0 && size.getWidth() > 0) {
+                BufferedImage newResizedImage = new BufferedImage(size.getWidth(), size.getHeight(), image.getType());
+
+                Graphics2D g = newResizedImage.createGraphics();
+
+                // background transparent
+                g.setComposite(AlphaComposite.Src);
+                g.fillRect(0, 0, size.getWidth(), size.getHeight());
+
+                // configure RenderingHints
+                g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+                // puts the original image into the newResizedImage
+                g.drawImage(image, 0, 0, size.getWidth(), size.getHeight(), null);
+
+                responseBuilder.argbPixels = convertBufferedImageToPixelArray(newResizedImage);
+            } else {
+                responseBuilder.argbPixels = new int[0];
+            }
+
             responseBuilder.size = size;
             return responseBuilder;
         }
