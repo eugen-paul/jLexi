@@ -47,6 +47,10 @@ public abstract class ImageButton extends Button {
         image.setImagePath(imagePath);
     }
 
+    public void setBorderSize(int borderSize) {
+        border.setBorderSize(borderSize);
+    }
+
     @Override
     public void setState(ButtonState state) {
         if (this.state == state) {

@@ -65,6 +65,7 @@ public class DarkFactory implements GuiFactory {
     @Override
     public Scrollpane createScrollpane(Glyph parent, GuiGlyph component) {
         return Scrollpane.builder()//
+                .factory(this)//
                 .parent(parent)//
                 .component(component)//
                 .scrollbarColor(MENU_BACKGROUND_COLOR)//
@@ -73,12 +74,12 @@ public class DarkFactory implements GuiFactory {
     }
 
     @Override
-    public ImageButton createTextButton(Glyph parent, Path imagePath) {
+    public ImageButton createImageButton(Glyph parent, Path imagePath) {
         BorderBuilder borderBuilder = Border.builder()//
                 .parent(null)//
                 .borderColor(BORDER_COLOR)//
                 .backgroundColor(BORDER_BACKGROUND_COLOR)//
-                .borderSize(BORDER_SIZE)//
+                .borderSize(0)//
         ;
 
         ImageGlyph image = ImageGlyph.builder()//

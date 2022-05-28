@@ -23,13 +23,13 @@ public abstract class Button extends GuiGlyph {
     private SingleGlyphCompositor<Glyph> compositor;
 
     @Setter(value = AccessLevel.PROTECTED)
-    private Glyph element;
+    private GuiGlyph element;
 
     @Getter
     @Setter
     protected ButtonState state;
 
-    protected Button(Glyph parent, Glyph element, SingleGlyphCompositor<Glyph> compositor) {
+    protected Button(Glyph parent, GuiGlyph element, SingleGlyphCompositor<Glyph> compositor) {
         super(parent);
         this.state = ButtonState.NORMAL;
         this.element = element;
@@ -47,31 +47,32 @@ public abstract class Button extends GuiGlyph {
 
     @Override
     public void resizeTo(Size size) {
-        // TODO Auto-generated method stub
-
+        this.cachedDrawable = null;
+        this.element.resizeTo(size);
+        setSize(size);
     }
 
     @Override
     public Drawable getDrawable() {
-        if (cachedDrawable != null) {
-            return cachedDrawable.draw();
+        if (this.cachedDrawable != null) {
+            return this.cachedDrawable.draw();
         }
 
-        if (compositor == null) {
+        if (this.compositor == null) {
             return DrawablePixelsImpl.EMPTY;
         }
 
-        Glyph glyph = compositor.compose(element, getSize());
+        Glyph glyph = this.compositor.compose(element, getSize());
 
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        cachedDrawable.addDrawable(glyph.getDrawable(), 0, 0);
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        this.cachedDrawable.addDrawable(glyph.getDrawable(), 0, 0);
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
     @Override
     public Iterator<Glyph> iterator() {
-        return List.of(element).iterator();
+        return List.of((Glyph) this.element).iterator();
     }
 
     @Override

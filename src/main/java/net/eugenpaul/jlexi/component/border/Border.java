@@ -98,12 +98,17 @@ public class Border extends GuiCompenentMonoGlyph {
     }
 
     private void resizeComponent() {
-        if (component.isResizeble()) {
-            component.resizeTo(//
+        if (this.component.isResizeble()) {
+            this.component.resizeTo(//
                     Math.max(0, getSize().getWidth() - this.borderSize * 2), //
                     Math.max(0, getSize().getHeight() - this.borderSize * 2) //
             );
         }
+    }
+
+    public void setBorderSize(int borderSize) {
+        this.borderSize = borderSize;
+        resizeComponent();
     }
 
     public void setBackgroundColor(Color backgroundColor) {
@@ -172,7 +177,6 @@ public class Border extends GuiCompenentMonoGlyph {
         cachedDrawable = null;
         setSize(size);
         resizeComponent();
-        getDrawable();
     }
 
     @Override

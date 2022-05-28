@@ -8,6 +8,7 @@ import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.ScrollGlypthCompositor;
 import net.eugenpaul.jlexi.component.scrollpane.Scrollbar.ScrollbarType;
+import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -18,7 +19,7 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 
 /**
- * Glyph with a Scrollpane.
+ * GuiGlyph with a Scrollpane.
  */
 public class Scrollpane extends GuiCompenentMonoGlyph {
 
@@ -38,8 +39,8 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
     private int vBarWidth = V_BAR_WIDTH;
     private int hBarHeight = H_BAR_HEIGHT;
 
-    private ScrollBarShow showVBar = ScrollBarShow.AT_NEED;
-    private ScrollBarShow showHBar = ScrollBarShow.AT_NEED;
+    private ScrollbarShowType showVBar = ScrollbarShowType.AT_NEED;
+    private ScrollbarShowType showHBar = ScrollbarShowType.AT_NEED;
 
     private int vScrollPosition = 0;
     private int hScrollPosition = 0;
@@ -70,11 +71,18 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
         private Color scrollbarColor;
         private Color backgroundColor;
 
-        private ScrollBarShow showVBar = ScrollBarShow.AT_NEED;
-        private ScrollBarShow showHBar = ScrollBarShow.AT_NEED;
+        private GuiFactory factory;
+
+        private ScrollbarShowType showVBar = ScrollbarShowType.AT_NEED;
+        private ScrollbarShowType showHBar = ScrollbarShowType.AT_NEED;
 
         private ScrollpaneBuilder() {
 
+        }
+
+        public ScrollpaneBuilder factory(GuiFactory factory) {
+            this.factory = factory;
+            return this;
         }
 
         public ScrollpaneBuilder parent(Glyph parent) {
@@ -101,12 +109,16 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
             Scrollpane response = new Scrollpane(parent, component, scrollbarColor, backgroundColor);
 
             response.vBar = ScrollbarImage.builder() //
+                    .factory(factory)//
                     .type(ScrollbarType.VERTICAL) //
+                    .width(V_BAR_WIDTH) //
                     .parent(parent) //
                     .build();
 
             response.hBar = ScrollbarImage.builder() //
+                    .factory(factory)//
                     .type(ScrollbarType.HORIZONTAL) //
+                    .width(H_BAR_HEIGHT) //
                     .parent(parent) //
                     .build();
 
@@ -188,10 +200,10 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
     }
 
     private boolean isVBarVisible() {
-        if (showVBar == ScrollBarShow.ALWAYS) {
+        if (showVBar == ScrollbarShowType.ALWAYS) {
             return true;
         }
-        if (showVBar == ScrollBarShow.NOT) {
+        if (showVBar == ScrollbarShowType.NOT) {
             return false;
         }
         int componentHeight = component.getDrawable().getSize().getHeight();
@@ -240,10 +252,10 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
     }
 
     private boolean isHBarVisible() {
-        if (showHBar == ScrollBarShow.ALWAYS) {
+        if (showHBar == ScrollbarShowType.ALWAYS) {
             return true;
         }
-        if (showHBar == ScrollBarShow.NOT) {
+        if (showHBar == ScrollbarShowType.NOT) {
             return false;
         }
         int componentWidth = component.getDrawable().getSize().getWidth();

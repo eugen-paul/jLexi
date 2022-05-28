@@ -1,14 +1,22 @@
 package net.eugenpaul.jlexi.component.scrollpane;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.GuiGlyph;
+import net.eugenpaul.jlexi.component.formatting.HorizontalAlignmentGlypthCompositor;
+import net.eugenpaul.jlexi.component.formatting.ToSingleGlyphCompositor;
+import net.eugenpaul.jlexi.component.formatting.VerticalAlignmentGlypthCompositor;
+import net.eugenpaul.jlexi.component.panes.ImageGlyph;
+import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.draw.DrawableImageImpl;
-import net.eugenpaul.jlexi.draw.DrawableImageImpl.DrawableImageImplBufferBuilder;
+import net.eugenpaul.jlexi.utils.AligmentH;
+import net.eugenpaul.jlexi.utils.AligmentV;
 import net.eugenpaul.jlexi.utils.Color;
 
 public class ScrollbarImage extends Scrollbar {
@@ -37,11 +45,17 @@ public class ScrollbarImage extends Scrollbar {
         private int width = DEFAULT_WIDTH;
 
         private ScrollbarType type = ScrollbarType.VERTICAL;
+        private ToSingleGlyphCompositor<GuiGlyph> compositor = new HorizontalAlignmentGlypthCompositor<>(//
+                scrollbarColor, //
+                AligmentH.LEFT //
+        );
 
         private String arrowFirstPath = null;
         private String arrowLastPath = null;
         private String runnerPath = null;
         private String backgroundPath = null;
+
+        private GuiFactory factory;
 
         private ScrollbarImageBuilder() {
 
@@ -52,8 +66,24 @@ public class ScrollbarImage extends Scrollbar {
             return this;
         }
 
+        public ScrollbarImageBuilder factory(GuiFactory factory) {
+            this.factory = factory;
+            return this;
+        }
+
         public ScrollbarImageBuilder type(ScrollbarType type) {
             this.type = type;
+            if (type == ScrollbarType.VERTICAL) {
+                compositor = new HorizontalAlignmentGlypthCompositor<>(//
+                        scrollbarColor, //
+                        AligmentH.LEFT //
+                );
+            } else {
+                compositor = new VerticalAlignmentGlypthCompositor<>(//
+                        scrollbarColor, //
+                        AligmentV.TOP //
+                );
+            }
             return this;
         }
 
@@ -93,39 +123,56 @@ public class ScrollbarImage extends Scrollbar {
             try {
                 switch (type) {
                 case VERTICAL:
-                    response.arrowFirstBuffer = getDrawImgBuilder(arrowFirstPath, ARROW_UP_DEFAULT);
-                    response.arrowLastBuffer = getDrawImgBuilder(arrowLastPath, ARROW_DOWN_DEFAULT);
+                    response.buttonFirst = factory.createImageButton(parent, getPath(arrowFirstPath, ARROW_UP_DEFAULT));
+                    response.buttonLast = factory.createImageButton(parent, getPath(arrowLastPath, ARROW_DOWN_DEFAULT));
                     break;
                 case HORIZONTAL:
-                    response.arrowFirstBuffer = getDrawImgBuilder(arrowFirstPath, ARROW_LEFT_DEFAULT);
-                    response.arrowLastBuffer = getDrawImgBuilder(arrowLastPath, ARROW_RIGHT_DEFAULT);
+                    response.buttonFirst = factory.createImageButton(parent,
+                            getPath(arrowFirstPath, ARROW_LEFT_DEFAULT));
+                    response.buttonLast = factory.createImageButton(parent,
+                            getPath(arrowLastPath, ARROW_RIGHT_DEFAULT));
                     break;
                 default:
                     break;
                 }
+                response.buttonFirst.resizeTo(width, width);
+                response.buttonLast.resizeTo(width, width);
 
-                response.runner = getDrawImgBuilder(runnerPath, RUNNER_DEFAULT);
-                response.background = getDrawImgBuilder(backgroundPath, SCROLLBAR_BG_DEFAULT);
+                response.backgroundGlyph = ImageGlyph.builder()//
+                        .parent(null)//
+                        .imagePath(getPath(backgroundPath, SCROLLBAR_BG_DEFAULT))//
+                        .imageBuilder(DrawableImageImpl.builder())//
+                        .build()//
+                ;
+
+                response.runnerGlyph = ImageGlyph.builder()//
+                        .parent(null)//
+                        .imagePath(getPath(runnerPath, RUNNER_DEFAULT))//
+                        .imageBuilder(DrawableImageImpl.builder())//
+                        .build()//
+                ;
+
             } catch (IOException e) {
-                response.arrowFirstBuffer = null;
-                response.arrowLastBuffer = null;
-                response.runner = null;
-                response.background = null;
+                response.buttonFirst = null;
+                response.buttonLast = null;
+                response.backgroundGlyph = null;
+                response.runnerGlyph = null;
                 LOGGER.error("Cann't load arrow image", e);
             }
 
             response.width = width;
             response.type = type;
             response.scrollbarColor = scrollbarColor;
+            response.compositor = compositor;
 
             return response;
         }
 
-        private DrawableImageImplBufferBuilder getDrawImgBuilder(String path, String defaultPath) throws IOException {
+        private Path getPath(String path, String defaultPath) throws IOException {
             if (path != null) {
-                return DrawableImageImpl.builder().fromPath(Paths.get(path));
+                return Paths.get(path);
             }
-            return DrawableImageImpl.builder().fromPath(Paths.get(defaultPath));
+            return Paths.get(defaultPath);
         }
     }
 

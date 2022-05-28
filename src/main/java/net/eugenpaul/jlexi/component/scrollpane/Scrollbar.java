@@ -2,12 +2,18 @@ package net.eugenpaul.jlexi.component.scrollpane;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
+import net.eugenpaul.jlexi.component.button.Button;
+import net.eugenpaul.jlexi.component.formatting.ToSingleGlyphCompositor;
+import net.eugenpaul.jlexi.component.panes.ImageGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
-import net.eugenpaul.jlexi.draw.DrawableImageImpl.DrawableImageImplBufferBuilder;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.visitor.Visitor;
@@ -18,22 +24,24 @@ public abstract class Scrollbar extends GuiGlyph {
         VERTICAL, HORIZONTAL
     }
 
-    protected static final int DEFAULT_WIDTH = 11;
+    protected static final int DEFAULT_WIDTH = 15;
 
     protected Color scrollbarColor;
 
     protected int width = DEFAULT_WIDTH;
 
-    protected DrawableImageImplBufferBuilder arrowFirstBuffer;
-    protected DrawableImageImplBufferBuilder arrowLastBuffer;
-    protected DrawableImageImplBufferBuilder background;
-    protected DrawableImageImplBufferBuilder runner;
+    protected ToSingleGlyphCompositor<GuiGlyph> compositor;
+
+    protected Button buttonFirst;
+    protected Button buttonLast;
+    protected ImageGlyph backgroundGlyph;
+    protected ImageGlyph runnerGlyph;
 
     protected ScrollbarType type;
 
-    private long intervalTotal = 0;
-    private long intervalDisplayed = 0;
-    private long intervalOffset = 0;
+    protected long intervalTotal = 0;
+    protected long intervalDisplayed = 0;
+    protected long intervalOffset = 0;
 
     protected Scrollbar(Glyph parent) {
         super(parent);
@@ -50,6 +58,95 @@ public abstract class Scrollbar extends GuiGlyph {
         setSize(size);
     }
 
+    @Override
+    public Drawable getDrawable() {
+        if (this.cachedDrawable != null) {
+            return this.cachedDrawable.draw();
+        }
+
+        if (type == ScrollbarType.VERTICAL) {
+            backgroundGlyph.resizeTo(width, getSize().getHeight() - 2 * width);
+        } else {
+            backgroundGlyph.resizeTo(getSize().getWidth() - 2 * width, width);
+        }
+
+        List<GuiGlyph> elements = new LinkedList<>();
+        elements.add(buttonFirst);
+        elements.add(backgroundGlyph);
+        elements.add(buttonLast);
+        elements = elements.stream().filter(Objects::nonNull).collect(Collectors.toList());
+
+        var bar = compositor.composeToSingle(elements.iterator(), getSize());
+
+        this.cachedDrawable = new DrawableSketchImpl(scrollbarColor, getSize());
+        this.cachedDrawable.addDrawable(bar.getDrawable(), 0, 0);
+
+        addRunnerV();
+        addRunnerH();
+
+        return this.cachedDrawable.draw();
+    }
+
+    private void addRunnerV() {
+        if (type == ScrollbarType.VERTICAL //
+                && runnerGlyph != null //
+                && intervalTotal != 0 //
+        ) {
+            Size runnerSize;
+
+            int visiblePercent = (int) (intervalDisplayed * 100 / intervalTotal);
+            int runnerHeight = (getSize().getHeight() - 2 * width) * visiblePercent / 100;
+
+            runnerSize = new Size(width, runnerHeight);
+
+            runnerGlyph.resizeTo(runnerSize);
+
+            int offsetPercent = (int) (intervalOffset * 100 / intervalTotal);
+
+            int offset = Math.min(//
+                    this.width + (getSize().getHeight() - 2 * width) * offsetPercent / 100, //
+                    getSize().getHeight() - this.width - runnerHeight //
+            );
+
+            this.cachedDrawable.addDrawable(//
+                    runnerGlyph.getDrawable(), //
+                    0, //
+                    offset, //
+                    0 //
+            );
+        }
+    }
+
+    private void addRunnerH() {
+        if (type == ScrollbarType.HORIZONTAL //
+                && runnerGlyph != null //
+                && intervalTotal != 0 //
+        ) {
+            Size runnerSize;
+
+            int visiblePercent = (int) (intervalDisplayed * 100 / intervalTotal);
+            int runnerWidth = (getSize().getWidth() - 2 * width) * visiblePercent / 100;
+
+            runnerSize = new Size(runnerWidth, width);
+
+            runnerGlyph.resizeTo(runnerSize);
+
+            int offsetPercent = (int) (intervalOffset * 100 / intervalTotal);
+
+            int offset = Math.min(//
+                    this.width + (getSize().getWidth() - 2 * width) * offsetPercent / 100, //
+                    getSize().getWidth() - this.width - runnerWidth //
+            );
+
+            this.cachedDrawable.addDrawable(//
+                    runnerGlyph.getDrawable(), //
+                    offset, //
+                    0, //
+                    0 //
+            );
+        }
+    }
+
     public void setIntervalTotal(long intervalTotal) {
         this.intervalTotal = intervalTotal;
         this.cachedDrawable = null;
@@ -63,100 +160,6 @@ public abstract class Scrollbar extends GuiGlyph {
     public void setIntervalOffset(long intervalOffset) {
         this.intervalOffset = intervalOffset;
         this.cachedDrawable = null;
-    }
-
-    @Override
-    public Drawable getDrawable() {
-        this.cachedDrawable = new DrawableSketchImpl(scrollbarColor, getSize());
-
-        addBackground();
-
-        addRunner();
-
-        addFirstArrow();
-
-        addLastArrow();
-
-        return this.cachedDrawable.draw();
-    }
-
-    private void addLastArrow() {
-        if (arrowLastBuffer != null) {
-            Drawable arrow = arrowLastBuffer//
-                    .size(new Size(this.width, this.width))//
-                    .build();
-
-            if (type == ScrollbarType.VERTICAL) {
-                this.cachedDrawable.addDrawable(arrow, 0, getSize().getHeight() - this.width, 0);
-            } else {
-                this.cachedDrawable.addDrawable(arrow, getSize().getWidth() - this.width, 0, 0);
-            }
-        }
-    }
-
-    private void addFirstArrow() {
-        if (arrowFirstBuffer != null) {
-            Drawable arrow = arrowFirstBuffer//
-                    .size(new Size(this.width, this.width))//
-                    .build();
-
-            this.cachedDrawable.addDrawable(arrow, 0, 0, 0);
-        }
-    }
-
-    private void addRunner() {
-        if (runner != null && intervalTotal != 0) {
-            Size runnerSize;
-
-            int visiblePercent = (int) (intervalDisplayed * 100 / intervalTotal);
-            if (type == ScrollbarType.VERTICAL) {
-                runnerSize = new Size(width, (getSize().getHeight() - 2 * width) * visiblePercent / 100);
-            } else {
-                runnerSize = new Size((getSize().getWidth() - 2 * width) * visiblePercent / 100, width);
-            }
-
-            Drawable rn = runner//
-                    .size(runnerSize)//
-                    .build();
-
-            int offsetPercent = (int) (intervalOffset * 100 / intervalTotal);
-            if (type == ScrollbarType.VERTICAL) {
-                this.cachedDrawable.addDrawable(//
-                        rn, //
-                        0, //
-                        this.width + (getSize().getHeight() - 2 * width) * offsetPercent / 100, //
-                        0 //
-                );
-            } else {
-                this.cachedDrawable.addDrawable(//
-                        rn, //
-                        this.width + (getSize().getWidth() - 2 * width) * offsetPercent / 100, //
-                        0, //
-                        0 //
-                );
-            }
-        }
-    }
-
-    private void addBackground() {
-        if (background != null) {
-            Size bgSize;
-            if (type == ScrollbarType.VERTICAL) {
-                bgSize = new Size(width, getSize().getHeight() - 2 * width);
-            } else {
-                bgSize = new Size(getSize().getWidth() - 2 * width, width);
-            }
-
-            Drawable bg = background//
-                    .size(bgSize)//
-                    .build();
-
-            if (type == ScrollbarType.VERTICAL) {
-                this.cachedDrawable.addDrawable(bg, 0, width, 0);
-            } else {
-                this.cachedDrawable.addDrawable(bg, width, 0, 0);
-            }
-        }
     }
 
     @Override

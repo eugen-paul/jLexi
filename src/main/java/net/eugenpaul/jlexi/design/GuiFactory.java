@@ -17,7 +17,7 @@ public interface GuiFactory {
 
     TextButton createTextButton(Glyph parent, String text, ResourceManager storage);
 
-    ImageButton createTextButton(Glyph parent, Path imagePath);
+    ImageButton createImageButton(Glyph parent, Path imagePath);
 
     Label createLabel(Glyph parent, String text, ResourceManager storage);
 

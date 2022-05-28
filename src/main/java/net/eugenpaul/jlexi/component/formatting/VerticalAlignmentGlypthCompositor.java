@@ -11,17 +11,17 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.SimpleGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
-import net.eugenpaul.jlexi.utils.AligmentH;
+import net.eugenpaul.jlexi.utils.AligmentV;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 
 /**
- * Put all elements to one column. Set horizontal alignment of the all elements in the column.
+ * Put all elements to one row. Set vertical alignment of the all elements in the row.
  * 
  * @param <T>
  */
 @AllArgsConstructor
-public class HorizontalAlignmentGlypthCompositor<T extends Glyph>
+public class VerticalAlignmentGlypthCompositor<T extends Glyph>
         implements GlyphCompositor<T>, ToSingleGlyphCompositor<T> {
 
     @Getter
@@ -30,7 +30,7 @@ public class HorizontalAlignmentGlypthCompositor<T extends Glyph>
 
     @Getter
     @Setter
-    private AligmentH aligment;
+    private AligmentV aligment;
 
     @Override
     public List<Glyph> compose(Iterator<T> iterator, Size maxSize) {
@@ -41,43 +41,43 @@ public class HorizontalAlignmentGlypthCompositor<T extends Glyph>
     public Glyph composeToSingle(Iterator<T> iterator, Size maxSize) {
         List<Drawable> listOfElements = new LinkedList<>();
 
-        int maxWidth = 0;
+        int maxHeight = 0;
         while (iterator.hasNext()) {
             Glyph element = iterator.next();
             var elementDrawable = element.getDrawable();
             listOfElements.add(elementDrawable);
-            maxWidth = Math.max(maxWidth, elementDrawable.getSize().getWidth());
+            maxHeight = Math.max(maxHeight, elementDrawable.getSize().getHeight());
         }
 
         DrawableSketchImpl responseSketch = new DrawableSketchImpl(backgroundColor, maxSize);
 
-        int currentY = 0;
+        int currentX = 0;
         for (Drawable drawable : listOfElements) {
             switch (aligment) {
             case CENTER:
                 responseSketch.addDrawable(//
                         drawable, //
-                        maxWidth / 2 - maxSize.getWidth() / 2, //
-                        currentY //
+                        currentX, //
+                        maxHeight / 2 - maxSize.getHeight() / 2 //
                 );
                 break;
-            case RIGHT:
+            case BOTTOM:
                 responseSketch.addDrawable(//
                         drawable, //
-                        maxWidth - drawable.getSize().getWidth(), //
-                        currentY //
+                        currentX, //
+                        maxHeight - drawable.getSize().getHeight() //
                 );
                 break;
-            case LEFT:
+            case TOP:
             default:
                 responseSketch.addDrawable(//
                         drawable, //
-                        0, //
-                        currentY //
+                        currentX, //
+                        0 //
                 );
                 break;
             }
-            currentY += drawable.getSize().getHeight();
+            currentX += drawable.getSize().getWidth();
         }
 
         SimpleGlyph responseGlyph = new SimpleGlyph();
