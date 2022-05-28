@@ -19,7 +19,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
  * @param <T>
  */
 @AllArgsConstructor
-public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor<T> {
+public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor<T>, SingleGlyphCompositor<T> {
 
     @Getter
     @Setter
@@ -51,6 +51,26 @@ public class CentralGlypthCompositor<T extends Glyph> implements GlyphCompositor
         responseGlyph.setDrawable(responseSketch);
 
         return List.of(responseGlyph);
+    }
+
+    @Override
+    public Glyph compose(T element, Size maxSize) {
+        DrawableSketchImpl responseSketch = new DrawableSketchImpl(backgroundColor, maxSize);
+        int hOffset = maxSize.getWidth() / 2 - element.getSize().getWidth() / 2;
+        int vOffset = maxSize.getHeight() / 2 - element.getSize().getHeight() / 2;
+
+        responseSketch.addDrawable(//
+                element.getDrawable(), //
+                hOffset, //
+                vOffset //
+        );
+
+        element.setRelativPosition(new Vector2d(hOffset, vOffset));
+
+        SimpleGlyph responseGlyph = new SimpleGlyph();
+        responseGlyph.setDrawable(responseSketch);
+
+        return responseGlyph;
     }
 
 }

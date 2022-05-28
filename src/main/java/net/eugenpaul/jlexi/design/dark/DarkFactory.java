@@ -1,15 +1,21 @@
 package net.eugenpaul.jlexi.design.dark;
 
+import java.nio.file.Path;
+
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.border.Border;
+import net.eugenpaul.jlexi.component.border.Border.BorderBuilder;
+import net.eugenpaul.jlexi.component.button.ImageButton;
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.label.Label;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.menubar.MenuBarColored;
+import net.eugenpaul.jlexi.component.panes.ImageGlyph;
 import net.eugenpaul.jlexi.component.scrollpane.Scrollpane;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.design.GuiFactory;
+import net.eugenpaul.jlexi.draw.DrawableImageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
@@ -25,6 +31,8 @@ public class DarkFactory implements GuiFactory {
 
     protected static final Color BORDER_COLOR = Color.fromHexArgb("0xFF000000");
     protected static final Color BORDER_BACKGROUND_COLOR = Color.fromHexArgb("0xFFBFBFBF");
+
+    protected static final int BORDER_SIZE = 2;
 
     private static final TextFormat format = TextFormat.DEFAULT.withBackgroundColor(BUTTON_BACKGROUND_COLOR);
 
@@ -45,18 +53,47 @@ public class DarkFactory implements GuiFactory {
 
     @Override
     public Border createBorder(Glyph parent, GuiGlyph component) {
-        return new Border(parent, component, BORDER_COLOR, BORDER_BACKGROUND_COLOR);
+        return Border.builder()//
+                .parent(parent)//
+                .component(component)//
+                .borderColor(BORDER_COLOR)//
+                .backgroundColor(BORDER_BACKGROUND_COLOR)//
+                .borderSize(BORDER_SIZE)//
+                .build();
     }
 
     @Override
     public Scrollpane createScrollpane(Glyph parent, GuiGlyph component) {
-
         return Scrollpane.builder()//
                 .parent(parent)//
                 .component(component)//
                 .scrollbarColor(MENU_BACKGROUND_COLOR)//
                 .backgroundColor(BORDER_BACKGROUND_COLOR)//
                 .build();
+    }
+
+    @Override
+    public ImageButton createTextButton(Glyph parent, Path imagePath) {
+        BorderBuilder borderBuilder = Border.builder()//
+                .parent(null)//
+                .borderColor(BORDER_COLOR)//
+                .backgroundColor(BORDER_BACKGROUND_COLOR)//
+                .borderSize(BORDER_SIZE)//
+        ;
+
+        ImageGlyph image = ImageGlyph.builder()//
+                .parent(null)//
+                .imagePath(imagePath)//
+                .imageBuilder(DrawableImageImpl.builder())//
+                .build()//
+        ;
+
+        return DarkImageButton.builder()//
+                .parent(parent)//
+                .borderBuilder(borderBuilder)//
+                .image(image)//
+                .build()//
+        ;
     }
 
 }

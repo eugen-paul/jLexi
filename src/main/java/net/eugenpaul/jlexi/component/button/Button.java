@@ -1,7 +1,6 @@
 package net.eugenpaul.jlexi.component.button;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -9,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
-import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
+import net.eugenpaul.jlexi.component.formatting.SingleGlyphCompositor;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -21,24 +20,24 @@ public abstract class Button extends GuiGlyph {
 
     @Setter(value = AccessLevel.PROTECTED)
     @Getter(value = AccessLevel.PROTECTED)
-    private GlyphCompositor<Glyph> compositor;
+    private SingleGlyphCompositor<Glyph> compositor;
 
-    @Getter(value = AccessLevel.PROTECTED)
-    private List<Glyph> elements;
+    @Setter(value = AccessLevel.PROTECTED)
+    private Glyph element;
 
     @Getter
     @Setter
     protected ButtonState state;
 
-    protected Button(Glyph parent, List<Glyph> elements, GlyphCompositor<Glyph> compositor) {
+    protected Button(Glyph parent, Glyph element, SingleGlyphCompositor<Glyph> compositor) {
         super(parent);
         this.state = ButtonState.NORMAL;
-        this.elements = elements;
+        this.element = element;
         this.compositor = compositor;
     }
 
     protected Button(Glyph parent) {
-        this(parent, new LinkedList<>(), null);
+        this(parent, null, null);
     }
 
     @Override
@@ -62,22 +61,17 @@ public abstract class Button extends GuiGlyph {
             return DrawablePixelsImpl.EMPTY;
         }
 
-        List<Glyph> glyph = compositor.compose(elements.iterator(), getSize());
-
-        if (glyph.isEmpty()) {
-            return DrawablePixelsImpl.EMPTY;
-        }
+        Glyph glyph = compositor.compose(element, getSize());
 
         cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        var drawable = glyph.get(0).getDrawable();
-        cachedDrawable.addDrawable(drawable, 0, 0);
+        cachedDrawable.addDrawable(glyph.getDrawable(), 0, 0);
 
         return cachedDrawable.draw();
     }
 
     @Override
     public Iterator<Glyph> iterator() {
-        return elements.iterator();
+        return List.of(element).iterator();
     }
 
     @Override

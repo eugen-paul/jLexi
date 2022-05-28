@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
@@ -30,29 +31,70 @@ public class Border extends GuiCompenentMonoGlyph {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Border.class);
 
-    private static final int BORDER_SIZE = 2;
-
     private Color borderColor;
     private Color backgroundColor;
-    private int borderSize = BORDER_SIZE;
+    private int borderSize;
 
     @Setter(value = AccessLevel.PROTECTED)
     @Getter(value = AccessLevel.PROTECTED)
     private GlyphCompositor<Glyph> compositor;
+
+    @NoArgsConstructor
+    public static class BorderBuilder {
+        private Color borderColor;
+        private Color backgroundColor;
+        private int borderSize;
+        private Glyph parent;
+        private GuiGlyph component;
+
+        public BorderBuilder borderColor(Color borderColor) {
+            this.borderColor = borderColor;
+            return this;
+        }
+
+        public BorderBuilder backgroundColor(Color backgroundColor) {
+            this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        public BorderBuilder borderSize(int borderSize) {
+            this.borderSize = borderSize;
+            return this;
+        }
+
+        public BorderBuilder parent(Glyph parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        public BorderBuilder component(GuiGlyph component) {
+            this.component = component;
+            return this;
+        }
+
+        public Border build() {
+            return new Border(parent, component, borderColor, backgroundColor, borderSize);
+        }
+    }
 
     /**
      * C'tor
      * 
      * @param component component that will be bordered.
      */
-    public Border(Glyph parent, GuiGlyph component, Color borderColor, Color backgroundColor) {
+    private Border(Glyph parent, GuiGlyph component, Color borderColor, Color backgroundColor, int borderSize) {
         super(parent, component);
         this.borderColor = borderColor;
         this.backgroundColor = backgroundColor;
+        this.borderSize = borderSize;
 
-        this.compositor = new CentralGlypthCompositor<>(backgroundColor);
-        this.component.setRelativPosition(new Vector2d(borderSize, borderSize));
+        this.compositor = new CentralGlypthCompositor<>(this.backgroundColor);
+        this.component.setRelativPosition(new Vector2d(this.borderSize, this.borderSize));
         resizeTo(Size.ZERO_SIZE);
+    }
+
+    public static BorderBuilder builder() {
+        return new BorderBuilder();
     }
 
     private void resizeComponent() {
@@ -135,10 +177,10 @@ public class Border extends GuiCompenentMonoGlyph {
 
     @Override
     protected boolean isPositionOnComponent(Integer mouseX, Integer mouseY) {
-        return mouseX > BORDER_SIZE //
-                && mouseX < getSize().getWidth() - BORDER_SIZE //
-                && mouseY > BORDER_SIZE //
-                && mouseY < getSize().getHeight() - BORDER_SIZE //
+        return mouseX > borderSize //
+                && mouseX < getSize().getWidth() - borderSize //
+                && mouseY > borderSize //
+                && mouseY < getSize().getHeight() - borderSize //
         ;
     }
 
