@@ -38,6 +38,7 @@ public class TextPaneElementRow extends TextRepresentation {
                     currentSize.getWidth() + child.getSize().getWidth(), //
                     Math.max(currentSize.getHeight(), child.getSize().getHeight())//
             ));
+            currentSize = getSize();
             this.xPositionToRow.put(child.getRelativPosition().getX(), child);
         }
     }
