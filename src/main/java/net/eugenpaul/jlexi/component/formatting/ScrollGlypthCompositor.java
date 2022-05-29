@@ -11,7 +11,7 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 /**
- * Put all elements to one column and set the column to center of returned glyph.
+ * Put element to given offset.
  * 
  * @param <T>
  */

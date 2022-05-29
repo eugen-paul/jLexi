@@ -129,7 +129,11 @@ public abstract class Scrollbar extends GuiGlyph {
         ) {
             Size runnerSize;
 
-            int visiblePercent = (int) (intervalDisplayed * 100 / intervalTotal);
+            int visiblePercent = Math.min(//
+                    100, //
+                    (int) (intervalDisplayed * 100 / intervalTotal) //
+            );
+
             int runnerHeight = (getSize().getHeight() - 2 * barWidth) * visiblePercent / 100;
 
             runnerSize = new Size(barWidth, runnerHeight);
@@ -161,7 +165,11 @@ public abstract class Scrollbar extends GuiGlyph {
         ) {
             Size runnerSize;
 
-            int visiblePercent = (int) (intervalDisplayed * 100 / intervalTotal);
+            int visiblePercent = Math.min(//
+                    100, //
+                    (int) (intervalDisplayed * 100 / intervalTotal) //
+            );
+
             int runnerWidth = (getSize().getWidth() - 2 * barWidth) * visiblePercent / 100;
 
             runnerSize = new Size(runnerWidth, barWidth);
