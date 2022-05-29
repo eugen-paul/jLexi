@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.border.Border;
-import net.eugenpaul.jlexi.component.border.Border.BorderBuilder;
+import net.eugenpaul.jlexi.component.border.Border.BorderBuilderComponent;
 import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.panes.ImageGlyph;
 import net.eugenpaul.jlexi.utils.Color;
@@ -21,7 +21,7 @@ public abstract class ImageButton extends Button {
     private ImageGlyph image;
     private Border border;
 
-    protected ImageButton(Glyph parent, ImageGlyph image, BorderBuilder borderBuilder) {
+    protected ImageButton(Glyph parent, ImageGlyph image, BorderBuilderComponent borderBuilder) {
         super(parent);
 
         this.border = borderBuilder.component(image).build();

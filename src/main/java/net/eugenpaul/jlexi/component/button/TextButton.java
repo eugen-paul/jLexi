@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.border.Border;
+import net.eugenpaul.jlexi.component.border.Border.BorderBuilderComponent;
 import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.label.Label;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
@@ -21,11 +21,15 @@ public abstract class TextButton extends Button {
     private Label label;
     private Border border;
 
-    protected TextButton(Glyph parent, GuiFactory factory, String text, TextFormat format, ResourceManager storage) {
+    protected TextButton(Glyph parent, BorderBuilderComponent borderBuilderComponent, String text, TextFormat format,
+            ResourceManager storage) {
         super(parent);
         this.label = new Label(this, text, format, storage);
 
-        this.border = factory.createBorder(this, this.label);
+        this.border = borderBuilderComponent//
+                .parent(this)//
+                .component(this.label)//
+                .build();
         this.border.setBackgroundColor(getBgColorNormal());
 
         var textCompositor = new CentralGlypthCompositor<>(getBgColorNormal());

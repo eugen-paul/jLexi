@@ -3,12 +3,12 @@ package net.eugenpaul.jlexi.component.scrollpane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.AccessLevel;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.ScrollGlypthCompositor;
-import net.eugenpaul.jlexi.component.scrollpane.Scrollbar.ScrollbarType;
-import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -21,25 +21,25 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 /**
  * GuiGlyph with a Scrollpane.
  */
-public class Scrollpane extends GuiCompenentMonoGlyph {
+public abstract class Scrollpane extends GuiCompenentMonoGlyph {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Scrollpane.class);
 
-    private static final int V_BAR_WIDTH = 11;
-    private static final int H_BAR_HEIGHT = 11;
+    private static final Color SCROLLBAR_COLOR_DEFAULT = Color.GREY;
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
 
-    private Color scrollbarColor;
-    private Color backgroundColor;
+    @Setter
+    private Color scrollbarColor = SCROLLBAR_COLOR_DEFAULT;
+    private Color backgroundColor = BACKGROUND_COLOR;
 
     private ScrollGlypthCompositor<Glyph> compositor;
 
     private Scrollbar vBar;
     private Scrollbar hBar;
 
-    private int vBarWidth = V_BAR_WIDTH;
-    private int hBarHeight = H_BAR_HEIGHT;
-
+    @Setter(value = AccessLevel.PROTECTED)
     private ScrollbarShowType showVBar = ScrollbarShowType.AT_NEED;
+    @Setter(value = AccessLevel.PROTECTED)
     private ScrollbarShowType showHBar = ScrollbarShowType.AT_NEED;
 
     private int vScrollPosition = 0;
@@ -50,10 +50,10 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
      * 
      * @param component component that will be scrolled.
      */
-    private Scrollpane(Glyph parent, GuiGlyph component, Color scrollbarColor, Color backgroundColor) {
+    protected Scrollpane(Glyph parent, GuiGlyph component, Scrollbar vBar, Scrollbar hBar) {
         super(parent, component);
-        this.scrollbarColor = scrollbarColor;
-        this.backgroundColor = backgroundColor;
+        this.vBar = vBar;
+        this.hBar = hBar;
 
         this.compositor = new ScrollGlypthCompositor<>(backgroundColor, vScrollPosition, hScrollPosition);
 
@@ -61,93 +61,28 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
         resizeTo(Size.ZERO_SIZE);
     }
 
-    public static ScrollpaneBuilder builder() {
-        return new ScrollpaneBuilder();
-    }
-
-    public static class ScrollpaneBuilder {
-        private Glyph parent;
-        private GuiGlyph component;
-        private Color scrollbarColor;
-        private Color backgroundColor;
-
-        private GuiFactory factory;
-
-        private ScrollbarShowType showVBar = ScrollbarShowType.AT_NEED;
-        private ScrollbarShowType showHBar = ScrollbarShowType.AT_NEED;
-
-        private ScrollpaneBuilder() {
-
-        }
-
-        public ScrollpaneBuilder factory(GuiFactory factory) {
-            this.factory = factory;
-            return this;
-        }
-
-        public ScrollpaneBuilder parent(Glyph parent) {
-            this.parent = parent;
-            return this;
-        }
-
-        public ScrollpaneBuilder component(GuiGlyph component) {
-            this.component = component;
-            return this;
-        }
-
-        public ScrollpaneBuilder scrollbarColor(Color scrollbarColor) {
-            this.scrollbarColor = scrollbarColor;
-            return this;
-        }
-
-        public ScrollpaneBuilder backgroundColor(Color backgroundColor) {
-            this.backgroundColor = backgroundColor;
-            return this;
-        }
-
-        public Scrollpane build() {
-            Scrollpane response = new Scrollpane(parent, component, scrollbarColor, backgroundColor);
-
-            response.vBar = ScrollbarImage.builder() //
-                    .factory(factory)//
-                    .type(ScrollbarType.VERTICAL) //
-                    .width(V_BAR_WIDTH) //
-                    .parent(parent) //
-                    .build();
-
-            response.hBar = ScrollbarImage.builder() //
-                    .factory(factory)//
-                    .type(ScrollbarType.HORIZONTAL) //
-                    .width(H_BAR_HEIGHT) //
-                    .parent(parent) //
-                    .build();
-
-            response.showVBar = showVBar;
-            response.showHBar = showHBar;
-
-            return response;
-        }
-    }
-
     private void resizeComponent() {
         if (this.component.isResizeble()) {
+            int vBarWidth = this.vBar.getSize().getWidth();
+            int hBarHeight = this.hBar.getSize().getHeight();
+
             this.component.resizeTo(//
-                    Math.max(0, getSize().getWidth() - this.vBarWidth), //
-                    Math.max(0, getSize().getHeight() - this.hBarHeight) //
+                    Math.max(0, getSize().getWidth() - vBarWidth), //
+                    Math.max(0, getSize().getHeight() - hBarHeight) //
             );
 
             if (this.vBar != null) {
                 if (isHBarVisible()) {
-                    this.vBar.resizeTo(this.vBarWidth, Math.max(0, getSize().getHeight() - this.hBarHeight));
+                    this.vBar.resizeTo(vBarWidth, Math.max(0, getSize().getHeight() - hBarHeight));
                 } else {
-                    this.vBar.resizeTo(this.vBarWidth, getSize().getHeight());
+                    this.vBar.resizeTo(vBarWidth, getSize().getHeight());
                 }
             }
             if (this.hBar != null) {
                 if (isVBarVisible()) {
-                    this.hBar.resizeTo(Math.max(0, getSize().getWidth() - this.vBarWidth), this.hBarHeight);
+                    this.hBar.resizeTo(Math.max(0, getSize().getWidth() - vBarWidth), hBarHeight);
                 } else {
-                    this.hBar.resizeTo(getSize().getWidth(), this.hBarHeight);
+                    this.hBar.resizeTo(getSize().getWidth(), hBarHeight);
                 }
             }
         }
@@ -165,16 +100,19 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
             return this.cachedDrawable.draw();
         }
 
-        if (getSize().getHeight() <= this.hBarHeight //
-                || getSize().getWidth() <= this.vBarWidth //
+        int vBarWidth = this.vBar.getSize().getWidth();
+        int hBarHeight = this.hBar.getSize().getHeight();
+
+        if (getSize().getHeight() <= hBarHeight //
+                || getSize().getWidth() <= vBarWidth //
         ) {
             this.cachedDrawable = new DrawableSketchImpl(scrollbarColor, getSize());
             return this.cachedDrawable.draw();
         }
 
         Size childSize = new Size(//
-                Math.max(0, getSize().getWidth() - this.vBarWidth), //
-                Math.max(0, getSize().getHeight() - this.hBarHeight) //
+                Math.max(0, getSize().getWidth() - vBarWidth), //
+                Math.max(0, getSize().getHeight() - hBarHeight) //
         );
 
         if (!isHBarVisible()) {
@@ -224,7 +162,7 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
 
         this.cachedDrawable.addDrawable(//
                 vBar.getDrawable(), //
-                getSize().getWidth() - this.vBarWidth, //
+                getSize().getWidth() - vBar.getSize().getWidth(), //
                 0, //
                 1 //
         );
@@ -235,18 +173,18 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
             return;
         }
 
+        int vBarWidth = this.vBar.getSize().getWidth();
+        int hBarHeight = this.hBar.getSize().getHeight();
+
         DrawableSketch bar = new DrawableSketchImpl(//
                 scrollbarColor, //
-                new Size(//
-                        this.vBarWidth, //
-                        this.hBarHeight //
-                )//
+                new Size(vBarWidth, hBarHeight)//
         );
 
         this.cachedDrawable.addDrawable(//
                 bar.draw(), //
-                getSize().getWidth() - this.vBarWidth, //
-                getSize().getHeight() - this.hBarHeight, //
+                getSize().getWidth() - vBarWidth, //
+                getSize().getHeight() - hBarHeight, //
                 1 //
         );
     }
@@ -277,7 +215,7 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
         this.cachedDrawable.addDrawable(//
                 hBar.getDrawable(), //
                 0, //
-                getSize().getHeight() - this.hBarHeight, //
+                getSize().getHeight() - hBar.getSize().getHeight(), //
                 1 //
         );
     }
@@ -301,11 +239,11 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
     }
 
     private boolean isClickOnHBar(Integer mouseY) {
-        return isHBarVisible() && mouseY > getSize().getHeight() - hBarHeight;
+        return isHBarVisible() && mouseY > getSize().getHeight() - hBar.getSize().getHeight();
     }
 
     private boolean isClickOnVBar(Integer mouseX) {
-        return isVBarVisible() && mouseX > getSize().getWidth() - vBarWidth;
+        return isVBarVisible() && mouseX > getSize().getWidth() - vBar.getSize().getWidth();
     }
 
     @Override
@@ -340,7 +278,7 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
         int barWidth = getSize().getWidth();
 
         if (isVBarVisible()) {
-            barWidth -= this.vBarWidth;
+            barWidth -= vBar.getSize().getWidth();
         }
         return barWidth;
     }
@@ -349,7 +287,7 @@ public class Scrollpane extends GuiCompenentMonoGlyph {
         int barHeight = getSize().getHeight();
 
         if (isHBarVisible()) {
-            barHeight -= this.hBarHeight;
+            barHeight -= hBar.getSize().getHeight();
         }
         return barHeight;
     }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
@@ -26,9 +27,11 @@ public abstract class Scrollbar extends GuiGlyph {
 
     protected static final int DEFAULT_WIDTH = 15;
 
-    protected Color scrollbarColor;
+    @Getter
+    private Color scrollbarColor = Color.INVISIBLE;
 
-    protected int width = DEFAULT_WIDTH;
+    @Getter
+    private int barWidth = DEFAULT_WIDTH;
 
     protected ToSingleGlyphCompositor<GuiGlyph> compositor;
 
@@ -55,7 +58,27 @@ public abstract class Scrollbar extends GuiGlyph {
     @Override
     public void resizeTo(Size size) {
         this.cachedDrawable = null;
-        setSize(size);
+        if (type == ScrollbarType.VERTICAL) {
+            setSize(new Size(barWidth, size.getHeight()));
+        } else {
+            setSize(new Size(size.getWidth(), barWidth));
+        }
+    }
+
+    protected void setBarWidth(int barWidth) {
+        this.barWidth = barWidth;
+        if (buttonFirst != null) {
+            buttonFirst.resizeTo(barWidth, barWidth);
+        }
+        if (buttonLast != null) {
+            buttonLast.resizeTo(barWidth, barWidth);
+        }
+    }
+
+    protected void setScrollbarColor(Color scrollbarColor) {
+        this.scrollbarColor = scrollbarColor;
+        cachedDrawable = null;
+        compositor.setBackgroundColor(scrollbarColor);
     }
 
     @Override
@@ -65,9 +88,9 @@ public abstract class Scrollbar extends GuiGlyph {
         }
 
         if (type == ScrollbarType.VERTICAL) {
-            backgroundGlyph.resizeTo(width, getSize().getHeight() - 2 * width);
+            backgroundGlyph.resizeTo(barWidth, getSize().getHeight() - 2 * barWidth);
         } else {
-            backgroundGlyph.resizeTo(getSize().getWidth() - 2 * width, width);
+            backgroundGlyph.resizeTo(getSize().getWidth() - 2 * barWidth, barWidth);
         }
 
         List<GuiGlyph> elements = new LinkedList<>();
@@ -95,17 +118,17 @@ public abstract class Scrollbar extends GuiGlyph {
             Size runnerSize;
 
             int visiblePercent = (int) (intervalDisplayed * 100 / intervalTotal);
-            int runnerHeight = (getSize().getHeight() - 2 * width) * visiblePercent / 100;
+            int runnerHeight = (getSize().getHeight() - 2 * barWidth) * visiblePercent / 100;
 
-            runnerSize = new Size(width, runnerHeight);
+            runnerSize = new Size(barWidth, runnerHeight);
 
             runnerGlyph.resizeTo(runnerSize);
 
             int offsetPercent = (int) (intervalOffset * 100 / intervalTotal);
 
             int offset = Math.min(//
-                    this.width + (getSize().getHeight() - 2 * width) * offsetPercent / 100, //
-                    getSize().getHeight() - this.width - runnerHeight //
+                    this.barWidth + (getSize().getHeight() - 2 * barWidth) * offsetPercent / 100, //
+                    getSize().getHeight() - this.barWidth - runnerHeight //
             );
 
             this.cachedDrawable.addDrawable(//
@@ -125,17 +148,17 @@ public abstract class Scrollbar extends GuiGlyph {
             Size runnerSize;
 
             int visiblePercent = (int) (intervalDisplayed * 100 / intervalTotal);
-            int runnerWidth = (getSize().getWidth() - 2 * width) * visiblePercent / 100;
+            int runnerWidth = (getSize().getWidth() - 2 * barWidth) * visiblePercent / 100;
 
-            runnerSize = new Size(runnerWidth, width);
+            runnerSize = new Size(runnerWidth, barWidth);
 
             runnerGlyph.resizeTo(runnerSize);
 
             int offsetPercent = (int) (intervalOffset * 100 / intervalTotal);
 
             int offset = Math.min(//
-                    this.width + (getSize().getWidth() - 2 * width) * offsetPercent / 100, //
-                    getSize().getWidth() - this.width - runnerWidth //
+                    this.barWidth + (getSize().getWidth() - 2 * barWidth) * offsetPercent / 100, //
+                    getSize().getWidth() - this.barWidth - runnerWidth //
             );
 
             this.cachedDrawable.addDrawable(//

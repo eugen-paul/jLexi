@@ -12,6 +12,7 @@ import lombok.Builder;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableImageImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.draw.DrawableImageImpl.DrawableImageImplBuilder;
 import net.eugenpaul.jlexi.utils.Color;
@@ -27,7 +28,7 @@ public class ImageGlyph extends GuiGlyph {
     protected Drawable imageDrawable;
 
     @Builder
-    protected ImageGlyph(Glyph parent, DrawableImageImplBuilder imageBuilder, Path imagePath) {
+    public ImageGlyph(Glyph parent, DrawableImageImplBuilder imageBuilder, Path imagePath) {
         super(parent);
         this.imageBuilder = imageBuilder;
         this.imagePath = imagePath;
@@ -39,6 +40,14 @@ public class ImageGlyph extends GuiGlyph {
             setSize(Size.ZERO_SIZE);
             LOGGER.error("Cann't load image.", e);
         }
+    }
+
+    public ImageGlyph(Glyph parent, Path imagePath) {
+        this(//
+                parent, //
+                DrawableImageImpl.builder(), //
+                imagePath //
+        );
     }
 
     @Override

@@ -3,9 +3,11 @@ package net.eugenpaul.jlexi.design.dark;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.border.Border.BorderBuilder;
+import net.eugenpaul.jlexi.component.border.Border;
+import net.eugenpaul.jlexi.component.border.Border.BorderBuilderComponent;
 import net.eugenpaul.jlexi.component.button.ImageButton;
 import net.eugenpaul.jlexi.component.panes.ImageGlyph;
 import net.eugenpaul.jlexi.utils.Color;
@@ -15,9 +17,56 @@ public class DarkImageButton extends ImageButton {
     @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(DarkImageButton.class);
 
-    @Builder
-    public DarkImageButton(Glyph parent, ImageGlyph image, BorderBuilder borderBuilder) {
-        super(parent, image, borderBuilder);
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class DarkImageButtonBuilder {
+        private Glyph parent;
+        private ImageGlyph image;
+        private BorderBuilderComponent borderBuilderComponent;
+        private int borderSize = DarkFactory.BORDER_SIZE;
+
+        public DarkImageButtonBuilder parent(Glyph parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        public DarkImageButtonBuilder image(ImageGlyph image) {
+            this.image = image;
+            return this;
+        }
+
+        public DarkImageButtonBuilder borderSize(int borderSize) {
+            this.borderSize = borderSize;
+            return this;
+        }
+
+        public DarkImageButtonBuilder borderBuilderComponent(BorderBuilderComponent borderBuilderComponent) {
+            this.borderBuilderComponent = borderBuilderComponent;
+            return this;
+        }
+
+        public DarkImageButton build() {
+            if (borderBuilderComponent == null) {
+                borderBuilderComponent = Border.builder()//
+                        .borderColor(DarkFactory.BORDER_COLOR)//
+                        .backgroundColor(DarkFactory.BORDER_BACKGROUND_COLOR)//
+                        .borderSize(borderSize)//
+                        .getBuilderComponent() //
+                ;
+            }
+            return new DarkImageButton(parent, image, borderBuilderComponent);
+        }
+    }
+
+    private DarkImageButton(Glyph parent, ImageGlyph image, BorderBuilderComponent borderBuilderComponent) {
+        super(//
+                parent, //
+                image, //
+                borderBuilderComponent //
+        );
+    }
+
+    public static DarkImageButtonBuilder builder() {
+        return new DarkImageButtonBuilder();
     }
 
     @Override

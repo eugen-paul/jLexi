@@ -72,6 +72,39 @@ public class Border extends GuiCompenentMonoGlyph {
             return this;
         }
 
+        public BorderBuilderComponent getBuilderComponent() {
+            BorderBuilderComponent response = new BorderBuilderComponent();
+            response.borderColor = borderColor;
+            response.backgroundColor = backgroundColor;
+            response.borderSize = borderSize;
+            response.parent = parent;
+
+            return response;
+        }
+
+        public Border build() {
+            return new Border(parent, component, borderColor, backgroundColor, borderSize);
+        }
+    }
+
+    @NoArgsConstructor
+    public static class BorderBuilderComponent {
+        private Color borderColor;
+        private Color backgroundColor;
+        private int borderSize;
+        private Glyph parent;
+        private GuiGlyph component;
+
+        public BorderBuilderComponent component(GuiGlyph component) {
+            this.component = component;
+            return this;
+        }
+
+        public BorderBuilderComponent parent(Glyph parent) {
+            this.parent = parent;
+            return this;
+        }
+
         public Border build() {
             return new Border(parent, component, borderColor, backgroundColor, borderSize);
         }
