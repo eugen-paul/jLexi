@@ -9,6 +9,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.ScrollGlypthCompositor;
+import net.eugenpaul.jlexi.component.scrollpane.Scrollbar.ScrollbarType;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -54,6 +55,9 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         super(parent, component);
         this.vBar = vBar;
         this.hBar = hBar;
+
+        this.vBar.setScrollCallback(v -> this.scrollbarCallback(v, ScrollbarType.VERTICAL));
+        this.hBar.setScrollCallback(v -> this.scrollbarCallback(v, ScrollbarType.HORIZONTAL));
 
         this.compositor = new ScrollGlypthCompositor<>(backgroundColor, vScrollPosition, hScrollPosition);
 
@@ -159,11 +163,15 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         vBar.setIntervalTotal(componentHeight);
         vBar.setIntervalDisplayed(paneHeight);
         vBar.setIntervalOffset(vScrollPosition * (-1L));
+        vBar.setRelativPosition(new Vector2d(//
+                getSize().getWidth() - vBar.getSize().getWidth(), //
+                0 //
+        ));
 
         this.cachedDrawable.addDrawable(//
                 vBar.getDrawable(), //
-                getSize().getWidth() - vBar.getSize().getWidth(), //
-                0, //
+                vBar.getRelativPosition().getX(), //
+                vBar.getRelativPosition().getY(), //
                 1 //
         );
     }
@@ -211,11 +219,15 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         hBar.setIntervalTotal(componentWidth);
         hBar.setIntervalDisplayed(paneWidth);
         hBar.setIntervalOffset(hScrollPosition * (-1L));
+        hBar.setRelativPosition(new Vector2d(//
+                0, //
+                getSize().getHeight() - hBar.getSize().getHeight() //
+        ));
 
         this.cachedDrawable.addDrawable(//
                 hBar.getDrawable(), //
-                0, //
-                getSize().getHeight() - hBar.getSize().getHeight(), //
+                hBar.getRelativPosition().getX(), //
+                hBar.getRelativPosition().getY(), //
                 1 //
         );
     }
@@ -251,67 +263,55 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         LOGGER.trace("Click on Scrollbar. Position ({},{}).", mouseX, mouseY);
 
         if (isClickOnVBar(mouseX)) {
-            int barHeight = compVBarHeight();
-            if (mouseY < barHeight / 2) {
-                scrollUp();
-            } else {
-                scrollDown();
-            }
+            vBar.onMouseClick(//
+                    mouseX - vBar.getRelativPosition().getX(), //
+                    mouseY - vBar.getRelativPosition().getY(), //
+                    button //
+            );
         } else if (isClickOnHBar(mouseY)) {
-            int barWidth = compHBarWidth();
-            if (mouseX < barWidth / 2) {
-                hScrollPosition = Math.min(0, hScrollPosition + 50);
-            } else {
-                int componenttWidth = component.getDrawable().getSize().getWidth();
-                int panetWidth = getSize().getWidth();
-                hScrollPosition = Math.max(//
-                        Math.min(0, -1 * (componenttWidth - panetWidth) - 50), //
-                        hScrollPosition - 50 //
-                );
-            }
+            hBar.onMouseClick(//
+                    mouseX - hBar.getRelativPosition().getX(), //
+                    mouseY - hBar.getRelativPosition().getY(), //
+                    button //
+            );
         }
 
         redraw();
     }
 
-    private int compHBarWidth() {
-        int barWidth = getSize().getWidth();
-
-        if (isVBarVisible()) {
-            barWidth -= vBar.getSize().getWidth();
+    private void scrollbarCallback(int delta, ScrollbarType type) {
+        if (type == ScrollbarType.VERTICAL) {
+            if (delta < 0) {
+                // scroll up
+                vScrollPosition = Math.min(0, vScrollPosition - delta);
+            } else {
+                // scroll down
+                int componentHeight = component.getDrawable().getSize().getHeight();
+                int paneHeight = getSize().getHeight();
+                vScrollPosition = Math.max(//
+                        Math.min(0, -1 * (componentHeight - paneHeight) - delta), //
+                        vScrollPosition - delta //
+                );
+            }
+        } else {
+            if (delta < 0) {
+                // scroll left
+                hScrollPosition = Math.min(0, hScrollPosition - delta);
+            } else {
+                // scroll right
+                int componenttWidth = component.getDrawable().getSize().getWidth();
+                int panetWidth = getSize().getWidth();
+                hScrollPosition = Math.max(//
+                        Math.min(0, -1 * (componenttWidth - panetWidth) - delta), //
+                        hScrollPosition - delta //
+                );
+            }
         }
-        return barWidth;
-    }
-
-    private int compVBarHeight() {
-        int barHeight = getSize().getHeight();
-
-        if (isHBarVisible()) {
-            barHeight -= hBar.getSize().getHeight();
-        }
-        return barHeight;
-    }
-
-    private void scrollDown() {
-        int componentHeight = component.getDrawable().getSize().getHeight();
-        int paneHeight = getSize().getHeight();
-        vScrollPosition = Math.max(//
-                Math.min(0, -1 * (componentHeight - paneHeight) - 50), //
-                vScrollPosition - 50 //
-        );
-    }
-
-    private void scrollUp() {
-        vScrollPosition = Math.min(0, vScrollPosition + 50);
     }
 
     @Override
     public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
-        if (direction == MouseWheelDirection.UP) {
-            scrollUp();
-        } else {
-            scrollDown();
-        }
+        vBar.onMouseWhellMoved(mouseX, mouseY, direction);
         redraw();
     }
 

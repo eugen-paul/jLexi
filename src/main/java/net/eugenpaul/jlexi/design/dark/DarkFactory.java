@@ -74,7 +74,7 @@ public class DarkFactory implements GuiFactory {
                 .component(component)//
                 .scrollbarColor(MENU_BACKGROUND_COLOR)//
                 .backgroundColor(BORDER_BACKGROUND_COLOR)//
-                .barWidth(35)//
+                .barWidth(15)//
                 .build();
     }
 

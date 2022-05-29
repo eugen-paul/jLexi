@@ -14,6 +14,7 @@ import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.utils.AligmentH;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 /**
  * Put all elements to one column. Set horizontal alignment of the all elements in the column.
@@ -39,44 +40,43 @@ public class HorizontalAlignmentGlypthCompositor<T extends Glyph>
 
     @Override
     public Glyph composeToSingle(Iterator<T> iterator, Size maxSize) {
-        List<Drawable> listOfElements = new LinkedList<>();
+        List<T> listOfElements = new LinkedList<>();
 
         int maxWidth = 0;
         while (iterator.hasNext()) {
-            Glyph element = iterator.next();
+            T element = iterator.next();
+            listOfElements.add(element);
             var elementDrawable = element.getDrawable();
-            listOfElements.add(elementDrawable);
             maxWidth = Math.max(maxWidth, elementDrawable.getSize().getWidth());
         }
 
         DrawableSketchImpl responseSketch = new DrawableSketchImpl(backgroundColor, maxSize);
 
         int currentY = 0;
-        for (Drawable drawable : listOfElements) {
+        for (T element : listOfElements) {
+            Drawable drawable = element.getDrawable();
+            int x;
             switch (aligment) {
             case CENTER:
-                responseSketch.addDrawable(//
-                        drawable, //
-                        maxWidth / 2 - maxSize.getWidth() / 2, //
-                        currentY //
-                );
+                x = maxWidth / 2 - maxSize.getWidth() / 2;
                 break;
             case RIGHT:
-                responseSketch.addDrawable(//
-                        drawable, //
-                        maxWidth - drawable.getSize().getWidth(), //
-                        currentY //
-                );
+                x = maxWidth - drawable.getSize().getWidth();
                 break;
             case LEFT:
             default:
-                responseSketch.addDrawable(//
-                        drawable, //
-                        0, //
-                        currentY //
-                );
+                x = 0;
                 break;
             }
+
+            element.setRelativPosition(new Vector2d(x, currentY));
+
+            responseSketch.addDrawable(//
+                    drawable, //
+                    x, //
+                    currentY //
+            );
+
             currentY += drawable.getSize().getHeight();
         }
 

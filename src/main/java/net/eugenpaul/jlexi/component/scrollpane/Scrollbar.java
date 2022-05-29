@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
@@ -17,6 +18,10 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
+import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
+import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public abstract class Scrollbar extends GuiGlyph {
@@ -41,6 +46,13 @@ public abstract class Scrollbar extends GuiGlyph {
     protected ImageGlyph runnerGlyph;
 
     protected ScrollbarType type;
+
+    private int buttonStep = 10;
+    private int barStep = 50;
+
+    @Getter
+    @Setter
+    private ScrollCallback scrollCallback = null;
 
     protected long intervalTotal = 0;
     protected long intervalDisplayed = 0;
@@ -131,6 +143,8 @@ public abstract class Scrollbar extends GuiGlyph {
                     getSize().getHeight() - this.barWidth - runnerHeight //
             );
 
+            runnerGlyph.setRelativPosition(new Vector2d(0, offset));
+
             this.cachedDrawable.addDrawable(//
                     runnerGlyph.getDrawable(), //
                     0, //
@@ -161,6 +175,8 @@ public abstract class Scrollbar extends GuiGlyph {
                     getSize().getWidth() - this.barWidth - runnerWidth //
             );
 
+            runnerGlyph.setRelativPosition(new Vector2d(offset, 0));
+
             this.cachedDrawable.addDrawable(//
                     runnerGlyph.getDrawable(), //
                     offset, //
@@ -183,6 +199,50 @@ public abstract class Scrollbar extends GuiGlyph {
     public void setIntervalOffset(long intervalOffset) {
         this.intervalOffset = intervalOffset;
         this.cachedDrawable = null;
+    }
+
+    @Override
+    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
+        if (scrollCallback == null) {
+            return;
+        }
+
+        if (CollisionHelper.isPointOnArea(mouseX, mouseY, buttonFirst.getRelativPosition(), buttonFirst.getSize())) {
+            scrollCallback.scrolledDelta(-buttonStep);
+        } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, buttonLast.getRelativPosition(),
+                buttonLast.getSize())) {
+            scrollCallback.scrolledDelta(buttonStep);
+        } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, runnerGlyph.getRelativPosition(),
+                runnerGlyph.getSize())) {
+            // TODO
+        } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, backgroundGlyph.getRelativPosition(),
+                backgroundGlyph.getSize())) {
+            boolean isClickFirst;
+            if (type == ScrollbarType.VERTICAL) {
+                int barMiddle;
+                barMiddle = backgroundGlyph.getSize().getHeight() / 2 + backgroundGlyph.getRelativPosition().getY();
+                isClickFirst = mouseY < barMiddle;
+            } else {
+                int barMiddle;
+                barMiddle = backgroundGlyph.getSize().getWidth() / 2 + backgroundGlyph.getRelativPosition().getX();
+                isClickFirst = mouseX < barMiddle;
+            }
+
+            if (isClickFirst) {
+                scrollCallback.scrolledDelta(-barStep);
+            } else {
+                scrollCallback.scrolledDelta(barStep);
+            }
+        }
+    }
+
+    @Override
+    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
+        if (direction == MouseWheelDirection.UP) {
+            scrollCallback.scrolledDelta(-barStep);
+        } else {
+            scrollCallback.scrolledDelta(barStep);
+        }
     }
 
     @Override
