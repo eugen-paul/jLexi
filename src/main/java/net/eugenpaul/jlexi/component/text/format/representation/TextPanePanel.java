@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
+import lombok.var;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
@@ -57,6 +58,8 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     private Color backgroundColor;
 
+    private Size maxSize = Size.ZERO_SIZE;
+
     @Getter
     private final String cursorName;
 
@@ -93,11 +96,19 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         this.children.clear();
 
-        Size fullAreaSize = new Size(getSize().getWidth(), Integer.MAX_VALUE);
+        Size fullAreaSize = new Size(maxSize.getWidth(), Integer.MAX_VALUE);
 
-        var sites = compositor.compose(document.getRepresentation(fullAreaSize).iterator(), fullAreaSize);
+        var sites = document.getRepresentation(fullAreaSize);
 
-        this.children.addAll(sites);
+        int maxSiteWidth = 0;
+
+        for (var site : sites) {
+            maxSiteWidth = Math.max(maxSiteWidth, site.getSize().getWidth());
+        }
+
+        var centeredSites = compositor.compose(sites.iterator(), new Size(maxSiteWidth, Integer.MAX_VALUE));
+
+        this.children.addAll(centeredSites);
 
         this.cachedDrawable = new DrawableSketchImpl(backgroundColor);
 
@@ -116,7 +127,15 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
             currentY += el.getSize().getHeight();
         }
 
+        this.setSize(new Size(maxSiteWidth, currentY));
+
         return this.cachedDrawable.draw();
+    }
+
+    @Override
+    public Size getSize() {
+        getDrawable();
+        return super.getSize();
     }
 
     @Override
@@ -159,7 +178,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Override
     public void resizeTo(Size size) {
         notifyChange();
-        setSize(size);
+        maxSize = size;
         document.resetStructure();
     }
 

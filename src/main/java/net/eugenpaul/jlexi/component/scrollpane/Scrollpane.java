@@ -118,7 +118,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         );
 
         if (!isHBarVisible()) {
-            hScrollPosition = 0;
+            hScrollPosition = childSize.getWidth() / 2 - component.getSize().getWidth() / 2;
         }
         hBar.setIntervalOffset(hScrollPosition);
         vBar.setIntervalOffset(vScrollPosition);

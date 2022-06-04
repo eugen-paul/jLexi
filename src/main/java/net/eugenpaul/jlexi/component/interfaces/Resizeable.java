@@ -10,7 +10,8 @@ public interface Resizeable {
     boolean isResizeble();
 
     /**
-     * Set new size
+     * The function tries to change the size of the element. The element can decide for itself whether the size is taken
+     * over or adjusted on the basis of the passed size.
      * 
      * @param name - name of the object that will be resized
      * @param size - new size
@@ -18,7 +19,8 @@ public interface Resizeable {
     void resizeTo(Size size);
 
     /**
-     * Set new width und height
+     * The function tries to change the size of the element. The element can decide for itself whether the size is taken
+     * over or adjusted on the basis of the passed size.
      * 
      * @param name   - name of the object that will be resized
      * @param width  - new width
