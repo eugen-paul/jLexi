@@ -159,6 +159,10 @@
         },
         {
             "text": "   - Try to take over the world!",
+            "eos": true
+        },
+        {
+            "text": "There is still a lot to do. But a page break is already implemented.",
             "eol": true
         }
     ]

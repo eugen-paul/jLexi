@@ -66,6 +66,9 @@ public class JsonConverter implements TextConverter {
         if (input.isEol()) {
             response.add(TextElementFactory.genNewLineChar(null, resourceManager, null, format, formatEffect));
         }
+        if (input.isEos()) {
+            response.add(TextElementFactory.genNewSectionChar(null, resourceManager, null, format, formatEffect));
+        }
 
         return response;
     }

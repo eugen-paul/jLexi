@@ -37,9 +37,10 @@ public class TextPaneDocument extends TextStructureOfStructure {
                 currentSection.add(currentParagraph);
                 currentParagraph = new TextParagraph(currentSection, format, storage);
             }
-
+            
             if (element.isEndOfSection()) {
                 children.add(currentSection);
+                currentParagraph = new TextParagraph(currentSection, format, storage);
                 currentSection = new TextSection(this, format, storage);
             }
         }

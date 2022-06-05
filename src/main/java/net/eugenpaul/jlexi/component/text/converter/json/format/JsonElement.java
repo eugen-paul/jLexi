@@ -32,4 +32,6 @@ public class JsonElement {
 
     private boolean eol = false;
 
+    private boolean eos = false;
+
 }
