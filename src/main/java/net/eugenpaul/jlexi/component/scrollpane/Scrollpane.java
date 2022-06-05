@@ -144,7 +144,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
             return;
         }
 
-        int componentHeight = component.getDrawable().getSize().getHeight();
+        int componentHeight = component.getSize().getHeight();
         int paneHeight = getSize().getHeight();
         vBar.setIntervalTotal(componentHeight);
         vBar.setIntervalDisplayed(paneHeight);
@@ -190,7 +190,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         if (showVBar == ScrollbarShowType.NOT) {
             return false;
         }
-        int componentHeight = component.getDrawable().getSize().getHeight();
+        int componentHeight = component.getSize().getHeight();
         int paneHeight = getSize().getHeight();
         paneHeight -= hBar.getSize().getHeight();
         return paneHeight <= componentHeight;
@@ -203,7 +203,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         if (showHBar == ScrollbarShowType.NOT) {
             return false;
         }
-        int componentWidth = component.getDrawable().getSize().getWidth();
+        int componentWidth = component.getSize().getWidth();
         int paneWidth = getSize().getWidth();
 
         paneWidth -= vBar.getSize().getWidth();
@@ -216,7 +216,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
             return;
         }
 
-        int componentWidth = component.getDrawable().getSize().getWidth();
+        int componentWidth = component.getSize().getWidth();
         int paneWidth = getSize().getWidth();
         hBar.setIntervalTotal(componentWidth);
         hBar.setIntervalDisplayed(paneWidth);
@@ -288,7 +288,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
                 vScrollPosition = Math.min(0, vScrollPosition - delta);
             } else {
                 // scroll down
-                int componentHeight = component.getDrawable().getSize().getHeight();
+                int componentHeight = component.getSize().getHeight();
                 int paneHeight = getSize().getHeight();
                 vScrollPosition = Math.max(//
                         Math.min(0, -1 * (componentHeight - paneHeight) - delta), //
@@ -301,7 +301,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
                 hScrollPosition = Math.min(0, hScrollPosition - delta);
             } else {
                 // scroll right
-                int componenttWidth = component.getDrawable().getSize().getWidth();
+                int componenttWidth = component.getSize().getWidth();
                 int panetWidth = getSize().getWidth();
                 hScrollPosition = Math.max(//
                         Math.min(0, -1 * (componenttWidth - panetWidth) - delta), //
