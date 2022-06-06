@@ -38,13 +38,13 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    public TextPosition getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCursorElementAt(Vector2d pos) {
         var row = this.xPositionToRow.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
 
-        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -80,6 +80,16 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
         }
 
         return this.cachedDrawable.draw();
+    }
+
+    @Override
+    protected TextPosition getLastText(int x) {
+        return getCursorElementAt(new Vector2d(x, 0));
+    }
+
+    @Override
+    protected TextPosition getFirstText(int x) {
+        return getCursorElementAt(new Vector2d(x, 0));
     }
 
 }

@@ -33,7 +33,7 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
 
     public abstract boolean isEmpty();
 
-    public abstract TextPosition getCorsorElementAt(Vector2d pos);
+    public abstract TextPosition getCursorElementAt(Vector2d pos);
 
     public abstract TextPosition getFirstChild();
 
@@ -99,6 +99,9 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
 
         return representation.getDown(position);
     }
+
+    protected abstract TextPosition getLastText(int x);
+    protected abstract TextPosition getFirstText(int x);
 
     @Override
     public TextPosition getEol(TextPosition element) {

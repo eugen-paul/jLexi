@@ -38,13 +38,13 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    public TextPosition getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCursorElementAt(Vector2d pos) {
         var row = this.xPositionToColumn.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
 
-        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -77,6 +77,30 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
         }
 
         return this.cachedDrawable.draw();
+    }
+
+    @Override
+    protected TextPosition getLastText(int x) {
+        var col = this.xPositionToColumn.floorEntry(x);
+        if (col == null) {
+            return null;
+        }
+
+        var pos = col.getValue().getRelativPositionTo(this);
+
+        return col.getValue().getLastText(x - pos.getX());
+    }
+
+    @Override
+    protected TextPosition getFirstText(int x) {
+        var col = this.xPositionToColumn.floorEntry(x);
+        if (col == null) {
+            return null;
+        }
+
+        var pos = col.getValue().getRelativPositionTo(this);
+
+        return col.getValue().getFirstText(x - pos.getX());
     }
 
 }

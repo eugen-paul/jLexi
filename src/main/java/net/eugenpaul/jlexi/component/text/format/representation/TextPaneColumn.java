@@ -45,13 +45,13 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    public TextPosition getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCursorElementAt(Vector2d pos) {
         var row = this.yPositionToRow.floorEntry(pos.getY());
         if (null == row) {
             return null;
         }
 
-        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -97,8 +97,7 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
             while (e == null && representation != null && pos != null) {
                 representation = getPreviousRepresentation(representation);
                 if (representation != null) {
-                    pos.setY(0);
-                    e = representation.getCorsorElementAt(pos);
+                    e = representation.getLastText(pos.getX());
                 }
             }
         }
@@ -120,13 +119,36 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
             while (e == null && representation != null && pos != null) {
                 representation = getNextRepresentation(representation);
                 if (representation != null) {
-                    pos.setY(0);
-                    e = representation.getCorsorElementAt(pos);
+                    e = representation.getFirstText(pos.getX());
                 }
             }
         }
 
         return e;
+    }
+
+    @Override
+    protected TextPosition getFirstText(int x) {
+        if (yPositionToRow.isEmpty()) {
+            return null;
+        }
+
+        var entry = yPositionToRow.firstEntry();
+        var pos = entry.getValue().getRelativPositionTo(this);
+
+        return entry.getValue().getFirstText(x - pos.getX());
+    }
+
+    @Override
+    protected TextPosition getLastText(int x) {
+        if (yPositionToRow.isEmpty()) {
+            return null;
+        }
+
+        var entry = yPositionToRow.lastEntry();
+        var pos = entry.getValue().getRelativPositionTo(this);
+
+        return entry.getValue().getFirstText(x - pos.getX());
     }
 
 }

@@ -149,13 +149,13 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     }
 
     @Override
-    public TextPosition getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCursorElementAt(Vector2d pos) {
         var row = this.yPositionToSite.floorEntry(pos.getY());
         if (null == row) {
             return null;
         }
 
-        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -207,7 +207,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
             return;
         }
 
-        TextPosition clickedElement = row.getValue().getCorsorElementAt(//
+        TextPosition clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         mouseX - row.getValue().getRelativPosition().getX(), //
                         mouseY - row.getValue().getRelativPosition().getY() //
@@ -247,5 +247,17 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Override
     public TextRepresentation getTextRepresentation() {
         return this;
+    }
+
+    @Override
+    protected TextPosition getLastText(int x) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected TextPosition getFirstText(int x) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

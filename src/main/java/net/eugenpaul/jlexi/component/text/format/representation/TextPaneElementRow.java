@@ -48,7 +48,7 @@ public class TextPaneElementRow extends TextRepresentation {
     }
 
     @Override
-    public TextPosition getCorsorElementAt(Vector2d pos) {
+    public TextPosition getCursorElementAt(Vector2d pos) {
         var row = this.xPositionToRow.floorEntry(pos.getX());
         if (null == row) {
             return null;
@@ -159,6 +159,16 @@ public class TextPaneElementRow extends TextRepresentation {
     @Override
     public TextRepresentation getPreviousRepresentation(TextRepresentation structure) {
         return null;
+    }
+
+    @Override
+    protected TextPosition getFirstText(int x) {
+        return getCursorElementAt(new Vector2d(x, 0));
+    }
+
+    @Override
+    protected TextPosition getLastText(int x) {
+        return getCursorElementAt(new Vector2d(x, 0));
     }
 
 }
