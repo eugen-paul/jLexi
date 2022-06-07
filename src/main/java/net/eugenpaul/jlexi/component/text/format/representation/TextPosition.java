@@ -1,9 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
-import java.util.List;
-
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 
 public class TextPosition {
 
@@ -17,12 +16,12 @@ public class TextPosition {
         return this.textElement.addBefore(element);
     }
 
-    public TextPosition removeElement(List<TextElement> removedElements) {
-        return this.textElement.removeElement(removedElements).getTextPosition();
+    public TextRemoveResponse removeElement() {
+        return this.textElement.removeElement();
     }
 
-    public boolean removeElementBefore(List<TextElement> removedElements) {
-        return this.textElement.removeElementBefore(removedElements);
+    public TextRemoveResponse removeElementBefore() {
+        return this.textElement.removeElementBefore();
     }
 
     public TextElement getTextElement() {

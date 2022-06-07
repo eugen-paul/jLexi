@@ -1,11 +1,9 @@
 package net.eugenpaul.jlexi.command;
 
-import java.util.LinkedList;
-
 import lombok.Getter;
-import lombok.var;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 
 public class TextElementRemoveCommant implements TextCommand {
 
@@ -24,15 +22,12 @@ public class TextElementRemoveCommant implements TextCommand {
 
     @Override
     public void execute() {
-        TextPosition newCursorPosition = null;
+        TextRemoveResponse removedData = positionBeforeRemove.removeElement();
 
-        var removed = new LinkedList<TextElement>();
-        newCursorPosition = positionBeforeRemove.removeElement(removed);
-
-        if (newCursorPosition != null) {
-            positionAfterRemove = newCursorPosition;
+        if (removedData != TextRemoveResponse.EMPTY) {
+            positionAfterRemove = removedData.getNewCursorPosition();
             cursorPosition = positionAfterRemove;
-            removedElement = removed.getFirst();
+            removedElement = removedData.getRemovedElement();
         }
     }
 

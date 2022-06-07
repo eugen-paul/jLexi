@@ -144,7 +144,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     }
 
     @Override
-    public TextElement removeElement(TextElement elementToRemove, List<TextElement> removedElements) {
+    public TextRemoveResponse removeElement(TextElement elementToRemove) {
         var iterator = this.textElements.iterator();
         TextElement nextElement = null;
         boolean found = false;
@@ -159,26 +159,30 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         }
 
         if (!found) {
-            return null;
+            return TextRemoveResponse.EMPTY;
         }
 
         if (nextElement == null) {
             if (this.parentStructure != null) {
                 var newCursorPosition = this.parentStructure.mergeChildWithNext(this);
-                if (newCursorPosition != null) {
-                    removedElements.add(elementToRemove);
-                }
                 notifyChange();
-                return newCursorPosition;
+                if (newCursorPosition != null) {
+                    return new TextRemoveResponse(//
+                            elementToRemove, //
+                            newCursorPosition.getTextPosition() //
+                    );
+                }
             }
-            return null;
+            return TextRemoveResponse.EMPTY;
         }
 
         removeElementFromText(elementToRemove);
 
-        removedElements.add(elementToRemove);
         notifyChange();
-        return nextElement;
+        return new TextRemoveResponse(//
+                elementToRemove, //
+                nextElement.getTextPosition() //
+        );
     }
 
     private void removeElementFromText(TextElement elementToRemove) {
@@ -192,7 +196,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     }
 
     @Override
-    public boolean removeElementBefore(TextElement position, List<TextElement> removedElements) {
+    public TextRemoveResponse removeElementBefore(TextElement position) {
         var iterator = this.textElements.listIterator();
         TextElement elementToRemove = null;
         boolean found = false;
@@ -206,26 +210,31 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         }
 
         if (!found) {
-            return false;
+            return TextRemoveResponse.EMPTY;
         }
 
         if (elementToRemove != null) {
             removeElementFromText(elementToRemove);
-            removedElements.add(elementToRemove);
-            this.representation = null;
+
             notifyChange();
-            return true;
+
+            return new TextRemoveResponse(//
+                    elementToRemove, //
+                    position.getTextPosition() //
+            );
         }
 
         if (this.parentStructure != null) {
             var removedElement = this.parentStructure.mergeChildWithPrevious(this);
             if (removedElement != null) {
-                removedElements.add(removedElement);
                 notifyChange();
-                return true;
+                return new TextRemoveResponse(//
+                        removedElement, //
+                        position.getTextPosition() //
+                );
             }
         }
-        return false;
+        return TextRemoveResponse.EMPTY;
     }
 
     @Override
