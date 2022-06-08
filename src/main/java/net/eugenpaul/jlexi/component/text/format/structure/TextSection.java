@@ -91,13 +91,16 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         }
 
         TextSection nextSection = (TextSection) element;
-        TextElement responseSeparator = null;
-        if (((TextParagraph) children.getLast()).isEndOfSection()) {
-            responseSeparator = ((TextParagraph) children.getLast()).removeEndOfSection();
-        }
+
+        TextStructure a = children.getLast();
+        TextStructure b = nextSection.children.getFirst();
 
         nextSection.children.stream().forEach(v -> v.setParentStructure(this));
         children.addAll(nextSection.children);
+
+        TextElement responseSeparator = a.mergeWithNext(b);
+
+        children.remove(b);
 
         representation = null;
 
@@ -116,10 +119,19 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
         TextElement position = children.getFirst().getFirstElement();
 
-        var iterator = children.listIterator();
-        previousParagraph.children.stream()//
-                .filter(v -> !((TextParagraph) v).isEndOfSection())//
-                .forEach(iterator::add);
+        // After merging two sections, check whether you need to merge the last paragraph of section A with the first
+        // paragraph of section B.
+        TextStructure a = previousParagraph.children.getLast();
+        TextStructure b = children.getFirst();
+
+        children.addAll(0, previousParagraph.children);
+
+        TextElement positionAfterInnerMerge = b.mergeWithPrevious(a);
+
+        if (positionAfterInnerMerge != null) {
+            children.remove(a);
+            position = positionAfterInnerMerge;
+        }
 
         representation = null;
 
@@ -135,6 +147,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     protected void restructChildren() {
         super.restructChildren();
 
+        checkRestruct();
+
         if (!needRestruct) {
             return;
         }
@@ -146,7 +160,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private void checkAndSplit() {
         var iterator = children.listIterator();
-        var newParagraph = new TextSection(parentStructure, format, storage);
+        var newSection = new TextSection(parentStructure, format, storage);
 
         clearSplitter();
 
@@ -156,18 +170,21 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
             var currentElement = (TextParagraph) iterator.next();
 
             if (doSplit) {
-                newParagraph.add(currentElement);
-                currentElement.setParentStructure(newParagraph);
+                newSection.add(currentElement);
+                currentElement.setParentStructure(newSection);
                 iterator.remove();
             }
 
             if (currentElement.isEndOfSection()) {
-                if (!newParagraph.isEmpty()) {
-                    splits.add(newParagraph);
+                if (!newSection.isEmpty()) {
+                    splits.add(newSection);
                 }
-                newParagraph = new TextSection(parentStructure, format, storage);
+                newSection = new TextSection(parentStructure, format, storage);
                 doSplit = true;
             }
+        }
+        if (!newSection.isEmpty()) {
+            splits.add(newSection);
         }
     }
 
@@ -197,6 +214,11 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         if (addedElement.isEndOfSection()) {
             needRestruct = true;
         }
+    }
+
+    private void checkRestruct() {
+        needRestruct = children.stream()//
+                .anyMatch(v -> ((TextParagraph) v).isEndOfSection());
     }
 
     @Override

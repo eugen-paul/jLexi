@@ -83,10 +83,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
         TextElement position = this.textElements.getFirst();
 
-        var iterator = this.textElements.listIterator();
-        previousParagraph.textElements.stream()//
-                .filter(v -> !v.isEndOfLine())//
-                .forEach(iterator::add);
+        textElements.addAll(0, previousParagraph.textElements);
 
         this.representation = null;
 
@@ -134,6 +131,9 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
                 doSplit = true;
             }
         }
+        if (!newParagraph.isEmpty()) {
+            splits.add(newParagraph);
+        }
     }
 
     public void add(TextElement element) {
@@ -163,14 +163,21 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         }
 
         if (nextElement == null) {
+            // There is no following element. Try to merge the paragraph with the following paragraph.
             if (this.parentStructure != null) {
+                // The last character (elementToRemove) is deleted before the merge.
+                textElements.removeLast();
                 var newCursorPosition = this.parentStructure.mergeChildWithNext(this);
-                notifyChange();
                 if (newCursorPosition != null) {
+                    notifyChange();
                     return new TextRemoveResponse(//
                             elementToRemove, //
                             newCursorPosition.getTextPosition() //
                     );
+                } else {
+                    // Merge was not successful. Last character (elementToRemove) must be added to the text elements
+                    // again.
+                    textElements.addLast(elementToRemove);
                 }
             }
             return TextRemoveResponse.EMPTY;
@@ -224,6 +231,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
             );
         }
 
+        // No previous element was found. Check if you can merge the paragraph with the previous paragraph.
         if (this.parentStructure != null) {
             var removedElement = this.parentStructure.mergeChildWithPrevious(this);
             if (removedElement != null) {
