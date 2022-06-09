@@ -14,22 +14,22 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     private ChangeListener parent;
 
-    public TextPaneDocument(ResourceManager storage, List<TextSection> data, ChangeListener parent) {
-        super(null, storage);
+    public TextPaneDocument(List<TextSection> data, ChangeListener parent) {
+        super(null);
         this.parent = parent;
         this.children.addAll(data);
         this.children.forEach(v -> v.setParentStructure(this));
     }
 
     public TextPaneDocument(ResourceManager storage, ChangeListener parent) {
-        super(null, storage);
+        super(null);
         this.parent = parent;
-        initEmptyDocument();
+        initEmptyDocument(storage);
     }
 
-    private void initEmptyDocument() {
-        TextSection section = new TextSection(this, storage);
-        TextParagraph paragraph = new TextParagraph(section, storage);
+    private void initEmptyDocument(ResourceManager storage) {
+        TextSection section = new TextSection(this);
+        TextParagraph paragraph = new TextParagraph(section);
         paragraph.add(TextElementFactory.genNewLineChar(//
                 storage, //
                 TextFormat.DEFAULT, //

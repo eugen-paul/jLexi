@@ -20,6 +20,7 @@ import net.eugenpaul.jlexi.component.text.converter.json.format.JsonSection;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
+import net.eugenpaul.jlexi.component.text.format.structure.TextParagraphConfiguration;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -53,7 +54,7 @@ public class JsonConverter implements TextConverter {
     }
 
     private TextSection toSection(JsonSection input) {
-        TextSection response = new TextSection(null, null);
+        TextSection response = new TextSection(null);
         TextParagraph lastParagraph = null;
 
         for (var paragraph : input.getParagraphs()) {
@@ -63,7 +64,7 @@ public class JsonConverter implements TextConverter {
         }
 
         if (lastParagraph == null) {
-            TextParagraph paragraph = new TextParagraph(null, null);
+            TextParagraph paragraph = new TextParagraph(null, TextParagraphConfiguration.builder().build());
             paragraph.setToEos(resourceManager);
             response.add(paragraph);
         } else {
@@ -74,7 +75,7 @@ public class JsonConverter implements TextConverter {
     }
 
     private TextParagraph toParagraph(JsonParagraph input) {
-        TextParagraph response = new TextParagraph(null, null);
+        TextParagraph response = new TextParagraph(null, TextParagraphConfiguration.builder().build());
 
         for (var element : input.getElements()) {
             toElement(element).stream()//

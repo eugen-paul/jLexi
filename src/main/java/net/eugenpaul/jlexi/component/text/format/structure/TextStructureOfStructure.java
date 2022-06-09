@@ -4,14 +4,13 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 public abstract class TextStructureOfStructure extends TextStructure {
 
     protected LinkedList<TextStructure> children;
 
-    protected TextStructureOfStructure(TextStructure parentStructure, ResourceManager storage) {
-        super(parentStructure, storage);
+    protected TextStructureOfStructure(TextStructure parentStructure) {
+        super(parentStructure);
         this.children = new LinkedList<>();
     }
 

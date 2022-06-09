@@ -13,7 +13,6 @@ import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationTo
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToSiteCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
-import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -36,8 +35,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private boolean needRestruct = true;
 
-    public TextSection(TextStructure parentStructure, ResourceManager storage) {
-        super(parentStructure, storage);
+    public TextSection(TextStructure parentStructure) {
+        super(parentStructure);
 
         int columnWidth = (siteSize.getWidth() - sitePaddingLeft - sitePaddingRight
                 - (columnPerSite - 1) * columnSpacing) / columnPerSite;
@@ -159,7 +158,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private void checkAndSplit() {
         var iterator = children.listIterator();
-        var newSection = new TextSection(parentStructure, storage);
+        var newSection = new TextSection(parentStructure);
 
         clearSplitter();
 
@@ -178,7 +177,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                 if (!newSection.isEmpty()) {
                     splits.add(newSection);
                 }
-                newSection = new TextSection(parentStructure, storage);
+                newSection = new TextSection(parentStructure);
                 doSplit = true;
             }
         }

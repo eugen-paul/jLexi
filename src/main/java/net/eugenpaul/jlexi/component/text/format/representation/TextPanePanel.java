@@ -51,8 +51,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Getter
     private Cursor mouseCursor;
 
-    private ResourceManager storage;
-
     private Color backgroundColor;
 
     private Size maxSize = Size.ZERO_SIZE;
@@ -62,7 +60,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     public TextPanePanel(String cursorPrefix, Glyph parent, ResourceManager storage, AbstractController controller) {
         super(parent);
-        this.storage = storage;
         this.backgroundColor = Color.GREY;
         this.compositor = new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER_POSITIV);
         this.cursorName = cursorPrefix + "textPaneCursor";
@@ -162,7 +159,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Override
     public void setText(List<TextSection> text) {
         LOGGER.trace("Set Document.text from List<TextSection>");
-        document = new TextPaneDocument(storage, text, this);
+        document = new TextPaneDocument(text, this);
         notifyChange();
     }
 
