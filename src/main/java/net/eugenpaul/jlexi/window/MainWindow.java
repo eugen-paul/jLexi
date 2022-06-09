@@ -93,8 +93,8 @@ public class MainWindow extends ApplicationWindow {
         JsonConverter converter = new JsonConverter(storage);
         try {
             var fileData = Files.readString(path);
-            var textElements = converter.read(fileData);
-            controller.setText(textPaneName, textElements);
+            var textSections = converter.read(fileData);
+            controller.setText(textPaneName, textSections);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

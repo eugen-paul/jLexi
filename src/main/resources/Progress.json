@@ -1,169 +1,228 @@
 {
-    "data": [
+    "sections": [
         {
-            "format": {
-                "bold": true,
-                "fontsize": 12,
-                "fontName": "Monospaced",
-                "fontColor": "white",
-                "backgroundColor": "black"
-            },
-            "text": "Progress:",
-            "eol": true
+            "paragraphs": [
+                {
+                    "elements": [
+                        {
+                            "format": {
+                                "bold": true,
+                                "fontsize": 12,
+                                "fontName": "Monospaced",
+                                "fontColor": "white",
+                                "backgroundColor": "black"
+                            },
+                            "text": "Progress:"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "format": {
+                                "fontColor": "RED"
+                            },
+                            "text": "   - simple text formatting by reading a file: "
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "         "
+                        },
+                        {
+                            "format": {
+                                "bold": true,
+                                "fontColor": "black",
+                                "backgroundColor": "white"
+                            },
+                            "text": "bold"
+                        },
+                        {
+                            "text": ", "
+                        },
+                        {
+                            "format": {
+                                "italic": true
+                            },
+                            "text": "italic"
+                        },
+                        {
+                            "text": ", "
+                        },
+                        {
+                            "format": {
+                                "bold": true,
+                                "italic": true
+                            },
+                            "text": "bold and italic"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "         "
+                        },
+                        {
+                            "text": "Underline: "
+                        },
+                        {
+                            "formatEffect": {
+                                "underline": "SINGLE"
+                            },
+                            "text": "single"
+                        },
+                        {
+                            "text": ", "
+                        },
+                        {
+                            "formatEffect": {
+                                "underline": "DOUBLE"
+                            },
+                            "text": "double"
+                        },
+                        {
+                            "text": ", "
+                        },
+                        {
+                            "formatEffect": {
+                                "underline": "SINGLE",
+                                "underlineColor": "green"
+                            },
+                            "text": "colored"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "         "
+                        },
+                        {
+                            "format": {
+                                "fontsize": 30,
+                                "fontName": "Monospaced"
+                            },
+                            "text": "large size"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - undo and redo by F1 and F2"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - "
+                        },
+                        {
+                            "format": {
+                                "bold": true
+                            },
+                            "text": "Bold"
+                        },
+                        {
+                            "text": " and/or "
+                        },
+                        {
+                            "format": {
+                                "italic": true
+                            },
+                            "text": "italic"
+                        },
+                        {
+                            "text": " text can be entered."
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - new menubar."
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - new site layout."
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "format": {
+                                "bold": true,
+                                "italic": true,
+                                "fontsize": 20,
+                                "fontName": "Serif Bold"
+                            },
+                            "formatEffect": {},
+                            "text": "Next steps:"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - save file"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - text formatting"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - GUI (menu, buttons, ...)"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - Textscroll"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - Keyboard shortcuts"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - Try to take over the world!"
+                        }
+                    ]
+                }
+            ]
         },
         {
-            "format": {
-                "fontColor": "RED"
-            },
-            "text": "   - simple text formatting by reading a file: ",
-            "eol": true
-        },
-        {
-            "text": "         "
-        },
-        {
-            "format": {
-                "bold": true,
-                "fontColor": "black",
-                "backgroundColor": "white"
-            },
-            "text": "bold"
-        },
-        {
-            "text": ", "
-        },
-        {
-            "format": {
-                "italic": true
-            },
-            "text": "italic"
-        },
-        {
-            "text": ", "
-        },
-        {
-            "format": {
-                "bold": true,
-                "italic": true
-            },
-            "text": "bold and italic",
-            "eol": true
-        },
-        {
-            "text": "         "
-        },
-        {
-            "text": "Underline: "
-        },
-        {
-            "formatEffect": {
-                "underline": "SINGLE"
-            },
-            "text": "single"
-        },
-        {
-            "text": ", "
-        },
-        {
-            "formatEffect": {
-                "underline": "DOUBLE"
-            },
-            "text": "double"
-        },
-        {
-            "text": ", "
-        },
-        {
-            "formatEffect": {
-                "underline": "SINGLE",
-                "underlineColor": "green"
-            },
-            "text": "colored",
-            "eol": true
-        },
-        {
-            "text": "         "
-        },
-        {
-            "format": {
-                "fontsize": 30,
-                "fontName": "Monospaced"
-            },
-            "text": "large size",
-            "eol": true
-        },
-        {
-            "text": "   - undo and redo by F1 and F2",
-            "eol": true
-        },
-        {
-            "text": "   - "
-        },
-        {
-            "format": {
-                "bold": true
-            },
-            "text": "Bold"
-        },
-        {
-            "text": " and/or "
-        },
-        {
-            "format": {
-                "italic": true
-            },
-            "text": "italic"
-        },
-        {
-            "text": " text can be entered.",
-            "eol": true
-        },
-        {
-            "text": "   - new menubar.",
-            "eol": true
-        },
-        {
-            "text": "   - new site layout.",
-            "eol": true
-        },
-        {
-            "format": {
-                "bold": true,
-                "italic": true,
-                "fontsize": 20,
-                "fontName": "Serif Bold"
-            },
-            "formatEffect": {},
-            "text": "Next steps:",
-            "eol": true
-        },
-        {
-            "text": "   - save file",
-            "eol": true
-        },
-        {
-            "text": "   - text formatting",
-            "eol": true
-        },
-        {
-            "text": "   - GUI (menu, buttons, ...)",
-            "eol": true
-        },
-        {
-            "text": "   - Textscroll",
-            "eol": true
-        },
-        {
-            "text": "   - Keyboard shortcuts",
-            "eol": true
-        },
-        {
-            "text": "   - Try to take over the world!",
-            "eos": true
-        },
-        {
-            "text": "There is still a lot to do. But a page break is already implemented.",
-            "eol": true
+            "paragraphs": [
+                {
+                    "elements": [
+                        {
+                            "text": "There is still a lot to do. But a page break is already implemented."
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

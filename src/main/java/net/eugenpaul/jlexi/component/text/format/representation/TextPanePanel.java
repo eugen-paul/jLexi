@@ -17,11 +17,8 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
+import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
@@ -71,13 +68,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         this.cursorName = cursorPrefix + "textPaneCursor";
 
         this.document = new TextPaneDocument(//
-                TextFormat.DEFAULT, //
                 storage, //
-                List.of(TextElementFactory.genNewLineChar(//
-                        storage, //
-                        TextFormat.DEFAULT, //
-                        TextFormatEffect.DEFAULT_FORMAT_EFFECT//
-                )), //
                 this//
         );
 
@@ -169,9 +160,9 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     }
 
     @Override
-    public void setText(List<TextElement> text) {
-        LOGGER.trace("Set Document.text from List<TextElement>");
-        document = new TextPaneDocument(TextFormat.DEFAULT, storage, text, this);
+    public void setText(List<TextSection> text) {
+        LOGGER.trace("Set Document.text from List<TextSection>");
+        document = new TextPaneDocument(storage, text, this);
         notifyChange();
     }
 

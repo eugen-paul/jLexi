@@ -29,9 +29,4 @@ public class JsonElement {
     private TextFormatEffect formatEffect = TextFormatEffect.DEFAULT_FORMAT_EFFECT;
 
     private String text = "";
-
-    private boolean eol = false;
-
-    private boolean eos = false;
-
 }

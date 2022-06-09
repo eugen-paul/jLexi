@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -76,7 +76,7 @@ public class ModelController extends AbstractController {
         textUpdateableMap.put(fieldName, field);
     }
 
-    public void setText(String fieldName, List<TextElement> text) {
+    public void setText(String fieldName, List<TextSection> text) {
         Mono.empty()//
                 .publishOn(modelScheduler)//
                 .doOnSuccess(v -> {

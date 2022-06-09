@@ -10,7 +10,6 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.Empty;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
@@ -27,15 +26,13 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
     @Getter
     @Setter
     protected TextStructure parentStructure;
-    protected TextFormat format;
     protected ResourceManager storage;
     protected List<TextRepresentation> representation;
 
     protected List<TextStructure> splits;
 
-    protected TextStructure(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
+    protected TextStructure(TextStructure parentStructure, ResourceManager storage) {
         this.parentStructure = parentStructure;
-        this.format = format;
         this.storage = storage;
         this.representation = null;
         this.splits = new LinkedList<>();

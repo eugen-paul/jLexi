@@ -12,7 +12,6 @@ import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToSiteCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
@@ -20,7 +19,7 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public class TextSection extends TextStructureOfStructure implements GlyphIterable<TextRepresentation> {
 
-    protected TextCompositor<TextRepresentation> compositor;
+    private TextCompositor<TextRepresentation> compositor;
 
     private Size siteSize = new Size(595, 842);
     private int sitePaddingLeft = 20;
@@ -37,8 +36,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private boolean needRestruct = true;
 
-    public TextSection(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
-        super(parentStructure, format, storage);
+    public TextSection(TextStructure parentStructure, ResourceManager storage) {
+        super(parentStructure, storage);
 
         int columnWidth = (siteSize.getWidth() - sitePaddingLeft - sitePaddingRight
                 - (columnPerSite - 1) * columnSpacing) / columnPerSite;
@@ -160,7 +159,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private void checkAndSplit() {
         var iterator = children.listIterator();
-        var newSection = new TextSection(parentStructure, format, storage);
+        var newSection = new TextSection(parentStructure, storage);
 
         clearSplitter();
 
@@ -179,7 +178,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                 if (!newSection.isEmpty()) {
                     splits.add(newSection);
                 }
-                newSection = new TextSection(parentStructure, format, storage);
+                newSection = new TextSection(parentStructure, storage);
                 doSplit = true;
             }
         }

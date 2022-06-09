@@ -12,8 +12,8 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.helper.KeyEventAdapterToKeyPressable;
 import net.eugenpaul.jlexi.component.helper.MouseEventAdapterToMouseClickable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePanel;
+import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -62,7 +62,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable {
     }
 
     @Override
-    public void setText(List<TextElement> text) {
+    public void setText(List<TextSection> text) {
         textPanel.setText(text);
     }
 

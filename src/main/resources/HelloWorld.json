@@ -1,67 +1,52 @@
 {
-    "data": [
+    "sections": [
         {
-            "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
-            "text": "A "
-        },
-        {
-            "format": {
-                "bold": true,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
-            "formatEffect": {
-                "underline": "SINGLE"
-            },
-            "text": "\"Hello, World!\""
-        },
-        {
-            "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
-            "text": " program is generally a "
-        },
-        {
-            "format": {
-                "bold": false,
-                "italic": true,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
-            "formatEffect": {
-                "underline": "DOUBLE"
-            },
-            "text": "computer program"
-        },
-        {
-            "format": {
-                "bold": false,
-                "italic": false,
-                "fontsize": 12,
-                "fontName": "Monospaced"
-            },
-            "text": " that outputs or displays the message:",
-            "eol": true
-        },
-        {
-            "format": {
-                "bold": true,
-                "italic": true,
-                "fontsize": 20,
-                "fontName": "Serif Bold"
-            },
-            "formatEffect": {},
-            "text": "Hello, World!",
-            "eol": true
+            "paragraphs": [
+                {
+                    "elements": [
+                        {
+                            "text": "A "
+                        },
+                        {
+                            "format": {
+                                "bold": true
+                            },
+                            "formatEffect": {
+                                "underline": "SINGLE"
+                            },
+                            "text": "\"Hello, World!\""
+                        },
+                        {
+                            "text": " program is generally a "
+                        },
+                        {
+                            "format": {
+                                "italic": true
+                            },
+                            "formatEffect": {
+                                "underline": "DOUBLE"
+                            },
+                            "text": "computer program"
+                        },
+                        {
+                            "text": " that outputs or displays the message:"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "format": {
+                                "bold": true,
+                                "italic": true,
+                                "fontsize": 20,
+                                "fontName": "Serif Bold"
+                            },
+                            "text": "Hello, World!"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.converter.json.format;
 
+import java.util.Collections;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -11,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class JsonFormat {
-    private List<JsonSection> sections;
+public class JsonSection {
+    private List<JsonParagraph> paragraphs = Collections.emptyList();
 }

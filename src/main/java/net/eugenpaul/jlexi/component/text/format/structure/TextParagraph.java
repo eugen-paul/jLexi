@@ -8,26 +8,35 @@ import java.util.ListIterator;
 
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextElementToRowCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextParagraph extends TextStructure implements GlyphIterable<TextRepresentation> {
 
-    protected TextCompositor<TextElement> compositor;
     private LinkedList<TextElement> textElements;
+
+    private TextParagraphConfiguration config;
 
     private boolean needRestruct = true;
 
-    public TextParagraph(TextStructure parentStructure, TextFormat format, ResourceManager storage) {
-        super(parentStructure, format, storage);
+    public TextParagraph(TextStructure parentStructure, ResourceManager storage) {
+        super(parentStructure, storage);
         this.textElements = new LinkedList<>();
-        // TODO get margin from paragraph konfiguration
-        this.compositor = new TextElementToRowCompositor<>(0, 0);
+
+        this.config = TextParagraphConfiguration.builder()//
+                .build();
+    }
+
+    public TextParagraph(TextStructure parentStructure, TextParagraphConfiguration config, ResourceManager storage) {
+        super(parentStructure, storage);
+        this.textElements = new LinkedList<>();
+
+        this.config = config;
     }
 
     @Override
@@ -41,7 +50,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     @Override
     public List<TextRepresentation> getRepresentation(Size size) {
         if (null == this.representation) {
-            this.representation = this.compositor.compose(this.textElements.iterator(), size);
+            this.representation = this.config.getTextToRowsCompositor().compose(this.textElements.iterator(), size);
         }
         return this.representation;
     }
@@ -108,7 +117,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     private void checkAndSplit() {
         var iterator = this.textElements.listIterator();
-        var newParagraph = new TextParagraph(this.parentStructure, this.format, this.storage);
+        var newParagraph = new TextParagraph(this.parentStructure, this.storage);
 
         clearSplitter();
 
@@ -127,7 +136,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
                 if (!newParagraph.isEmpty()) {
                     splits.add(newParagraph);
                 }
-                newParagraph = new TextParagraph(this.parentStructure, this.format, this.storage);
+                newParagraph = new TextParagraph(this.parentStructure, this.storage);
                 doSplit = true;
             }
         }
@@ -310,6 +319,58 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     @Override
     protected TextStructure getLastChild() {
         return null;
+    }
+
+    public void setToEol(ResourceManager storage) {
+        if (getLastElement().isEndOfLine()) {
+            return;
+        }
+
+        if (!textElements.isEmpty()) {
+            add(TextElementFactory.genNewLineChar(//
+                    null, //
+                    storage, //
+                    null, //
+                    textElements.getLast().getFormat(), //
+                    textElements.getLast().getFormatEffect() //
+            ));
+        } else {
+            add(TextElementFactory.genNewLineChar(//
+                    null, //
+                    storage, //
+                    null, //
+                    TextFormat.DEFAULT, //
+                    TextFormatEffect.DEFAULT_FORMAT_EFFECT //
+            ));
+        }
+    }
+
+    public void setToEos(ResourceManager storage) {
+        if (getLastElement().isEndOfSection()) {
+            return;
+        }
+
+        if (getLastElement().isEndOfLine()) {
+            textElements.removeLast();
+        }
+
+        if (!textElements.isEmpty()) {
+            add(TextElementFactory.genNewSectionChar(//
+                    null, //
+                    storage, //
+                    null, //
+                    textElements.getLast().getFormat(), //
+                    textElements.getLast().getFormatEffect() //
+            ));
+        } else {
+            add(TextElementFactory.genNewSectionChar(//
+                    null, //
+                    storage, //
+                    null, //
+                    TextFormat.DEFAULT, //
+                    TextFormatEffect.DEFAULT_FORMAT_EFFECT //
+            ));
+        }
     }
 
     public boolean isEndOfSection() {
