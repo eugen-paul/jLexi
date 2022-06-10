@@ -1,11 +1,13 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import lombok.Builder.Default;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Builder.Default;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextElementToRowCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextElementToLetterWord;
+import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextToWordsCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.wordtorow.TextWordsToRowCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.wordtorow.TextWordsToRowCompositorImpl;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
 @Builder
@@ -14,5 +16,8 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 public class TextParagraphConfiguration {
     
     @Default
-    private TextCompositor<TextElement> textToRowsCompositor = new TextElementToRowCompositor<>(0, 0);
+    private TextToWordsCompositor<TextElement> textToWordCompositor = TextElementToLetterWord.builder().build();
+    
+    @Default
+    private TextWordsToRowCompositor textToRowsCompositor = TextWordsToRowCompositorImpl.builder().build();
 }

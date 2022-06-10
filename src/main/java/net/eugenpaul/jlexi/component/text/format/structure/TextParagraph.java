@@ -50,7 +50,8 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     @Override
     public List<TextRepresentation> getRepresentation(Size size) {
         if (null == this.representation) {
-            this.representation = this.config.getTextToRowsCompositor().compose(this.textElements.iterator(), size);
+            var words = this.config.getTextToWordCompositor().compose(this.textElements.iterator());
+            this.representation = this.config.getTextToRowsCompositor().compose(words, size);
         }
         return this.representation;
     }

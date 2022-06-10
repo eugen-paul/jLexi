@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.component.text.format.element;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
@@ -10,16 +9,13 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public class TextChar extends TextElementAbstract {
+public class TextWordBreak extends TextElementAbstract {
 
-    @Getter
-    private Character c;
+    private static final Character WORD_BREAK = '-';
 
-    public TextChar(Glyph parent, ResourceManager storage, TextStructure parentStructure, Character c,
-            TextFormat format, TextFormatEffect formatEffect) {
+    public TextWordBreak(Glyph parent, ResourceManager storage, TextStructure parentStructure, TextFormat format,
+            TextFormatEffect formatEffect) {
         super(parent, storage, parentStructure, format, formatEffect);
-        this.c = c;
-
         getDrawable();
     }
 
@@ -30,7 +26,7 @@ public class TextChar extends TextElementAbstract {
         }
 
         cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        Drawable charDrawable = storage.getFonts().ofChar2(c, getFormat());
+        Drawable charDrawable = storage.getFonts().ofChar2(WORD_BREAK, getFormat());
         cachedDrawable.addDrawable(charDrawable, 0, 0, 0);
 
         setSize(cachedDrawable.getSize());
@@ -50,7 +46,7 @@ public class TextChar extends TextElementAbstract {
 
     @Override
     public String toString() {
-        return Character.toString(c);
+        return Character.toString(WORD_BREAK);
     }
 
     @Override
