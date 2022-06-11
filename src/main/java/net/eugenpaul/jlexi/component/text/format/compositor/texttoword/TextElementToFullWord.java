@@ -13,6 +13,11 @@ import net.eugenpaul.jlexi.component.text.format.element.TextWord;
 public class TextElementToFullWord<T extends TextElement> implements TextToWordsCompositor<T> {
 
     @Override
+    public TextElementToFullWord<T> copy() {
+        return new TextElementToFullWord<>();
+    }
+
+    @Override
     public List<TextWord> compose(Iterator<T> iterator) {
         List<TextWord> responseWords = new LinkedList<>();
         TextWord currentWord = new TextWord();

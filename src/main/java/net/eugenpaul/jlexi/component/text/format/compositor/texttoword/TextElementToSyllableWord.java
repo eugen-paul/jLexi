@@ -10,9 +10,14 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextWord;
 
 @Builder
-public class TextElementToSyllableWord<T extends TextElement> implements TextToWordsCompositor<T>{
+public class TextElementToSyllableWord<T extends TextElement> implements TextToWordsCompositor<T> {
 
-    //TODO
+    @Override
+    public TextToWordsCompositor<T> copy() {
+        return new TextElementToSyllableWord<>();
+    }
+
+    // TODO
     @Override
     public List<TextWord> compose(Iterator<T> iterator) {
         List<TextWord> responseWords = new LinkedList<>();

@@ -25,11 +25,10 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     private boolean needRestruct = true;
 
     public TextParagraph(TextStructure parentStructure) {
-        super(parentStructure);
-        this.textElements = new LinkedList<>();
-
-        this.config = TextParagraphConfiguration.builder()//
-                .build();
+        this(//
+                parentStructure, //
+                TextParagraphConfiguration.builder().build() //
+        );
     }
 
     public TextParagraph(TextStructure parentStructure, TextParagraphConfiguration config) {
@@ -118,7 +117,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     private void checkAndSplit() {
         var iterator = this.textElements.listIterator();
-        var newParagraph = new TextParagraph(this.parentStructure);
+        var newParagraph = new TextParagraph(this.parentStructure, this.config.copy());
 
         clearSplitter();
 
@@ -137,7 +136,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
                 if (!newParagraph.isEmpty()) {
                     splits.add(newParagraph);
                 }
-                newParagraph = new TextParagraph(this.parentStructure);
+                newParagraph = new TextParagraph(this.parentStructure, this.config.copy());
                 doSplit = true;
             }
         }

@@ -13,7 +13,12 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 @Builder
-public class TextWordsToRowCompositorImpl implements TextWordsToRowCompositor{
+public class TextWordsToRowCompositorImpl implements TextWordsToRowCompositor {
+
+    @Override
+    public TextWordsToRowCompositor copy() {
+        return new TextWordsToRowCompositorImpl();
+    }
 
     @Override
     public List<TextRepresentation> compose(List<TextWord> words, Size maxSize) {

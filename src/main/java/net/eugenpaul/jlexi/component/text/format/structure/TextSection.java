@@ -163,7 +163,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private void checkAndSplit() {
         var iterator = this.children.listIterator();
-        var newSection = new TextSection(this.parentStructure, this.configuration);
+        var newSection = new TextSection(this.parentStructure, this.configuration.copy());
 
         clearSplitter();
 
@@ -182,7 +182,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                 if (!newSection.isEmpty()) {
                     splits.add(newSection);
                 }
-                newSection = new TextSection(this.parentStructure, this.configuration);
+                newSection = new TextSection(this.parentStructure, this.configuration.copy());
                 doSplit = true;
             }
         }

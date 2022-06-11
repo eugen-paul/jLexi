@@ -8,4 +8,6 @@ import net.eugenpaul.jlexi.component.text.format.element.TextWord;
 
 public interface TextToWordsCompositor<T extends Glyph> {
     public List<TextWord> compose(Iterator<T> iterator);
+
+    public TextToWordsCompositor<T> copy();
 }

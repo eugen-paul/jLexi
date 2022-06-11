@@ -12,6 +12,11 @@ import net.eugenpaul.jlexi.component.text.format.element.TextWord;
 public class TextElementToLetterWord<T extends TextElement> implements TextToWordsCompositor<T> {
 
     @Override
+    public TextElementToLetterWord<T> copy() {
+        return new TextElementToLetterWord<>();
+    }
+
+    @Override
     public List<TextWord> compose(Iterator<T> iterator) {
         List<TextWord> responseWords = new LinkedList<>();
 

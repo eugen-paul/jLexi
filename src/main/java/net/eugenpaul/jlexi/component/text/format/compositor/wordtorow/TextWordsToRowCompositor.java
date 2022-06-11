@@ -8,4 +8,6 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public interface TextWordsToRowCompositor {
     public List<TextRepresentation> compose(List<TextWord> words, Size maxSize);
+
+    public TextWordsToRowCompositor copy();
 }
