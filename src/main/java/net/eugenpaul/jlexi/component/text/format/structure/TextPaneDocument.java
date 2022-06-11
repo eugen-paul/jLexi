@@ -28,7 +28,7 @@ public class TextPaneDocument extends TextStructureOfStructure {
     }
 
     private void initEmptyDocument(ResourceManager storage) {
-        TextSection section = new TextSection(this);
+        TextSection section = new TextSection(this, TextSectionConfiguration.builder().build());
         TextParagraph paragraph = new TextParagraph(section);
         paragraph.add(TextElementFactory.genNewLineChar(//
                 storage, //

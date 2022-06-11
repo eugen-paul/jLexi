@@ -54,7 +54,8 @@ public class JsonConverter implements TextConverter {
     }
 
     private TextSection toSection(JsonSection input) {
-        TextSection response = new TextSection(null);
+        TextSection response = new TextSection(null, input.getTextSectionConfiguration());
+
         TextParagraph lastParagraph = null;
 
         for (var paragraph : input.getParagraphs()) {
@@ -75,7 +76,7 @@ public class JsonConverter implements TextConverter {
     }
 
     private TextParagraph toParagraph(JsonParagraph input) {
-        TextParagraph response = new TextParagraph(null, TextParagraphConfiguration.builder().build());
+        TextParagraph response = new TextParagraph(null, input.getTextSectionConfiguration());
 
         for (var element : input.getElements()) {
             toElement(element).stream()//

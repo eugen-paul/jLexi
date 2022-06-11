@@ -20,30 +20,35 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private TextCompositor<TextRepresentation> compositor;
 
-    private Size siteSize = new Size(595, 842);
+    private final TextSectionConfiguration configuration;
+
     private int sitePaddingLeft = 20;
     private int sitePaddingRight = 20;
     private int sitePaddingTop = 40;
     private int sitePaddingBottom = 40;
     private int columnSpacing = 10;
-    private int columnPerSite = 1;
 
-    private final Size siteDrawSize = new Size(//
-            (siteSize.getWidth() - sitePaddingLeft - sitePaddingRight) / columnPerSite, //
-            siteSize.getHeight() - sitePaddingTop - sitePaddingBottom //
-    );
+    private final Size siteDrawSize;
 
     private boolean needRestruct = true;
 
-    public TextSection(TextStructure parentStructure) {
+    public TextSection(TextStructure parentStructure, TextSectionConfiguration configuration) {
         super(parentStructure);
 
-        int columnWidth = (siteSize.getWidth() - sitePaddingLeft - sitePaddingRight
-                - (columnPerSite - 1) * columnSpacing) / columnPerSite;
+        this.configuration = configuration;
+
+        siteDrawSize = new Size(//
+                (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight)
+                        / configuration.getNumberOfColumns(), //
+                configuration.getSiteHeightPx() - sitePaddingTop - sitePaddingBottom //
+        );
+
+        int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
+                - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
 
         this.compositor = new TextRepresentationToSiteCompositor(//
-                siteSize, //
-                columnPerSite, //
+                new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
+                configuration.getNumberOfColumns(), //
                 columnWidth, //
                 columnSpacing, //
                 sitePaddingLeft, //
@@ -157,8 +162,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     private void checkAndSplit() {
-        var iterator = children.listIterator();
-        var newSection = new TextSection(parentStructure);
+        var iterator = this.children.listIterator();
+        var newSection = new TextSection(this.parentStructure, this.configuration);
 
         clearSplitter();
 
@@ -177,7 +182,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                 if (!newSection.isEmpty()) {
                     splits.add(newSection);
                 }
-                newSection = new TextSection(parentStructure);
+                newSection = new TextSection(this.parentStructure, this.configuration);
                 doSplit = true;
             }
         }
@@ -187,7 +192,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     public void add(TextParagraph element) {
-        children.add(element);
+        this.children.add(element);
         element.setParentStructure(this);
 
         setRestructIfNeeded(element);
