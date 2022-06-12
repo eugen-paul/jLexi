@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.format.compositor;
+package net.eugenpaul.jlexi.component.text.format.compositor.texttoword;
 
 import java.util.Map;
 import java.util.stream.Collectors;

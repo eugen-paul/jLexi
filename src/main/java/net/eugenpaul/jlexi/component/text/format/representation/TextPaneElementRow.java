@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import lombok.var;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextWordBreak;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
@@ -74,6 +75,9 @@ public class TextPaneElementRow extends TextRepresentation {
 
     @Override
     public TextPosition getLastChild() {
+        if (children.getLast() instanceof TextWordBreak) {
+            return children.get(children.size() - 2).getTextPosition();
+        }
         return children.getLast().getTextPosition();
     }
 
@@ -84,10 +88,13 @@ public class TextPaneElementRow extends TextRepresentation {
             var e = iterator.next();
             if (e == position.getTextElement()) {
                 if (iterator.hasNext()) {
-                    return iterator.next().getTextPosition();
-                } else {
-                    return null;
+                    var nextEl = iterator.next();
+                    if (nextEl instanceof TextWordBreak) {
+                        return null;
+                    }
+                    return nextEl.getTextPosition();
                 }
+                return null;
             }
         }
         return null;

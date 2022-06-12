@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import net.eugenpaul.jlexi.component.text.format.compositor.TextHyphenation;
+import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextHyphenation;
 
 public class TextHyphenationDeserializer extends JsonDeserializer<TextHyphenation> {
 

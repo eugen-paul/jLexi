@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-import net.eugenpaul.jlexi.component.text.format.compositor.TextHyphenation;
+import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextHyphenation;
 
 public class TextHyphenationSerializer extends StdSerializer<TextHyphenation> {
 

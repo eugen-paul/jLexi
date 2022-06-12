@@ -24,18 +24,22 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     private boolean needRestruct = true;
 
-    public TextParagraph(TextStructure parentStructure) {
+    private ResourceManager storage;
+
+    public TextParagraph(TextStructure parentStructure, ResourceManager storage) {
         this(//
                 parentStructure, //
-                TextParagraphConfiguration.builder().build() //
+                TextParagraphConfiguration.builder().build(), //
+                storage //
         );
     }
 
-    public TextParagraph(TextStructure parentStructure, TextParagraphConfiguration config) {
+    public TextParagraph(TextStructure parentStructure, TextParagraphConfiguration config, ResourceManager storage) {
         super(parentStructure);
         this.textElements = new LinkedList<>();
 
         this.config = config;
+        this.storage = storage;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     public List<TextRepresentation> getRepresentation(Size size) {
         if (null == this.representation) {
             var words = this.config.getTextToWordCompositor().compose(this.textElements.iterator());
-            this.representation = this.config.getTextToRowsCompositor().compose(words, size);
+            this.representation = this.config.getTextToRowsCompositor().compose(words, size, this.storage);
         }
         return this.representation;
     }
@@ -117,7 +121,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
 
     private void checkAndSplit() {
         var iterator = this.textElements.listIterator();
-        var newParagraph = new TextParagraph(this.parentStructure, this.config.copy());
+        var newParagraph = new TextParagraph(this.parentStructure, this.config.copy(), this.storage);
 
         clearSplitter();
 
@@ -136,7 +140,7 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
                 if (!newParagraph.isEmpty()) {
                     splits.add(newParagraph);
                 }
-                newParagraph = new TextParagraph(this.parentStructure, this.config.copy());
+                newParagraph = new TextParagraph(this.parentStructure, this.config.copy(), this.storage);
                 doSplit = true;
             }
         }

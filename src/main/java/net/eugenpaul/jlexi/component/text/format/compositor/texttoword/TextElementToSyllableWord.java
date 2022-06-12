@@ -17,7 +17,6 @@ public class TextElementToSyllableWord<T extends TextElement> implements TextToW
         return new TextElementToSyllableWord<>();
     }
 
-    // TODO
     @Override
     public List<TextWord> compose(Iterator<T> iterator) {
         List<TextWord> responseWords = new LinkedList<>();
@@ -25,28 +24,33 @@ public class TextElementToSyllableWord<T extends TextElement> implements TextToW
         List<TextElement> currentSyllable = new LinkedList<>();
 
         boolean lastElementIsText = false;
+        boolean lastElementIsVowel = false;
 
         while (iterator.hasNext()) {
             T element = iterator.next();
             if (lastElementIsText) {
 
-                boolean currentElementIsText = false;
-                if (element instanceof TextChar) {
-                    TextChar textChar = (TextChar) element;
-                    currentElementIsText = isLetterText(textChar);
-                } else {
-                    currentElementIsText = false;
-                }
+                boolean currentElementIsText = isText(element);
+                boolean currentElementIsVowel = isVowel(element);
 
-                if (currentElementIsText) {
-                    currentSyllable.add(element);
-                } else {
+                boolean isNewWord = !lastElementIsText || !currentElementIsText;
+                boolean isNewSyllable = isNewWord //
+                        || (!currentElementIsVowel && lastElementIsVowel) // two vowels in a row
+                ;
+
+                if (isNewWord) {
                     responseWords.add(currentWord);
                     currentWord = new TextWord();
+                }
+
+                if (isNewSyllable) {
                     currentSyllable = new LinkedList<>();
-                    currentSyllable.add(element);
                     currentWord.addSyllable(currentSyllable);
                 }
+                currentSyllable.add(element);
+
+                lastElementIsText = currentElementIsText;
+                lastElementIsVowel = currentElementIsVowel;
 
             } else {
                 if (!currentWord.isEmpty()) {
@@ -58,12 +62,8 @@ public class TextElementToSyllableWord<T extends TextElement> implements TextToW
                 currentSyllable.add(element);
                 currentWord.addSyllable(currentSyllable);
 
-                if (element instanceof TextChar) {
-                    TextChar textChar = (TextChar) element;
-                    lastElementIsText = isLetterText(textChar);
-                } else {
-                    lastElementIsText = false;
-                }
+                lastElementIsText = isText(element);
+                lastElementIsVowel = isVowel(element);
             }
         }
 
@@ -74,14 +74,30 @@ public class TextElementToSyllableWord<T extends TextElement> implements TextToW
         return responseWords;
     }
 
-    private boolean isVowel(TextChar c) {
-        char testC = Character.toLowerCase(c.getC());
-        return testC == 'a' //
-                || testC == 'e' //
-                || testC == 'i' //
-                || testC == 'o' //
-                || testC == 'u' //
-        ;
+    private boolean isVowel(T element) {
+        if (element instanceof TextChar) {
+            TextChar textChar = (TextChar) element;
+            char testC = Character.toLowerCase(textChar.getC());
+            return testC == 'a' //
+                    || testC == 'e' //
+                    || testC == 'i' //
+                    || testC == 'o' //
+                    || testC == 'u' //
+            ;
+        }
+
+        return false;
+    }
+
+    private boolean isText(T element) {
+        boolean currentElementIsText;
+        if (element instanceof TextChar) {
+            TextChar textChar = (TextChar) element;
+            currentElementIsText = isLetterText(textChar);
+        } else {
+            currentElementIsText = false;
+        }
+        return currentElementIsText;
     }
 
     private boolean isLetterText(TextChar c) {

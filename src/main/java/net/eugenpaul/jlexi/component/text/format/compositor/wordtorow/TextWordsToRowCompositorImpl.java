@@ -6,9 +6,13 @@ import java.util.List;
 import lombok.Builder;
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.element.TextWord;
+import net.eugenpaul.jlexi.component.text.format.element.TextWordBreak;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneElementRow;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -21,14 +25,14 @@ public class TextWordsToRowCompositorImpl implements TextWordsToRowCompositor {
     }
 
     @Override
-    public List<TextRepresentation> compose(List<TextWord> words, Size maxSize) {
+    public List<TextRepresentation> compose(List<TextWord> words, Size maxSize, ResourceManager storage) {
         List<TextRepresentation> responseRows = new LinkedList<>();
         List<TextElement> elementsToRow = new LinkedList<>();
 
         int currentLength = 0;
         int currentHeight = 0;
-
         for (TextWord word : words) {
+            boolean firstSyllable = true;
 
             for (var syllable : word.getSyllables()) {
                 int syllableWidth = getSyllableWidth(syllable);
@@ -37,6 +41,20 @@ public class TextWordsToRowCompositorImpl implements TextWordsToRowCompositor {
                     currentLength += syllableWidth;
                     currentHeight = Math.max(currentHeight, getSyllableHeight(syllable));
                 } else {
+                    if (!firstSyllable) {
+                        // add word break
+                        TextWordBreak wb = new TextWordBreak(//
+                                null, //
+                                storage, //
+                                null, //
+                                TextFormat.DEFAULT, //
+                                TextFormatEffect.DEFAULT_FORMAT_EFFECT, //
+                                syllable.get(0) //
+                        );
+                        elementsToRow.add(wb);
+                        currentHeight = Math.max(currentHeight, getSyllableHeight(syllable));
+                    }
+
                     setRelativPositions(elementsToRow, currentHeight);
                     TextPaneElementRow row = createRow(elementsToRow);
                     responseRows.add(row);
@@ -46,6 +64,8 @@ public class TextWordsToRowCompositorImpl implements TextWordsToRowCompositor {
                     currentLength = syllableWidth;
                     currentHeight = getSyllableHeight(syllable);
                 }
+
+                firstSyllable = false;
             }
         }
 

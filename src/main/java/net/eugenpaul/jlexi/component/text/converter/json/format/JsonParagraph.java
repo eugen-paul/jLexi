@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.text.converter.json.format.transformation.TextHyphenationDeserializer;
 import net.eugenpaul.jlexi.component.text.converter.json.format.transformation.TextHyphenationSerializer;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextHyphenation;
 import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextElementToFullWord;
 import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextElementToLetterWord;
+import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextElementToSyllableWord;
+import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextHyphenation;
 import net.eugenpaul.jlexi.component.text.format.compositor.texttoword.TextToWordsCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.wordtorow.TextWordsToRowCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.wordtorow.TextWordsToRowCompositorImpl;
@@ -46,6 +47,8 @@ public class JsonParagraph {
             return TextElementToLetterWord.builder().build();
         case WORD:
             return TextElementToFullWord.builder().build();
+        case SYLLABLE:
+            return TextElementToSyllableWord.builder().build();
         default:
             break;
         }

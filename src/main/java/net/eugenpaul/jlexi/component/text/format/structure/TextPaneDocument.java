@@ -13,25 +13,28 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 public class TextPaneDocument extends TextStructureOfStructure {
 
     private ChangeListener parent;
+    private ResourceManager storage;
 
-    public TextPaneDocument(List<TextSection> data, ChangeListener parent) {
+    public TextPaneDocument(List<TextSection> data, ChangeListener parent, ResourceManager storage) {
         super(null);
         this.parent = parent;
         this.children.addAll(data);
         this.children.forEach(v -> v.setParentStructure(this));
+        this.storage = storage;
     }
 
     public TextPaneDocument(ResourceManager storage, ChangeListener parent) {
         super(null);
         this.parent = parent;
-        initEmptyDocument(storage);
+        this.storage = storage;
+        initEmptyDocument();
     }
 
-    private void initEmptyDocument(ResourceManager storage) {
+    private void initEmptyDocument() {
         TextSection section = new TextSection(this, TextSectionConfiguration.builder().build());
-        TextParagraph paragraph = new TextParagraph(section);
+        TextParagraph paragraph = new TextParagraph(section, this.storage);
         paragraph.add(TextElementFactory.genNewLineChar(//
-                storage, //
+                this.storage, //
                 TextFormat.DEFAULT, //
                 TextFormatEffect.DEFAULT_FORMAT_EFFECT//
         ));

@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.element;
 
+import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
@@ -13,9 +14,13 @@ public class TextWordBreak extends TextElementAbstract {
 
     private static final Character WORD_BREAK = '-';
 
+    @Getter
+    private TextPosition textPosition;
+
     public TextWordBreak(Glyph parent, ResourceManager storage, TextStructure parentStructure, TextFormat format,
-            TextFormatEffect formatEffect) {
+            TextFormatEffect formatEffect, TextElement followingElement) {
         super(parent, storage, parentStructure, format, formatEffect);
+        textPosition = followingElement.getTextPosition();
         getDrawable();
     }
 

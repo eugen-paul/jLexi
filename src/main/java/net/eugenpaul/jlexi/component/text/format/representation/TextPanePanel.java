@@ -55,6 +55,8 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     private Size maxSize = Size.ZERO_SIZE;
 
+    private ResourceManager storage;
+
     @Getter
     private final String cursorName;
 
@@ -72,6 +74,8 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         this.mouseCursor = new Cursor(null, null, controller, this.cursorName);
 
         this.yPositionToSite = new TreeMap<>();
+
+        this.storage = storage;
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
     }
@@ -159,7 +163,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     @Override
     public void setText(List<TextSection> text) {
         LOGGER.trace("Set Document.text from List<TextSection>");
-        document = new TextPaneDocument(text, this);
+        document = new TextPaneDocument(text, this, this.storage);
         notifyChange();
     }
 
