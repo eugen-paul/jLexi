@@ -80,7 +80,11 @@ public class JsonConverter implements TextConverter {
     }
 
     private TextParagraph toParagraph(JsonParagraph input) {
-        TextParagraph response = new TextParagraph(null, input.getTextSectionConfiguration(), resourceManager);
+        TextParagraph response = new TextParagraph(//
+                null, //
+                input.getTextSectionConfiguration(), //
+                resourceManager //
+        );
 
         for (var element : input.getElements()) {
             toElement(element).stream()//

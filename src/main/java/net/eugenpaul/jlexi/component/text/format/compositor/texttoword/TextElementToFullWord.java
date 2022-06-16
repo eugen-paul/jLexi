@@ -7,7 +7,9 @@ import java.util.List;
 import lombok.Builder;
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextSyllable;
 import net.eugenpaul.jlexi.component.text.format.element.TextWord;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 @Builder
 public class TextElementToFullWord<T extends TextElement> implements TextToWordsCompositor<T> {
@@ -18,10 +20,10 @@ public class TextElementToFullWord<T extends TextElement> implements TextToWords
     }
 
     @Override
-    public List<TextWord> compose(Iterator<T> iterator) {
+    public List<TextWord> compose(Iterator<T> iterator, ResourceManager storage) {
         List<TextWord> responseWords = new LinkedList<>();
         TextWord currentWord = new TextWord();
-        List<TextElement> currentSyllable = new LinkedList<>();
+        TextSyllable currentSyllable = new TextSyllable();
 
         boolean lastElementIsText = false;
 
@@ -32,13 +34,13 @@ public class TextElementToFullWord<T extends TextElement> implements TextToWords
                 boolean currentElementIsText = isText(element);
 
                 if (currentElementIsText) {
-                    currentSyllable.add(element);
+                    currentSyllable.addElement(element);
                     lastElementIsText = true;
                 } else {
                     responseWords.add(currentWord);
                     currentWord = new TextWord();
-                    currentSyllable = new LinkedList<>();
-                    currentSyllable.add(element);
+                    currentSyllable = new TextSyllable();
+                    currentSyllable.addElement(element);
                     currentWord.addSyllable(currentSyllable);
                     lastElementIsText = false;
                 }
@@ -49,8 +51,8 @@ public class TextElementToFullWord<T extends TextElement> implements TextToWords
                     currentWord = new TextWord();
                 }
 
-                currentSyllable = new LinkedList<>();
-                currentSyllable.add(element);
+                currentSyllable = new TextSyllable();
+                currentSyllable.addElement(element);
                 currentWord.addSyllable(currentSyllable);
 
                 lastElementIsText = isText(element);

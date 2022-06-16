@@ -8,13 +8,13 @@ import lombok.Getter;
 public class TextWord {
 
     @Getter
-    private List<List<TextElement>> syllables;
+    private List<TextSyllable> syllables;
 
     public TextWord() {
         syllables = new LinkedList<>();
     }
 
-    public void addSyllable(List<TextElement> syllable) {
+    public void addSyllable(TextSyllable syllable) {
         syllables.add(syllable);
     }
 

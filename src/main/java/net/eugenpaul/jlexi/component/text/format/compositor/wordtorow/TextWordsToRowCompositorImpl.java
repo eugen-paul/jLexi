@@ -6,13 +6,9 @@ import java.util.List;
 import lombok.Builder;
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.element.TextWord;
-import net.eugenpaul.jlexi.component.text.format.element.TextWordBreak;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneElementRow;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
-import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
@@ -25,47 +21,38 @@ public class TextWordsToRowCompositorImpl implements TextWordsToRowCompositor {
     }
 
     @Override
-    public List<TextRepresentation> compose(List<TextWord> words, Size maxSize, ResourceManager storage) {
+    public List<TextRepresentation> compose(List<TextWord> words, Size maxSize) {
         List<TextRepresentation> responseRows = new LinkedList<>();
-        List<TextElement> elementsToRow = new LinkedList<>();
+        LinkedList<TextElement> elementsToRow = new LinkedList<>();
 
         int currentLength = 0;
         int currentHeight = 0;
         for (TextWord word : words) {
-            boolean firstSyllable = true;
-
+            boolean lastSylableWithWordBreak = false;
             for (var syllable : word.getSyllables()) {
-                int syllableWidth = getSyllableWidth(syllable);
-                if (currentLength + syllableWidth <= maxSize.getWidth() || elementsToRow.isEmpty()) {
-                    elementsToRow.addAll(syllable);
-                    currentLength += syllableWidth;
-                    currentHeight = Math.max(currentHeight, getSyllableHeight(syllable));
-                } else {
-                    if (!firstSyllable) {
-                        // add word break
-                        TextWordBreak wb = new TextWordBreak(//
-                                null, //
-                                storage, //
-                                null, //
-                                TextFormat.DEFAULT, //
-                                TextFormatEffect.DEFAULT_FORMAT_EFFECT, //
-                                syllable.get(0) //
-                        );
-                        elementsToRow.add(wb);
-                        currentHeight = Math.max(currentHeight, getSyllableHeight(syllable));
-                    }
+                int syllableLength = syllable.getLength();
+                boolean currentSylableWithWordBreak = syllable.isWithWordBreak();
 
+                if (currentLength + syllableLength <= maxSize.getWidth() || elementsToRow.isEmpty()) {
+                    if (lastSylableWithWordBreak && !elementsToRow.isEmpty()) {
+                        TextElement lastwb = elementsToRow.removeLast();
+                        currentLength -= lastwb.getSize().getWidth();
+                    }
+                    elementsToRow.addAll(syllable.getElements());
+                    currentLength += syllableLength;
+                    currentHeight = Math.max(currentHeight, syllable.getHeight());
+                } else {
                     setRelativPositions(elementsToRow, currentHeight);
                     TextPaneElementRow row = createRow(elementsToRow);
                     responseRows.add(row);
 
                     elementsToRow.clear();
-                    elementsToRow.addAll(syllable);
-                    currentLength = syllableWidth;
-                    currentHeight = getSyllableHeight(syllable);
+                    elementsToRow.addAll(syllable.getElements());
+                    currentLength = syllableLength;
+                    currentHeight = syllable.getHeight();
                 }
 
-                firstSyllable = false;
+                lastSylableWithWordBreak = currentSylableWithWordBreak;
             }
         }
 
@@ -76,20 +63,6 @@ public class TextWordsToRowCompositorImpl implements TextWordsToRowCompositor {
         }
 
         return responseRows;
-    }
-
-    private int getSyllableWidth(List<TextElement> syllable) {
-        return syllable.stream()//
-                .mapToInt(v -> v.getSize().getWidth())//
-                .sum();
-    }
-
-    private int getSyllableHeight(List<TextElement> syllable) {
-        int maxHeight = 0;
-        for (TextElement textElement : syllable) {
-            maxHeight = Math.max(maxHeight, textElement.getSize().getHeight());
-        }
-        return maxHeight;
     }
 
     private TextPaneElementRow createRow(List<TextElement> elementsToRow) {
