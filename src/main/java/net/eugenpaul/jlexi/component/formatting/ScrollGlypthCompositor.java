@@ -27,14 +27,39 @@ public class ScrollGlypthCompositor<T extends Glyph> implements SingleGlyphCompo
     @Setter
     private int hOffset;
 
+    @Setter
+    private boolean centerH = true;
+    @Setter
+    private boolean centerV = true;
+
     @Override
     public Glyph compose(T element, Size maxSize) {
         DrawableSketchImpl responseSketch = new DrawableSketchImpl(backgroundColor, maxSize);
-        responseSketch.addDrawable(//
-                element.getDrawable(), //
-                hOffset, //
-                vOffset //
-        );
+        if (centerV && centerH) {
+            responseSketch.addDrawable(//
+                    element.getDrawable(), //
+                    maxSize.getWidth() / 2 - element.getDrawable().getSize().getWidth() / 2, //
+                    maxSize.getHeight() / 2 - element.getDrawable().getSize().getHeight() / 2 //
+            );
+        } else if (centerV) {
+            responseSketch.addDrawable(//
+                    element.getDrawable(), //
+                    hOffset, //
+                    maxSize.getHeight() / 2 - element.getDrawable().getSize().getHeight() / 2 //
+            );
+        } else if (centerH) {
+            responseSketch.addDrawable(//
+                    element.getDrawable(), //
+                    maxSize.getWidth() / 2 - element.getDrawable().getSize().getWidth() / 2, //
+                    vOffset //
+            );
+        } else {
+            responseSketch.addDrawable(//
+                    element.getDrawable(), //
+                    hOffset, //
+                    vOffset //
+            );
+        }
 
         element.setRelativPosition(new Vector2d(hOffset, vOffset));
 

@@ -215,7 +215,8 @@
         },
         {
             "numberOfColumns": 2,
-            "siteHeightPx": 400,
+            "siteHeightPx": 595,
+            "siteWidthPx" : 842,
             "paragraphs": [
                 {
                     "elements": [

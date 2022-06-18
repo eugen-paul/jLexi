@@ -52,13 +52,13 @@ public class HorizontalAlignmentRepresentationCompositor implements TextComposit
             case CENTER_POSITIV:
                 element.setRelativPosition(//
                         new Vector2d(//
-                                Math.max(0, maxSize.getWidth() / 2 - maxWidth / 2), //
+                                Math.max(0, maxWidth / 2 - element.getSize().getWidth() / 2), //
                                 Math.max(0, currentY) //
                         ) //
                 );
                 break;
             case CENTER:
-                element.setRelativPosition(new Vector2d(maxSize.getWidth() / 2 - maxWidth / 2, currentY));
+                element.setRelativPosition(new Vector2d(maxWidth / 2 - element.getSize().getWidth() / 2, currentY));
                 break;
             case LEFT:
                 element.setRelativPosition(new Vector2d(0, currentY));

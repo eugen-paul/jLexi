@@ -60,7 +60,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         this.vBar.setScrollCallback(v -> this.scrollbarCallback(v, ScrollbarType.VERTICAL));
         this.hBar.setScrollCallback(v -> this.scrollbarCallback(v, ScrollbarType.HORIZONTAL));
 
-        this.compositor = new ScrollGlypthCompositor<>(backgroundColor, vScrollPosition, hScrollPosition);
+        this.compositor = new ScrollGlypthCompositor<>(backgroundColor, vScrollPosition, hScrollPosition, true, true);
 
         this.component.setRelativPosition(new Vector2d(0, 0));
         resizeTo(Size.ZERO_SIZE);
@@ -76,17 +76,21 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
                     Math.max(0, getSize().getHeight() - hBarHeight) //
             );
 
-            if (isHBarVisible()) {
-                this.vBar.resizeTo(vBarWidth, Math.max(0, getSize().getHeight() - hBarHeight));
-            } else {
-                this.vBar.resizeTo(vBarWidth, getSize().getHeight());
-            }
+            resizeBars(vBarWidth, hBarHeight);
+        }
+    }
 
-            if (isVBarVisible()) {
-                this.hBar.resizeTo(Math.max(0, getSize().getWidth() - vBarWidth), hBarHeight);
-            } else {
-                this.hBar.resizeTo(getSize().getWidth(), hBarHeight);
-            }
+    private void resizeBars(int vBarWidth, int hBarHeight) {
+        if (isHBarVisible()) {
+            this.vBar.resizeTo(vBarWidth, Math.max(0, getSize().getHeight() - hBarHeight));
+        } else {
+            this.vBar.resizeTo(vBarWidth, getSize().getHeight());
+        }
+
+        if (isVBarVisible()) {
+            this.hBar.resizeTo(Math.max(0, getSize().getWidth() - vBarWidth), hBarHeight);
+        } else {
+            this.hBar.resizeTo(getSize().getWidth(), hBarHeight);
         }
     }
 
@@ -105,6 +109,8 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         int vBarWidth = isVBarVisible() ? this.vBar.getSize().getWidth() : 0;
         int hBarHeight = isHBarVisible() ? this.hBar.getSize().getHeight() : 0;
 
+        resizeBars(vBarWidth, hBarHeight);
+
         if (getSize().getHeight() <= hBarHeight //
                 || getSize().getWidth() <= vBarWidth //
         ) {
@@ -117,14 +123,15 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
                 Math.max(0, getSize().getHeight() - hBarHeight) //
         );
 
-        if (!isHBarVisible()) {
-            hScrollPosition = childSize.getWidth() / 2 - component.getSize().getWidth() / 2;
-        }
+        this.compositor.setCenterH(!isHBarVisible());
+        this.compositor.setHOffset(hScrollPosition);
+
+        this.compositor.setCenterV(!isVBarVisible());
+        this.compositor.setVOffset(vScrollPosition);
+
         hBar.setIntervalOffset(hScrollPosition);
         vBar.setIntervalOffset(vScrollPosition);
 
-        this.compositor.setHOffset(hScrollPosition);
-        this.compositor.setVOffset(vScrollPosition);
         Glyph composedGlyphs = this.compositor.compose(component, childSize);
 
         this.cachedDrawable = new DrawableSketchImpl(backgroundColor);
