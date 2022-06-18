@@ -17,6 +17,10 @@ public interface MouseEventAdapter extends MouseClickListener {
     }
 
     @Override
+    public default void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+    }
+
+    @Override
     public default void mouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
     }
 }

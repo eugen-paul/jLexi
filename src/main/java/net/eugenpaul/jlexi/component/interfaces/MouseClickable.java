@@ -11,4 +11,6 @@ public interface MouseClickable {
     public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button);
 
     public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button);
+
+    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button);
 }

@@ -4,9 +4,9 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import net.eugenpaul.jlexi.visitor.Visitor;
+import net.eugenpaul.jlexi.component.helper.KeyEventAdapterToKeyPressable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
-import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 
@@ -22,6 +22,8 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
         super(parent);
         this.component = component;
         this.component.setParent(this);
+
+        this.keyEventAdapter = new KeyEventAdapterToKeyPressable(component);
     }
 
     @Override
@@ -96,6 +98,16 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
     }
 
     @Override
+    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+        // TODO
+        component.onMouseDragged(//
+                mouseX - component.getRelativPosition().getX(), //
+                mouseY - component.getRelativPosition().getY(), //
+                button//
+        );
+    }
+
+    @Override
     public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
         if (isPositionOnComponent(mouseX, mouseY)) {
             component.onMouseWhellMoved(//
@@ -104,20 +116,5 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
                     direction//
             );
         }
-    }
-
-    @Override
-    public void onKeyTyped(Character key) {
-        component.onKeyTyped(key);
-    }
-
-    @Override
-    public void onKeyPressed(KeyCode keyCode) {
-        component.onKeyPressed(keyCode);
-    }
-
-    @Override
-    public void onKeyReleased(KeyCode keyCode) {
-        component.onKeyReleased(keyCode);
     }
 }

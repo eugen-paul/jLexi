@@ -153,6 +153,13 @@ public abstract class Window extends MonoGlyph
     }
 
     @Override
+    public void onMouseDragged(String name, Integer mouseX, Integer mouseY, MouseButton button) {
+        if (mainGlyph != null) {
+            mainGlyph.onMouseDragged(mouseX, mouseY, button);
+        }
+    }
+
+    @Override
     public void resizeTo(String name, Size size) {
         if (mainGlyph != null) {
             mainGlyph.resizeTo(size);

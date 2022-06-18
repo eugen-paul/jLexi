@@ -10,5 +10,7 @@ public interface MouseClickListener {
 
     void mouseReleased(Integer mouseX, Integer mouseY, MouseButton button);
 
+    void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button);
+
     void mouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction);
 }

@@ -136,13 +136,16 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
         registeredModels.stream()//
                 .filter(v -> ((Class<?>) propertyType.getTargetClass()).isAssignableFrom(v.getClass()))//
-                .forEach(v -> {
-                    try {
-                        Method method = v.getClass().getMethod(propertyType.getMethode(), methodParameter);
-                        method.invoke(v, newValue);
-                    } catch (Exception ex) {
-                        // Handle exception.
-                    }
-                });
+                .forEach(v -> callRegistredModel(propertyType, methodParameter, v, newValue));
+    }
+
+    private void callRegistredModel(ModelPropertyChangeType propertyType, Class<?>[] methodParameter, InterfaceModel v,
+            Object... newValue) {
+        try {
+            Method method = v.getClass().getMethod(propertyType.getMethode(), methodParameter);
+            method.invoke(v, newValue);
+        } catch (Exception ex) {
+            // Handle exception.
+        }
     }
 }

@@ -60,6 +60,10 @@ public class ModelController extends AbstractController {
         setModelProperty(ModelPropertyChangeType.MOUSE_WHEEL, name, mouseX, mouseY, direction);
     }
 
+    public void mouseDragged(String name, int mouseX, int mouseY, MouseButton button) {
+        setModelProperty(ModelPropertyChangeType.MOUSE_DRAGGED, name, mouseX, mouseY, button);
+    }
+
     public void keyTyped(String name, Character key) {
         setModelProperty(ModelPropertyChangeType.KEY_TYPED, name, key);
     }

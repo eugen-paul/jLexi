@@ -26,4 +26,9 @@ public class MouseEventAdapterToMouseClickable implements MouseEventAdapter {
     public void mouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         target.onMouseReleased(mouseX, mouseY, button);
     }
+
+    @Override
+    public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+        target.onMouseDragged(mouseX, mouseY, button);
+    }
 }

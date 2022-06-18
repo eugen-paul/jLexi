@@ -14,6 +14,7 @@ public enum ModelPropertyChangeType {
     MOUSE_PRESSED(WindowsMouseClickable.class, "onMousePressed", Duration.ZERO), //
     MOUSE_RELEASED(WindowsMouseClickable.class, "onMouseReleased", Duration.ZERO), //
     MOUSE_WHEEL(WindowsMouseWheel.class, "onMouseWheelMooved", Duration.ZERO), //
+    MOUSE_DRAGGED(WindowsMouseClickable.class, "onMouseDragged", Duration.ZERO), //
     KEY_TYPED(WindowsKeyPressable.class, "onKeyTyped", Duration.ZERO), //
     KEY_PRESSED(WindowsKeyPressable.class, "onKeyPressed", Duration.ZERO), //
     KEY_RELEASED(WindowsKeyPressable.class, "onKeyReleased", Duration.ZERO), //

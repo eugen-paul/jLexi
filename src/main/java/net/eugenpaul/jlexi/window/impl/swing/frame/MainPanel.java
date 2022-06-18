@@ -33,6 +33,7 @@ public class MainPanel extends AbstractView {
 
         var mouseListner = new MouseListner(name, controller);
         this.panel.addMouseListener(mouseListner);
+        this.panel.addMouseMotionListener(mouseListner);
         this.panel.addMouseWheelListener(mouseListner);
         this.panel.addKeyListener(new KeyListener(name, controller));
     }

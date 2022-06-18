@@ -158,6 +158,13 @@
                 {
                     "elements": [
                         {
+                            "text": "   - Textscroll"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
                             "format": {
                                 "bold": true,
                                 "italic": true,
@@ -187,13 +194,6 @@
                     "elements": [
                         {
                             "text": "   - GUI (menu, buttons, ...)"
-                        }
-                    ]
-                },
-                {
-                    "elements": [
-                        {
-                            "text": "   - Textscroll"
                         }
                     ]
                 },

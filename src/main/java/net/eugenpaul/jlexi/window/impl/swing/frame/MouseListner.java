@@ -34,4 +34,9 @@ public class MouseListner extends MouseAdapter {
     public void mouseWheelMoved(MouseWheelEvent e) {
         controller.mouseWheelMoved(name, e.getX(), e.getY(), MouseWheelDirection.ofRotation(e.getWheelRotation()));
     }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        controller.mouseDragged(name, e.getX(), e.getY(), MouseButton.ofButton(e.getButton()));
+    }
 }

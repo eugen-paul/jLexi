@@ -63,6 +63,13 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
     }
 
     @Override
+    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+        if (mouseEventAdapter != null) {
+            mouseEventAdapter.mouseDragged(mouseX, mouseY, button);
+        }
+    }
+
+    @Override
     public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
         if (mouseEventAdapter != null) {
             mouseEventAdapter.mouseWhellMoved(mouseX, mouseY, direction);

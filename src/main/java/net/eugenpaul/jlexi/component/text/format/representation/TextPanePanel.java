@@ -190,6 +190,11 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     }
 
     @Override
+    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("onMouseDragged on TextPane. Position ({},{}).", mouseX, mouseY);
+    }
+
+    @Override
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
 
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
