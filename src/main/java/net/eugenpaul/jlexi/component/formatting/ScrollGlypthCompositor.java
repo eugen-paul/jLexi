@@ -35,33 +35,24 @@ public class ScrollGlypthCompositor<T extends Glyph> implements SingleGlyphCompo
     @Override
     public Glyph compose(T element, Size maxSize) {
         DrawableSketchImpl responseSketch = new DrawableSketchImpl(backgroundColor, maxSize);
-        if (centerV && centerH) {
-            responseSketch.addDrawable(//
-                    element.getDrawable(), //
-                    maxSize.getWidth() / 2 - element.getDrawable().getSize().getWidth() / 2, //
-                    maxSize.getHeight() / 2 - element.getDrawable().getSize().getHeight() / 2 //
-            );
-        } else if (centerV) {
-            responseSketch.addDrawable(//
-                    element.getDrawable(), //
-                    hOffset, //
-                    maxSize.getHeight() / 2 - element.getDrawable().getSize().getHeight() / 2 //
-            );
-        } else if (centerH) {
-            responseSketch.addDrawable(//
-                    element.getDrawable(), //
-                    maxSize.getWidth() / 2 - element.getDrawable().getSize().getWidth() / 2, //
-                    vOffset //
-            );
-        } else {
-            responseSketch.addDrawable(//
-                    element.getDrawable(), //
-                    hOffset, //
-                    vOffset //
-            );
+
+        int posX = hOffset;
+        int posY = vOffset;
+
+        if (centerV) {
+            posY = maxSize.getHeight() / 2 - element.getDrawable().getSize().getHeight() / 2; //
+        }
+        if (centerH) {
+            posX = maxSize.getWidth() / 2 - element.getDrawable().getSize().getWidth() / 2; //
         }
 
-        element.setRelativPosition(new Vector2d(hOffset, vOffset));
+        responseSketch.addDrawable(//
+                element.getDrawable(), //
+                posX, //
+                posY //
+        );
+
+        element.setRelativPosition(new Vector2d(posX, posY));
 
         SimpleGlyph responseGlyph = new SimpleGlyph();
         responseGlyph.setDrawable(responseSketch);
