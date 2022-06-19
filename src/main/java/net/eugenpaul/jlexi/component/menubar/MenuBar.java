@@ -10,6 +10,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -114,31 +115,52 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
         return mouseY >= menubarHeight;
     }
 
+    private GuiGlyph getMenuElement(Integer mouseX, Integer mouseY) {
+        for (Button menuButton : menuButtons) {
+            if (CollisionHelper.isPointOnArea(mouseX, mouseY, menuButton.getRelativPosition(), menuButton.getSize())) {
+                return menuButton;
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void onMouseClickOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Click on Menu. Position ({},{}).", mouseX, mouseY);
-        for (Button menuButton : menuButtons) {
-            if (CollisionHelper.isPointOnArea(mouseX, mouseY, menuButton.getRelativPosition(), menuButton.getSize())) {
-                menuButton.onMouseClick(//
-                        mouseX - menuButton.getRelativPosition().getX(), //
-                        mouseY - menuButton.getRelativPosition().getY(), //
-                        button //
-                );
-                return;
-            }
+        var menuElement = getMenuElement(mouseX, mouseY);
+        if (menuElement != null) {
+            menuElement.onMouseClick(//
+                    mouseX - menuElement.getRelativPosition().getX(), //
+                    mouseY - menuElement.getRelativPosition().getY(), //
+                    button //
+            );
         }
     }
 
     @Override
-    protected void onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
+    protected MouseDraggable onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+        var menuElement = getMenuElement(mouseX, mouseY);
+        if (menuElement != null) {
+            return menuElement.onMousePressed(//
+                    mouseX - menuElement.getRelativPosition().getX(), //
+                    mouseY - menuElement.getRelativPosition().getY(), //
+                    button //
+            );
+        }
+        return null;
     }
 
     @Override
-    protected void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
+    protected MouseDraggable onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+        var menuElement = getMenuElement(mouseX, mouseY);
+        if (menuElement != null) {
+            return menuElement.onMouseReleased(//
+                    mouseX - menuElement.getRelativPosition().getX(), //
+                    mouseY - menuElement.getRelativPosition().getY(), //
+                    button //
+            );
+        }
+        return null;
     }
 
 }

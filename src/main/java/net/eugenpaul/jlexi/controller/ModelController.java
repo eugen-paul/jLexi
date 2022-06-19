@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
@@ -22,10 +23,12 @@ public class ModelController extends AbstractController {
 
     private Map<GlyphEffect, Disposable> effectMap;
     private Map<String, TextUpdateable> textUpdateableMap;
+    private MouseDraggable currentDraggable;
 
     public ModelController() {
-        effectMap = Collections.synchronizedMap(new HashMap<>());
-        textUpdateableMap = new HashMap<>();
+        this.effectMap = Collections.synchronizedMap(new HashMap<>());
+        this.textUpdateableMap = new HashMap<>();
+        this.currentDraggable = null;
     }
 
     /**
@@ -61,7 +64,10 @@ public class ModelController extends AbstractController {
     }
 
     public void mouseDragged(String name, int mouseX, int mouseY, MouseButton button) {
-        setModelProperty(ModelPropertyChangeType.MOUSE_DRAGGED, name, mouseX, mouseY, button);
+        // TODO Synchrinize the call
+        if (currentDraggable != null) {
+            currentDraggable.onMouseDragged(mouseX, mouseY, button);
+        }
     }
 
     public void keyTyped(String name, Character key) {
@@ -121,5 +127,9 @@ public class ModelController extends AbstractController {
         if (disposeEffect != null) {
             disposeEffect.dispose();
         }
+    }
+
+    public void mousePressedOn(MouseDraggable currentDraggable) {
+        this.currentDraggable = currentDraggable;
     }
 }

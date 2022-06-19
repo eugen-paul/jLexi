@@ -4,10 +4,12 @@ import java.util.function.BiFunction;
 
 import lombok.AllArgsConstructor;
 import net.eugenpaul.jlexi.component.GuiGlyph;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.utils.reflection.TriConsumer;
+import net.eugenpaul.jlexi.utils.reflection.TriFunction;
 
 @AllArgsConstructor
 public class MouseEventAdapterOnGuiGlyph implements MouseEventAdapter {
@@ -18,9 +20,9 @@ public class MouseEventAdapterOnGuiGlyph implements MouseEventAdapter {
 
     private TriConsumer<Integer, Integer, MouseButton> onMouseClickOutsideComponent;
 
-    private TriConsumer<Integer, Integer, MouseButton> onMousePressedOutsideComponent;
+    private TriFunction<Integer, Integer, MouseButton, MouseDraggable> onMousePressedOutsideComponent;
 
-    private TriConsumer<Integer, Integer, MouseButton> onMouseReleasedOutsideComponent;
+    private TriFunction<Integer, Integer, MouseButton, MouseDraggable> onMouseReleasedOutsideComponent;
 
     private TriConsumer<Integer, Integer, MouseWheelDirection> onMouseWhellMovedOutsideComponent;
 
@@ -38,39 +40,28 @@ public class MouseEventAdapterOnGuiGlyph implements MouseEventAdapter {
     }
 
     @Override
-    public void mousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+    public MouseDraggable mousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
         if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            this.component.onMousePressed(//
+            return this.component.onMousePressed(//
                     mouseX - this.component.getRelativPosition().getX(), //
                     mouseY - this.component.getRelativPosition().getY(), //
                     button//
             );
         } else {
-            this.onMousePressedOutsideComponent.accept(mouseX, mouseY, button);
+            return this.onMousePressedOutsideComponent.apply(mouseX, mouseY, button);
         }
     }
 
     @Override
-    public void mouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+    public MouseDraggable mouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            this.component.onMouseReleased(//
+            return this.component.onMouseReleased(//
                     mouseX - this.component.getRelativPosition().getX(), //
                     mouseY - this.component.getRelativPosition().getY(), //
                     button//
             );
         } else {
-            this.onMouseReleasedOutsideComponent.accept(mouseX, mouseY, button);
-        }
-    }
-
-    @Override
-    public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            this.component.onMouseDragged(//
-                    mouseX - this.component.getRelativPosition().getX(), //
-                    mouseY - this.component.getRelativPosition().getY(), //
-                    button//
-            );
+            return this.onMouseReleasedOutsideComponent.apply(mouseX, mouseY, button);
         }
     }
 

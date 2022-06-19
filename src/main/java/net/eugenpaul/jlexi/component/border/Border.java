@@ -15,6 +15,7 @@ import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.CentralGlypthCompositor;
 import net.eugenpaul.jlexi.component.formatting.GlyphCompositor;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -227,24 +228,14 @@ public class Border extends GuiCompenentMonoGlyph {
     }
 
     @Override
-    protected void onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+    protected MouseDraggable onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Pressed on Border. Position ({},{}).", mouseX, mouseY);
+        return null;
     }
 
     @Override
-    protected void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+    protected MouseDraggable onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Released on Border. Position ({},{}).", mouseX, mouseY);
-    }
-
-    @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
+        return null;
     }
 }

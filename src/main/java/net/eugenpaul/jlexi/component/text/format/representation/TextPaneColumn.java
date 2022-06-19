@@ -36,8 +36,9 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
         Size currentSize = getSize();
         setSize(new Size(//
-                Math.max(currentSize.getWidth(), child.getSize().getWidth()), //
-                currentSize.getHeight() + child.getSize().getHeight()//
+                Math.max(currentSize.getWidth(),
+                        child.getSize().getWidth() + child.getMarginLeft() + child.getMarginRight()), //
+                currentSize.getHeight() + child.getSize().getHeight() + child.getMarginBottom() + child.getMarginTop()//
         ));
 
         this.cachedDrawable = null;

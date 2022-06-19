@@ -9,5 +9,4 @@ public interface WindowsMouseClickable {
     public void onMouseClick(String name, Integer mouseX, Integer mouseY, MouseButton button);
     public void onMousePressed(String name, Integer mouseX, Integer mouseY, MouseButton button);
     public void onMouseReleased(String name, Integer mouseX, Integer mouseY, MouseButton button);
-    public void onMouseDragged(String name, Integer mouseX, Integer mouseY, MouseButton button);
 }

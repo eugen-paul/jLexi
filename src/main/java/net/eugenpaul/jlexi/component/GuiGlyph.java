@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -49,24 +50,19 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
     }
 
     @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
         if (mouseEventAdapter != null) {
-            mouseEventAdapter.mousePressed(mouseX, mouseY, button);
+            return mouseEventAdapter.mousePressed(mouseX, mouseY, button);
         }
+        return null;
     }
 
     @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         if (mouseEventAdapter != null) {
-            mouseEventAdapter.mouseReleased(mouseX, mouseY, button);
+            return mouseEventAdapter.mouseReleased(mouseX, mouseY, button);
         }
-    }
-
-    @Override
-    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (mouseEventAdapter != null) {
-            mouseEventAdapter.mouseDragged(mouseX, mouseY, button);
-        }
+        return null;
     }
 
     @Override

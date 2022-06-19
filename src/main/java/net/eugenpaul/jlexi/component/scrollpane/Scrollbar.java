@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
 import net.eugenpaul.jlexi.component.formatting.ToSingleGlyphCompositor;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.panes.ImageGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -24,7 +28,9 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public abstract class Scrollbar extends GuiGlyph {
+public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Scrollbar.class);
 
     public enum ScrollbarType {
         VERTICAL, HORIZONTAL
@@ -57,6 +63,10 @@ public abstract class Scrollbar extends GuiGlyph {
     protected long intervalTotal = 0;
     protected long intervalDisplayed = 0;
     protected long intervalOffset = 0;
+
+    protected long draggedOffset = 0;
+    protected long draggedMouseX = 0;
+    protected long draggedMouseY = 0;
 
     protected Scrollbar(Glyph parent) {
         super(parent);
@@ -216,10 +226,10 @@ public abstract class Scrollbar extends GuiGlyph {
         }
 
         if (CollisionHelper.isPointOnArea(mouseX, mouseY, buttonFirst.getRelativPosition(), buttonFirst.getSize())) {
-            scrollCallback.scrolledDelta(-buttonStep);
+            scrollCallback.scrolledTo((int) (intervalOffset - buttonStep));
         } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, buttonLast.getRelativPosition(),
                 buttonLast.getSize())) {
-            scrollCallback.scrolledDelta(buttonStep);
+            scrollCallback.scrolledTo((int) (intervalOffset + buttonStep));
         } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, runnerGlyph.getRelativPosition(),
                 runnerGlyph.getSize())) {
             // TODO
@@ -237,19 +247,44 @@ public abstract class Scrollbar extends GuiGlyph {
             }
 
             if (isClickFirst) {
-                scrollCallback.scrolledDelta(-barStep);
+                scrollCallback.scrolledTo((int) (intervalOffset - barStep));
             } else {
-                scrollCallback.scrolledDelta(barStep);
+                scrollCallback.scrolledTo((int) (intervalOffset + barStep));
             }
         }
     }
 
     @Override
+    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("MouseDragged Scrollbar. Position ({},{}).", mouseX, mouseY);
+        if (type == ScrollbarType.VERTICAL) {
+            // TODO
+        } else {
+            // TODO
+        }
+    }
+
+    @Override
+    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Scrollbar onMousePressed. Position ({},{}).", mouseX, mouseY);
+        draggedOffset = intervalOffset;
+        draggedMouseX = mouseX;
+        draggedMouseY = mouseY;
+        return this;
+    }
+
+    @Override
+    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Scrollbar onMouseReleased. Position ({},{}).", mouseX, mouseY);
+        return this;
+    }
+
+    @Override
     public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
         if (direction == MouseWheelDirection.UP) {
-            scrollCallback.scrolledDelta(-barStep);
+            scrollCallback.scrolledTo((int) (intervalOffset - barStep));
         } else {
-            scrollCallback.scrolledDelta(barStep);
+            scrollCallback.scrolledTo((int) (intervalOffset + barStep));
         }
     }
 

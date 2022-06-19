@@ -13,6 +13,7 @@ import lombok.var;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
@@ -180,18 +181,15 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     }
 
     @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
         // TODO
+        return null;
     }
 
     @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         // TODO
-    }
-
-    @Override
-    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("onMouseDragged on TextPane. Position ({},{}).", mouseX, mouseY);
+        return null;
     }
 
     @Override

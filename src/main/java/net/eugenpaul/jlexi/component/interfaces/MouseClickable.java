@@ -8,9 +8,7 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 public interface MouseClickable {
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button);
 
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button);
+    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button);
 
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button);
-
-    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button);
+    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button);
 }

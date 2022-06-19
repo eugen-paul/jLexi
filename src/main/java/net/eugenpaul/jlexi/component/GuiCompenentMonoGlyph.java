@@ -6,6 +6,7 @@ import java.util.Iterator;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.component.helper.KeyEventAdapterToKeyPressable;
 import net.eugenpaul.jlexi.component.helper.MouseEventAdapterOnGuiGlyph;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
@@ -63,7 +64,9 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
 
     protected abstract void onMouseClickOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button);
 
-    protected abstract void onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button);
+    protected abstract MouseDraggable onMousePressedOutsideComponent(Integer mouseX, Integer mouseY,
+            MouseButton button);
 
-    protected abstract void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button);
+    protected abstract MouseDraggable onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY,
+            MouseButton button);
 }

@@ -134,7 +134,10 @@ public abstract class Window extends MonoGlyph
     @Override
     public void onMousePressed(String name, Integer mouseX, Integer mouseY, MouseButton button) {
         if (mainGlyph != null) {
-            mainGlyph.onMousePressed(mouseX, mouseY, button);
+            var mousePressedOn = mainGlyph.onMousePressed(mouseX, mouseY, button);
+            controller.mousePressedOn(mousePressedOn);
+        } else {
+            controller.mousePressedOn(null);
         }
     }
 
@@ -143,19 +146,13 @@ public abstract class Window extends MonoGlyph
         if (mainGlyph != null) {
             mainGlyph.onMouseReleased(mouseX, mouseY, button);
         }
+        controller.mousePressedOn(null);
     }
 
     @Override
     public void onMouseWheelMooved(String name, Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
         if (mainGlyph != null) {
             mainGlyph.onMouseWhellMoved(mouseX, mouseY, direction);
-        }
-    }
-
-    @Override
-    public void onMouseDragged(String name, Integer mouseX, Integer mouseY, MouseButton button) {
-        if (mainGlyph != null) {
-            mainGlyph.onMouseDragged(mouseX, mouseY, button);
         }
     }
 

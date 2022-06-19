@@ -10,6 +10,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.formatting.ScrollGlypthCompositor;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.scrollpane.Scrollbar.ScrollbarType;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
@@ -57,8 +58,8 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         this.vBar = vBar;
         this.hBar = hBar;
 
-        this.vBar.setScrollCallback(v -> this.scrollbarCallback(v, ScrollbarType.VERTICAL));
-        this.hBar.setScrollCallback(v -> this.scrollbarCallback(v, ScrollbarType.HORIZONTAL));
+        this.vBar.setScrollCallback(v -> this.scrollbarToCallback(v, ScrollbarType.VERTICAL));
+        this.hBar.setScrollCallback(v -> this.scrollbarToCallback(v, ScrollbarType.HORIZONTAL));
 
         this.compositor = new ScrollGlypthCompositor<>(backgroundColor, vScrollPosition, hScrollPosition, true, true);
 
@@ -288,31 +289,31 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         redraw();
     }
 
-    private void scrollbarCallback(int delta, ScrollbarType type) {
+    private void scrollbarToCallback(int offset, ScrollbarType type) {
         if (type == ScrollbarType.VERTICAL) {
-            if (delta < 0) {
+            if (offset <= 0) {
                 // scroll up
-                vScrollPosition = Math.min(0, vScrollPosition - delta);
+                vScrollPosition = 0;
             } else {
                 // scroll down
                 int componentHeight = component.getSize().getHeight();
                 int paneHeight = getSize().getHeight();
                 vScrollPosition = Math.max(//
-                        Math.min(0, -1 * (componentHeight - paneHeight) - delta), //
-                        vScrollPosition - delta //
+                        Math.min(0, -1 * (componentHeight - paneHeight)), //
+                        -offset //
                 );
             }
         } else {
-            if (delta < 0) {
+            if (offset < 0) {
                 // scroll left
-                hScrollPosition = Math.min(0, hScrollPosition - delta);
+                hScrollPosition = 0;
             } else {
                 // scroll right
                 int componenttWidth = component.getSize().getWidth();
                 int panetWidth = getSize().getWidth();
                 hScrollPosition = Math.max(//
-                        Math.min(0, -1 * (componenttWidth - panetWidth) - delta), //
-                        hScrollPosition - delta //
+                        Math.min(0, -1 * (componenttWidth - panetWidth)), //
+                        -offset //
                 );
             }
         }
@@ -325,24 +326,50 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
     }
 
     @Override
-    protected void onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+    protected MouseDraggable onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Pressed on Border. Position ({},{}).", mouseX, mouseY);
+        return null;
     }
 
     @Override
-    protected void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+    protected MouseDraggable onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Released on Border. Position ({},{}).", mouseX, mouseY);
+        return null;
     }
 
     @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
+    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+        if (isClickOnVBar(mouseX)) {
+            return vBar.onMousePressed(//
+                    mouseX - vBar.getRelativPosition().getX(), //
+                    mouseY - vBar.getRelativPosition().getY(), //
+                    button //
+            );
+        } else if (isClickOnHBar(mouseY)) {
+            return hBar.onMousePressed(//
+                    mouseX - hBar.getRelativPosition().getX(), //
+                    mouseY - hBar.getRelativPosition().getY(), //
+                    button //
+            );
+        }
+        return null;
     }
 
     @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO Auto-generated method stub
-
+    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+        if (isClickOnVBar(mouseX)) {
+            return vBar.onMouseReleased(//
+                    mouseX - vBar.getRelativPosition().getX(), //
+                    mouseY - vBar.getRelativPosition().getY(), //
+                    button //
+            );
+        } else if (isClickOnHBar(mouseY)) {
+            return hBar.onMouseReleased(//
+                    mouseX - hBar.getRelativPosition().getX(), //
+                    mouseY - hBar.getRelativPosition().getY(), //
+                    button //
+            );
+        }
+        return null;
     }
 }
