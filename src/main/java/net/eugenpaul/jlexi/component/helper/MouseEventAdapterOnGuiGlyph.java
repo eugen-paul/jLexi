@@ -26,49 +26,49 @@ public class MouseEventAdapterOnGuiGlyph implements MouseEventAdapter {
 
     @Override
     public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            component.onMouseClick(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
+        if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
+            this.component.onMouseClick(//
+                    mouseX - this.component.getRelativPosition().getX(), //
+                    mouseY - this.component.getRelativPosition().getY(), //
                     button//
             );
         } else {
-            onMouseClickOutsideComponent.accept(mouseX, mouseY, button);
+            this.onMouseClickOutsideComponent.accept(mouseX, mouseY, button);
         }
     }
 
     @Override
     public void mousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            component.onMousePressed(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
+        if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
+            this.component.onMousePressed(//
+                    mouseX - this.component.getRelativPosition().getX(), //
+                    mouseY - this.component.getRelativPosition().getY(), //
                     button//
             );
         } else {
-            onMousePressedOutsideComponent.accept(mouseX, mouseY, button);
+            this.onMousePressedOutsideComponent.accept(mouseX, mouseY, button);
         }
     }
 
     @Override
     public void mouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            component.onMouseReleased(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
+        if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
+            this.component.onMouseReleased(//
+                    mouseX - this.component.getRelativPosition().getX(), //
+                    mouseY - this.component.getRelativPosition().getY(), //
                     button//
             );
         } else {
-            onMouseReleasedOutsideComponent.accept(mouseX, mouseY, button);
+            this.onMouseReleasedOutsideComponent.accept(mouseX, mouseY, button);
         }
     }
 
     @Override
     public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            component.onMouseDragged(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
+        if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
+            this.component.onMouseDragged(//
+                    mouseX - this.component.getRelativPosition().getX(), //
+                    mouseY - this.component.getRelativPosition().getY(), //
                     button//
             );
         }
@@ -76,14 +76,14 @@ public class MouseEventAdapterOnGuiGlyph implements MouseEventAdapter {
 
     @Override
     public void mouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
-        if (isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
-            component.onMouseWhellMoved(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
+        if (this.isPositionOnComponent.apply(mouseX, mouseY).booleanValue()) {
+            this.component.onMouseWhellMoved(//
+                    mouseX - this.component.getRelativPosition().getX(), //
+                    mouseY - this.component.getRelativPosition().getY(), //
                     direction//
             );
         } else {
-            onMouseWhellMovedOutsideComponent.accept(mouseX, mouseY, direction);
+            this.onMouseWhellMovedOutsideComponent.accept(mouseX, mouseY, direction);
         }
     }
 }

@@ -37,26 +37,26 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
 
     @Override
     public Drawable getDrawable() {
-        if (component == null) {
+        if (this.component == null) {
             return DrawablePixelsImpl.EMPTY;
         }
-        return component.getDrawable();
+        return this.component.getDrawable();
     }
 
     @Override
     public void visit(Visitor checker) {
-        if (component == null) {
+        if (this.component == null) {
             return;
         }
-        component.visit(checker);
+        this.component.visit(checker);
     }
 
     @Override
     public Iterator<Glyph> iterator() {
-        if (component == null) {
+        if (this.component == null) {
             return Collections.emptyIterator();
         }
-        return component.iterator();
+        return this.component.iterator();
     }
 
     protected abstract boolean isPositionOnComponent(Integer mouseX, Integer mouseY);
