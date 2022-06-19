@@ -1,16 +1,14 @@
 package net.eugenpaul.jlexi.component.helper;
 
+import lombok.AllArgsConstructor;
 import net.eugenpaul.jlexi.component.interfaces.MouseClickable;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 
+@AllArgsConstructor
 public class MouseEventAdapterToMouseClickable implements MouseEventAdapter {
 
     private MouseClickable target;
-
-    public MouseEventAdapterToMouseClickable(MouseClickable target) {
-        this.target = target;
-    }
 
     @Override
     public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {

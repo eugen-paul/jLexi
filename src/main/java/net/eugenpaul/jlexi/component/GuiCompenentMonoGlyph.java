@@ -5,10 +5,10 @@ import java.util.Iterator;
 
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.component.helper.KeyEventAdapterToKeyPressable;
+import net.eugenpaul.jlexi.component.helper.MouseEventAdapterOnGuiGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
-import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 
 /**
  * Abstract Class for Gui-Glyph that cann have just one GuiComponent-Child
@@ -24,6 +24,15 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
         this.component.setParent(this);
 
         this.keyEventAdapter = new KeyEventAdapterToKeyPressable(component);
+
+        this.mouseEventAdapter = new MouseEventAdapterOnGuiGlyph(//
+                this.component, //
+                this::isPositionOnComponent, //
+                this::onMouseClickOutsideComponent, //
+                this::onMousePressedOutsideComponent, //
+                this::onMousePressedOutsideComponent, //
+                this::onMouseWhellMoved //
+        );
     }
 
     @Override
@@ -57,64 +66,4 @@ public abstract class GuiCompenentMonoGlyph extends GuiGlyph {
     protected abstract void onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button);
 
     protected abstract void onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button);
-
-    @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (isPositionOnComponent(mouseX, mouseY)) {
-            component.onMouseClick(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
-                    button//
-            );
-        } else {
-            onMouseClickOutsideComponent(mouseX, mouseY, button);
-        }
-    }
-
-    @Override
-    public void onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (isPositionOnComponent(mouseX, mouseY)) {
-            component.onMousePressed(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
-                    button//
-            );
-        } else {
-            onMousePressedOutsideComponent(mouseX, mouseY, button);
-        }
-    }
-
-    @Override
-    public void onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (isPositionOnComponent(mouseX, mouseY)) {
-            component.onMouseReleased(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
-                    button//
-            );
-        } else {
-            onMouseReleasedOutsideComponent(mouseX, mouseY, button);
-        }
-    }
-
-    @Override
-    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO
-        component.onMouseDragged(//
-                mouseX - component.getRelativPosition().getX(), //
-                mouseY - component.getRelativPosition().getY(), //
-                button//
-        );
-    }
-
-    @Override
-    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
-        if (isPositionOnComponent(mouseX, mouseY)) {
-            component.onMouseWhellMoved(//
-                    mouseX - component.getRelativPosition().getX(), //
-                    mouseY - component.getRelativPosition().getY(), //
-                    direction//
-            );
-        }
-    }
 }
