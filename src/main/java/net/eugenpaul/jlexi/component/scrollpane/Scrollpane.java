@@ -58,6 +58,9 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         this.vBar = vBar;
         this.hBar = hBar;
 
+        this.vBar.setParent(this);
+        this.hBar.setParent(this);
+
         this.vBar.setScrollCallback(v -> this.scrollbarToCallback(v, ScrollbarType.VERTICAL));
         this.hBar.setScrollCallback(v -> this.scrollbarToCallback(v, ScrollbarType.HORIZONTAL));
 
@@ -317,6 +320,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
                 );
             }
         }
+        redraw();
     }
 
     @Override

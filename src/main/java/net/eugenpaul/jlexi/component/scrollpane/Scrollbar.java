@@ -64,10 +64,6 @@ public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
     protected long intervalDisplayed = 0;
     protected long intervalOffset = 0;
 
-    protected long draggedOffset = 0;
-    protected long draggedMouseX = 0;
-    protected long draggedMouseY = 0;
-
     protected Scrollbar(Glyph parent) {
         super(parent);
     }
@@ -256,20 +252,46 @@ public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
 
     @Override
     public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("MouseDragged Scrollbar. Position ({},{}).", mouseX, mouseY);
+        Vector2d relPosToMain = getRelativPositionToMainParent();
+
+        int mouseToElement;
+        int mouseMin;
+        int mouseMax;
         if (type == ScrollbarType.VERTICAL) {
-            // TODO
+            mouseToElement = mouseY - relPosToMain.getY();
+
+            mouseMin = this.buttonFirst.getSize().getHeight() //
+                    + this.runnerGlyph.getSize().getHeight() / 2 //
+            ;
+            mouseMax = this.buttonFirst.getSize().getHeight() //
+                    + this.backgroundGlyph.getSize().getHeight() //
+                    - this.runnerGlyph.getSize().getHeight() / 2 //
+            ;
         } else {
-            // TODO
+            mouseToElement = mouseX - relPosToMain.getX();
+
+            mouseMin = this.buttonFirst.getSize().getWidth() //
+                    + this.runnerGlyph.getSize().getWidth() / 2 //
+            ;
+            mouseMax = this.buttonFirst.getSize().getWidth() //
+                    + this.backgroundGlyph.getSize().getWidth() //
+                    - this.runnerGlyph.getSize().getWidth() / 2 //
+            ;
         }
+        int mouseArea = mouseMax - mouseMin;
+
+        int mouseToArea = Math.max(0, mouseToElement - mouseMin);
+        mouseToArea = Math.min(mouseArea, mouseToArea);
+
+        int offetPercent = mouseToArea * 100 / mouseArea;
+        long realOffet = offetPercent * (intervalTotal - intervalDisplayed) / 100L;
+
+        this.scrollCallback.scrolledTo((int) realOffet);
     }
 
     @Override
     public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Scrollbar onMousePressed. Position ({},{}).", mouseX, mouseY);
-        draggedOffset = intervalOffset;
-        draggedMouseX = mouseX;
-        draggedMouseY = mouseY;
         return this;
     }
 

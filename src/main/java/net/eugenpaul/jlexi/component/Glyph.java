@@ -79,6 +79,18 @@ public abstract class Glyph {
         return responsePosition;
     }
 
+    public Vector2d getRelativPositionToMainParent() {
+        Glyph pGlyph = parent;
+        Vector2d responsePosition = new Vector2d(relativPosition);
+        while (null != pGlyph) {
+            responsePosition.add(pGlyph.getRelativPosition());
+            // responsePosition
+            pGlyph = pGlyph.getParent();
+        }
+
+        return responsePosition;
+    }
+
     /**
      * 
      * @param checker
