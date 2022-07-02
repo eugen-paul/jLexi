@@ -64,10 +64,12 @@ public class ModelController extends AbstractController {
     }
 
     public void mouseDragged(String name, int mouseX, int mouseY, MouseButton button) {
-        // TODO Synchrinize the call
-        if (currentDraggable != null) {
-            currentDraggable.onMouseDragged(mouseX, mouseY, button);
-        }
+        doOnModel(ModelPropertyChangeType.MOUSE_DRAGGED, //
+                () -> {
+                    if (currentDraggable != null) {
+                        currentDraggable.onMouseDragged(mouseX, mouseY, button);
+                    }
+                });
     }
 
     public void keyTyped(String name, Character key) {

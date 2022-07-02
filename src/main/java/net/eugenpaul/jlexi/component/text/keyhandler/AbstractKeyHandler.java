@@ -49,6 +49,9 @@ public class AbstractKeyHandler {
     }
 
     public void onKeyPressed(KeyCode keyCode) {
+        // TODO You may have to edit the selected text here.
+        component.getMouseCursor().removeSelection();
+
         switch (keyCode) {
         case ENTER:
             keyPressedEnter();

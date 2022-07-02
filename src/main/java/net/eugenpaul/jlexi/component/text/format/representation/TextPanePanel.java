@@ -37,7 +37,7 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public class TextPanePanel extends TextRepresentationOfRepresentation
-        implements ChangeListener, GuiEvents, TextUpdateable, KeyHandlerable {
+        implements ChangeListener, GuiEvents, TextUpdateable, KeyHandlerable, MouseDraggable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPanePanel.class);
 
@@ -58,6 +58,8 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     private ResourceManager storage;
 
+    private TextPosition textSelectionFrom;
+
     @Getter
     private final String cursorName;
 
@@ -72,13 +74,14 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
                 this//
         );
 
-        this.mouseCursor = new Cursor(null, null, controller, this.cursorName);
+        this.mouseCursor = new Cursor(null, controller, this.cursorName);
 
         this.yPositionToSite = new TreeMap<>();
 
         this.storage = storage;
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
+        this.textSelectionFrom = null;
     }
 
     @Override
@@ -182,20 +185,41 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
     @Override
     public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO
-        return null;
+        LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
+        mouseCursor.removeSelection();
+
+        var row = this.yPositionToSite.floorEntry(mouseY);
+        if (null != row) {
+            textSelectionFrom = row.getValue().getCursorElementAt(//
+                    new Vector2d(//
+                            mouseX - row.getValue().getRelativPosition().getX(), //
+                            mouseY - row.getValue().getRelativPosition().getY() //
+                    )//
+            );
+        }
+
+        if (textSelectionFrom != null) {
+            LOGGER.trace("MousePressed on TextPane. Position ({},{}). Element {}", mouseX, mouseY,
+                    textSelectionFrom.getTextElement());
+        } else {
+            LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
+        }
+
+        return this;
     }
 
     @Override
     public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        // TODO
-        return null;
+        LOGGER.trace("MouseReleased on TextPane. Position ({},{}).", mouseX, mouseY);
+        textSelectionFrom = null;
+        return this;
     }
 
     @Override
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
+
+        mouseCursor.removeSelection();
 
         var row = this.yPositionToSite.floorEntry(mouseY);
         if (null == row) {
@@ -254,5 +278,38 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
     protected TextPosition getFirstText(int x) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+        Vector2d relPosToMain = getRelativPositionToMainParent();
+
+        int mouseRelX = mouseX - relPosToMain.getX();
+        int mouseRelY = mouseY - relPosToMain.getY();
+
+        LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
+        if (this.textSelectionFrom != null) {
+            var row = this.yPositionToSite.floorEntry(mouseRelY);
+            if (null != row) {
+                TextPosition textSelectionTo = row.getValue().getCursorElementAt(//
+                        new Vector2d(//
+                                mouseRelX - row.getValue().getRelativPosition().getX(), //
+                                mouseRelY - row.getValue().getRelativPosition().getY() //
+                        )//
+                );
+
+                if (textSelectionTo != null) {
+                    LOGGER.trace("Selection from: {} to: {}", //
+                            this.textSelectionFrom.getTextElement(), //
+                            textSelectionTo.getTextElement() //
+                    );
+
+                    mouseCursor.setTextSelection(//
+                            this.textSelectionFrom.getTextElement(), //
+                            textSelectionTo.getTextElement() //
+                    );
+                }
+            }
+        }
     }
 }

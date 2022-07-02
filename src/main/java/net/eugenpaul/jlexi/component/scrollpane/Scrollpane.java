@@ -332,17 +332,6 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
     @Override
     protected MouseDraggable onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Pressed on Border. Position ({},{}).", mouseX, mouseY);
-        return null;
-    }
-
-    @Override
-    protected MouseDraggable onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("Released on Border. Position ({},{}).", mouseX, mouseY);
-        return null;
-    }
-
-    @Override
-    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
         if (isClickOnVBar(mouseX)) {
             return vBar.onMousePressed(//
                     mouseX - vBar.getRelativPosition().getX(), //
@@ -360,7 +349,8 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
     }
 
     @Override
-    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+    protected MouseDraggable onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
+        LOGGER.trace("Released on Border. Position ({},{}).", mouseX, mouseY);
         if (isClickOnVBar(mouseX)) {
             return vBar.onMouseReleased(//
                     mouseX - vBar.getRelativPosition().getX(), //

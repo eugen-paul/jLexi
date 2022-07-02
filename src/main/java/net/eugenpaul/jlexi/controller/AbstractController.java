@@ -128,6 +128,23 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
         modelPropChangeMap.put(propertyType, disp);
     }
 
+    protected void doOnModel(ModelPropertyChangeType propertyType, Runnable task) {
+
+        Disposable oldChange = modelPropChangeMap.remove(propertyType);
+        if (oldChange != null) {
+            oldChange.dispose();
+        }
+
+        Disposable disp = Mono//
+                .fromRunnable(task)//
+                .publishOn(modelScheduler)//
+                .delaySubscription(propertyType.getDelay())//
+                .doOnSuccess(v -> LOGGER.trace("setModelProperty done"))//
+                .subscribe();
+
+        modelPropChangeMap.put(propertyType, disp);
+    }
+
     private void doModelPropertyChange(ModelPropertyChangeType propertyType, Object... newValue) {
         Class<?>[] methodParameter = Stream.of(newValue) //
                 .map(Object::getClass) //
