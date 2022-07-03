@@ -58,4 +58,9 @@ public class TextNewLine extends TextElementAbstract {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "\n";
+    }
+
 }

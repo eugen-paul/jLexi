@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
@@ -388,4 +389,78 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
         throw new NullPointerException("Paragraph has no EndOfSection");
     }
 
+    @Override
+    public Optional<Boolean> isABeforB(TextElement elemA, TextElement elemB) {
+        for (var child : this.textElements) {
+            if (child == elemA) {
+                return Optional.of(Boolean.TRUE);
+            }
+            if (child == elemB) {
+                return Optional.of(Boolean.FALSE);
+            }
+        }
+
+        // TODO: Expand the function if TextElement is a compositor.
+
+        return Optional.empty();
+    }
+
+    @Override
+    public List<TextElement> getAllTextElements() {
+        return new LinkedList<>(this.textElements);
+    }
+
+    @Override
+    public List<TextElement> getAllTextElementsFrom(TextElement from) {
+        List<TextElement> response = new LinkedList<>();
+
+        boolean doAdd = false;
+        for (var child : this.textElements) {
+            if (from == child) {
+                response.add(child);
+                doAdd = true;
+            } else if (doAdd) {
+                response.add(child);
+            }
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<TextElement> getAllTextElementsTo(TextElement to) {
+        List<TextElement> response = new LinkedList<>();
+
+        for (var child : this.textElements) {
+            if (to == child) {
+                response.add(child);
+                break;
+            } else {
+                response.add(child);
+            }
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<TextElement> getAllTextElementsBetween(TextElement from, TextElement to) {
+        List<TextElement> response = new LinkedList<>();
+
+        boolean doAdd = false;
+
+        for (var child : this.textElements) {
+            if ((from == child && to == child) || to == child) {
+                response.add(child);
+                break;
+            } else if (from == child) {
+                response.add(child);
+                doAdd = true;
+            } else if (doAdd) {
+                response.add(child);
+            }
+        }
+
+        return response;
+    }
 }

@@ -63,4 +63,9 @@ public class TextNewSection extends TextElementAbstract {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "\n";
+    }
+
 }

@@ -51,6 +51,24 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
      */
     protected abstract TextElement mergeWithNext(TextStructure element);
 
+    public abstract Optional<Boolean> isABeforB(TextElement elemA, TextElement elemB);
+
+    public abstract List<TextElement> getAllTextElements();
+    public abstract List<TextElement> getAllTextElementsBetween(TextElement from, TextElement to);
+    public abstract List<TextElement> getAllTextElementsFrom(TextElement from);
+    public abstract List<TextElement> getAllTextElementsTo(TextElement to);
+
+    protected List<TextStructure> getElementPath(TextElement element) {
+        List<TextStructure> path = new LinkedList<>();
+        TextStructure currentStructure = element.getStructureParent();
+        while (currentStructure != null) {
+            path.add(0, currentStructure);
+            currentStructure = currentStructure.getParentStructure();
+        }
+
+        return path;
+    }
+
     /**
      * The specified element is added to the beginning of the object.
      * 

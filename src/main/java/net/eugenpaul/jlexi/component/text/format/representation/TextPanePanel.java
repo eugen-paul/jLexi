@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
+import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
@@ -304,12 +306,39 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
                             textSelectionTo.getTextElement() //
                     );
 
-                    mouseCursor.setTextSelection(//
-                            this.textSelectionFrom.getTextElement(), //
+                    List<TextElement> selectedText = getSelectedText(//
+                            textSelectionFrom.getTextElement(), //
                             textSelectionTo.getTextElement() //
                     );
+
+                    if (!selectedText.isEmpty()) {
+                        StringBuilder t = new StringBuilder(selectedText.size());
+                        selectedText.stream().forEach(t::append);
+                        LOGGER.trace("selectedText: {}", //
+                                t //
+                        );
+
+                        mouseCursor.setTextSelection(selectedText);
+                    }
                 }
             }
         }
+    }
+
+    private List<TextElement> getSelectedText(TextElement posA, TextElement posB) {
+        Optional<Boolean> aIsFirst = document.isABeforB(posA, posB);
+
+        if (aIsFirst.isEmpty()) {
+            LOGGER.trace("Empty selection");
+            return Collections.emptyList();
+        }
+
+        if (aIsFirst.get().booleanValue()) {
+            LOGGER.trace("{} is first", posA);
+            return document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
+        }
+
+        LOGGER.trace("{} is first", posB);
+        return document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
     }
 }

@@ -3,7 +3,6 @@ package net.eugenpaul.jlexi.component.text.format.element;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
@@ -18,7 +17,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public abstract class TextElement extends Glyph implements EffectHolder, TextDocumentElement {
 
-    @Getter(value = AccessLevel.PROTECTED)
+    @Getter
     @Setter
     protected TextStructure structureParent;
 

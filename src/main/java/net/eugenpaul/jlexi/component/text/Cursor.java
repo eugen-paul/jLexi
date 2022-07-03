@@ -1,6 +1,8 @@
 package net.eugenpaul.jlexi.component.text;
 
 import java.beans.PropertyChangeEvent;
+import java.util.LinkedList;
+import java.util.List;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -28,13 +30,8 @@ public class Cursor implements ModelPropertyChangeListner {
     private GlyphEffect cursorEffect;
     private AbstractController controller;
 
-    // TODO: remove
-    // Two selection Effects. Just for Tests
-    private GlyphEffect selectedEffectFrom;
-    private GlyphEffect selectedEffectTo;
-
-    private TextElement selectionFrom;
-    private TextElement selectionTo;
+    private List<TextElement> selectedText;
+    private List<GlyphEffect> selectedTextEffect;
 
     public Cursor(TextElement glyphElement, AbstractController controller, String name) {
         this.name = name;
@@ -42,11 +39,8 @@ public class Cursor implements ModelPropertyChangeListner {
         this.cursorEffect = null;
         this.controller = controller;
 
-        this.selectedEffectFrom = null;
-        this.selectedEffectTo = null;
-
-        this.selectionFrom = null;
-        this.selectionTo = null;
+        this.selectedText = null;
+        this.selectedTextEffect = null;
 
         this.controller.addView(this);
     }
@@ -56,45 +50,57 @@ public class Cursor implements ModelPropertyChangeListner {
     }
 
     public boolean isTextSelected() {
-        return this.selectionFrom != null && this.selectionTo != null;
+        return this.selectedText != null && !this.selectedText.isEmpty();
     }
 
     public void removeSelection() {
-        setTextSelection(null, null);
+        setTextSelection(null);
     }
 
     private void addSelectedEffect() {
-        if (this.selectionFrom == null || this.selectionTo == null) {
+        if (!isTextSelected()) {
             return;
         }
 
         removeSelectedEffect();
 
-        this.selectedEffectFrom = new SelectedEffect(this.selectionFrom);
-        this.controller.addEffectToController(this.selectedEffectFrom);
+        var iteratorText = this.selectedText.iterator();
 
-        this.selectedEffectTo = new SelectedEffect(this.selectionTo);
-        this.controller.addEffectToController(this.selectedEffectTo);
+        this.selectedTextEffect = new LinkedList<>();
+
+        while (iteratorText.hasNext()) {
+            var textElem = iteratorText.next();
+
+            var effect = new SelectedEffect(textElem);
+            this.controller.addEffectToController(effect);
+            selectedTextEffect.add(effect);
+        }
     }
 
     private void removeSelectedEffect() {
-        if (this.selectedEffectFrom == null || this.selectedEffectTo == null) {
+        if (this.selectedTextEffect == null || this.selectedTextEffect.isEmpty()) {
+            // nothing to remove
             return;
         }
 
-        this.selectionFrom.removeEffect(this.selectedEffectFrom);
-        this.controller.removeEffectFromController(this.selectedEffectFrom);
-        this.selectedEffectFrom = null;
+        var iteratorText = this.selectedText.iterator();
+        var iteratorTextEffect = this.selectedTextEffect.iterator();
 
-        this.selectionTo.removeEffect(this.selectedEffectTo);
-        this.controller.removeEffectFromController(this.selectedEffectTo);
-        this.selectedEffectTo = null;
+        while (iteratorText.hasNext() && iteratorTextEffect.hasNext()) {
+            var textElem = iteratorText.next();
+            var textElemEffect = iteratorTextEffect.next();
+
+            textElem.removeEffect(textElemEffect);
+            this.controller.removeEffectFromController(textElemEffect);
+        }
+
+        this.selectedText = null;
+        this.selectedTextEffect = null;
     }
 
-    public void setTextSelection(TextElement from, TextElement to) {
+    public void setTextSelection(List<TextElement> selection) {
         removeSelectedEffect();
-        this.selectionFrom = from;
-        this.selectionTo = to;
+        this.selectedText = selection;
         addSelectedEffect();
     }
 

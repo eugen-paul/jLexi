@@ -12,6 +12,7 @@ import net.eugenpaul.jlexi.draw.DrawableSketch;
 
 public class SelectedEffect extends GlyphEffect {
 
+    @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(SelectedEffect.class);
 
     public SelectedEffect(TextElement glyph) {
@@ -37,7 +38,6 @@ public class SelectedEffect extends GlyphEffect {
 
     @Override
     public void terminate() {
-        LOGGER.trace("terminate Selection on {}.", getGlyph());
         getGlyph().removeEffect(this);
         getGlyph().updateEffect(null);
     }
