@@ -312,12 +312,6 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
                     );
 
                     if (!selectedText.isEmpty()) {
-                        StringBuilder t = new StringBuilder(selectedText.size());
-                        selectedText.stream().forEach(t::append);
-                        LOGGER.trace("selectedText: {}", //
-                                t //
-                        );
-
                         mouseCursor.setTextSelection(selectedText);
                     }
                 }

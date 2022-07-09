@@ -1,8 +1,10 @@
 package net.eugenpaul.jlexi.component.text;
 
 import java.beans.PropertyChangeEvent;
-import java.util.LinkedList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -18,6 +20,8 @@ import net.eugenpaul.jlexi.effect.SelectedEffect;
 
 public class Cursor implements ModelPropertyChangeListner {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Cursor.class);
+
     private final String name;
 
     private TextElement textElement;
@@ -31,7 +35,7 @@ public class Cursor implements ModelPropertyChangeListner {
     private AbstractController controller;
 
     private List<TextElement> selectedText;
-    private List<GlyphEffect> selectedTextEffect;
+    private GlyphEffect selectedTextEffect;
 
     public Cursor(TextElement glyphElement, AbstractController controller, String name) {
         this.name = name;
@@ -64,35 +68,21 @@ public class Cursor implements ModelPropertyChangeListner {
 
         removeSelectedEffect();
 
-        var iteratorText = this.selectedText.iterator();
-
-        this.selectedTextEffect = new LinkedList<>();
-
-        while (iteratorText.hasNext()) {
-            var textElem = iteratorText.next();
-
-            var effect = new SelectedEffect(textElem);
-            this.controller.addEffectToController(effect);
-            selectedTextEffect.add(effect);
-        }
+        this.selectedTextEffect = new SelectedEffect(this.selectedText);
+        this.controller.addEffectToController(selectedTextEffect);
     }
 
     private void removeSelectedEffect() {
-        if (this.selectedTextEffect == null || this.selectedTextEffect.isEmpty()) {
+        if (this.selectedTextEffect == null) {
             // nothing to remove
             return;
         }
 
-        var iteratorText = this.selectedText.iterator();
-        var iteratorTextEffect = this.selectedTextEffect.iterator();
-
-        while (iteratorText.hasNext() && iteratorTextEffect.hasNext()) {
-            var textElem = iteratorText.next();
-            var textElemEffect = iteratorTextEffect.next();
-
-            textElem.removeEffect(textElemEffect);
-            this.controller.removeEffectFromController(textElemEffect);
+        for (var element : this.selectedText) {
+            element.removeEffect(selectedTextEffect);
         }
+
+        this.controller.removeEffectFromController(selectedTextEffect);
 
         this.selectedText = null;
         this.selectedTextEffect = null;

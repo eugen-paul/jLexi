@@ -55,29 +55,29 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     public abstract TextPosition getCursorElementAt(Vector2d pos);
 
     public void reset() {
-        cachedDrawable = null;
+        this.cachedDrawable = null;
     }
 
     @Override
     public void addEffect(GlyphEffect effect) {
-        effects.add(effect);
+        this.effects.add(effect);
     }
 
     @Override
     public void removeEffect(GlyphEffect effect) {
-        effects.remove(effect);
+        this.effects.remove(effect);
     }
 
     protected void doEffects(DrawableSketch element) {
-        effects.stream()//
+        this.effects.stream()//
                 .forEach(v -> v.addToDrawable(element));
     }
 
     @Override
     public void updateEffect(GlyphEffect effect) {
-        if (null != parent) {
-            cachedDrawable = null;
-            parent.redraw();
+        this.cachedDrawable = null;
+        if (null != this.parent) {
+            this.parent.notifyChange();
         }
     }
 
@@ -123,6 +123,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
 
     @Override
     public void notifyChange() {
+        this.cachedDrawable = null;
         if (structureParent == null) {
             return;
         }

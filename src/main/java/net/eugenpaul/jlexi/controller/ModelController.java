@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
@@ -20,6 +23,9 @@ import reactor.core.Disposable;
  * Implementation of {@link AbstractController} for jLexi
  */
 public class ModelController extends AbstractController {
+
+    @SuppressWarnings("unused")
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModelController.class);
 
     private Map<GlyphEffect, Disposable> effectMap;
     private Map<String, TextUpdateable> textUpdateableMap;

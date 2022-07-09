@@ -77,11 +77,4 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
         }
         return null;
     }
-
-    @Override
-    public void notifyChange() {
-        super.notifyChange();
-        children.forEach(v -> v.setParent(null));
-        children.clear();
-    }
 }

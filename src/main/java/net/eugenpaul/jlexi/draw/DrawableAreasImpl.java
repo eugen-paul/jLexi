@@ -93,14 +93,16 @@ public class DrawableAreasImpl implements Drawable {
                 getSize() //
         );
 
-        ImageArrayHelper.fillRectangle(//
-                background, //
-                colorType, //
-                dest, //
-                destSize, //
-                finalDrawArea.getSize(), //
-                finalDrawArea.getPosition() //
-        );
+        if (!background.equals(Color.INVISIBLE)) {
+            ImageArrayHelper.fillRectangle(//
+                    background, //
+                    colorType, //
+                    dest, //
+                    destSize, //
+                    finalDrawArea.getSize(), //
+                    finalDrawArea.getPosition() //
+            );
+        }
 
         this.data.forEach((d, v) -> d.toPixels(//
                 colorType, //

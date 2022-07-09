@@ -34,12 +34,13 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
     @Override
     public void redraw() {
-        if (parent == null) {
+        this.cachedDrawable = null;
+
+        if (this.parent == null) {
             return;
         }
 
-        cachedDrawable = null;
-        parent.redraw();
+        this.parent.redraw();
     }
 
     @Override

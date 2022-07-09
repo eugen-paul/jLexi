@@ -1,23 +1,29 @@
 package net.eugenpaul.jlexi.effect;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.var;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 
-public class SelectedEffect extends GlyphEffect {
+public class SelectedEffect implements GlyphEffect {
 
     @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(SelectedEffect.class);
 
-    public SelectedEffect(TextElement glyph) {
-        super(glyph);
-        glyph.addEffect(this);
+    List<TextElement> glyphs;
+
+    public SelectedEffect(List<TextElement> glyphs) {
+        this.glyphs = glyphs;
+        for (var glyph : glyphs) {
+            glyph.addEffect(this);
+        }
     }
 
     @Override
@@ -32,14 +38,25 @@ public class SelectedEffect extends GlyphEffect {
 
     @Override
     public GlyphEffect doEffect() {
-        getGlyph().updateEffect(this);
+        for (var glyph : glyphs) {
+            glyph.updateEffect(this);
+        }
+        if (!glyphs.isEmpty()) {
+            glyphs.get(0).redraw();
+        }
         return this;
     }
 
     @Override
     public void terminate() {
-        getGlyph().removeEffect(this);
-        getGlyph().updateEffect(null);
+        for (var glyph : glyphs) {
+            glyph.removeEffect(this);
+            glyph.updateEffect(null);
+        }
+        // TODO: do it better
+        if (!glyphs.isEmpty()) {
+            glyphs.get(0).redraw();
+        }
     }
 
     @Override
@@ -48,17 +65,10 @@ public class SelectedEffect extends GlyphEffect {
         int[] originalPixels = drawable.draw().asArgbPixels();
 
         for (int i = 0; i < originalPixels.length; i++) {
-            int color = originalPixels[i];
-            int blue = color & 0xFF;
-            int red = color & 0xFF0000;
-            int green = color & 0xFF00;
+            int color = originalPixels[i] & 0xFFFFFF;
 
             // remove alpha and invert colors
-            cursorsPixels[i] = 0xFF000000 //
-                    | (0xFF0000 - red) //
-                    | (0xFF00 - green) //
-                    | (0xFF - blue) //
-            ;
+            cursorsPixels[i] = 0xFF000000 | (0xFFFFFF - color);
         }
 
         Drawable cursorDrawable = DrawablePixelsImpl.builderArgb()//

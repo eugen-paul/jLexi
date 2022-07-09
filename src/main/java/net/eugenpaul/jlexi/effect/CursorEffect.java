@@ -12,7 +12,7 @@ import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.utils.Size;
 
-public class CursorEffect extends GlyphEffect {
+public class CursorEffect implements GlyphEffect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CursorEffect.class);
 
@@ -20,10 +20,12 @@ public class CursorEffect extends GlyphEffect {
 
     private boolean showCursor;
 
+    private TextElement glyph;
+
     public CursorEffect(TextElement glyph) {
-        super(glyph);
-        showCursor = false;
-        glyph.addEffect(this);
+        this.glyph = glyph;
+        this.showCursor = false;
+        this.glyph.addEffect(this);
     }
 
     @Override
@@ -38,28 +40,30 @@ public class CursorEffect extends GlyphEffect {
 
     @Override
     public GlyphEffect doEffect() {
-        if (showCursor) {
-            showCursor = false;
-            LOGGER.trace("hide Cursor on {}.", getGlyph());
+        if (this.showCursor) {
+            this.showCursor = false;
+            LOGGER.trace("hide Cursor on {}.", this.glyph);
         } else {
-            showCursor = true;
-            LOGGER.trace("show Cursor on {}.", getGlyph());
+            this.showCursor = true;
+            LOGGER.trace("show Cursor on {}.", this.glyph);
         }
 
-        getGlyph().updateEffect(this);
+        this.glyph.updateEffect(this);
+        this.glyph.redraw();
         return this;
     }
 
     @Override
     public void terminate() {
-        LOGGER.trace("terminate Cursor on {}.", getGlyph());
-        getGlyph().removeEffect(this);
-        getGlyph().updateEffect(null);
+        LOGGER.trace("terminate Cursor on {}.", this.glyph);
+        this.glyph.removeEffect(this);
+        this.glyph.updateEffect(null);
+        this.glyph.redraw();
     }
 
     @Override
     public void addToDrawable(DrawableSketch drawable) {
-        if (showCursor) {
+        if (this.showCursor) {
             int[] cursorsPixels = new int[drawable.getSize().getHeight()];
             Arrays.fill(cursorsPixels, CURSOR_COLOR);
 
