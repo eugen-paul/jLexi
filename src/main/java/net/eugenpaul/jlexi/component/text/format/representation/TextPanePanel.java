@@ -24,10 +24,12 @@ import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
+import net.eugenpaul.jlexi.component.text.keyhandler.TextCommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
+import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.AligmentH;
 import net.eugenpaul.jlexi.utils.Color;
@@ -37,9 +39,10 @@ import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.visitor.Visitor;
+import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 
-public class TextPanePanel extends TextRepresentationOfRepresentation
-        implements ChangeListener, GuiEvents, TextUpdateable, KeyHandlerable, MouseDraggable {
+public class TextPanePanel extends TextRepresentationOfRepresentation implements ChangeListener, GuiEvents,
+        TextUpdateable, KeyHandlerable, MouseDraggable, UndoRedoable, InterfaceModel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TextPanePanel.class);
 
@@ -71,19 +74,23 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
         this.compositor = new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER_POSITIV);
         this.cursorName = cursorPrefix + "textPaneCursor";
 
+        TextCommandsDeque commandDeque = new TextCommandsDeque();
+
         this.document = new TextPaneDocument(//
                 storage, //
                 this//
         );
 
-        this.mouseCursor = new Cursor(null, controller, this.cursorName);
+        this.mouseCursor = new Cursor(null, controller, this.cursorName, commandDeque);
 
         this.yPositionToSite = new TreeMap<>();
 
         this.storage = storage;
 
-        this.keyHandler = new TextPaneExtendedKeyHandler(this, storage);
+        this.keyHandler = new TextPaneExtendedKeyHandler(this, storage, commandDeque);
         this.textSelectionFrom = null;
+
+        controller.addModel(this);
     }
 
     @Override
@@ -314,6 +321,8 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
                     if (!selectedText.isEmpty()) {
                         mouseCursor.setTextSelection(selectedText);
                     }
+
+                    mouseCursor.moveCursorTo(textSelectionTo);
                 }
             }
         }
@@ -334,5 +343,15 @@ public class TextPanePanel extends TextRepresentationOfRepresentation
 
         LOGGER.trace("{} is first", posB);
         return document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
+    }
+
+    @Override
+    public void undo(String name) {
+        keyHandler.undo();
+    }
+
+    @Override
+    public void redo(String name) {
+        keyHandler.redo();
     }
 }

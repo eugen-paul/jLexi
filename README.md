@@ -8,6 +8,15 @@ In the implementation I only use two Java Swing classes: JFrame and JPanel to cr
 
 ## Progress
 
+### Step 6
+Undo (**<**) and Redo (**>**) buttons.
+
+Simple text selection was implemented.
+
+By pressing **B** and **I** buttons, the format of the selected text will be changed.
+
+![Progress_6](doc/img/Progress_6.gif).
+
 ### Step 5
 More properties (page size, number of columns, page breaks/sections, hyphenation, ...) can be read from the file.
 

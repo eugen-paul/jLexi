@@ -13,9 +13,9 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 @AllArgsConstructor
 public class ItalicActivate implements MouseEventAdapter {
 
-    private String name;
-    private Button button;
-    private AbstractController controller;
+    private final String name;
+    private final Button button;
+    private final AbstractController controller;
 
     @Override
     public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {

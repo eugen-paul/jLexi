@@ -13,9 +13,9 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 @AllArgsConstructor
 public class BoldActivate implements MouseEventAdapter {
 
-    private String name;
-    private Button button;
-    private AbstractController controller;
+    private final String name;
+    private final Button button;
+    private final AbstractController controller;
 
     @Override
     public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
@@ -23,8 +23,8 @@ public class BoldActivate implements MouseEventAdapter {
             this.button.setState(ButtonState.PUSHED);
             this.button.redraw();
 
-            controller.propertyChange(new PropertyChangeEvent(//
-                    name, //
+            this.controller.propertyChange(new PropertyChangeEvent(//
+            this.name, //
                     ViewPropertyChangeType.CURSOR_SET_FORMAT_BOLD.getTypeName(), //
                     null, //
                     Boolean.TRUE //
@@ -33,8 +33,8 @@ public class BoldActivate implements MouseEventAdapter {
             this.button.setState(ButtonState.NORMAL);
             this.button.redraw();
 
-            controller.propertyChange(new PropertyChangeEvent(//
-                    name, //
+            this.controller.propertyChange(new PropertyChangeEvent(//
+            this.name, //
                     ViewPropertyChangeType.CURSOR_SET_FORMAT_BOLD.getTypeName(), //
                     null, //
                     Boolean.FALSE //

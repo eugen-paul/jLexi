@@ -60,27 +60,57 @@ public class MainWindow extends ApplicationWindow {
     }
 
     private void initMenu(MenuBar menubar, String cursorName) {
-        TextButton boldButton = guiFactory.createTextButton(menubar, "B", storage);
-        boldButton.setTextFormat(boldButton.getTextFormat().withBold(true));
-        boldButton.setSize(new Size(20, 20));
-        menubar.addMenuButton(boldButton);
+        addBoldButton(menubar, cursorName);
+        addItalicButton(menubar, cursorName);
 
-        BoldFormatChangeListner boldListner = new BoldFormatChangeListner(boldButton, cursorName);
-        this.controller.addView(boldListner);
+        addUndoButton(menubar, cursorName);
+        addRedoButton(menubar, cursorName);
+    }
 
-        MouseEventAdapter mouseEventAdapter = new BoldActivate(cursorName, boldButton, this.controller);
-        boldButton.setMouseEventAdapter(mouseEventAdapter);
+    private void addBoldButton(MenuBar menubar, String cursorName) {
+        TextButton button = guiFactory.createTextButton(menubar, "B", storage);
+        button.setTextFormat(button.getTextFormat().withBold(true));
+        button.setSize(new Size(20, 20));
+        menubar.addMenuButton(button);
 
-        TextButton italicButton = guiFactory.createTextButton(menubar, "I", storage);
-        italicButton.setTextFormat(italicButton.getTextFormat().withItalic(true));
-        italicButton.setSize(new Size(20, 20));
-        menubar.addMenuButton(italicButton);
+        BoldFormatChangeListner listner = new BoldFormatChangeListner(button, cursorName);
+        this.controller.addView(listner);
 
-        ItalicFormatChangeListner italicListner = new ItalicFormatChangeListner(italicButton, cursorName);
-        this.controller.addView(italicListner);
+        MouseEventAdapter mouseEventAdapter = new BoldActivate(cursorName, button, this.controller);
+        button.setMouseEventAdapter(mouseEventAdapter);
+    }
 
-        mouseEventAdapter = new ItalicActivate(cursorName, italicButton, this.controller);
-        italicButton.setMouseEventAdapter(mouseEventAdapter);
+    private void addItalicButton(MenuBar menubar, String cursorName) {
+        TextButton button = guiFactory.createTextButton(menubar, "I", storage);
+        button.setTextFormat(button.getTextFormat().withItalic(true));
+        button.setSize(new Size(20, 20));
+        menubar.addMenuButton(button);
+
+        ItalicFormatChangeListner listner = new ItalicFormatChangeListner(button, cursorName);
+        this.controller.addView(listner);
+
+        MouseEventAdapter mouseEventAdapter = new ItalicActivate(cursorName, button, this.controller);
+        button.setMouseEventAdapter(mouseEventAdapter);
+    }
+
+    private void addUndoButton(MenuBar menubar, String cursorName) {
+        TextButton button = guiFactory.createTextButton(menubar, "<", storage);
+        button.setTextFormat(button.getTextFormat());
+        button.setSize(new Size(20, 20));
+        menubar.addMenuButton(button);
+
+        MouseEventAdapter mouseEventAdapter = new UndoActivate(cursorName, this.controller);
+        button.setMouseEventAdapter(mouseEventAdapter);
+    }
+
+    private void addRedoButton(MenuBar menubar, String cursorName) {
+        TextButton button = guiFactory.createTextButton(menubar, ">", storage);
+        button.setTextFormat(button.getTextFormat());
+        button.setSize(new Size(20, 20));
+        menubar.addMenuButton(button);
+
+        MouseEventAdapter mouseEventAdapter = new RedoActivate(cursorName, this.controller);
+        button.setMouseEventAdapter(mouseEventAdapter);
     }
 
     /**

@@ -75,7 +75,16 @@ public class ModelController extends AbstractController {
                     if (currentDraggable != null) {
                         currentDraggable.onMouseDragged(mouseX, mouseY, button);
                     }
-                });
+                }, //
+                true);
+    }
+
+    public void undo(String name) {
+        setModelPropertyWithoutDispose(ModelPropertyChangeType.TEXT_UNDO, name);
+    }
+
+    public void redo(String name) {
+        setModelPropertyWithoutDispose(ModelPropertyChangeType.TEXT_REDO, name);
     }
 
     public void keyTyped(String name, Character key) {

@@ -81,6 +81,14 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         }
     }
 
+    public void updateFormat(TextFormat newFormat) {
+        this.format = newFormat;
+        this.cachedDrawable = null;
+        if (null != this.parent) {
+            this.parent.notifyChange();
+        }
+    }
+
     /**
      * return true if the Text Element can be removed by DELETE or BACKSPACE
      * 
