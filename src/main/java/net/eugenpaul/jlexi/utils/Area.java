@@ -12,4 +12,13 @@ public class Area {
     public Area copy() {
         return new Area(this.position.copy(), this.size);
     }
+
+    /**
+     * Check if size of the Area is zero
+     * 
+     * @return
+     */
+    public boolean isZero() {
+        return size.isZero();
+    }
 }

@@ -93,6 +93,11 @@ public class DrawableAreasImpl implements Drawable {
                 getSize() //
         );
 
+        if (finalDrawArea.isZero()) {
+            // There is no overlap between destination area and the object. There is no need to draw.
+            return;
+        }
+
         if (!background.equals(Color.INVISIBLE)) {
             ImageArrayHelper.fillRectangle(//
                     background, //
