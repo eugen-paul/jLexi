@@ -28,6 +28,7 @@ public class AbstractKeyHandler {
         }
 
         var cursor = component.getMouseCursor();
+        cursor.removeSelection();
 
         var addCommand = new TextElementAddBeforeCommand(//
                 TextElementFactory.fromChar(//

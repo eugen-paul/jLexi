@@ -73,8 +73,6 @@ public class Cursor implements ModelPropertyChangeListner {
             return;
         }
 
-        removeSelectedEffect();
-
         this.selectedTextEffect = new SelectedEffect(this.selectedText);
         this.controller.addEffectToController(selectedTextEffect);
     }
