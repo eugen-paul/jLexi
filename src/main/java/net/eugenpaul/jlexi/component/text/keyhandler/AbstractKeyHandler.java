@@ -4,7 +4,10 @@ import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveCommant;
 import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommant;
+import net.eugenpaul.jlexi.command.TextElementReplaceCommand;
 import net.eugenpaul.jlexi.command.TextRemoveBevorCommant;
+import net.eugenpaul.jlexi.component.text.Cursor;
+import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -30,25 +33,22 @@ public class AbstractKeyHandler {
 
         var cursor = component.getMouseCursor();
 
-        var addCommand = new TextElementAddBeforeCommand(//
-                TextElementFactory.fromChar(//
-                        storage, //
-                        key, //
-                        cursor.getTextFormat(), //
-                        cursor.getTextFormatEffect()//
-                ), //
-                cursor.getPosition());
-
-        doTextCommant(addCommand);
+        TextElement element = TextElementFactory.fromChar(//
+                storage, //
+                key, //
+                cursor.getTextFormat(), //
+                cursor.getTextFormatEffect()//
+        );
+        addTextElement(cursor, element);
     }
 
     public void onKeyPressed(KeyCode keyCode) {
-
         switch (keyCode) {
         case ENTER:
             keyPressedEnter();
             break;
         case RIGHT, LEFT, UP, DOWN:
+            component.getMouseCursor().removeSelection();
             keyPressedCursorMove(keyCode);
             break;
         case DELETE:
@@ -107,21 +107,43 @@ public class AbstractKeyHandler {
     private void keyPressedEnter() {
         var cursor = component.getMouseCursor();
 
-        var addCommand = new TextElementAddBeforeCommand(//
-                TextElementFactory.genNewLineChar(//
-                        storage, //
-                        cursor.getTextFormat(), //
-                        cursor.getTextFormatEffect()//
-                ), //
-                cursor.getPosition());
+        TextElement addedElement = TextElementFactory.genNewLineChar(//
+                storage, //
+                cursor.getTextFormat(), //
+                cursor.getTextFormatEffect()//
+        );
+        addTextElement(cursor, addedElement);
+    }
+
+    private void addTextElement(Cursor cursor, TextElement addedElement) {
+        TextCommand addCommand;
+        if (cursor.isTextSelected()) {
+            addCommand = new TextElementReplaceCommand(//
+                    addedElement, //
+                    cursor.getSelectedText());
+            cursor.removeSelection();
+        } else {
+            addCommand = new TextElementAddBeforeCommand(//
+                    addedElement, //
+                    cursor.getPosition());
+        }
 
         doTextCommant(addCommand);
+
+        cursor.moveCursorTo(addCommand.getCursorPosition());
     }
 
     private void keyPressedBackSpace() {
         var cursor = component.getMouseCursor();
 
-        var deleteCommand = new TextRemoveBevorCommant(cursor.getPosition());
+        TextCommand deleteCommand;
+        if (cursor.isTextSelected()) {
+            deleteCommand = new TextElementRemoveSelectedCommant(cursor.getSelectedText());
+            cursor.removeSelection();
+        } else {
+            deleteCommand = new TextRemoveBevorCommant(cursor.getPosition());
+        }
+
         doTextCommant(deleteCommand);
 
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
@@ -133,6 +155,7 @@ public class AbstractKeyHandler {
         TextCommand deleteCommand;
         if (cursor.isTextSelected()) {
             deleteCommand = new TextElementRemoveSelectedCommant(cursor.getSelectedText());
+            cursor.removeSelection();
         } else {
             deleteCommand = new TextElementRemoveCommant(cursor.getPosition());
         }
