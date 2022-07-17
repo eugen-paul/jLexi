@@ -39,6 +39,7 @@ public class Cursor implements ModelPropertyChangeListner {
     private GlyphEffect cursorEffect;
     private AbstractController controller;
 
+    @Getter
     private List<TextElement> selectedText;
     private GlyphEffect selectedTextEffect;
 

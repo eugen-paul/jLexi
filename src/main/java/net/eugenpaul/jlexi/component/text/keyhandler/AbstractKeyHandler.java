@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveCommant;
+import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommant;
 import net.eugenpaul.jlexi.command.TextRemoveBevorCommant;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
@@ -28,7 +29,6 @@ public class AbstractKeyHandler {
         }
 
         var cursor = component.getMouseCursor();
-        cursor.removeSelection();
 
         var addCommand = new TextElementAddBeforeCommand(//
                 TextElementFactory.fromChar(//
@@ -43,8 +43,6 @@ public class AbstractKeyHandler {
     }
 
     public void onKeyPressed(KeyCode keyCode) {
-        // TODO You may have to edit the selected text here.
-        component.getMouseCursor().removeSelection();
 
         switch (keyCode) {
         case ENTER:
@@ -132,10 +130,17 @@ public class AbstractKeyHandler {
     private void keyPressedDelete() {
         var cursor = component.getMouseCursor();
 
-        var deleteCommand = new TextElementRemoveCommant(cursor.getPosition());
+        TextCommand deleteCommand;
+        if (cursor.isTextSelected()) {
+            deleteCommand = new TextElementRemoveSelectedCommant(cursor.getSelectedText());
+        } else {
+            deleteCommand = new TextElementRemoveCommant(cursor.getPosition());
+        }
+
         doTextCommant(deleteCommand);
 
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
+
     }
 
     private boolean keyPressedCursorMove(KeyCode keyCode) {
