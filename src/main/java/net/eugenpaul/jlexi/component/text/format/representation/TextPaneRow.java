@@ -58,6 +58,26 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
     }
 
     @Override
+    public TextPositionV2 getCursorElementAtV2(Vector2d pos) {
+        var row = this.xPositionToRow.floorEntry(pos.getX());
+        if (null == row) {
+            return null;
+        }
+
+        var clickedElement = row.getValue().getCursorElementAtV2(//
+                new Vector2d(//
+                        pos.sub(row.getValue().getRelativPosition())//
+                )//
+        );
+        if (clickedElement != null) {
+            LOGGER.trace("Row Click on Element: {}.", clickedElement);
+        } else {
+            LOGGER.trace("Row Click on Element: NONE.");
+        }
+        return clickedElement;
+    }
+
+    @Override
     public Drawable getDrawable() {
         if (this.cachedDrawable != null) {
             return this.cachedDrawable.draw();
@@ -88,8 +108,18 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
     }
 
     @Override
+    protected TextPositionV2 getLastTextV2(int x) {
+        return getCursorElementAtV2(new Vector2d(x, 0));
+    }
+
+    @Override
     protected TextPosition getFirstText(int x) {
         return getCursorElementAt(new Vector2d(x, 0));
+    }
+
+    @Override
+    protected TextPositionV2 getFirstTextV2(int x) {
+        return getCursorElementAtV2(new Vector2d(x, 0));
     }
 
 }

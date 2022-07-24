@@ -116,4 +116,20 @@ public abstract class Glyph {
         parent.notifyChange();
     }
 
+    /**
+     * The function returns the child node of the {@code parentGlyph} leading to the element.
+     * 
+     * @param parentGlyph
+     * @return
+     */
+    public Glyph getChild(Glyph parentGlyph) {
+        Glyph previousParent = null;
+        while (parent != null && parent != parentGlyph) {
+            previousParent = parent;
+            parent = parent.getParent();
+        }
+
+        return previousParent;
+    }
+
 }

@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text.format.element;
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -46,6 +47,11 @@ public class TextChar extends TextElementAbstract {
     @Override
     public TextPosition getCursorElementAt(Vector2d pos) {
         return getTextPosition();
+    }
+
+    @Override
+    public TextPositionV2 getCursorElementAtV2(Vector2d pos) {
+        return getTextPositionV2();
     }
 
     @Override

@@ -174,6 +174,26 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
     }
 
     @Override
+    public TextPositionV2 getCursorElementAtV2(Vector2d pos) {
+        var row = this.yPositionToSite.floorEntry(pos.getY());
+        if (null == row) {
+            return null;
+        }
+
+        var clickedElement = row.getValue().getCursorElementAtV2(//
+                new Vector2d(//
+                        pos.sub(row.getValue().getRelativPosition())//
+                )//
+        );
+        if (clickedElement != null) {
+            LOGGER.trace("Document Click on Element: {}.", clickedElement);
+        } else {
+            LOGGER.trace("Document Click on Element: NONE.");
+        }
+        return clickedElement;
+    }
+
+    @Override
     public void setText(List<TextSection> text) {
         LOGGER.trace("Set Document.text from List<TextSection>");
         document = new TextPaneDocument(text, this, this.storage);
@@ -284,7 +304,19 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
     }
 
     @Override
+    protected TextPositionV2 getLastTextV2(int x) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     protected TextPosition getFirstText(int x) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected TextPositionV2 getFirstTextV2(int x) {
         // TODO Auto-generated method stub
         return null;
     }

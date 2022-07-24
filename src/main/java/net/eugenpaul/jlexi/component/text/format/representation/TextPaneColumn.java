@@ -66,6 +66,26 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
+    public TextPositionV2 getCursorElementAtV2(Vector2d pos) {
+        var row = this.yPositionToRow.floorEntry(pos.getY());
+        if (null == row) {
+            return null;
+        }
+
+        var clickedElement = row.getValue().getCursorElementAtV2(//
+                new Vector2d(//
+                        pos.sub(row.getValue().getRelativPosition())//
+                )//
+        );
+        if (clickedElement != null) {
+            LOGGER.trace("Column Click on Element: {}.", clickedElement);
+        } else {
+            LOGGER.trace("Column Click on Element: NONE.");
+        }
+        return clickedElement;
+    }
+
+    @Override
     public Drawable getDrawable() {
         if (this.cachedDrawable != null) {
             return this.cachedDrawable.draw();
@@ -107,6 +127,31 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
+    public TextPositionV2 getUp(TextPositionV2 position) {
+        // TODO
+        var newPosition = position.moveTo(MovePosition.UP, this);
+
+        if (newPosition == null) {
+            var childGlyph = position.getTextElement().getChild(this);
+
+            if (childGlyph instanceof TextRepresentation) {
+                var representation = (TextRepresentation) childGlyph;
+
+                var pos = position.getTextElement().getRelativPositionTo(this);
+                while (newPosition == null && representation != null && pos != null) {
+                    representation = getPreviousRepresentation(representation);
+                    if (representation != null) {
+                        newPosition = representation.getLastTextV2(pos.getX());
+                    }
+                }
+            }
+
+        }
+
+        return newPosition;
+    }
+
+    @Override
     public TextPosition getDown(TextPosition position) {
         var representation = position.getRepresentationChild(this);
         if (null == representation) {
@@ -129,6 +174,12 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
+    public TextPositionV2 getDown(TextPositionV2 position) {
+        // TODO
+        return null;
+    }
+
+    @Override
     protected TextPosition getFirstText(int x) {
         if (yPositionToRow.isEmpty()) {
             return null;
@@ -141,6 +192,18 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
+    protected TextPositionV2 getFirstTextV2(int x) {
+        if (yPositionToRow.isEmpty()) {
+            return null;
+        }
+
+        var entry = yPositionToRow.firstEntry();
+        var pos = entry.getValue().getRelativPositionTo(this);
+
+        return entry.getValue().getFirstTextV2(x - pos.getX());
+    }
+
+    @Override
     protected TextPosition getLastText(int x) {
         if (yPositionToRow.isEmpty()) {
             return null;
@@ -150,6 +213,18 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
         var pos = entry.getValue().getRelativPositionTo(this);
 
         return entry.getValue().getFirstText(x - pos.getX());
+    }
+
+    @Override
+    protected TextPositionV2 getLastTextV2(int x) {
+        if (yPositionToRow.isEmpty()) {
+            return null;
+        }
+
+        var entry = yPositionToRow.lastEntry();
+        var pos = entry.getValue().getRelativPositionTo(this);
+
+        return entry.getValue().getFirstTextV2(x - pos.getX());
     }
 
 }
