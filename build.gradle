@@ -4,6 +4,20 @@ apply plugin: 'java'
 
 sourceCompatibility=14
 
+buildscript {
+    ext.dependency_check_version = "7.1.1"
+
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+        classpath "org.owasp:dependency-check-gradle:$dependency_check_version"
+    }
+}
+
+apply plugin: 'org.owasp.dependencycheck'
+
 repositories {
     mavenCentral()
 }

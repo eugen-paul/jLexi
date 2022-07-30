@@ -1,7 +1,6 @@
 package net.eugenpaul.jlexi.component;
 
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
