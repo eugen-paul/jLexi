@@ -1,8 +1,5 @@
 package net.eugenpaul.jlexi.design.dark;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.scrollpane.Scrollbar.ScrollbarType;
@@ -17,9 +14,6 @@ import net.eugenpaul.jlexi.utils.Color;
 public class DarkScrollpane extends Scrollpane {
 
     private static final int BAR_WIDTH_DEFAULT = 11;
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(DarkScrollpane.class);
 
     /**
      * C'tor

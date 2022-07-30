@@ -6,11 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Getter;
-import lombok.var;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
@@ -41,10 +38,9 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 
+@Slf4j
 public class TextPanePanel extends TextRepresentationOfRepresentation implements ChangeListener, GuiEvents,
         TextUpdateable, KeyHandlerable, MouseDraggable, UndoRedoable, InterfaceModel {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextPanePanel.class);
 
     private TextPaneDocument document;
 

@@ -3,19 +3,16 @@ package net.eugenpaul.jlexi.window.impl.swing.frame;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.window.AbstractView;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 public class MainPanel extends AbstractView {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainPanel.class);
 
     @Getter
     private ImagePanel panel;

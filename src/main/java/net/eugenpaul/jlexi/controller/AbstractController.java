@@ -15,9 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.effect.EffectController;
@@ -34,9 +32,8 @@ import reactor.core.scheduler.Schedulers;
  * <p>
  * This is a View of MVC
  */
+@Slf4j
 public abstract class AbstractController implements PropertyChangeListener, EffectController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
     private List<ModelPropertyChangeListner> registeredViews;
     private List<InterfaceModel> registeredModels;

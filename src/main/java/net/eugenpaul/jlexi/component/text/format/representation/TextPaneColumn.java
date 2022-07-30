@@ -2,21 +2,19 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
+import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
+@Slf4j
 public class TextPaneColumn extends TextRepresentationOfRepresentation {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneColumn.class);
 
     private TreeMap<Integer, TextRepresentation> yPositionToRow;
 
@@ -127,9 +125,20 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    public TextPositionV2 getUp(TextPositionV2 position) {
+    public TextPositionV2 move(TextPositionV2 position, MovePosition moving) {
+        switch (moving) {
+        case UP:
+            return getUp(position);
+        case DOWN:
+            return getDown(position);
+        default:
+            throw new NotYetImplementedException("Moving " + moving + " is not implemented.");
+        }
+    }
+
+    private TextPositionV2 getUp(TextPositionV2 position) {
         // TODO
-        var newPosition = position.moveTo(MovePosition.UP, this);
+        var newPosition = position.move(MovePosition.UP);
 
         if (newPosition == null) {
             var childGlyph = position.getTextElement().getChild(this);
@@ -173,8 +182,7 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
         return e;
     }
 
-    @Override
-    public TextPositionV2 getDown(TextPositionV2 position) {
+    private TextPositionV2 getDown(TextPositionV2 position) {
         // TODO
         return null;
     }

@@ -1,8 +1,5 @@
 package net.eugenpaul.jlexi.design.dark;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.eugenpaul.jlexi.component.Glyph;
@@ -13,9 +10,6 @@ import net.eugenpaul.jlexi.component.panes.ImageGlyph;
 import net.eugenpaul.jlexi.utils.Color;
 
 public class DarkImageButton extends ImageButton {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(DarkImageButton.class);
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class DarkImageButtonBuilder {

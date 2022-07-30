@@ -4,12 +4,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 
 @EqualsAndHashCode
+@Slf4j
 public final class Color {
     private static final String EXCEPTION_TEXT = "unsuported Format ";
 
@@ -32,8 +31,6 @@ public final class Color {
             Map.entry("blue", BLUE), //
             Map.entry("invisible", INVISIBLE)//
     );
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Color.class);
 
     private static final Pattern HEX_PATTERN = Pattern
             .compile("^0x([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})_?([0-9a-fA-F]{2})$");

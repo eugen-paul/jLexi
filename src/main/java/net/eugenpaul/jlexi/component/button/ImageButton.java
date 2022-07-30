@@ -2,9 +2,6 @@ package net.eugenpaul.jlexi.component.button;
 
 import java.nio.file.Path;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.border.Border;
 import net.eugenpaul.jlexi.component.border.Border.BorderBuilderComponent;
@@ -14,9 +11,6 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 
 public abstract class ImageButton extends Button {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageButton.class);
 
     private ImageGlyph image;
     private Border border;

@@ -3,9 +3,7 @@ package net.eugenpaul.jlexi.component.menubar;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
@@ -23,9 +21,8 @@ import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 /**
  * Add Menubar to Glyph
  */
+@Slf4j
 public abstract class MenuBar extends GuiCompenentMonoGlyph {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MenuBar.class);
 
     private static final Drawable EMPTY_DRAWABLE = DrawablePixelsImpl.EMPTY;
 

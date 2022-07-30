@@ -2,9 +2,6 @@ package net.eugenpaul.jlexi.window;
 
 import java.beans.PropertyChangeEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
@@ -29,9 +26,6 @@ import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
  */
 public abstract class Window extends MonoGlyph
         implements WindowsKeyPressable, WindowsMouseClickable, WindowsResizeable, WindowsMouseWheel, InterfaceModel {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(Window.class);
 
     @Setter
     protected static WindowSystemFactory factory = null;

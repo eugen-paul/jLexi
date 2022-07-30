@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format;
 
+import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 
@@ -8,11 +9,11 @@ public interface CursorControl {
 
     public TextPosition getPrevious(TextPosition position);
 
+    public TextPositionV2 move(TextPositionV2 position, MovePosition moving);
+
     public TextPosition getUp(TextPosition position);
-    public TextPositionV2 getUp(TextPositionV2 position);
 
     public TextPosition getDown(TextPosition position);
-    public TextPositionV2 getDown(TextPositionV2 position);
 
     public TextPosition getEol(TextPosition position);
 

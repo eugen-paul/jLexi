@@ -1,11 +1,9 @@
 package net.eugenpaul.jlexi.component.scrollpane;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
@@ -24,9 +22,8 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 /**
  * GuiGlyph with a Scrollpane.
  */
+@Slf4j
 public abstract class Scrollpane extends GuiCompenentMonoGlyph {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Scrollpane.class);
 
     private static final Color SCROLLBAR_COLOR_DEFAULT = Color.GREY;
     private static final Color BACKGROUND_COLOR = Color.WHITE;

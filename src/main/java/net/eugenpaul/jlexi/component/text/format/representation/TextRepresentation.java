@@ -34,6 +34,7 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
     public abstract boolean isEmpty();
 
     public abstract TextPosition getCursorElementAt(Vector2d pos);
+
     public abstract TextPositionV2 getCursorElementAtV2(Vector2d pos);
 
     public abstract TextPosition getFirstChild();
@@ -82,6 +83,18 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
     public abstract TextRepresentation getPreviousRepresentation(TextRepresentation structure);
 
     @Override
+    public TextPositionV2 move(TextPositionV2 position, MovePosition moving) {
+        var parent = getParent();
+
+        if (parent instanceof TextRepresentation) {
+            TextRepresentation representation = (TextRepresentation) parent;
+            return representation.move(position, moving);
+        }
+
+        return null;
+    }
+
+    @Override
     public TextPosition getUp(TextPosition position) {
         var representation = position.getRepresentationChild(this);
         if (null == representation) {
@@ -89,11 +102,6 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
         }
 
         return representation.getUp(position);
-    }
-
-    @Override
-    public TextPositionV2 getUp(TextPositionV2 position) {
-        return position.moveTo(MovePosition.UP, this);
     }
 
     @Override
@@ -106,14 +114,12 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
         return representation.getDown(position);
     }
 
-    @Override
-    public TextPositionV2 getDown(TextPositionV2 position) {
-        return position.moveTo(MovePosition.DOWN, this);
-    }
-
     protected abstract TextPosition getLastText(int x);
+
     protected abstract TextPositionV2 getLastTextV2(int x);
+
     protected abstract TextPosition getFirstText(int x);
+
     protected abstract TextPositionV2 getFirstTextV2(int x);
 
     @Override

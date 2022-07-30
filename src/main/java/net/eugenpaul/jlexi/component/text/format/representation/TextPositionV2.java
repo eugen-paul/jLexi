@@ -1,9 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
-import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
-import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 
 public class TextPositionV2 {
 
@@ -14,12 +12,12 @@ public class TextPositionV2 {
     }
 
     public TextPositionV2 getPreviousPosition() {
-        //TODO
+        // TODO
         return null;
     }
-    
+
     public TextPositionV2 getNextPosition() {
-        //TODO
+        // TODO
         return null;
     }
 
@@ -35,26 +33,15 @@ public class TextPositionV2 {
         return textElement;
     }
 
-    public TextPositionV2 moveTo(MovePosition moving, TextRepresentation parentRepresentation) {
+    public TextPositionV2 move(MovePosition moving) {
         var parent = textElement.getParent();
-        Glyph previousParent = null;
-        while (parent != null && parent != parentRepresentation) {
-            previousParent = parent;
+        while (parent != null) {
+            if (parent instanceof TextRepresentation) {
+                TextRepresentation representation = (TextRepresentation) parent;
+                return representation.move(this, moving);
+            }
             parent = parent.getParent();
         }
-
-        if (previousParent instanceof TextRepresentation) {
-            TextRepresentation representation = (TextRepresentation) previousParent;
-            switch (moving) {
-            case UP:
-                return representation.getUp(this);
-            case DOWN:
-                return representation.getDown(this);
-            default:
-                throw new NotYetImplementedException("Move TextPosition to " + moving + " is not implemented.");
-            }
-        }
-
         return null;
     }
 }

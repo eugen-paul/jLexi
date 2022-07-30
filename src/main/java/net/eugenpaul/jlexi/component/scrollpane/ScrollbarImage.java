@@ -2,9 +2,6 @@ package net.eugenpaul.jlexi.component.scrollpane;
 
 import java.nio.file.Paths;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.formatting.HorizontalAlignmentGlypthCompositor;
 import net.eugenpaul.jlexi.component.formatting.VerticalAlignmentGlypthCompositor;
@@ -16,9 +13,6 @@ import net.eugenpaul.jlexi.utils.AligmentH;
 import net.eugenpaul.jlexi.utils.AligmentV;
 
 public abstract class ScrollbarImage extends Scrollbar {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScrollbarImage.class);
 
     protected ScrollbarImage(Glyph parent, ScrollbarType type, String arrowFirstPath, String arrowLastPath,
             String backgroundPath, String runnerPath) {

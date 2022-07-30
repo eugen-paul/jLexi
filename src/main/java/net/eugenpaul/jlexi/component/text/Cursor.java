@@ -4,9 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Getter;
 import net.eugenpaul.jlexi.command.TextElementChangeFormatCommand;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -22,9 +19,6 @@ import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.effect.SelectedEffect;
 
 public class Cursor implements ModelPropertyChangeListner {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(Cursor.class);
 
     private final String name;
     private final TextCommandsDeque commandDeque;

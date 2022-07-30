@@ -4,9 +4,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.helper.KeyEventAdapterToKeyPressable;
@@ -23,9 +20,6 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public class TextPane extends GuiGlyph implements TextUpdateable {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextPane.class);
 
     private TextPanePanel textPanel;
 

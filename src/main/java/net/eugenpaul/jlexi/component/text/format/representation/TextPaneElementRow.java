@@ -5,10 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import lombok.var;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextWordBreak;
@@ -20,9 +17,8 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
+@Slf4j
 public class TextPaneElementRow extends TextRepresentation {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneElementRow.class);
 
     private LinkedList<TextElement> children;
     private TreeMap<Integer, TextElement> xPositionToRow;

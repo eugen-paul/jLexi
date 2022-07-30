@@ -1,8 +1,5 @@
 package net.eugenpaul.jlexi.design.dark;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Builder;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.border.Border;
@@ -13,9 +10,6 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 
 public class DarkTextButton extends TextButton {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(DarkTextButton.class);
 
     @Builder
     private DarkTextButton(Glyph parent, String text, TextFormat format, ResourceManager storage) {

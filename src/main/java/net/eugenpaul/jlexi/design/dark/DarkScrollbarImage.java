@@ -1,16 +1,10 @@
 package net.eugenpaul.jlexi.design.dark;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.scrollpane.ScrollbarImage;
 import net.eugenpaul.jlexi.utils.Color;
 
 public class DarkScrollbarImage extends ScrollbarImage {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(DarkScrollbarImage.class);
 
     private static final String ARROW_UP_DEFAULT = "src/main/resources/textures/gui/arrow_up.jpg";
     private static final String ARROW_DOWN_DEFAULT = "src/main/resources/textures/gui/arrow_down.jpg";

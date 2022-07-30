@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.NonNull;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
@@ -20,9 +17,6 @@ import net.eugenpaul.jlexi.resourcesmanager.textformat.PixelsFormatter;
 import net.eugenpaul.jlexi.utils.Color;
 
 public class FormatStorageImpl implements FormatStorage {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(FormatStorageImpl.class);
 
     private Map<Integer, // Style
             Map<String, // FontName

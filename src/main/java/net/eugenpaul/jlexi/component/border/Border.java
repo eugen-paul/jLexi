@@ -3,13 +3,11 @@ package net.eugenpaul.jlexi.component.border;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiCompenentMonoGlyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
@@ -28,9 +26,8 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
  * Glyph with a boarder.
  * 
  */
+@Slf4j
 public class Border extends GuiCompenentMonoGlyph {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Border.class);
 
     private Color borderColor;
     private Color backgroundColor;

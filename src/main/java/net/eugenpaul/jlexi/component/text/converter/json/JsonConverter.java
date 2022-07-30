@@ -5,13 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.var;
 import net.eugenpaul.jlexi.component.text.converter.TextConverter;
 import net.eugenpaul.jlexi.component.text.converter.json.format.JsonElement;
 import net.eugenpaul.jlexi.component.text.converter.json.format.JsonFormat;
@@ -26,9 +22,6 @@ import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 public class JsonConverter implements TextConverter {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonConverter.class);
 
     private final ObjectMapper mapper;
 

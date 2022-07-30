@@ -3,18 +3,15 @@ package net.eugenpaul.jlexi.effect;
 import java.time.Duration;
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.utils.Size;
 
+@Slf4j
 public class CursorEffectBox implements GlyphEffect {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CursorEffectBox.class);
 
     private static final int CURSOR_COLOR = 0xFF0000FF;
 

@@ -1,9 +1,7 @@
 package net.eugenpaul.jlexi.component;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
@@ -13,9 +11,6 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 
 public abstract class GuiGlyph extends Glyph implements GuiEvents {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuiGlyph.class);
 
     @Setter
     protected MouseEventAdapter mouseEventAdapter;

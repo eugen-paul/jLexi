@@ -3,19 +3,12 @@ package net.eugenpaul.jlexi.effect;
 import java.time.Duration;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import lombok.var;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 
 public class SelectedEffect implements GlyphEffect {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(SelectedEffect.class);
 
     List<TextElement> glyphs;
 

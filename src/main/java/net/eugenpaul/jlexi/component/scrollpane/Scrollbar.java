@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.Button;
@@ -28,9 +26,8 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
+@Slf4j
 public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Scrollbar.class);
 
     public enum ScrollbarType {
         VERTICAL, HORIZONTAL

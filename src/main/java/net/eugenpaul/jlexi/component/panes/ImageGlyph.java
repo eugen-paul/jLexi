@@ -5,10 +5,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -19,9 +17,8 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
+@Slf4j
 public class ImageGlyph extends GuiGlyph {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageGlyph.class);
 
     protected DrawableImageImplBuilder imageBuilder;
     protected Path imagePath;

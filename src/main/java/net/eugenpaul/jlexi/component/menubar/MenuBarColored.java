@@ -1,8 +1,5 @@
 package net.eugenpaul.jlexi.component.menubar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -16,9 +13,6 @@ import net.eugenpaul.jlexi.utils.Size;
  * 
  */
 public class MenuBarColored extends MenuBar {
-
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(MenuBarColored.class);
 
     private Color backgroundColor;
 

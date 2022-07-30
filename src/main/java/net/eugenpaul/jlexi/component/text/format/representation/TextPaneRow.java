@@ -2,10 +2,8 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.var;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
@@ -13,9 +11,8 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
+@Slf4j
 public class TextPaneRow extends TextRepresentationOfRepresentation {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TextPaneRow.class);
 
     private TreeMap<Integer, TextRepresentation> xPositionToRow;
 
