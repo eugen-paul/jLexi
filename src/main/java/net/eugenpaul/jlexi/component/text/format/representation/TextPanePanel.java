@@ -251,7 +251,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
             return;
         }
 
-        TextPosition clickedElement = row.getValue().getCursorElementAt(//
+        TextPositionV2 clickedElement = row.getValue().getCursorElementAtV2(//
                 new Vector2d(//
                         mouseX - row.getValue().getRelativPosition().getX(), //
                         mouseY - row.getValue().getRelativPosition().getY() //

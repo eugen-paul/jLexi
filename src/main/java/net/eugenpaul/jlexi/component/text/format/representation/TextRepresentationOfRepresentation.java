@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public abstract class TextRepresentationOfRepresentation extends TextRepresentation {
@@ -76,5 +77,108 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
             lastElement = currentElement;
         }
         return null;
+    }
+
+    @Override
+    public TextPositionV2 move(TextPositionV2 position, MovePosition moving) {
+        switch (moving) {
+        case UP:
+            return getUp(position);
+        case DOWN:
+            return getDown(position);
+        case PREVIOUS:
+            return getPrevious(position);
+        case NEXT:
+            return getNext(position);
+        default:
+            throw new NotYetImplementedException("Moving " + moving + " is not implemented.");
+        }
+    }
+
+    private TextPositionV2 getNext(TextPositionV2 position) {
+        var childRepresentation = getChildRepresentation(position);
+        if (childRepresentation == null) {
+            return null;
+        }
+
+        var next = getNextRepresentation(childRepresentation);
+
+        if (next == null) {
+            if (getParent() instanceof TextRepresentation) {
+                var parentRepresentation = (TextRepresentation) getParent();
+                return parentRepresentation.move(position, MovePosition.NEXT);
+            }
+            return null;
+        }
+
+        var pos = next.getFirstChild();
+        if (pos != null) {
+            return pos.getTextElement().getTextPositionV2();
+        }
+        return null;
+    }
+
+    private TextPositionV2 getPrevious(TextPositionV2 position) {
+        var childGlyph = position.getTextElement().getChild(this);
+        if (!(childGlyph instanceof TextRepresentation)) {
+            return null;
+        }
+
+        var childRepresentation = (TextRepresentation) childGlyph;
+        var previous = getPreviousRepresentation(childRepresentation);
+
+        if (previous == null) {
+            if (getParent() instanceof TextRepresentation) {
+                var parentRepresentation = (TextRepresentation) getParent();
+                return parentRepresentation.move(position, MovePosition.PREVIOUS);
+            }
+            return null;
+        }
+
+        var pos = previous.getLastChild();
+        if (pos != null) {
+            return pos.getTextElement().getTextPositionV2();
+        }
+        return null;
+    }
+
+    private TextPositionV2 getUp(TextPositionV2 position) {
+        var childRepresentation = getChildRepresentation(position);
+        if (childRepresentation == null) {
+            return null;
+        }
+
+        var next = getPreviousRepresentation(childRepresentation);
+
+        if (next == null) {
+            if (getParent() instanceof TextRepresentation) {
+                var parentRepresentation = (TextRepresentation) getParent();
+                return parentRepresentation.move(position, MovePosition.UP);
+            }
+            return null;
+        }
+
+        var pos = position.getTextElement().getRelativPositionTo(this);
+        return next.getLastTextV2(pos.getX());
+    }
+
+    private TextPositionV2 getDown(TextPositionV2 position) {
+        var childRepresentation = getChildRepresentation(position);
+        if (childRepresentation == null) {
+            return null;
+        }
+
+        var next = getNextRepresentation(childRepresentation);
+
+        if (next == null) {
+            if (getParent() instanceof TextRepresentation) {
+                var parentRepresentation = (TextRepresentation) getParent();
+                return parentRepresentation.move(position, MovePosition.DOWN);
+            }
+            return null;
+        }
+
+        var pos = position.getTextElement().getRelativPositionTo(this);
+        return next.getFirstTextV2(pos.getX());
     }
 }

@@ -1,10 +1,12 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 
 public class TextPositionV2 {
 
+    @Getter
     private TextElement textElement;
 
     public TextPositionV2(TextElement element) {
@@ -12,13 +14,11 @@ public class TextPositionV2 {
     }
 
     public TextPositionV2 getPreviousPosition() {
-        // TODO
-        return null;
+        return afterMove(MovePosition.PREVIOUS);
     }
 
     public TextPositionV2 getNextPosition() {
-        // TODO
-        return null;
+        return afterMove(MovePosition.NEXT);
     }
 
     public boolean addBefore(TextElement element) {
@@ -29,12 +29,8 @@ public class TextPositionV2 {
         return this.textElement.removeElement();
     }
 
-    public TextElement getTextElement() {
-        return textElement;
-    }
-
-    public TextPositionV2 move(MovePosition moving) {
-        var parent = textElement.getParent();
+    public TextPositionV2 afterMove(MovePosition moving) {
+        var parent = this.textElement.getParent();
         while (parent != null) {
             if (parent instanceof TextRepresentation) {
                 TextRepresentation representation = (TextRepresentation) parent;

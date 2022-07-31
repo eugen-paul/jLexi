@@ -123,10 +123,11 @@ public abstract class Glyph {
      * @return
      */
     public Glyph getChild(Glyph parentGlyph) {
+        Glyph currentParent = parent;
         Glyph previousParent = null;
-        while (parent != null && parent != parentGlyph) {
-            previousParent = parent;
-            parent = parent.getParent();
+        while (currentParent != null && currentParent != parentGlyph) {
+            previousParent = currentParent;
+            currentParent = currentParent.getParent();
         }
 
         return previousParent;

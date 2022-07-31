@@ -41,78 +41,9 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
 
     public abstract TextPosition getLastChild();
 
-    @Override
-    public TextPosition getNext(TextPosition position) {
-        var representation = position.getRepresentationChild(this);
-        if (null == representation) {
-            return null;
-        }
-
-        var e = representation.getNext(position);
-
-        while (e == null && representation != null) {
-            representation = getNextRepresentation(representation);
-            if (representation != null) {
-                e = representation.getFirstChild();
-            }
-        }
-
-        return e;
-    }
-
     public abstract TextRepresentation getNextRepresentation(TextRepresentation representation);
 
-    @Override
-    public TextPosition getPrevious(TextPosition position) {
-        var representation = position.getRepresentationChild(this);
-        if (null == representation) {
-            return null;
-        }
-
-        var e = representation.getPrevious(position);
-        while (e == null && representation != null) {
-            representation = getPreviousRepresentation(representation);
-            if (representation != null) {
-                e = representation.getLastChild();
-            }
-        }
-
-        return e;
-    }
-
     public abstract TextRepresentation getPreviousRepresentation(TextRepresentation structure);
-
-    @Override
-    public TextPositionV2 move(TextPositionV2 position, MovePosition moving) {
-        var parent = getParent();
-
-        if (parent instanceof TextRepresentation) {
-            TextRepresentation representation = (TextRepresentation) parent;
-            return representation.move(position, moving);
-        }
-
-        return null;
-    }
-
-    @Override
-    public TextPosition getUp(TextPosition position) {
-        var representation = position.getRepresentationChild(this);
-        if (null == representation) {
-            return null;
-        }
-
-        return representation.getUp(position);
-    }
-
-    @Override
-    public TextPosition getDown(TextPosition position) {
-        var representation = position.getRepresentationChild(this);
-        if (null == representation) {
-            return null;
-        }
-
-        return representation.getDown(position);
-    }
 
     protected abstract TextPosition getLastText(int x);
 
@@ -156,5 +87,14 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
     public TextPosition getPageDown(TextPosition element) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    protected TextRepresentation getChildRepresentation(TextPositionV2 position) {
+        var childGlyph = position.getTextElement().getChild(this);
+        if (!(childGlyph instanceof TextRepresentation)) {
+            return null;
+        }
+
+        return (TextRepresentation) childGlyph;
     }
 }

@@ -43,6 +43,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         this.formatEffect = formatEffect;
         this.effects = new LinkedList<>();
         this.textPosition = new TextPosition(this);
+        this.textPositionV2 = new TextPositionV2(this);
     }
 
     public boolean isEndOfLine() {

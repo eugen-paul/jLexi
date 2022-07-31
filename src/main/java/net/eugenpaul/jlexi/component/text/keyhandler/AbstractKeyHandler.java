@@ -9,7 +9,8 @@ import net.eugenpaul.jlexi.command.TextRemoveBevorCommant;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
@@ -174,19 +175,19 @@ public class AbstractKeyHandler {
             return false;
         }
 
-        TextPosition cursorPosition = null;
+        TextPositionV2 cursorPosition = null;
         switch (keyCode) {
         case RIGHT:
-            cursorPosition = representation.getNext(cursor.getPosition());
+            cursorPosition = cursor.getPositionV2().afterMove(MovePosition.NEXT);
             break;
         case LEFT:
-            cursorPosition = representation.getPrevious(cursor.getPosition());
+            cursorPosition = cursor.getPositionV2().afterMove(MovePosition.PREVIOUS);
             break;
         case UP:
-            cursorPosition = representation.getUp(cursor.getPosition());
+            cursorPosition = cursor.getPositionV2().afterMove(MovePosition.UP);
             break;
         case DOWN:
-            cursorPosition = representation.getDown(cursor.getPosition());
+            cursorPosition = cursor.getPositionV2().afterMove(MovePosition.DOWN);
             break;
         default:
             break;
@@ -197,7 +198,6 @@ public class AbstractKeyHandler {
         }
 
         cursor.moveCursorTo(cursorPosition);
-
         return true;
     }
 
