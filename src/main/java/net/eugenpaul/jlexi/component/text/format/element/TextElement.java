@@ -9,7 +9,6 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
@@ -32,8 +31,6 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
 
     @Getter
     private TextPosition textPosition;
-    @Getter
-    private TextPositionV2 textPositionV2;
 
     protected TextElement(Glyph parent, TextStructure structureParent, TextFormat format,
             TextFormatEffect formatEffect) {
@@ -43,7 +40,6 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         this.formatEffect = formatEffect;
         this.effects = new LinkedList<>();
         this.textPosition = new TextPosition(this);
-        this.textPositionV2 = new TextPositionV2(this);
     }
 
     public boolean isEndOfLine() {
@@ -57,7 +53,6 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     public abstract boolean isCursorHoldable();
 
     public abstract TextPosition getCursorElementAt(Vector2d pos);
-    public abstract TextPositionV2 getCursorElementAtV2(Vector2d pos);
 
     public void reset() {
         this.cachedDrawable = null;

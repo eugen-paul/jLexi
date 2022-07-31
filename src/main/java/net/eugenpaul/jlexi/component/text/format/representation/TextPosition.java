@@ -1,15 +1,24 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
-import net.eugenpaul.jlexi.component.Glyph;
+import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 
 public class TextPosition {
 
+    @Getter
     private TextElement textElement;
 
     public TextPosition(TextElement element) {
         this.textElement = element;
+    }
+
+    public TextPosition getPreviousPosition() {
+        return afterMove(MovePosition.PREVIOUS);
+    }
+
+    public TextPosition getNextPosition() {
+        return afterMove(MovePosition.NEXT);
     }
 
     public boolean addBefore(TextElement element) {
@@ -20,24 +29,14 @@ public class TextPosition {
         return this.textElement.removeElement();
     }
 
-    public TextRemoveResponse removeElementBefore() {
-        return this.textElement.removeElementBefore();
-    }
-
-    public TextElement getTextElement() {
-        return textElement;
-    }
-
-    public TextRepresentation getRepresentationChild(TextRepresentation representation) {
-        var parent = textElement.getParent();
-        Glyph previousParent = null;
-        while (parent != null && parent != representation) {
-            previousParent = parent;
+    public TextPosition afterMove(MovePosition moving) {
+        var parent = this.textElement.getParent();
+        while (parent != null) {
+            if (parent instanceof TextRepresentation) {
+                TextRepresentation representation = (TextRepresentation) parent;
+                return representation.move(this, moving);
+            }
             parent = parent.getParent();
-        }
-
-        if (previousParent instanceof TextRepresentation) {
-            return (TextRepresentation) previousParent;
         }
         return null;
     }

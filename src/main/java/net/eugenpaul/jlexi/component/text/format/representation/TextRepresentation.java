@@ -35,8 +35,6 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
 
     public abstract TextPosition getCursorElementAt(Vector2d pos);
 
-    public abstract TextPositionV2 getCursorElementAtV2(Vector2d pos);
-
     public abstract TextPosition getFirstChild();
 
     public abstract TextPosition getLastChild();
@@ -45,11 +43,11 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
 
     public abstract TextRepresentation getPreviousRepresentation(TextRepresentation structure);
 
-    protected abstract TextPositionV2 getLastTextV2(int x);
+    protected abstract TextPosition getLastText(int x);
 
-    protected abstract TextPositionV2 getFirstTextV2(int x);
+    protected abstract TextPosition getFirstText(int x);
 
-    protected TextRepresentation getChildRepresentation(TextPositionV2 position) {
+    protected TextRepresentation getChildRepresentation(TextPosition position) {
         var childGlyph = position.getTextElement().getChild(this);
         if (!(childGlyph instanceof TextRepresentation)) {
             return null;

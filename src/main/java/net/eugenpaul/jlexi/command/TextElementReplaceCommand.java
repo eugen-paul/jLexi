@@ -11,6 +11,7 @@ public class TextElementReplaceCommand implements TextCommand {
     private TextElement addedElement;
     @Getter
     private TextPosition cursorPosition;
+
     private TextElementRemoveSelectedCommant removeTextCommand;
 
     public TextElementReplaceCommand(TextElement addedElement, List<TextElement> selectedText) {

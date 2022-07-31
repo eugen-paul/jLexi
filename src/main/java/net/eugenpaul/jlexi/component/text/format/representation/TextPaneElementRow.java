@@ -52,28 +52,7 @@ public class TextPaneElementRow extends TextRepresentation {
         }
 
         // If the element is a composite, then we need to go into the element.
-        TextPosition clickedElement = elementEntry.getValue().getCursorElementAt(//
-                new Vector2d(//
-                        pos.sub(elementEntry.getValue().getRelativPosition())//
-                )//
-        );
-        if (clickedElement != null) {
-            LOGGER.trace("Row Click on Element: {}.", clickedElement);
-        } else {
-            LOGGER.trace("Row Click on Element: NONE.");
-        }
-        return clickedElement;
-    }
-
-    @Override
-    public TextPositionV2 getCursorElementAtV2(Vector2d pos) {
-        var elementEntry = this.xPositionToElement.floorEntry(pos.getX());
-        if (null == elementEntry) {
-            return null;
-        }
-
-        // If the element is a composite, then we need to go into the element.
-        var clickedElement = elementEntry.getValue().getCursorElementAtV2(//
+        var clickedElement = elementEntry.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(elementEntry.getValue().getRelativPosition())//
                 )//
@@ -100,9 +79,9 @@ public class TextPaneElementRow extends TextRepresentation {
     }
 
     @Override
-    public TextPositionV2 move(TextPositionV2 position, MovePosition moving) {
+    public TextPosition move(TextPosition position, MovePosition moving) {
         // TODO Add support for composite elements.
-        TextPositionV2 responsePosition;
+        TextPosition responsePosition;
         switch (moving) {
         case NEXT:
             responsePosition = getNext(position);
@@ -122,7 +101,7 @@ public class TextPaneElementRow extends TextRepresentation {
         return responsePosition;
     }
 
-    private TextPositionV2 getNext(TextPositionV2 position) {
+    private TextPosition getNext(TextPosition position) {
         var iterator = children.iterator();
         while (iterator.hasNext()) {
             var e = iterator.next();
@@ -132,7 +111,7 @@ public class TextPaneElementRow extends TextRepresentation {
                     if (nextEl instanceof TextWordBreak) {
                         return null;
                     }
-                    return nextEl.getTextPositionV2();
+                    return nextEl.getTextPosition();
                 }
                 return null;
             }
@@ -140,7 +119,7 @@ public class TextPaneElementRow extends TextRepresentation {
         return null;
     }
 
-    private TextPositionV2 getPrevious(TextPositionV2 position) {
+    private TextPosition getPrevious(TextPosition position) {
         var iterator = children.iterator();
         TextElement prevElement = null;
         while (iterator.hasNext()) {
@@ -153,7 +132,7 @@ public class TextPaneElementRow extends TextRepresentation {
                 if (prevElement == null) {
                     return null;
                 }
-                return prevElement.getTextPositionV2();
+                return prevElement.getTextPosition();
             }
             prevElement = currentElement;
         }
@@ -208,13 +187,13 @@ public class TextPaneElementRow extends TextRepresentation {
     }
 
     @Override
-    protected TextPositionV2 getFirstTextV2(int x) {
-        return getCursorElementAtV2(new Vector2d(x, 0));
+    protected TextPosition getFirstText(int x) {
+        return getCursorElementAt(new Vector2d(x, 0));
     }
 
     @Override
-    protected TextPositionV2 getLastTextV2(int x) {
-        return getCursorElementAtV2(new Vector2d(x, 0));
+    protected TextPosition getLastText(int x) {
+        return getCursorElementAt(new Vector2d(x, 0));
     }
 
 }

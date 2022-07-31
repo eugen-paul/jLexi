@@ -156,27 +156,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
             return null;
         }
 
-        TextPosition clickedElement = row.getValue().getCursorElementAt(//
-                new Vector2d(//
-                        pos.sub(row.getValue().getRelativPosition())//
-                )//
-        );
-        if (clickedElement != null) {
-            LOGGER.trace("Document Click on Element: {}.", clickedElement);
-        } else {
-            LOGGER.trace("Document Click on Element: NONE.");
-        }
-        return clickedElement;
-    }
-
-    @Override
-    public TextPositionV2 getCursorElementAtV2(Vector2d pos) {
-        var row = this.yPositionToSite.floorEntry(pos.getY());
-        if (null == row) {
-            return null;
-        }
-
-        var clickedElement = row.getValue().getCursorElementAtV2(//
+        var clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         pos.sub(row.getValue().getRelativPosition())//
                 )//
@@ -251,7 +231,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
             return;
         }
 
-        TextPositionV2 clickedElement = row.getValue().getCursorElementAtV2(//
+        TextPosition clickedElement = row.getValue().getCursorElementAt(//
                 new Vector2d(//
                         mouseX - row.getValue().getRelativPosition().getX(), //
                         mouseY - row.getValue().getRelativPosition().getY() //
@@ -294,13 +274,13 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
     }
 
     @Override
-    protected TextPositionV2 getLastTextV2(int x) {
+    protected TextPosition getLastText(int x) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    protected TextPositionV2 getFirstTextV2(int x) {
+    protected TextPosition getFirstText(int x) {
         // TODO Auto-generated method stub
         return null;
     }

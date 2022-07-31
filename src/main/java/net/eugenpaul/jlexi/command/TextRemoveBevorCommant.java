@@ -18,12 +18,16 @@ public class TextRemoveBevorCommant implements TextCommand {
 
     @Override
     public void execute() {
-        TextRemoveResponse removedData = cursorPosition.removeElementBefore();
+        var posPrevious = cursorPosition.getPreviousPosition();
+        if (posPrevious != null) {
+            TextRemoveResponse removedData = posPrevious.removeElement();
 
-        if (removedData != TextRemoveResponse.EMPTY) {
-            cursorPosition = removedData.getNewCursorPosition();
-            removedElement = removedData.getRemovedElement();
+            if (removedData != TextRemoveResponse.EMPTY) {
+                cursorPosition = removedData.getNewCursorPosition();
+                removedElement = removedData.getRemovedElement();
+            }
         }
+
     }
 
     @Override

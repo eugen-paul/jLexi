@@ -10,7 +10,6 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextCommandsDeque;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
@@ -56,10 +55,6 @@ public class Cursor implements ModelPropertyChangeListner {
         return this.textElement.getTextPosition();
     }
 
-    public TextPositionV2 getPositionV2() {
-        return this.textElement.getTextPositionV2();
-    }
-
     public boolean isTextSelected() {
         return this.selectedText != null && !this.selectedText.isEmpty();
     }
@@ -100,31 +95,6 @@ public class Cursor implements ModelPropertyChangeListner {
     }
 
     public void moveCursorTo(TextPosition cursorPosition) {
-        if (null != this.textElement && null != this.cursorEffect) {
-            this.textElement.removeEffect(this.cursorEffect);
-            this.controller.removeEffectFromController(this.cursorEffect);
-        }
-
-        if (null == cursorPosition) {
-            return;
-        }
-
-        this.textElement = cursorPosition.getTextElement();
-        this.textFormat = this.textElement.getFormat();
-        this.textFormatEffect = this.textElement.getFormatEffect();
-
-        this.cursorEffect = new CursorEffect(this.textElement);
-        this.controller.addEffectToController(this.cursorEffect);
-
-        this.controller.propertyChange(new PropertyChangeEvent(//
-                this.name, //
-                ViewPropertyChangeType.CURSOR_MOVE.getTypeName(), //
-                null, //
-                this.textElement //
-        ));
-    }
-
-    public void moveCursorTo(TextPositionV2 cursorPosition) {
         if (null != this.textElement && null != this.cursorEffect) {
             this.textElement.removeEffect(this.cursorEffect);
             this.controller.removeEffectFromController(this.cursorEffect);

@@ -80,7 +80,7 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
     }
 
     @Override
-    public TextPositionV2 move(TextPositionV2 position, MovePosition moving) {
+    public TextPosition move(TextPosition position, MovePosition moving) {
         switch (moving) {
         case UP:
             return getUp(position);
@@ -95,7 +95,7 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
         }
     }
 
-    private TextPositionV2 getNext(TextPositionV2 position) {
+    private TextPosition getNext(TextPosition position) {
         var childRepresentation = getChildRepresentation(position);
         if (childRepresentation == null) {
             return null;
@@ -113,12 +113,12 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
         var pos = next.getFirstChild();
         if (pos != null) {
-            return pos.getTextElement().getTextPositionV2();
+            return pos.getTextElement().getTextPosition();
         }
         return null;
     }
 
-    private TextPositionV2 getPrevious(TextPositionV2 position) {
+    private TextPosition getPrevious(TextPosition position) {
         var childGlyph = position.getTextElement().getChild(this);
         if (!(childGlyph instanceof TextRepresentation)) {
             return null;
@@ -137,12 +137,12 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
         var pos = previous.getLastChild();
         if (pos != null) {
-            return pos.getTextElement().getTextPositionV2();
+            return pos.getTextElement().getTextPosition();
         }
         return null;
     }
 
-    private TextPositionV2 getUp(TextPositionV2 position) {
+    private TextPosition getUp(TextPosition position) {
         var childRepresentation = getChildRepresentation(position);
         if (childRepresentation == null) {
             return null;
@@ -159,10 +159,10 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
         }
 
         var pos = position.getTextElement().getRelativPositionTo(this);
-        return next.getLastTextV2(pos.getX());
+        return next.getLastText(pos.getX());
     }
 
-    private TextPositionV2 getDown(TextPositionV2 position) {
+    private TextPosition getDown(TextPosition position) {
         var childRepresentation = getChildRepresentation(position);
         if (childRepresentation == null) {
             return null;
@@ -179,6 +179,6 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
         }
 
         var pos = position.getTextElement().getRelativPositionTo(this);
-        return next.getFirstTextV2(pos.getX());
+        return next.getFirstText(pos.getX());
     }
 }
