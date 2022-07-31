@@ -45,49 +45,9 @@ public abstract class TextRepresentation extends Glyph implements CursorControl,
 
     public abstract TextRepresentation getPreviousRepresentation(TextRepresentation structure);
 
-    protected abstract TextPosition getLastText(int x);
-
     protected abstract TextPositionV2 getLastTextV2(int x);
 
-    protected abstract TextPosition getFirstText(int x);
-
     protected abstract TextPositionV2 getFirstTextV2(int x);
-
-    @Override
-    public TextPosition getEol(TextPosition element) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public TextPosition getBol(TextPosition element) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public TextPosition getStart(TextPosition element) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public TextPosition getEnd(TextPosition element) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public TextPosition getPageUp(TextPosition element) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public TextPosition getPageDown(TextPosition element) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     protected TextRepresentation getChildRepresentation(TextPositionV2 position) {
         var childGlyph = position.getTextElement().getChild(this);

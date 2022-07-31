@@ -102,18 +102,6 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    protected TextPosition getFirstText(int x) {
-        if (yPositionToRow.isEmpty()) {
-            return null;
-        }
-
-        var entry = yPositionToRow.firstEntry();
-        var pos = entry.getValue().getRelativPositionTo(this);
-
-        return entry.getValue().getFirstText(x - pos.getX());
-    }
-
-    @Override
     protected TextPositionV2 getFirstTextV2(int x) {
         if (yPositionToRow.isEmpty()) {
             return null;
@@ -123,18 +111,6 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
         var pos = entry.getValue().getRelativPositionTo(this);
 
         return entry.getValue().getFirstTextV2(x - pos.getX());
-    }
-
-    @Override
-    protected TextPosition getLastText(int x) {
-        if (yPositionToRow.isEmpty()) {
-            return null;
-        }
-
-        var entry = yPositionToRow.lastEntry();
-        var pos = entry.getValue().getRelativPositionTo(this);
-
-        return entry.getValue().getFirstText(x - pos.getX());
     }
 
     @Override

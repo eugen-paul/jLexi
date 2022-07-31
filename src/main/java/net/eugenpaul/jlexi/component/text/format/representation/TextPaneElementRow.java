@@ -208,18 +208,8 @@ public class TextPaneElementRow extends TextRepresentation {
     }
 
     @Override
-    protected TextPosition getFirstText(int x) {
-        return getCursorElementAt(new Vector2d(x, 0));
-    }
-
-    @Override
     protected TextPositionV2 getFirstTextV2(int x) {
         return getCursorElementAtV2(new Vector2d(x, 0));
-    }
-
-    @Override
-    protected TextPosition getLastText(int x) {
-        return getCursorElementAt(new Vector2d(x, 0));
     }
 
     @Override

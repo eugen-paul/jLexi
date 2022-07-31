@@ -294,19 +294,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
     }
 
     @Override
-    protected TextPosition getLastText(int x) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     protected TextPositionV2 getLastTextV2(int x) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected TextPosition getFirstText(int x) {
         // TODO Auto-generated method stub
         return null;
     }

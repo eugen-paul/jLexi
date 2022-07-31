@@ -97,18 +97,6 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    protected TextPosition getLastText(int x) {
-        var col = this.xPositionToColumn.floorEntry(x);
-        if (col == null) {
-            return null;
-        }
-
-        var pos = col.getValue().getRelativPositionTo(this);
-
-        return col.getValue().getLastText(x - pos.getX());
-    }
-
-    @Override
     protected TextPositionV2 getLastTextV2(int x) {
         var col = this.xPositionToColumn.floorEntry(x);
         if (col == null) {
@@ -118,18 +106,6 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
         var pos = col.getValue().getRelativPositionTo(this);
 
         return col.getValue().getLastTextV2(x - pos.getX());
-    }
-
-    @Override
-    protected TextPosition getFirstText(int x) {
-        var col = this.xPositionToColumn.floorEntry(x);
-        if (col == null) {
-            return null;
-        }
-
-        var pos = col.getValue().getRelativPositionTo(this);
-
-        return col.getValue().getFirstText(x - pos.getX());
     }
 
     @Override

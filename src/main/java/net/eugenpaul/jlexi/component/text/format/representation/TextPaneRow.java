@@ -100,18 +100,8 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
     }
 
     @Override
-    protected TextPosition getLastText(int x) {
-        return getCursorElementAt(new Vector2d(x, 0));
-    }
-
-    @Override
     protected TextPositionV2 getLastTextV2(int x) {
         return getCursorElementAtV2(new Vector2d(x, 0));
-    }
-
-    @Override
-    protected TextPosition getFirstText(int x) {
-        return getCursorElementAt(new Vector2d(x, 0));
     }
 
     @Override
