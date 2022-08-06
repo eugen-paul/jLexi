@@ -18,17 +18,17 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     public boolean isEmpty() {
-        return children.isEmpty();
+        return this.children.isEmpty();
     }
 
     @Override
     public TextPosition getFirstChild() {
-        return children.getFirst().getFirstChild();
+        return this.children.getFirst().getFirstChild();
     }
 
     @Override
     public TextPosition getLastChild() {
-        return children.getLast().getLastChild();
+        return this.children.getLast().getLastChild();
     }
 
     @Override
@@ -51,7 +51,7 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     public TextRepresentation getNextRepresentation(TextRepresentation representation) {
-        var iterator = children.iterator();
+        var iterator = this.children.iterator();
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
             if (currentElement == representation) {
@@ -67,7 +67,7 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     public TextRepresentation getPreviousRepresentation(TextRepresentation representation) {
-        var iterator = children.iterator();
+        var iterator = this.children.iterator();
         TextRepresentation lastElement = null;
         while (iterator.hasNext()) {
             var currentElement = iterator.next();

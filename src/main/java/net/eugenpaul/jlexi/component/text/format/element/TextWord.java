@@ -11,14 +11,14 @@ public class TextWord {
     private List<TextSyllable> syllables;
 
     public TextWord() {
-        syllables = new LinkedList<>();
+        this.syllables = new LinkedList<>();
     }
 
     public void addSyllable(TextSyllable syllable) {
-        syllables.add(syllable);
+        this.syllables.add(syllable);
     }
 
     public boolean isEmpty() {
-        return syllables.isEmpty();
+        return this.syllables.isEmpty();
     }
 }

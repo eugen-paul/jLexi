@@ -18,12 +18,12 @@ public class TextRemoveBevorCommant implements TextCommand {
 
     @Override
     public void execute() {
-        var posPrevious = cursorPosition.getPreviousPosition();
-        if (posPrevious != null) {
-            TextRemoveResponse removedData = posPrevious.removeElement();
+        var previousPosition = this.cursorPosition.getPreviousPosition();
+        if (previousPosition != null) {
+            TextRemoveResponse removedData = previousPosition.removeElement();
 
             if (removedData != TextRemoveResponse.EMPTY) {
-                cursorPosition = removedData.getNewCursorPosition();
+                this.cursorPosition = removedData.getNewCursorPosition();
                 removedElement = removedData.getRemovedElement();
             }
         }
@@ -32,7 +32,7 @@ public class TextRemoveBevorCommant implements TextCommand {
 
     @Override
     public void unexecute() {
-        TextElementAddBeforeCommand command = new TextElementAddBeforeCommand(removedElement, cursorPosition);
+        TextElementAddBeforeCommand command = new TextElementAddBeforeCommand(this.removedElement, this.cursorPosition);
         command.execute();
     }
 
@@ -43,7 +43,7 @@ public class TextRemoveBevorCommant implements TextCommand {
 
     @Override
     public boolean isEmpty() {
-        return removedElement == null;
+        return this.removedElement == null;
     }
 
 }

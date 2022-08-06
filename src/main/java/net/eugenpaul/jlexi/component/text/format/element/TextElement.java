@@ -97,7 +97,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     public abstract boolean isRemoveable();
 
     public boolean isChildOf(TextStructure parentToCheck) {
-        var currentParent = structureParent;
+        var currentParent = this.structureParent;
         while (currentParent != null) {
             if (currentParent == parentToCheck) {
                 return true;
@@ -108,34 +108,26 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
     }
 
     public boolean addBefore(TextElement element) {
-        if (structureParent == null) {
+        if (this.structureParent == null) {
             return false;
         }
-        return structureParent.addBefore(this, element);
+        return this.structureParent.addBefore(this, element);
     }
 
     public TextRemoveResponse removeElement() {
-        if (structureParent == null) {
+        if (this.structureParent == null) {
             return TextRemoveResponse.EMPTY;
         }
-        return structureParent.removeElement(this);
-    }
-
-    public TextRemoveResponse removeElementBefore() {
-        if (structureParent == null) {
-            return TextRemoveResponse.EMPTY;
-        }
-
-        return structureParent.removeElementBefore(this);
+        return this.structureParent.removeElement(this);
     }
 
     @Override
     public void notifyChange() {
         this.cachedDrawable = null;
-        if (structureParent == null) {
+        if (this.structureParent == null) {
             return;
         }
-        structureParent.notifyChange();
+        this.structureParent.notifyChange();
     }
 
     public TextElement getTextElement() {

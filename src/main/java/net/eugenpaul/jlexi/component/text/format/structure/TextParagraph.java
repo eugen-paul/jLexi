@@ -217,49 +217,6 @@ public class TextParagraph extends TextStructure implements GlyphIterable<TextRe
     }
 
     @Override
-    public TextRemoveResponse removeElementBefore(TextElement position) {
-        var iterator = this.textElements.listIterator();
-        TextElement elementToRemove = null;
-        boolean found = false;
-        while (iterator.hasNext()) {
-            var currentChild = iterator.next();
-            if (currentChild == position) {
-                found = true;
-                break;
-            }
-            elementToRemove = currentChild;
-        }
-
-        if (!found) {
-            return TextRemoveResponse.EMPTY;
-        }
-
-        if (elementToRemove != null) {
-            removeElementFromText(elementToRemove);
-
-            notifyChange();
-
-            return new TextRemoveResponse(//
-                    elementToRemove, //
-                    position.getTextPosition() //
-            );
-        }
-
-        // No previous element was found. Check if you can merge the paragraph with the previous paragraph.
-        if (this.parentStructure != null) {
-            var removedElement = this.parentStructure.mergeChildWithPrevious(this);
-            if (removedElement != null) {
-                notifyChange();
-                return new TextRemoveResponse(//
-                        removedElement, //
-                        position.getTextPosition() //
-                );
-            }
-        }
-        return TextRemoveResponse.EMPTY;
-    }
-
-    @Override
     public boolean addBefore(TextElement position, TextElement element) {
         var iterator = this.textElements.listIterator();
         while (iterator.hasNext()) {

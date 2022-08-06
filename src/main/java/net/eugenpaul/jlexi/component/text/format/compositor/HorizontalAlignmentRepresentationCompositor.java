@@ -33,7 +33,7 @@ public class HorizontalAlignmentRepresentationCompositor implements TextComposit
     @Override
     public List<TextRepresentation> compose(Iterator<TextRepresentation> iterator, Size maxSize) {
         TextPaneColumn responseColumn = new TextPaneColumn(null);
-        responseColumn.setBackground(backgroundColor);
+        responseColumn.setBackground(this.backgroundColor);
 
         List<TextRepresentation> listOfElements = new LinkedList<>();
 
@@ -48,7 +48,7 @@ public class HorizontalAlignmentRepresentationCompositor implements TextComposit
         for (var element : listOfElements) {
             currentY += element.getMarginTop();
             element.setParent(responseColumn);
-            switch (aligment) {
+            switch (this.aligment) {
             case CENTER_POSITIV:
                 element.setRelativPosition(//
                         new Vector2d(//

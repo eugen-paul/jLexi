@@ -66,9 +66,9 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
 
     private TextPaneColumn createColumn() {
         TextPaneColumn column = new TextPaneColumn(null);
-        column.setBackground(background);
-        column.setMarginTop(marginTop);
-        column.setMarginBottom(marginBottom);
+        column.setBackground(this.background);
+        column.setMarginTop(this.marginTop);
+        column.setMarginBottom(this.marginBottom);
         return column;
     }
 

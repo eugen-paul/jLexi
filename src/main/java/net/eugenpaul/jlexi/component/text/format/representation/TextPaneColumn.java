@@ -68,7 +68,7 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
             return this.cachedDrawable.draw();
         }
 
-        this.cachedDrawable = new DrawableSketchImpl(background);
+        this.cachedDrawable = new DrawableSketchImpl(this.background);
 
         for (var el : this.children) {
             this.cachedDrawable.addDrawable( //
@@ -83,11 +83,11 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
     @Override
     protected TextPosition getFirstText(int x) {
-        if (yPositionToRow.isEmpty()) {
+        if (this.yPositionToRow.isEmpty()) {
             return null;
         }
 
-        var entry = yPositionToRow.firstEntry();
+        var entry = this.yPositionToRow.firstEntry();
         var pos = entry.getValue().getRelativPositionTo(this);
 
         return entry.getValue().getFirstText(x - pos.getX());
@@ -95,11 +95,11 @@ public class TextPaneColumn extends TextRepresentationOfRepresentation {
 
     @Override
     protected TextPosition getLastText(int x) {
-        if (yPositionToRow.isEmpty()) {
+        if (this.yPositionToRow.isEmpty()) {
             return null;
         }
 
-        var entry = yPositionToRow.lastEntry();
+        var entry = this.yPositionToRow.lastEntry();
         var pos = entry.getValue().getRelativPositionTo(this);
 
         return entry.getValue().getFirstText(x - pos.getX());

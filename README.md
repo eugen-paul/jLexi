@@ -1,6 +1,6 @@
 # jLexi
 ## Intro
-My Java implementation of document editor based on book "Design Patterns: Elements of Reusable Object-Oriented Software". Almost all classes have to be implemented by myself, because only the abstract classes and interfaces that should be used are described in the book. The book describes the parretn to use. The implementation of the classes remains open. 
+My Java implementation of document editor Lexi (jLexi) based on book "Design Patterns: Elements of Reusable Object-Oriented Software". Almost all classes have to be implemented by myself, because only the abstract classes and interfaces that should be used are described in the book. The book describes the parretn to use. The implementation of the classes remains open. 
 
 I want to try to implement it.
 

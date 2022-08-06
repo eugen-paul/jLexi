@@ -13,7 +13,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 public class TextChar extends TextElementAbstract {
 
     @Getter
-    private Character c;
+    private final Character c;
 
     public TextChar(Glyph parent, ResourceManager storage, TextStructure parentStructure, Character c,
             TextFormat format, TextFormatEffect formatEffect) {
@@ -25,22 +25,22 @@ public class TextChar extends TextElementAbstract {
 
     @Override
     public Drawable getDrawable() {
-        if (null != cachedDrawable) {
-            return cachedDrawable.draw();
+        if (null != this.cachedDrawable) {
+            return this.cachedDrawable.draw();
         }
 
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        Drawable charDrawable = storage.getFonts().ofChar2(c, getFormat());
-        cachedDrawable.addDrawable(charDrawable, 0, 0, 0);
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        Drawable charDrawable = this.storage.getFonts().ofChar2(this.c, getFormat());
+        this.cachedDrawable.addDrawable(charDrawable, 0, 0, 0);
 
-        setSize(cachedDrawable.getSize());
+        setSize(this.cachedDrawable.getSize());
 
-        doEffects(cachedDrawable);
+        doEffects(this.cachedDrawable);
 
-        getFormatEffect().getFormatter(storage.getFormats()).stream()//
-                .forEach(f -> f.doFormat(cachedDrawable));
+        getFormatEffect().getFormatter(this.storage.getFormats()).stream()//
+                .forEach(f -> f.doFormat(this.cachedDrawable));
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class TextChar extends TextElementAbstract {
 
     @Override
     public String toString() {
-        return Character.toString(c);
+        return Character.toString(this.c);
     }
 
     @Override

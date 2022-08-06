@@ -15,33 +15,33 @@ public class TextWordBreak extends TextElementAbstract {
     private static final Character WORD_BREAK = '-';
 
     @Getter
-    private TextPosition textPosition;
+    private final TextPosition textPosition;
 
     public TextWordBreak(Glyph parent, ResourceManager storage, TextStructure parentStructure, TextFormat format,
             TextFormatEffect formatEffect, TextElement followingElement) {
         super(parent, storage, parentStructure, format, formatEffect);
-        textPosition = followingElement.getTextPosition();
+        this.textPosition = followingElement.getTextPosition();
         getDrawable();
     }
 
     @Override
     public Drawable getDrawable() {
-        if (null != cachedDrawable) {
-            return cachedDrawable.draw();
+        if (null != this.cachedDrawable) {
+            return this.cachedDrawable.draw();
         }
 
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        Drawable charDrawable = storage.getFonts().ofChar2(WORD_BREAK, getFormat());
-        cachedDrawable.addDrawable(charDrawable, 0, 0, 0);
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        Drawable charDrawable = this.storage.getFonts().ofChar2(WORD_BREAK, getFormat());
+        this.cachedDrawable.addDrawable(charDrawable, 0, 0, 0);
 
-        setSize(cachedDrawable.getSize());
+        setSize(this.cachedDrawable.getSize());
 
-        doEffects(cachedDrawable);
+        doEffects(this.cachedDrawable);
 
-        getFormatEffect().getFormatter(storage.getFormats()).stream()//
-                .forEach(f -> f.doFormat(cachedDrawable));
+        getFormatEffect().getFormatter(this.storage.getFormats()).stream()//
+                .forEach(f -> f.doFormat(this.cachedDrawable));
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TextWordBreak extends TextElementAbstract {
 
     @Override
     public int getDescent() {
-        return storage.getFonts().getDescent(getFormat().getFontName(), getFormat().getFontsize());
+        return this.storage.getFonts().getDescent(getFormat().getFontName(), getFormat().getFontsize());
     }
 
 }

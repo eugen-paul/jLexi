@@ -13,6 +13,8 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextNewLine extends TextElementAbstract {
 
+    private static final String NEW_LINE_SEPARATOR = "\n";
+
     public TextNewLine(Glyph parent, ResourceManager storage, TextStructure parentStructure, TextFormat format,
             TextFormatEffect formatEffect) {
         super(parent, storage, parentStructure, format, formatEffect);
@@ -23,29 +25,29 @@ public class TextNewLine extends TextElementAbstract {
 
     @Override
     public Drawable getDrawable() {
-        if (null != cachedDrawable) {
-            return cachedDrawable.draw();
+        if (null != this.cachedDrawable) {
+            return this.cachedDrawable.draw();
         }
 
-        int[] pixels = new int[storage.getFonts().getMaxAscent(//
+        int[] pixels = new int[this.storage.getFonts().getMaxAscent(//
                 getFormat().getFontName(), //
                 getFormat().getFontsize() //
         )];
 
-        cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
 
         Drawable newLineDrawable = DrawablePixelsImpl.builderArgb()//
                 .argbPixels(pixels)//
                 .size(new Size(1, pixels.length))//
                 .build();
 
-        cachedDrawable.addDrawable(newLineDrawable, 0, 0, 0);
+        this.cachedDrawable.addDrawable(newLineDrawable, 0, 0, 0);
 
-        setSize(cachedDrawable.getSize());
+        setSize(this.cachedDrawable.getSize());
 
-        doEffects(cachedDrawable);
+        doEffects(this.cachedDrawable);
 
-        return cachedDrawable.draw();
+        return this.cachedDrawable.draw();
     }
 
     @Override
@@ -60,7 +62,7 @@ public class TextNewLine extends TextElementAbstract {
 
     @Override
     public String toString() {
-        return "\n";
+        return NEW_LINE_SEPARATOR;
     }
 
 }

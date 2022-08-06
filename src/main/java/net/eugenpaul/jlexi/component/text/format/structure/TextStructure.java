@@ -199,15 +199,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         return child.removeElement(elementToRemove);
     }
 
-    public TextRemoveResponse removeElementBefore(TextElement position) {
-        TextStructure child = getChildWithElement(position);
-        if (null == child) {
-            return TextRemoveResponse.EMPTY;
-        }
-
-        return child.removeElementBefore(position);
-    }
-
     public boolean addBefore(TextElement position, TextElement element) {
         TextStructure child = getChildWithElement(element);
         if (null == child) {

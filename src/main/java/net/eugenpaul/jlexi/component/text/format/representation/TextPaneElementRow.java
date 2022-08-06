@@ -67,15 +67,15 @@ public class TextPaneElementRow extends TextRepresentation {
 
     @Override
     public TextPosition getFirstChild() {
-        return children.getFirst().getTextPosition();
+        return this.children.getFirst().getTextPosition();
     }
 
     @Override
     public TextPosition getLastChild() {
-        if (children.getLast() instanceof TextWordBreak) {
-            return children.get(children.size() - 2).getTextPosition();
+        if (this.children.getLast() instanceof TextWordBreak) {
+            return this.children.get(this.children.size() - 2).getTextPosition();
         }
-        return children.getLast().getTextPosition();
+        return this.children.getLast().getTextPosition();
     }
 
     @Override
@@ -102,7 +102,7 @@ public class TextPaneElementRow extends TextRepresentation {
     }
 
     private TextPosition getNext(TextPosition position) {
-        var iterator = children.iterator();
+        var iterator = this.children.iterator();
         while (iterator.hasNext()) {
             var e = iterator.next();
             if (e == position.getTextElement()) {
@@ -120,7 +120,7 @@ public class TextPaneElementRow extends TextRepresentation {
     }
 
     private TextPosition getPrevious(TextPosition position) {
-        var iterator = children.iterator();
+        var iterator = this.children.iterator();
         TextElement prevElement = null;
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
@@ -147,7 +147,7 @@ public class TextPaneElementRow extends TextRepresentation {
 
         this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
 
-        for (var el : children) {
+        for (var el : this.children) {
             this.cachedDrawable.addDrawable(//
                     el.getDrawable(), //
                     el.getRelativPosition().getX(), //
