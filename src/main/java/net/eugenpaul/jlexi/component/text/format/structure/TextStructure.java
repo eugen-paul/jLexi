@@ -43,19 +43,18 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
      */
     protected abstract boolean checkMergeWith(TextStructure element);
 
-    /**
-     * The specified element is added to the end of the object.
-     * 
-     * @param element
-     * @return Separator deleted at the end of the object when the element was added.
-     */
-    protected abstract TextElement mergeWithNext(TextStructure element);
+    protected abstract TextRemoveResponse mergeWith(TextStructure element);
+
+    protected abstract TextRemoveResponse mergeChildsWithNext(TextStructure child);
 
     public abstract Optional<Boolean> isABeforB(TextElement elemA, TextElement elemB);
 
     public abstract List<TextElement> getAllTextElements();
+
     public abstract List<TextElement> getAllTextElementsBetween(TextElement from, TextElement to);
+
     public abstract List<TextElement> getAllTextElementsFrom(TextElement from);
+
     public abstract List<TextElement> getAllTextElementsTo(TextElement to);
 
     protected List<TextStructure> getElementPath(TextElement element) {
@@ -69,59 +68,7 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         return path;
     }
 
-    /**
-     * The specified element is added to the beginning of the object.
-     * 
-     * @param element
-     * @return The first element of current object (before the merge).
-     */
-    protected abstract TextElement mergeWithPrevious(TextStructure element);
-
-    protected TextElement mergeChildWithPrevious(TextStructure child) {
-        var previousChild = getPreviousChild(child);
-
-        if (previousChild.isEmpty()) {
-            if (this.parentStructure != null) {
-                return this.parentStructure.mergeChildWithPrevious(this);
-            }
-            return null;
-        }
-
-        if (!previousChild.get().checkMergeWith(child)) {
-            return null;
-        }
-
-        TextElement separator = previousChild.get().mergeWithNext(child);
-        if (separator != null) {
-            removeChild(child);
-            return separator;
-        }
-        return null;
-    }
-
-    protected TextElement mergeChildWithNext(TextStructure child) {
-        var nextChild = getNextChild(child);
-
-        if (nextChild.isEmpty()) {
-            if (parentStructure != null) {
-                return parentStructure.mergeChildWithNext(this);
-            }
-            return null;
-        }
-
-        if (!nextChild.get().checkMergeWith(child)) {
-            return null;
-        }
-
-        TextElement position = nextChild.get().mergeWithPrevious(child);
-        if (position != null) {
-            removeChild(child);
-            return position;
-        }
-        return null;
-    }
-
-    private Optional<TextStructure> getPreviousChild(TextStructure position) {
+    protected Optional<TextStructure> getPreviousChild(TextStructure position) {
         var iterator = childListIterator();
         TextStructure previousChild = null;
         while (iterator.hasNext()) {
@@ -137,7 +84,7 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         return Optional.of(previousChild);
     }
 
-    private Optional<TextStructure> getNextChild(TextStructure position) {
+    protected Optional<TextStructure> getNextChild(TextStructure position) {
         var iterator = childListIterator();
         while (iterator.hasNext()) {
             if (iterator.next() == position) {
@@ -148,16 +95,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
             }
         }
         return Optional.empty();
-    }
-
-    private void removeChild(TextStructure child) {
-        var iterator = childListIterator();
-        while (iterator.hasNext()) {
-            if (iterator.next() == child) {
-                iterator.remove();
-                break;
-            }
-        }
     }
 
     protected abstract void restructChildren();
@@ -229,6 +166,8 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
     }
 
     protected abstract ListIterator<TextStructure> childListIterator();
+
+    protected abstract ListIterator<TextStructure> childListIterator(int index);
 
     protected abstract TextStructure getFirstChild();
 

@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.var;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
@@ -88,57 +87,87 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     @Override
-    protected TextElement mergeWithNext(TextStructure element) {
+    protected TextRemoveResponse mergeWith(TextStructure element) {
         if (!checkMergeWith(element)) {
-            return null;
+            return TextRemoveResponse.EMPTY;
         }
 
-        TextSection nextSection = (TextSection) element;
+        var nextSection = (TextSection) element;
 
-        TextStructure a = children.getLast();
-        TextStructure b = nextSection.children.getFirst();
+        var firstStructure = getLastChild();
+        var secondStructure = nextSection.getFirstChild();
 
-        nextSection.children.stream().forEach(v -> v.setParentStructure(this));
-        children.addAll(nextSection.children);
+        var removedData = firstStructure.mergeWith(secondStructure);
+        if (removedData == TextRemoveResponse.EMPTY) {
+            // Structures cann't be merged
+            return TextRemoveResponse.EMPTY;
+        }
 
-        TextElement responseSeparator = a.mergeWithNext(b);
+        var responseSection = new TextSection(parentStructure, configuration);
 
-        children.remove(b);
+        // take over own child elements except the last
+        var iteratorFirst = childListIterator();
+        while (iteratorFirst.hasNext()) {
+            responseSection.children.add(iteratorFirst.next());
+        }
 
-        representation = null;
+        responseSection.children.removeLast();
+        responseSection.children.add(removedData.getNewStructures().get(0));
 
-        return responseSeparator;
+        // take over child elements from following structure except the first
+        var iteratorSecond = nextSection.childListIterator(1);
+        while (iteratorSecond.hasNext()) {
+            responseSection.children.add(iteratorSecond.next());
+        }
+
+        responseSection.children.stream().forEach(v -> v.setParentStructure(responseSection));
+
+        var removedStructures = new LinkedList<List<TextStructure>>();
+        removedStructures.add(List.of(this, nextSection));
+        removedStructures.addAll(removedData.getRemovedStructures());
+
+        var createdStructures = new LinkedList<TextStructure>();
+        createdStructures.add(responseSection);
+        createdStructures.addAll(removedData.getNewStructures());
+
+        return new TextRemoveResponse(//
+                removedData.getRemovedElement(), //
+                removedData.getNewCursorPosition(), //
+                removedStructures, //
+                createdStructures //
+        );
     }
 
     @Override
-    protected TextElement mergeWithPrevious(TextStructure element) {
-        if (!checkMergeWith(element)) {
-            return null;
+    protected TextRemoveResponse mergeChildsWithNext(TextStructure child) {
+        var nextChild = getNextChild(child);
+
+        if (nextChild.isPresent()) {
+            var removedData = child.mergeWith(nextChild.get());
+            if (removedData != TextRemoveResponse.EMPTY) {
+                var iterator = this.children.listIterator();
+                while (iterator.hasNext()) {
+                    // TODO do it better
+                    var currentChild = iterator.next();
+                    if (currentChild == child) {
+                        iterator.remove();
+                        iterator.next();
+                        iterator.remove();
+                        iterator.add(removedData.getNewStructures().get(0));
+                        removedData.getNewStructures().get(0).setParentStructure(this);
+                        break;
+                    }
+                }
+            }
+
+            resetStructure();
+            notifyChange();
+
+            return removedData;
+        } else if (this.parentStructure != null) {
+            return this.parentStructure.mergeChildsWithNext(this);
         }
-
-        TextSection previousParagraph = (TextSection) element;
-
-        previousParagraph.children.stream().forEach(v -> v.setParentStructure(this));
-
-        TextElement position = children.getFirst().getFirstElement();
-
-        // After merging two sections, check whether you need to merge the last paragraph of section A with the first
-        // paragraph of section B.
-        TextStructure a = previousParagraph.children.getLast();
-        TextStructure b = children.getFirst();
-
-        children.addAll(0, previousParagraph.children);
-
-        TextElement positionAfterInnerMerge = b.mergeWithPrevious(a);
-
-        if (positionAfterInnerMerge != null) {
-            children.remove(a);
-            position = positionAfterInnerMerge;
-        }
-
-        representation = null;
-
-        return position;
+        return TextRemoveResponse.EMPTY;
     }
 
     @Override

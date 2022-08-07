@@ -34,6 +34,11 @@ public abstract class TextStructureOfStructure extends TextStructure {
     }
 
     @Override
+    protected ListIterator<TextStructure> childListIterator(int index) {
+        return children.listIterator(index);
+    }
+
+    @Override
     protected TextStructure getFirstChild() {
         return children.peekFirst();
     }

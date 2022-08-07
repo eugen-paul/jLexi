@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
@@ -62,13 +61,41 @@ public class TextPaneDocument extends TextStructureOfStructure {
     }
 
     @Override
-    protected TextElement mergeWithNext(TextStructure element) {
-        return null;
+    protected TextRemoveResponse mergeWith(TextStructure element) {
+        // Document ist the root class.
+        return TextRemoveResponse.EMPTY;
     }
 
     @Override
-    protected TextElement mergeWithPrevious(TextStructure element) {
-        return null;
+    protected TextRemoveResponse mergeChildsWithNext(TextStructure child) {
+        var nextChild = getNextChild(child);
+
+        if (nextChild.isPresent()) {
+            var removedData = child.mergeWith(nextChild.get());
+            if (removedData != TextRemoveResponse.EMPTY) {
+                var iterator = this.children.listIterator();
+                while (iterator.hasNext()) {
+                    // TODO do it better
+                    var currentChild = iterator.next();
+                    if (currentChild == child) {
+                        iterator.remove();
+                        iterator.next();
+                        iterator.remove();
+                        iterator.add(removedData.getNewStructures().get(0));
+                        removedData.getNewStructures().get(0).setParentStructure(this);
+                        break;
+                    }
+                }
+            }
+
+            resetStructure();
+            notifyChange();
+
+            return removedData;
+        }
+        // Document ist the root class. No need to check if parentStructure is present.
+
+        return TextRemoveResponse.EMPTY;
     }
 
     @Override
