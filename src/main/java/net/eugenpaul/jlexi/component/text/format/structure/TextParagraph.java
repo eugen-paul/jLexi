@@ -96,11 +96,6 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
     }
 
     @Override
-    public void resetStructure() {
-        this.representation = null;
-    }
-
-    @Override
     protected void restructChildren() {
         if (!this.needRestruct) {
             return;
@@ -163,7 +158,7 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
 
         removeChild(elementToRemove);
 
-        notifyChange();
+        notifyChangeUp();
         return new TextRemoveResponse(//
                 elementToRemove, //
                 nextElement.get().getTextPosition(), //
@@ -184,11 +179,32 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
 
                 setRestructIfNeeded(element);
 
-                notifyChange();
+                notifyChangeUp();
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean splitStructures(List<TextStructure> oldStructure, List<List<TextStructure>> newStructures) {
+        if (this.parentStructure != null) {
+            // TODO do it better
+            if (!newStructures.isEmpty()) {
+                for (var str : newStructures.get(0)) {
+                    if (str instanceof TextParagraph) {
+                        ((TextParagraph) str).children.forEach(v -> v.setStructureParent(str));
+                    }
+                }
+            }
+            return this.parentStructure.splitStructures(oldStructure, newStructures);
+        }
+        return false;
+    }
+
+    @Override
+    public void notifyChangeDown() {
+        this.representation = null;
     }
 
     private void setRestructIfNeeded(TextElement addedElement) {
@@ -200,7 +216,7 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
     @Override
     public void clear() {
         this.children.clear();
-        resetStructure();
+        this.representation = null;
     }
 
     public void setToEol(ResourceManager storage) {

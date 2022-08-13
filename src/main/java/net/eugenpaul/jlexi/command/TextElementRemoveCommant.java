@@ -13,31 +13,41 @@ public class TextElementRemoveCommant implements TextCommand {
     @Getter
     private TextPosition cursorPosition;
 
+    private TextRemoveResponse removedData;
+
     public TextElementRemoveCommant(TextPosition cursorPosition) {
         this.positionBeforeRemove = cursorPosition;
         this.cursorPosition = cursorPosition;
         this.positionAfterRemove = null;
         this.removedElement = null;
+        this.removedData = TextRemoveResponse.EMPTY;
     }
 
     @Override
     public void execute() {
-        TextRemoveResponse removedData = positionBeforeRemove.removeElement();
+        this.removedData = positionBeforeRemove.removeElement();
 
-        if (removedData != TextRemoveResponse.EMPTY) {
-            positionAfterRemove = removedData.getNewCursorPosition();
+        if (this.removedData != TextRemoveResponse.EMPTY) {
+            positionAfterRemove = this.removedData.getNewCursorPosition();
             cursorPosition = positionAfterRemove;
-            removedElement = removedData.getRemovedElement();
+            removedElement = this.removedData.getRemovedElement();
         }
     }
 
     @Override
     public void unexecute() {
-        if (!isEmpty()) {
-            TextElementAddBeforeCommand command = new TextElementAddBeforeCommand(removedElement, positionAfterRemove);
-            command.execute();
-            cursorPosition = positionBeforeRemove;
+        if (isEmpty()) {
+            return;
         }
+
+        TextElementAddBeforeCommand command;
+        if (this.removedData.isTextReplaced()) {
+            command = new TextElementAddBeforeCommand(this.removedData);
+        } else {
+            command = new TextElementAddBeforeCommand(this.removedElement, this.positionAfterRemove);
+        }
+        command.execute();
+        this.cursorPosition = positionBeforeRemove;
     }
 
     @Override

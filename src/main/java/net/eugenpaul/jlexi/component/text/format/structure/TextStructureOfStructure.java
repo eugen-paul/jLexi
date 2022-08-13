@@ -19,8 +19,8 @@ public abstract class TextStructureOfStructure extends TextStructure {
 
     @Override
     public void clear() {
-        children.clear();
-        resetStructure();
+        this.children.clear();
+        this.representation = null;
     }
 
     @Override

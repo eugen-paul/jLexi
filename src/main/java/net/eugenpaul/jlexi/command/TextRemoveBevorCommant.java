@@ -11,28 +11,39 @@ public class TextRemoveBevorCommant implements TextCommand {
     private TextPosition cursorPosition;
     private TextElement removedElement;
 
+    TextRemoveResponse removedData;
+
     public TextRemoveBevorCommant(TextPosition cursorPosition) {
         this.cursorPosition = cursorPosition;
         this.removedElement = null;
+        this.removedData = TextRemoveResponse.EMPTY;
     }
 
     @Override
     public void execute() {
         var previousPosition = this.cursorPosition.getPreviousPosition();
         if (previousPosition != null) {
-            TextRemoveResponse removedData = previousPosition.removeElement();
+            removedData = previousPosition.removeElement();
 
             if (removedData != TextRemoveResponse.EMPTY) {
                 this.cursorPosition = removedData.getNewCursorPosition();
-                removedElement = removedData.getRemovedElement();
+                this.removedElement = removedData.getRemovedElement();
             }
         }
-
     }
 
     @Override
     public void unexecute() {
-        TextElementAddBeforeCommand command = new TextElementAddBeforeCommand(this.removedElement, this.cursorPosition);
+        if (isEmpty()) {
+            return;
+        }
+
+        TextElementAddBeforeCommand command;
+        if (this.removedData.isTextReplaced()) {
+            command = new TextElementAddBeforeCommand(this.removedData);
+        } else {
+            command = new TextElementAddBeforeCommand(this.removedElement, this.cursorPosition);
+        }
         command.execute();
     }
 

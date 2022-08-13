@@ -24,4 +24,8 @@ public class TextRemoveResponse {
 
     private List<List<TextStructure>> removedStructures;
     private List<TextStructure> newStructures;
+
+    public boolean isTextReplaced() {
+        return !removedStructures.isEmpty();
+    }
 }

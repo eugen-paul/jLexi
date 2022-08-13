@@ -114,6 +114,13 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return this.structureParent.addBefore(this, element);
     }
 
+    public boolean splitStructures(List<TextStructure> oldStructure, List<List<TextStructure>> newStructures) {
+        if (this.structureParent == null) {
+            return false;
+        }
+        return this.structureParent.splitStructures(oldStructure, newStructures);
+    }
+
     public TextRemoveResponse removeElement() {
         if (this.structureParent == null) {
             return TextRemoveResponse.EMPTY;
@@ -127,7 +134,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         if (this.structureParent == null) {
             return;
         }
-        this.structureParent.notifyChange();
+        this.structureParent.notifyChangeUp();
     }
 
     public TextElement getTextElement() {

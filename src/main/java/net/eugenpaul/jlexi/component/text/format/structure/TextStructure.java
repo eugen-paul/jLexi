@@ -99,10 +99,18 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
 
     protected abstract void restructChildren();
 
-    public void notifyChange() {
+    public void notifyChangeUp() {
         this.representation = null;
         if (null != this.parentStructure) {
-            this.parentStructure.notifyChange();
+            this.parentStructure.notifyChangeUp();
+        }
+    }
+
+    public void notifyChangeDown() {
+        this.representation = null;
+        var childIterator = childListIterator();
+        while (childIterator.hasNext()) {
+            childIterator.next().notifyChangeDown();
         }
     }
 
@@ -116,14 +124,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
             }
         }
         return this.representation;
-    }
-
-    protected void resetStructure() {
-        this.representation = null;
-        var iterator = childListIterator();
-        while (iterator.hasNext()) {
-            iterator.next().resetStructure();
-        }
     }
 
     public abstract void clear();
@@ -142,6 +142,41 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
             return false;
         }
         return child.addBefore(position, element);
+    }
+
+    public boolean splitStructures(List<TextStructure> oldStructure, List<List<TextStructure>> newStructures) {
+        if (oldStructure.isEmpty() || newStructures.isEmpty()) {
+            return false;
+        }
+
+        var childIterator = childListIterator();
+        while (childIterator.hasNext()) {
+            var child = childIterator.next();
+            if (child == oldStructure.get(0)) {
+                childIterator.remove();
+                for (var newData : newStructures.get(0)) {
+                    childIterator.add(newData);
+                    newData.setParentStructure(this);
+                    var childIt = newData.childListIterator();
+                    while (childIt.hasNext()) {
+                        childIt.next().setParentStructure(newData);
+                    }
+                }
+
+                if (oldStructure.size() > 1 && this.parentStructure != null) {
+                    return this.parentStructure.splitStructures(//
+                            oldStructure.subList(1, oldStructure.size()), //
+                            newStructures.subList(1, newStructures.size()) //
+                    );
+                }
+
+                notifyChangeDown();
+                notifyChangeUp();
+
+                return true;
+            }
+        }
+        return false;
     }
 
     protected TextStructure getChildWithElement(TextElement element) {

@@ -41,13 +41,7 @@ public class TextPaneDocument extends TextStructureOfStructure {
     }
 
     @Override
-    public void resetStructure() {
-        representation = null;
-        children.stream().forEach(TextStructure::resetStructure);
-    }
-
-    @Override
-    public void notifyChange() {
+    public void notifyChangeUp() {
         restructChildren();
         representation = null;
         if (parent != null) {
@@ -62,7 +56,7 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     @Override
     protected TextRemoveResponse mergeWith(TextStructure element) {
-        // Document ist the root class.
+        // Document ist the root class and cann't be merged with other elements
         return TextRemoveResponse.EMPTY;
     }
 
@@ -81,15 +75,17 @@ public class TextPaneDocument extends TextStructureOfStructure {
                         iterator.remove();
                         iterator.next();
                         iterator.remove();
-                        iterator.add(removedData.getNewStructures().get(0));
-                        removedData.getNewStructures().get(0).setParentStructure(this);
+                        var newStructure = removedData.getNewStructures()
+                                .get(removedData.getNewStructures().size() - 1);
+                        newStructure.setParentStructure(this);
+                        iterator.add(newStructure);
                         break;
                     }
                 }
             }
 
-            resetStructure();
-            notifyChange();
+            notifyChangeDown();
+            notifyChangeUp();
 
             return removedData;
         }
