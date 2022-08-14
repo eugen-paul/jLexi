@@ -195,49 +195,34 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     @Override
     public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
-        var iterator = this.children.listIterator();
 
-        while (iterator.hasNext()) {
-            var elem = iterator.next();
+        if (child.getLastElement().isEndOfSection() && this.parentStructure != null) {
+            var splitResult = split(child, to);
+            return this.parentStructure.splitChild(this, splitResult);
+        }
+
+        var chiltIterator = this.children.listIterator();
+        while (chiltIterator.hasNext()) {
+            var elem = chiltIterator.next();
             if (elem == child) {
-                iterator.remove();
-                to.forEach(iterator::add);
+                chiltIterator.remove();
+                to.forEach(chiltIterator::add);
                 to.forEach(v -> v.setParentStructure(this));
 
-                if (to.size() > 1 && to.get(0).getLastElement().isEndOfSection()) {
-                    var splitResult = split();
-                    if (this.parentStructure != null) {
-                        var parentResponse = this.parentStructure.splitChild(this, splitResult);
-
-                        List<List<TextStructure>> newStr = new LinkedList<>();
-                        List<List<TextStructure>> remStr = new LinkedList<>();
-
-                        newStr.addAll(List.of(to));
-                        newStr.addAll(parentResponse.getNewStructures());
-
-                        remStr.addAll(List.of(List.of(child)));
-                        remStr.addAll(parentResponse.getRemovedStructures());
-
-                        return new TextAddResponse(//
-                                null, //
-                                newStr, //
-                                remStr //
-                        );
-                    }
-                }
+                notifyChangeUp();
 
                 return new TextAddResponse(//
-                        null, //
-                        List.of(to), //
-                        List.of(List.of(child)) //
+                        this, //
+                        child, //
+                        to //
                 );
             }
         }
 
-        return TextAddResponse.EMPTY;
+        throw new IllegalArgumentException("Cann't split section. Child to replace not found.");
     }
 
-    private List<TextStructure> split() {
+    private List<TextStructure> split(TextStructure position, List<TextStructure> to) {
         var first = new TextSection(this.parentStructure, this.configuration);
         var second = new TextSection(this.parentStructure, this.configuration);
         var current = first;
@@ -245,10 +230,13 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         var chiltIterator = this.children.listIterator();
         while (chiltIterator.hasNext()) {
             var currentElement = chiltIterator.next();
-            current.children.add(currentElement);
-            if (currentElement.getLastElement().isEndOfSection()) {
+            if (currentElement == position) {
+                current.children.add(to.get(0));
+                to.get(0).setParentStructure(current);
                 current = second;
             }
+            current.children.add(currentElement);
+            currentElement.setParentStructure(current);
         }
 
         first.setParentStructure(parentStructure);

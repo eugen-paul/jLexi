@@ -115,7 +115,19 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return this.structureParent.addBefore(this, element);
     }
 
-    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure, List<List<TextStructure>> newStructures) {
+    public boolean replaceStructure(//
+            TextStructure owner, //
+            List<TextStructure> oldStructure, //
+            List<TextStructure> newStructure //
+    ) {
+        if (this.structureParent == null) {
+            return false;
+        }
+        return this.structureParent.replaceStructure(owner, oldStructure, newStructure);
+    }
+
+    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
+            List<List<TextStructure>> newStructures) {
         if (this.structureParent == null) {
             return TextAddResponse.EMPTY;
         }

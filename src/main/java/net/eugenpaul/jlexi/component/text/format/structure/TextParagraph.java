@@ -106,6 +106,15 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         this.needRestruct = false;
     }
 
+    @Override
+    protected void updateParentOfChildRecursiv() {
+        var childIterator = children.iterator();
+        while (childIterator.hasNext()) {
+            var child = childIterator.next();
+            child.setStructureParent(this);
+        }
+    }
+
     private void checkAndSplit() {
         var iterator = this.children.listIterator();
         var newParagraph = new TextParagraph(this.parentStructure, this.config.copy(), this.storage);
@@ -182,13 +191,7 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         if (isSplitNeeded(element)) {
             var newParagraphs = split(position, element);
             if (this.parentStructure != null) {
-                var parentSplit = this.parentStructure.splitChild(this, newParagraphs);
-
-                response = new TextAddResponse(//
-                        position.getTextPosition(), //
-                        parentSplit.getNewStructures(), //
-                        parentSplit.getRemovedStructures() //
-                );
+                return this.parentStructure.splitChild(this, newParagraphs);
             }
         } else {
             response = addElementBefore(position, element);
@@ -232,7 +235,6 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
                 iterator.previous();
                 iterator.add(element);
                 element.setStructureParent(this);
-                notifyChangeUp();
                 break;
             }
         }

@@ -42,10 +42,9 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     @Override
     public void notifyChangeUp() {
-        restructChildren();
-        representation = null;
-        if (parent != null) {
-            parent.notifyChange();
+        this.representation = null;
+        if (this.parent != null) {
+            this.parent.notifyChange();
         }
     }
 
@@ -72,9 +71,9 @@ public class TextPaneDocument extends TextStructureOfStructure {
                 to.forEach(v -> v.setParentStructure(this));
 
                 return new TextAddResponse(//
-                        null, //
-                        List.of(to), //
-                        List.of(List.of(child)) //
+                        this, //
+                        child, //
+                        to //
                 );
             }
         }

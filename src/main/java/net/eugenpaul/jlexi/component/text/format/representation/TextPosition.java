@@ -29,6 +29,14 @@ public class TextPosition {
         return this.textElement.addBefore(element);
     }
 
+    public boolean replaceStructure(//
+            TextStructure owner, //
+            List<TextStructure> oldStructure, //
+            List<TextStructure> newStructure //
+    ) {
+        return this.textElement.replaceStructure(owner, oldStructure, newStructure);
+    }
+
     public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
             List<List<TextStructure>> newStructures) {
         return this.textElement.replaceStructures(oldStructure, newStructures);

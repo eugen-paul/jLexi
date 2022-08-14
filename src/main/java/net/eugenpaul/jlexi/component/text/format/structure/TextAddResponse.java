@@ -15,27 +15,29 @@ public class TextAddResponse {
 
     private TextPosition newCursorPosition;
 
-    private List<List<TextStructure>> newStructures;
-    private List<List<TextStructure>> removedStructures;
+    private TextStructure owner;
+    private TextStructure removedStructures;
+    private List<TextStructure> newStructures;
 
     public TextAddResponse(TextPosition newCursorPosition) {
-
         this.newCursorPosition = newCursorPosition;
-        this.removedStructures = Collections.emptyList();
+        this.owner = null;
+        this.removedStructures = null;
         this.newStructures = Collections.emptyList();
     }
 
     public TextAddResponse(//
-            TextPosition newCursorPosition, //
-            List<List<TextStructure>> newStructures, //
-            List<List<TextStructure>> removedStructures //
+            TextStructure owner, //
+            TextStructure removedStructures, //
+            List<TextStructure> newStructures //
     ) {
-        this.newCursorPosition = newCursorPosition;
+        this.newCursorPosition = null;
+        this.owner = owner;
         this.removedStructures = removedStructures;
         this.newStructures = newStructures;
     }
 
-    public boolean isTextReplaced() {
-        return !removedStructures.isEmpty();
+    public boolean isStructureChanged() {
+        return owner != null;
     }
 }

@@ -115,6 +115,15 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         }
     }
 
+    protected void updateParentOfChildRecursiv() {
+        var childIterator = childListIterator();
+        while (childIterator.hasNext()) {
+            var child = childIterator.next();
+            child.updateParentOfChildRecursiv();
+            child.setParentStructure(this);
+        }
+    }
+
     public List<TextRepresentation> getRepresentation(Size size) {
         if (null == this.representation) {
             restructChildren();
@@ -145,6 +154,40 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         return child.addBefore(position, element);
     }
 
+    public boolean replaceStructure(//
+            TextStructure owner, //
+            List<TextStructure> oldStructure, //
+            List<TextStructure> newSructure //
+    ) {
+        if (owner == this) {
+            var childIterator = childListIterator();
+            while (childIterator.hasNext()) {
+                var child = childIterator.next();
+                if (child == oldStructure.get(0)) {
+                    childIterator.remove();
+                    // TODO do it better
+                    for (int i = 1; i < oldStructure.size(); i++) {
+                        childIterator.next();
+                        childIterator.remove();
+                    }
+
+                    newSructure.forEach(childIterator::add);
+                    newSructure.forEach(v -> v.setParentStructure(this));
+                    newSructure.forEach(TextStructure::updateParentOfChildRecursiv);
+
+                    notifyChangeDown();
+                    notifyChangeUp();
+
+                    return true;
+                }
+            }
+        } else if (this.parentStructure != null) {
+            return this.parentStructure.replaceStructure(owner, oldStructure, newSructure);
+        }
+
+        throw new IllegalArgumentException("Cann't restore child structure. Owner or child not found.");
+    }
+
     public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
             List<List<TextStructure>> newStructures) {
         if (oldStructure.isEmpty() || newStructures.isEmpty()) {
@@ -171,20 +214,10 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
                 }
 
                 if (oldStructure.size() > 1 && this.parentStructure != null) {
-                    var parentResponse = this.parentStructure.replaceStructures(//
+                    return this.parentStructure.replaceStructures(//
                             oldStructure.subList(1, oldStructure.size()), //
                             newStructures.subList(1, newStructures.size()) //
                     );
-
-                    List<List<TextStructure>> from = new LinkedList<>();
-                    List<List<TextStructure>> to = new LinkedList<>();
-
-                    from.addAll(parentResponse.getNewStructures());
-                    from.add(newStructures.get(0));
-                    to.addAll(parentResponse.getRemovedStructures());
-                    to.add(oldStructure.get(0));
-
-                    return new TextAddResponse(null, from, to);
                 }
 
                 notifyChangeDown();
@@ -196,64 +229,7 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
                 from.add(newStructures.get(0));
                 to.add(oldStructure.get(0));
 
-                return new TextAddResponse(null, to, from);
-            }
-        }
-        return TextAddResponse.EMPTY;
-    }
-
-    public TextAddResponse replaceStructuresRecursiv(List<List<TextStructure>> oldStructure,
-            List<List<TextStructure>> newStructures) {
-        if (oldStructure.isEmpty() || newStructures.isEmpty()) {
-            return TextAddResponse.EMPTY;
-        }
-
-        var childIterator = childListIterator();
-        while (childIterator.hasNext()) {
-            var child = childIterator.next();
-            if (child == oldStructure.get(0).get(0)) {
-                childIterator.remove();
-                // TODO do it better
-                for (int i = 1; i < oldStructure.get(0).size(); i++) {
-                    childIterator.next();
-                    childIterator.remove();
-                }
-                for (var newData : newStructures.get(0)) {
-                    childIterator.add(newData);
-                    newData.setParentStructure(this);
-                    var childIt = newData.childListIterator();
-                    while (childIt.hasNext()) {
-                        childIt.next().setParentStructure(newData);
-                    }
-                }
-
-                if (oldStructure.size() > 1 && this.parentStructure != null) {
-                    var parentResponse = this.parentStructure.replaceStructures(//
-                            oldStructure.subList(1, oldStructure.size()), //
-                            newStructures.subList(1, newStructures.size()) //
-                    );
-
-                    List<List<TextStructure>> from = new LinkedList<>();
-                    List<List<TextStructure>> to = new LinkedList<>();
-
-                    from.addAll(parentResponse.getNewStructures());
-                    from.add(newStructures.get(0));
-                    to.addAll(parentResponse.getRemovedStructures());
-                    to.add(oldStructure.get(0));
-
-                    return new TextAddResponse(null, from, to);
-                }
-
-                notifyChangeDown();
-                notifyChangeUp();
-
-                List<List<TextStructure>> from = new LinkedList<>();
-                List<List<TextStructure>> to = new LinkedList<>();
-
-                from.add(newStructures.get(0));
-                to.add(oldStructure.get(0));
-
-                return new TextAddResponse(null, to, from);
+                return new TextAddResponse(null, null, null);
             }
         }
         return TextAddResponse.EMPTY;
