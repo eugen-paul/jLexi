@@ -113,8 +113,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
         responseSection.children.removeLast();
 
-        //add new element created by mergeWith
-        responseSection.children.add(removedData.getNewStructures().get(removedData.getNewStructures().size() - 1));
+        // add new element created by mergeWith
+        responseSection.children.addAll(removedData.getNewStructures().get(removedData.getNewStructures().size() - 1));
 
         // take over child elements from following structure except the first
         var iteratorSecond = nextSection.childListIterator(1);
@@ -128,9 +128,9 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         removedStructures.addAll(removedData.getRemovedStructures());
         removedStructures.add(List.of(this, nextSection));
 
-        var createdStructures = new LinkedList<TextStructure>();
+        var createdStructures = new LinkedList<List<TextStructure>>();
         createdStructures.addAll(removedData.getNewStructures());
-        createdStructures.add(responseSection);
+        createdStructures.add(List.of(responseSection));
 
         return new TextRemoveResponse(//
                 removedData.getRemovedElement(), //
@@ -155,10 +155,14 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                         iterator.remove();
                         iterator.next();
                         iterator.remove();
-                        var newStructure = removedData.getNewStructures()
+                        var newStructureList = removedData.getNewStructures()
                                 .get(removedData.getNewStructures().size() - 1);
-                        iterator.add(newStructure);
-                        newStructure.setParentStructure(this);
+
+                        newStructureList.forEach(v -> {
+                            iterator.add(v);
+                            v.setParentStructure(this);
+                        });
+
                         break;
                     }
                 }
@@ -187,6 +191,70 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         checkAndSplit();
 
         needRestruct = false;
+    }
+
+    @Override
+    public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
+        var iterator = this.children.listIterator();
+
+        while (iterator.hasNext()) {
+            var elem = iterator.next();
+            if (elem == child) {
+                iterator.remove();
+                to.forEach(iterator::add);
+                to.forEach(v -> v.setParentStructure(this));
+
+                if (to.size() > 1 && to.get(0).getLastElement().isEndOfSection()) {
+                    var splitResult = split();
+                    if (this.parentStructure != null) {
+                        var parentResponse = this.parentStructure.splitChild(this, splitResult);
+
+                        List<List<TextStructure>> newStr = new LinkedList<>();
+                        List<List<TextStructure>> remStr = new LinkedList<>();
+
+                        newStr.addAll(List.of(to));
+                        newStr.addAll(parentResponse.getNewStructures());
+
+                        remStr.addAll(List.of(List.of(child)));
+                        remStr.addAll(parentResponse.getRemovedStructures());
+
+                        return new TextAddResponse(//
+                                null, //
+                                newStr, //
+                                remStr //
+                        );
+                    }
+                }
+
+                return new TextAddResponse(//
+                        null, //
+                        List.of(to), //
+                        List.of(List.of(child)) //
+                );
+            }
+        }
+
+        return TextAddResponse.EMPTY;
+    }
+
+    private List<TextStructure> split() {
+        var first = new TextSection(this.parentStructure, this.configuration);
+        var second = new TextSection(this.parentStructure, this.configuration);
+        var current = first;
+
+        var chiltIterator = this.children.listIterator();
+        while (chiltIterator.hasNext()) {
+            var currentElement = chiltIterator.next();
+            current.children.add(currentElement);
+            if (currentElement.getLastElement().isEndOfSection()) {
+                current = second;
+            }
+        }
+
+        first.setParentStructure(parentStructure);
+        second.setParentStructure(parentStructure);
+
+        return List.of(first, second);
     }
 
     private void checkAndSplit() {
@@ -224,21 +292,6 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         element.setParentStructure(this);
 
         setRestructIfNeeded(element);
-    }
-
-    @Override
-    public boolean addBefore(TextElement position, TextElement element) {
-        var response = super.addBefore(position, element);
-        if (response) {
-            setRestructIfNeeded(element);
-        }
-        return response;
-    }
-
-    private void setRestructIfNeeded(TextElement addedElement) {
-        if (addedElement.isEndOfSection()) {
-            needRestruct = true;
-        }
     }
 
     private void setRestructIfNeeded(TextParagraph addedElement) {

@@ -11,7 +11,7 @@ public class TextRemoveBevorCommant implements TextCommand {
     private TextPosition cursorPosition;
     private TextElement removedElement;
 
-    TextRemoveResponse removedData;
+    private TextRemoveResponse removedData;
 
     public TextRemoveBevorCommant(TextPosition cursorPosition) {
         this.cursorPosition = cursorPosition;
@@ -21,15 +21,24 @@ public class TextRemoveBevorCommant implements TextCommand {
 
     @Override
     public void execute() {
-        var previousPosition = this.cursorPosition.getPreviousPosition();
-        if (previousPosition != null) {
-            removedData = previousPosition.removeElement();
 
-            if (removedData != TextRemoveResponse.EMPTY) {
-                this.cursorPosition = removedData.getNewCursorPosition();
-                this.removedElement = removedData.getRemovedElement();
+        if (this.removedData.isTextReplaced()) {
+            this.cursorPosition.replaceStructures(//
+                    this.removedData.getRemovedStructures(), //
+                    this.removedData.getNewStructures() //
+            );
+        } else {
+            var previousPosition = this.cursorPosition.getPreviousPosition();
+            if (previousPosition != null) {
+                this.removedData = previousPosition.removeElement();
+
+                if (removedData != TextRemoveResponse.EMPTY) {
+                    this.cursorPosition = this.removedData.getNewCursorPosition();
+                    this.removedElement = this.removedData.getRemovedElement();
+                }
             }
         }
+
     }
 
     @Override
@@ -38,13 +47,14 @@ public class TextRemoveBevorCommant implements TextCommand {
             return;
         }
 
-        TextElementAddBeforeCommand command;
         if (this.removedData.isTextReplaced()) {
-            command = new TextElementAddBeforeCommand(this.removedData);
+            this.cursorPosition.replaceStructures(//
+                    this.removedData.getNewStructures(), //
+                    this.removedData.getRemovedStructures() //
+            );
         } else {
-            command = new TextElementAddBeforeCommand(this.removedElement, this.cursorPosition);
+            this.cursorPosition.addBefore(this.removedElement);
         }
-        command.execute();
     }
 
     @Override

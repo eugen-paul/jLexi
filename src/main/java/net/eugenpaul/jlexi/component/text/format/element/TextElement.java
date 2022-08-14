@@ -9,6 +9,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
@@ -107,18 +108,18 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return false;
     }
 
-    public boolean addBefore(TextElement element) {
+    public TextAddResponse addBefore(TextElement element) {
         if (this.structureParent == null) {
-            return false;
+            return TextAddResponse.EMPTY;
         }
         return this.structureParent.addBefore(this, element);
     }
 
-    public boolean splitStructures(List<TextStructure> oldStructure, List<List<TextStructure>> newStructures) {
+    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure, List<List<TextStructure>> newStructures) {
         if (this.structureParent == null) {
-            return false;
+            return TextAddResponse.EMPTY;
         }
-        return this.structureParent.splitStructures(oldStructure, newStructures);
+        return this.structureParent.replaceStructures(oldStructure, newStructures);
     }
 
     public TextRemoveResponse removeElement() {

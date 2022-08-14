@@ -4,33 +4,32 @@ import java.util.Collections;
 import java.util.List;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 @Getter
-public class TextRemoveResponse {
+public class TextAddResponse {
 
-    public static final TextRemoveResponse EMPTY = new TextRemoveResponse(//
-            null, //
+    public static final TextAddResponse EMPTY = new TextAddResponse(//
             null //
     );
 
-    private TextElement removedElement;
     private TextPosition newCursorPosition;
 
-    private List<List<TextStructure>> removedStructures;
     private List<List<TextStructure>> newStructures;
+    private List<List<TextStructure>> removedStructures;
 
-    public TextRemoveResponse(TextElement removedElement, TextPosition newCursorPosition) {
-        this.removedElement = removedElement;
+    public TextAddResponse(TextPosition newCursorPosition) {
+
         this.newCursorPosition = newCursorPosition;
         this.removedStructures = Collections.emptyList();
         this.newStructures = Collections.emptyList();
     }
 
-    public TextRemoveResponse(TextElement removedElement, TextPosition newCursorPosition,
-            List<List<TextStructure>> removedStructures, List<List<TextStructure>> newStructures) {
-        this.removedElement = removedElement;
+    public TextAddResponse(//
+            TextPosition newCursorPosition, //
+            List<List<TextStructure>> newStructures, //
+            List<List<TextStructure>> removedStructures //
+    ) {
         this.newCursorPosition = newCursorPosition;
         this.removedStructures = removedStructures;
         this.newStructures = newStructures;

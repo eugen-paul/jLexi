@@ -61,6 +61,28 @@ public class TextPaneDocument extends TextStructureOfStructure {
     }
 
     @Override
+    public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
+        var iterator = this.children.listIterator();
+
+        while (iterator.hasNext()) {
+            var elem = iterator.next();
+            if (elem == child) {
+                iterator.remove();
+                to.forEach(iterator::add);
+                to.forEach(v -> v.setParentStructure(this));
+
+                return new TextAddResponse(//
+                        null, //
+                        List.of(to), //
+                        List.of(List.of(child)) //
+                );
+            }
+        }
+
+        return TextAddResponse.EMPTY;
+    }
+
+    @Override
     protected TextRemoveResponse mergeChildsWithNext(TextStructure child) {
         var nextChild = getNextChild(child);
 
@@ -75,10 +97,14 @@ public class TextPaneDocument extends TextStructureOfStructure {
                         iterator.remove();
                         iterator.next();
                         iterator.remove();
-                        var newStructure = removedData.getNewStructures()
+                        var newStructureList = removedData.getNewStructures()
                                 .get(removedData.getNewStructures().size() - 1);
-                        newStructure.setParentStructure(this);
-                        iterator.add(newStructure);
+
+                        newStructureList.forEach(v -> {
+                            iterator.add(v);
+                            v.setParentStructure(this);
+                        });
+
                         break;
                     }
                 }

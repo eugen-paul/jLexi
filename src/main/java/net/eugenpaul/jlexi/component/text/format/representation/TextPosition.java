@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 
@@ -24,12 +25,13 @@ public class TextPosition {
         return afterMove(MovePosition.NEXT);
     }
 
-    public boolean addBefore(TextElement element) {
+    public TextAddResponse addBefore(TextElement element) {
         return this.textElement.addBefore(element);
     }
 
-    public boolean splitStructures(List<TextStructure> oldStructure, List<List<TextStructure>> newStructures) {
-        return this.textElement.splitStructures(oldStructure, newStructures);
+    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
+            List<List<TextStructure>> newStructures) {
+        return this.textElement.replaceStructures(oldStructure, newStructures);
     }
 
     public TextRemoveResponse removeElement() {

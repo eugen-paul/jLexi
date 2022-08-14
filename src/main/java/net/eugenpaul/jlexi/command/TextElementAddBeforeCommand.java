@@ -15,7 +15,7 @@ public class TextElementAddBeforeCommand implements TextCommand {
     private TextPosition cursorPosition;
 
     private List<List<TextStructure>> removedStructures;
-    private List<TextStructure> newStructures;
+    private List<List<TextStructure>> newStructures;
 
     public TextElementAddBeforeCommand(TextElement addedElement, TextPosition cursorPosition) {
         this.addedElement = addedElement;
@@ -34,16 +34,23 @@ public class TextElementAddBeforeCommand implements TextCommand {
     @Override
     public void execute() {
         if (newStructures == null || removedStructures == null) {
-            cursorPosition.addBefore(addedElement);
+            var response = cursorPosition.addBefore(addedElement);
+            if (response.isTextReplaced()) {
+                this.removedStructures = response.getNewStructures();
+                this.newStructures = response.getRemovedStructures();
+            }
         } else {
-            cursorPosition.splitStructures(newStructures, removedStructures);
+            cursorPosition.replaceStructures(newStructures, removedStructures);
         }
     }
 
     @Override
     public void unexecute() {
-        TextElementRemoveCommant undoCommand = new TextElementRemoveCommant(addedElement.getTextPosition());
-        undoCommand.execute();
+        if (newStructures == null || removedStructures == null) {
+            addedElement.getTextPosition().removeElement();
+        } else {
+            cursorPosition.replaceStructures(removedStructures, newStructures);
+        }
     }
 
     @Override

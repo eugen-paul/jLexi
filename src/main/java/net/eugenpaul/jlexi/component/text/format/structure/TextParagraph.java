@@ -85,7 +85,7 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
                 removedSeparator, //
                 newCursorPosition, //
                 List.of(List.of(this, nextParagraph)), //
-                List.of(responseParagraph) //
+                List.of(List.of(responseParagraph)) //
         );
     }
 
@@ -161,14 +161,70 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         notifyChangeUp();
         return new TextRemoveResponse(//
                 elementToRemove, //
-                nextElement.get().getTextPosition(), //
-                Collections.emptyList(), //
-                Collections.emptyList() //
+                nextElement.get().getTextPosition() //
         );
     }
 
     @Override
-    public boolean addBefore(TextElement position, TextElement element) {
+    public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
+        // Paragraph cann't be splited by this method
+        return TextAddResponse.EMPTY;
+    }
+
+    @Override
+    public TextAddResponse addBefore(TextElement position, TextElement element) {
+
+        if (position.getStructureParent() != this) {
+            return TextAddResponse.EMPTY;
+        }
+
+        TextAddResponse response = TextAddResponse.EMPTY;
+        if (isSplitNeeded(element)) {
+            var newParagraphs = split(position, element);
+            if (this.parentStructure != null) {
+                var parentSplit = this.parentStructure.splitChild(this, newParagraphs);
+
+                response = new TextAddResponse(//
+                        position.getTextPosition(), //
+                        parentSplit.getNewStructures(), //
+                        parentSplit.getRemovedStructures() //
+                );
+            }
+        } else {
+            response = addElementBefore(position, element);
+        }
+
+        notifyChangeUp();
+
+        return response;
+    }
+
+    private List<TextStructure> split(TextElement position, TextElement separator) {
+        TextParagraph first = new TextParagraph(parentStructure, config, storage);
+        TextParagraph second = new TextParagraph(parentStructure, config, storage);
+        TextParagraph current = first;
+
+        var chiltIterator = this.children.listIterator();
+        while (chiltIterator.hasNext()) {
+            var currentElement = chiltIterator.next();
+            if (currentElement == position) {
+                if (separator != null) {
+                    current.children.add(separator);
+                    separator.setStructureParent(current);
+                }
+                current = second;
+            }
+            current.children.add(currentElement);
+            currentElement.setStructureParent(current);
+        }
+
+        first.setParentStructure(parentStructure);
+        second.setParentStructure(parentStructure);
+
+        return List.of(first, second);
+    }
+
+    private TextAddResponse addElementBefore(TextElement position, TextElement element) {
         var iterator = this.children.listIterator();
         while (iterator.hasNext()) {
             var currentElement = iterator.next();
@@ -176,18 +232,16 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
                 iterator.previous();
                 iterator.add(element);
                 element.setStructureParent(this);
-
-                setRestructIfNeeded(element);
-
                 notifyChangeUp();
-                return true;
+                break;
             }
         }
-        return false;
+        return new TextAddResponse(position.getTextPosition());
     }
 
     @Override
-    public boolean splitStructures(List<TextStructure> oldStructure, List<List<TextStructure>> newStructures) {
+    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
+            List<List<TextStructure>> newStructures) {
         if (this.parentStructure != null) {
             // TODO do it better
             if (!newStructures.isEmpty()) {
@@ -197,9 +251,9 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
                     }
                 }
             }
-            return this.parentStructure.splitStructures(oldStructure, newStructures);
+            return this.parentStructure.replaceStructures(oldStructure, newStructures);
         }
-        return false;
+        return TextAddResponse.EMPTY;
     }
 
     @Override
@@ -211,6 +265,10 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         if (addedElement.isEndOfLine()) {
             this.needRestruct = true;
         }
+    }
+
+    private boolean isSplitNeeded(TextElement addedElement) {
+        return addedElement.isEndOfLine();
     }
 
     @Override

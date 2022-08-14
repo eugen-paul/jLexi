@@ -25,12 +25,19 @@ public class TextElementRemoveCommant implements TextCommand {
 
     @Override
     public void execute() {
-        this.removedData = positionBeforeRemove.removeElement();
+        if (this.removedData.isTextReplaced()) {
+            this.cursorPosition.replaceStructures(//
+                    this.removedData.getRemovedStructures(), //
+                    this.removedData.getNewStructures() //
+            );
+        } else {
+            this.removedData = this.positionBeforeRemove.removeElement();
 
-        if (this.removedData != TextRemoveResponse.EMPTY) {
-            positionAfterRemove = this.removedData.getNewCursorPosition();
-            cursorPosition = positionAfterRemove;
-            removedElement = this.removedData.getRemovedElement();
+            if (this.removedData != TextRemoveResponse.EMPTY) {
+                this.positionAfterRemove = this.removedData.getNewCursorPosition();
+                this.cursorPosition = this.positionAfterRemove;
+                this.removedElement = this.removedData.getRemovedElement();
+            }
         }
     }
 
@@ -40,14 +47,15 @@ public class TextElementRemoveCommant implements TextCommand {
             return;
         }
 
-        TextElementAddBeforeCommand command;
         if (this.removedData.isTextReplaced()) {
-            command = new TextElementAddBeforeCommand(this.removedData);
+            this.cursorPosition.replaceStructures(//
+                    this.removedData.getNewStructures(), //
+                    this.removedData.getRemovedStructures() //
+            );
         } else {
-            command = new TextElementAddBeforeCommand(this.removedElement, this.positionAfterRemove);
+            this.positionAfterRemove.addBefore(this.removedElement);
         }
-        command.execute();
-        this.cursorPosition = positionBeforeRemove;
+        this.cursorPosition = this.positionBeforeRemove;
     }
 
     @Override
@@ -57,6 +65,6 @@ public class TextElementRemoveCommant implements TextCommand {
 
     @Override
     public boolean isEmpty() {
-        return removedElement == null;
+        return this.removedElement == null;
     }
 }

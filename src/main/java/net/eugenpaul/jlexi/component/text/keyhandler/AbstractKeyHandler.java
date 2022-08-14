@@ -32,10 +32,10 @@ public class AbstractKeyHandler {
             return;
         }
 
-        var cursor = component.getMouseCursor();
+        var cursor = this.component.getMouseCursor();
 
         TextElement element = TextElementFactory.fromChar(//
-                storage, //
+                this.storage, //
                 key, //
                 cursor.getTextFormat(), //
                 cursor.getTextFormatEffect()//
@@ -49,7 +49,7 @@ public class AbstractKeyHandler {
             keyPressedEnter();
             break;
         case RIGHT, LEFT, UP, DOWN:
-            component.getMouseCursor().removeSelection();
+            this.component.getMouseCursor().removeSelection();
             keyPressedCursorMove(keyCode);
             break;
         case DELETE:
@@ -72,21 +72,21 @@ public class AbstractKeyHandler {
     }
 
     public void undo() {
-        var cursorPosition = commandDeque.undo();
+        var cursorPosition = this.commandDeque.undo();
 
-        var cursor = component.getMouseCursor();
+        var cursor = this.component.getMouseCursor();
         cursor.moveCursorTo(cursorPosition);
 
-        component.getTextRepresentation().redraw();
+        this.component.getTextRepresentation().redraw();
     }
 
     public void redo() {
-        var cursorPosition = commandDeque.redo();
+        var cursorPosition = this.commandDeque.redo();
 
-        var cursor = component.getMouseCursor();
+        var cursor = this.component.getMouseCursor();
         cursor.moveCursorTo(cursorPosition);
 
-        component.getTextRepresentation().redraw();
+        this.component.getTextRepresentation().redraw();
     }
 
     private void doTextCommant(TextCommand command) {
@@ -96,9 +96,9 @@ public class AbstractKeyHandler {
             return;
         }
 
-        component.getTextRepresentation().redraw();
+        this.component.getTextRepresentation().redraw();
 
-        commandDeque.addCommand(command);
+        this.commandDeque.addCommand(command);
     }
 
     public void onKeyReleased(KeyCode keyCode) {
@@ -106,10 +106,10 @@ public class AbstractKeyHandler {
     }
 
     private void keyPressedEnter() {
-        var cursor = component.getMouseCursor();
+        var cursor = this.component.getMouseCursor();
 
         TextElement addedElement = TextElementFactory.genNewLineChar(//
-                storage, //
+                this.storage, //
                 cursor.getTextFormat(), //
                 cursor.getTextFormatEffect()//
         );
@@ -135,7 +135,7 @@ public class AbstractKeyHandler {
     }
 
     private void keyPressedBackSpace() {
-        var cursor = component.getMouseCursor();
+        var cursor = this.component.getMouseCursor();
 
         TextCommand deleteCommand;
         if (cursor.isTextSelected()) {
@@ -151,7 +151,7 @@ public class AbstractKeyHandler {
     }
 
     private void keyPressedDelete() {
-        var cursor = component.getMouseCursor();
+        var cursor = this.component.getMouseCursor();
 
         TextCommand deleteCommand;
         if (cursor.isTextSelected()) {
@@ -168,8 +168,8 @@ public class AbstractKeyHandler {
     }
 
     private boolean keyPressedCursorMove(KeyCode keyCode) {
-        var cursor = component.getMouseCursor();
-        var representation = component.getTextRepresentation();
+        var cursor = this.component.getMouseCursor();
+        var representation = this.component.getTextRepresentation();
 
         if (null == representation) {
             return false;

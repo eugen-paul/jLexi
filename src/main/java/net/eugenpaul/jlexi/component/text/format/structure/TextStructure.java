@@ -14,11 +14,10 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentati
 import net.eugenpaul.jlexi.utils.Size;
 
 /**
- * Basic structure of a document element, such as a paragraph, a section, or the similar.
- * 
- * The object is the component object of the composite pattern. The object can be a part of other
- * <code>TextStructure</code> and/or contain other <code>TextStructure</code>. It provides the direct child objects with
- * the functions to split, merge and access previous/next objects.
+ * Basic structure of a document element, such as a paragraph, a section, or the similar. The object is the component
+ * object of the composite pattern. The object can be a part of other <code>TextStructure</code> and/or contain other
+ * <code>TextStructure</code>. It provides the direct child objects with the functions to split, merge and access
+ * previous/next objects.
  */
 public abstract class TextStructure implements TextDocumentElement, Splitable<TextStructure>, Empty {
 
@@ -42,6 +41,8 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
      * @return
      */
     protected abstract boolean checkMergeWith(TextStructure element);
+
+    public abstract TextAddResponse splitChild(TextStructure child, List<TextStructure> to);
 
     protected abstract TextRemoveResponse mergeWith(TextStructure element);
 
@@ -136,24 +137,30 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         return child.removeElement(elementToRemove);
     }
 
-    public boolean addBefore(TextElement position, TextElement element) {
+    public TextAddResponse addBefore(TextElement position, TextElement element) {
         TextStructure child = getChildWithElement(element);
         if (null == child) {
-            return false;
+            return TextAddResponse.EMPTY;
         }
         return child.addBefore(position, element);
     }
 
-    public boolean splitStructures(List<TextStructure> oldStructure, List<List<TextStructure>> newStructures) {
+    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
+            List<List<TextStructure>> newStructures) {
         if (oldStructure.isEmpty() || newStructures.isEmpty()) {
-            return false;
+            return TextAddResponse.EMPTY;
         }
 
         var childIterator = childListIterator();
         while (childIterator.hasNext()) {
             var child = childIterator.next();
-            if (child == oldStructure.get(0)) {
+            if (child == oldStructure.get(0).get(0)) {
                 childIterator.remove();
+                // TODO do it better
+                for (int i = 1; i < oldStructure.get(0).size(); i++) {
+                    childIterator.next();
+                    childIterator.remove();
+                }
                 for (var newData : newStructures.get(0)) {
                     childIterator.add(newData);
                     newData.setParentStructure(this);
@@ -164,19 +171,92 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
                 }
 
                 if (oldStructure.size() > 1 && this.parentStructure != null) {
-                    return this.parentStructure.splitStructures(//
+                    var parentResponse = this.parentStructure.replaceStructures(//
                             oldStructure.subList(1, oldStructure.size()), //
                             newStructures.subList(1, newStructures.size()) //
                     );
+
+                    List<List<TextStructure>> from = new LinkedList<>();
+                    List<List<TextStructure>> to = new LinkedList<>();
+
+                    from.addAll(parentResponse.getNewStructures());
+                    from.add(newStructures.get(0));
+                    to.addAll(parentResponse.getRemovedStructures());
+                    to.add(oldStructure.get(0));
+
+                    return new TextAddResponse(null, from, to);
                 }
 
                 notifyChangeDown();
                 notifyChangeUp();
 
-                return true;
+                List<List<TextStructure>> from = new LinkedList<>();
+                List<List<TextStructure>> to = new LinkedList<>();
+
+                from.add(newStructures.get(0));
+                to.add(oldStructure.get(0));
+
+                return new TextAddResponse(null, to, from);
             }
         }
-        return false;
+        return TextAddResponse.EMPTY;
+    }
+
+    public TextAddResponse replaceStructuresRecursiv(List<List<TextStructure>> oldStructure,
+            List<List<TextStructure>> newStructures) {
+        if (oldStructure.isEmpty() || newStructures.isEmpty()) {
+            return TextAddResponse.EMPTY;
+        }
+
+        var childIterator = childListIterator();
+        while (childIterator.hasNext()) {
+            var child = childIterator.next();
+            if (child == oldStructure.get(0).get(0)) {
+                childIterator.remove();
+                // TODO do it better
+                for (int i = 1; i < oldStructure.get(0).size(); i++) {
+                    childIterator.next();
+                    childIterator.remove();
+                }
+                for (var newData : newStructures.get(0)) {
+                    childIterator.add(newData);
+                    newData.setParentStructure(this);
+                    var childIt = newData.childListIterator();
+                    while (childIt.hasNext()) {
+                        childIt.next().setParentStructure(newData);
+                    }
+                }
+
+                if (oldStructure.size() > 1 && this.parentStructure != null) {
+                    var parentResponse = this.parentStructure.replaceStructures(//
+                            oldStructure.subList(1, oldStructure.size()), //
+                            newStructures.subList(1, newStructures.size()) //
+                    );
+
+                    List<List<TextStructure>> from = new LinkedList<>();
+                    List<List<TextStructure>> to = new LinkedList<>();
+
+                    from.addAll(parentResponse.getNewStructures());
+                    from.add(newStructures.get(0));
+                    to.addAll(parentResponse.getRemovedStructures());
+                    to.add(oldStructure.get(0));
+
+                    return new TextAddResponse(null, from, to);
+                }
+
+                notifyChangeDown();
+                notifyChangeUp();
+
+                List<List<TextStructure>> from = new LinkedList<>();
+                List<List<TextStructure>> to = new LinkedList<>();
+
+                from.add(newStructures.get(0));
+                to.add(oldStructure.get(0));
+
+                return new TextAddResponse(null, to, from);
+            }
+        }
+        return TextAddResponse.EMPTY;
     }
 
     protected TextStructure getChildWithElement(TextElement element) {
