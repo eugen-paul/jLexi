@@ -188,53 +188,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         throw new IllegalArgumentException("Cann't restore child structure. Owner or child not found.");
     }
 
-    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
-            List<List<TextStructure>> newStructures) {
-        if (oldStructure.isEmpty() || newStructures.isEmpty()) {
-            return TextAddResponse.EMPTY;
-        }
-
-        var childIterator = childListIterator();
-        while (childIterator.hasNext()) {
-            var child = childIterator.next();
-            if (child == oldStructure.get(0).get(0)) {
-                childIterator.remove();
-                // TODO do it better
-                for (int i = 1; i < oldStructure.get(0).size(); i++) {
-                    childIterator.next();
-                    childIterator.remove();
-                }
-                for (var newData : newStructures.get(0)) {
-                    childIterator.add(newData);
-                    newData.setParentStructure(this);
-                    var childIt = newData.childListIterator();
-                    while (childIt.hasNext()) {
-                        childIt.next().setParentStructure(newData);
-                    }
-                }
-
-                if (oldStructure.size() > 1 && this.parentStructure != null) {
-                    return this.parentStructure.replaceStructures(//
-                            oldStructure.subList(1, oldStructure.size()), //
-                            newStructures.subList(1, newStructures.size()) //
-                    );
-                }
-
-                notifyChangeDown();
-                notifyChangeUp();
-
-                List<List<TextStructure>> from = new LinkedList<>();
-                List<List<TextStructure>> to = new LinkedList<>();
-
-                from.add(newStructures.get(0));
-                to.add(oldStructure.get(0));
-
-                return new TextAddResponse(null, null, null);
-            }
-        }
-        return TextAddResponse.EMPTY;
-    }
-
     protected TextStructure getChildWithElement(TextElement element) {
         var childIterator = childListIterator();
         while (childIterator.hasNext()) {

@@ -240,23 +240,6 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
     }
 
     @Override
-    public TextAddResponse replaceStructures(List<List<TextStructure>> oldStructure,
-            List<List<TextStructure>> newStructures) {
-        if (this.parentStructure != null) {
-            // TODO do it better
-            if (!newStructures.isEmpty()) {
-                for (var str : newStructures.get(0)) {
-                    if (str instanceof TextParagraph) {
-                        ((TextParagraph) str).children.forEach(v -> v.setStructureParent(str));
-                    }
-                }
-            }
-            return this.parentStructure.replaceStructures(oldStructure, newStructures);
-        }
-        return TextAddResponse.EMPTY;
-    }
-
-    @Override
     public void notifyChangeDown() {
         this.representation = null;
     }
