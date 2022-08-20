@@ -12,11 +12,11 @@ public class TextElementReplaceCommand implements TextCommand {
     @Getter
     private TextPosition cursorPosition;
 
-    private TextElementRemoveSelectedCommant removeTextCommand;
+    private TextElementRemoveSelectedCommand removeTextCommand;
 
     public TextElementReplaceCommand(TextElement addedElement, List<TextElement> selectedText) {
         this.addedElement = addedElement;
-        this.removeTextCommand = new TextElementRemoveSelectedCommant(selectedText);
+        this.removeTextCommand = new TextElementRemoveSelectedCommand(selectedText);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class TextElementReplaceCommand implements TextCommand {
 
     @Override
     public void unexecute() {
-        TextElementRemoveCommant undoCommand = new TextElementRemoveCommant(addedElement.getTextPosition());
+        TextElementRemoveCommand undoCommand = new TextElementRemoveCommand(addedElement.getTextPosition());
         undoCommand.execute();
         this.removeTextCommand.unexecute();
     }

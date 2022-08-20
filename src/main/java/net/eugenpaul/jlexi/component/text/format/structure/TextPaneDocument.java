@@ -98,8 +98,7 @@ public class TextPaneDocument extends TextStructureOfStructure {
                         iterator.remove();
                         iterator.next();
                         iterator.remove();
-                        var newStructureList = removedData.getNewStructures()
-                                .get(removedData.getNewStructures().size() - 1);
+                        var newStructureList = removedData.getNewStructures();
 
                         newStructureList.forEach(v -> {
                             iterator.add(v);
@@ -114,7 +113,13 @@ public class TextPaneDocument extends TextStructureOfStructure {
             notifyChangeDown();
             notifyChangeUp();
 
-            return removedData;
+            return new TextRemoveResponse(//
+                    removedData.getRemovedElement(), //
+                    removedData.getNewCursorPosition(), //
+                    this, //
+                    removedData.getRemovedStructures(), //
+                    removedData.getNewStructures() //
+            );
         }
         // Document ist the root class. No need to check if parentStructure is present.
 

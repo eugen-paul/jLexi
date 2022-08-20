@@ -18,8 +18,9 @@ public class TextRemoveResponse {
     private TextElement removedElement;
     private TextPosition newCursorPosition;
 
-    private List<List<TextStructure>> removedStructures;
-    private List<List<TextStructure>> newStructures;
+    private TextStructure owner;
+    private List<TextStructure> removedStructures;
+    private List<TextStructure> newStructures;
 
     public TextRemoveResponse(TextElement removedElement, TextPosition newCursorPosition) {
         this.removedElement = removedElement;
@@ -28,10 +29,11 @@ public class TextRemoveResponse {
         this.newStructures = Collections.emptyList();
     }
 
-    public TextRemoveResponse(TextElement removedElement, TextPosition newCursorPosition,
-            List<List<TextStructure>> removedStructures, List<List<TextStructure>> newStructures) {
+    public TextRemoveResponse(TextElement removedElement, TextPosition newCursorPosition, TextStructure owner,
+            List<TextStructure> removedStructures, List<TextStructure> newStructures) {
         this.removedElement = removedElement;
         this.newCursorPosition = newCursorPosition;
+        this.owner = owner;
         this.removedStructures = removedStructures;
         this.newStructures = newStructures;
     }

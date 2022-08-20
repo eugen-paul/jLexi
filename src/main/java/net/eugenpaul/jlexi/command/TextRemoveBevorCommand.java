@@ -5,40 +5,41 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 
-public class TextElementRemoveCommant implements TextCommand {
+public class TextRemoveBevorCommand implements TextCommand {
 
-    private TextElement removedElement;
-    private TextPosition positionBeforeRemove;
-    private TextPosition positionAfterRemove;
     @Getter
     private TextPosition cursorPosition;
+    private TextElement removedElement;
 
     private TextRemoveResponse removedData;
 
-    public TextElementRemoveCommant(TextPosition cursorPosition) {
-        this.positionBeforeRemove = cursorPosition;
+    public TextRemoveBevorCommand(TextPosition cursorPosition) {
         this.cursorPosition = cursorPosition;
-        this.positionAfterRemove = null;
         this.removedElement = null;
         this.removedData = TextRemoveResponse.EMPTY;
     }
 
     @Override
     public void execute() {
+
         if (this.removedData.isTextReplaced()) {
-            this.cursorPosition.replaceStructures(//
+            this.cursorPosition.replaceStructure(//
+                    this.removedData.getOwner(), //
                     this.removedData.getRemovedStructures(), //
                     this.removedData.getNewStructures() //
             );
         } else {
-            this.removedData = this.positionBeforeRemove.removeElement();
+            var previousPosition = this.cursorPosition.getPreviousPosition();
+            if (previousPosition != null) {
+                this.removedData = previousPosition.removeElement();
 
-            if (this.removedData != TextRemoveResponse.EMPTY) {
-                this.positionAfterRemove = this.removedData.getNewCursorPosition();
-                this.cursorPosition = this.positionAfterRemove;
-                this.removedElement = this.removedData.getRemovedElement();
+                if (removedData != TextRemoveResponse.EMPTY) {
+                    this.cursorPosition = this.removedData.getNewCursorPosition();
+                    this.removedElement = this.removedData.getRemovedElement();
+                }
             }
         }
+
     }
 
     @Override
@@ -48,14 +49,14 @@ public class TextElementRemoveCommant implements TextCommand {
         }
 
         if (this.removedData.isTextReplaced()) {
-            this.cursorPosition.replaceStructures(//
+            this.cursorPosition.replaceStructure(//
+                    this.removedData.getOwner(), //
                     this.removedData.getNewStructures(), //
                     this.removedData.getRemovedStructures() //
             );
         } else {
-            this.positionAfterRemove.addBefore(this.removedElement);
+            this.cursorPosition.addBefore(this.removedElement);
         }
-        this.cursorPosition = this.positionBeforeRemove;
     }
 
     @Override
@@ -67,4 +68,5 @@ public class TextElementRemoveCommant implements TextCommand {
     public boolean isEmpty() {
         return this.removedElement == null;
     }
+
 }

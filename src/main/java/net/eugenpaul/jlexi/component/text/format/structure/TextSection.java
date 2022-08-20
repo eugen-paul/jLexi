@@ -94,6 +94,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
         var nextSection = (TextSection) element;
 
+        // By merging of two Section we must remove the endOfSection-Element at the end of first section. To do this, we
+        // must merge the last child with the first child of incomming element.
         var firstStructure = getLastChild();
         var secondStructure = nextSection.getFirstChild();
 
@@ -114,7 +116,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         responseSection.children.removeLast();
 
         // add new element created by mergeWith
-        responseSection.children.addAll(removedData.getNewStructures().get(removedData.getNewStructures().size() - 1));
+        responseSection.children.addAll(removedData.getNewStructures());
 
         // take over child elements from following structure except the first
         var iteratorSecond = nextSection.childListIterator(1);
@@ -124,19 +126,12 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
         responseSection.children.stream().forEach(v -> v.setParentStructure(responseSection));
 
-        var removedStructures = new LinkedList<List<TextStructure>>();
-        removedStructures.addAll(removedData.getRemovedStructures());
-        removedStructures.add(List.of(this, nextSection));
-
-        var createdStructures = new LinkedList<List<TextStructure>>();
-        createdStructures.addAll(removedData.getNewStructures());
-        createdStructures.add(List.of(responseSection));
-
         return new TextRemoveResponse(//
                 removedData.getRemovedElement(), //
                 removedData.getNewCursorPosition(), //
-                removedStructures, //
-                createdStructures //
+                this, //
+                List.of(this, nextSection), //
+                List.of(responseSection) //
         );
     }
 
@@ -155,10 +150,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                         iterator.remove();
                         iterator.next();
                         iterator.remove();
-                        var newStructureList = removedData.getNewStructures()
-                                .get(removedData.getNewStructures().size() - 1);
 
-                        newStructureList.forEach(v -> {
+                        removedData.getNewStructures().forEach(v -> {
                             iterator.add(v);
                             v.setParentStructure(this);
                         });
@@ -171,7 +164,13 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
             notifyChangeDown();
             notifyChangeUp();
 
-            return removedData;
+            return new TextRemoveResponse(//
+                    removedData.getRemovedElement(), //
+                    removedData.getNewCursorPosition(), //
+                    this, //
+                    removedData.getRemovedStructures(), //
+                    removedData.getNewStructures() //
+            );
         } else if (this.parentStructure != null) {
             return this.parentStructure.mergeChildsWithNext(this);
         }

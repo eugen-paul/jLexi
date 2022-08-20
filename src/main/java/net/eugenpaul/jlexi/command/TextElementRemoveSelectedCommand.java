@@ -8,7 +8,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 
-public class TextElementRemoveSelectedCommant implements TextCommand {
+public class TextElementRemoveSelectedCommand implements TextCommand {
 
     private TextPosition positionBeforeRemove;
     private TextPosition positionAfterRemove;
@@ -18,7 +18,7 @@ public class TextElementRemoveSelectedCommant implements TextCommand {
     private List<TextElement> selectedText;
     private LinkedList<TextElement> removedText;
 
-    public TextElementRemoveSelectedCommant(List<TextElement> selectedText) {
+    public TextElementRemoveSelectedCommand(List<TextElement> selectedText) {
         this.positionBeforeRemove = selectedText.get(0).getTextPosition();
         this.cursorPosition = null;
         this.positionAfterRemove = null;

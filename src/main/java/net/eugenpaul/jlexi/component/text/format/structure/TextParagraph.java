@@ -84,8 +84,9 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         return new TextRemoveResponse(//
                 removedSeparator, //
                 newCursorPosition, //
-                List.of(List.of(this, nextParagraph)), //
-                List.of(List.of(responseParagraph)) //
+                this, //
+                List.of(this, nextParagraph), //
+                List.of(responseParagraph) //
         );
     }
 

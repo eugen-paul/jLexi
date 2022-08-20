@@ -2,10 +2,10 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
-import net.eugenpaul.jlexi.command.TextElementRemoveCommant;
-import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommant;
+import net.eugenpaul.jlexi.command.TextElementRemoveCommand;
+import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommand;
 import net.eugenpaul.jlexi.command.TextElementReplaceCommand;
-import net.eugenpaul.jlexi.command.TextRemoveBevorCommant;
+import net.eugenpaul.jlexi.command.TextRemoveBevorCommand;
 import net.eugenpaul.jlexi.component.text.Cursor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
@@ -94,7 +94,7 @@ public class AbstractKeyHandler {
         this.component.getTextRepresentation().redraw();
     }
 
-    private void doTextCommant(TextCommand command) {
+    private void doTextCommand(TextCommand command) {
         command.execute();
 
         if (command.isEmpty()) {
@@ -150,7 +150,7 @@ public class AbstractKeyHandler {
                     cursor.getPosition());
         }
 
-        doTextCommant(addCommand);
+        doTextCommand(addCommand);
 
         cursor.moveCursorTo(addCommand.getCursorPosition());
     }
@@ -160,13 +160,13 @@ public class AbstractKeyHandler {
 
         TextCommand deleteCommand;
         if (cursor.isTextSelected()) {
-            deleteCommand = new TextElementRemoveSelectedCommant(cursor.getSelectedText());
+            deleteCommand = new TextElementRemoveSelectedCommand(cursor.getSelectedText());
             cursor.removeSelection();
         } else {
-            deleteCommand = new TextRemoveBevorCommant(cursor.getPosition());
+            deleteCommand = new TextRemoveBevorCommand(cursor.getPosition());
         }
 
-        doTextCommant(deleteCommand);
+        doTextCommand(deleteCommand);
 
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
     }
@@ -176,13 +176,13 @@ public class AbstractKeyHandler {
 
         TextCommand deleteCommand;
         if (cursor.isTextSelected()) {
-            deleteCommand = new TextElementRemoveSelectedCommant(cursor.getSelectedText());
+            deleteCommand = new TextElementRemoveSelectedCommand(cursor.getSelectedText());
             cursor.removeSelection();
         } else {
-            deleteCommand = new TextElementRemoveCommant(cursor.getPosition());
+            deleteCommand = new TextElementRemoveCommand(cursor.getPosition());
         }
 
-        doTextCommant(deleteCommand);
+        doTextCommand(deleteCommand);
 
         cursor.moveCursorTo(deleteCommand.getCursorPosition());
 
