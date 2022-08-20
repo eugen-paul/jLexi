@@ -21,10 +21,14 @@ public class AbstractKeyHandler {
     private final ResourceManager storage;
     private final TextCommandsDeque commandDeque;
 
+    // TODO just for test. refactor it
+    private boolean ctrlPressed;
+
     protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage, TextCommandsDeque commandDeque) {
         this.component = component;
         this.storage = storage;
         this.commandDeque = commandDeque;
+        this.ctrlPressed = false;
     }
 
     public void onKeyTyped(Character key) {
@@ -59,6 +63,7 @@ public class AbstractKeyHandler {
             keyPressedBackSpace();
             break;
         case CTRL:
+            ctrlPressed = true;
             break;
         case F1:
             undo();
@@ -102,17 +107,33 @@ public class AbstractKeyHandler {
     }
 
     public void onKeyReleased(KeyCode keyCode) {
-        // TODO
+        switch (keyCode) {
+        case CTRL:
+            ctrlPressed = false;
+            break;
+        default:
+            break;
+        }
     }
 
     private void keyPressedEnter() {
         var cursor = this.component.getMouseCursor();
 
-        TextElement addedElement = TextElementFactory.genNewLineChar(//
-                this.storage, //
-                cursor.getTextFormat(), //
-                cursor.getTextFormatEffect()//
-        );
+        TextElement addedElement;
+
+        if (ctrlPressed) {
+            addedElement = TextElementFactory.genNewSectionChar(//
+                    this.storage, //
+                    cursor.getTextFormat(), //
+                    cursor.getTextFormatEffect()//
+            );
+        } else {
+            addedElement = TextElementFactory.genNewLineChar(//
+                    this.storage, //
+                    cursor.getTextFormat(), //
+                    cursor.getTextFormatEffect()//
+            );
+        }
         addTextElement(cursor, addedElement);
     }
 

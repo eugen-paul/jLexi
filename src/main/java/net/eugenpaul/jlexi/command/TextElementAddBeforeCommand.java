@@ -43,7 +43,6 @@ public class TextElementAddBeforeCommand implements TextCommand {
         if (newStructures == null || removedStructures == null) {
             addedElement.getTextPosition().removeElement();
         } else {
-            // TODO
             cursorPosition.replaceStructure(owner, newStructures, List.of(removedStructures));
         }
     }

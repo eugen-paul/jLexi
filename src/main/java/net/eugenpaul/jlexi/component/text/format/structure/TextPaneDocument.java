@@ -70,6 +70,8 @@ public class TextPaneDocument extends TextStructureOfStructure {
                 to.forEach(iterator::add);
                 to.forEach(v -> v.setParentStructure(this));
 
+                notifyChangeUp();
+
                 return new TextAddResponse(//
                         this, //
                         child, //

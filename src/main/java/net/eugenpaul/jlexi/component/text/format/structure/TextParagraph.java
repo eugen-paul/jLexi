@@ -221,9 +221,6 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
             currentElement.setStructureParent(current);
         }
 
-        first.setParentStructure(parentStructure);
-        second.setParentStructure(parentStructure);
-
         return List.of(first, second);
     }
 

@@ -196,8 +196,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     @Override
     public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
 
-        if (child.getLastElement().isEndOfSection() && this.parentStructure != null) {
-            var splitResult = split(child, to);
+        if (to.get(0).getLastElement().isEndOfSection() && this.parentStructure != null) {
+            var splitResult = replaceAndSplit(child, to);
             return this.parentStructure.splitChild(this, splitResult);
         }
 
@@ -222,7 +222,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         throw new IllegalArgumentException("Cann't split section. Child to replace not found.");
     }
 
-    private List<TextStructure> split(TextStructure position, List<TextStructure> to) {
+    private List<TextStructure> replaceAndSplit(TextStructure position, List<TextStructure> to) {
         var first = new TextSection(this.parentStructure, this.configuration);
         var second = new TextSection(this.parentStructure, this.configuration);
         var current = first;
@@ -234,13 +234,13 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                 current.children.add(to.get(0));
                 to.get(0).setParentStructure(current);
                 current = second;
+                current.children.add(to.get(1));
+                to.get(1).setParentStructure(current);
+            } else {
+                current.children.add(currentElement);
+                currentElement.setParentStructure(current);
             }
-            current.children.add(currentElement);
-            currentElement.setParentStructure(current);
         }
-
-        first.setParentStructure(parentStructure);
-        second.setParentStructure(parentStructure);
 
         return List.of(first, second);
     }
