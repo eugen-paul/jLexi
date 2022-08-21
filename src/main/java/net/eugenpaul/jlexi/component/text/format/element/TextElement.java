@@ -9,6 +9,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
@@ -107,11 +108,22 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         return false;
     }
 
-    public boolean addBefore(TextElement element) {
+    public TextAddResponse addBefore(TextElement element) {
+        if (this.structureParent == null) {
+            return TextAddResponse.EMPTY;
+        }
+        return this.structureParent.addBefore(this, element);
+    }
+
+    public boolean replaceStructure(//
+            TextStructure owner, //
+            List<TextStructure> oldStructure, //
+            List<TextStructure> newStructure //
+    ) {
         if (this.structureParent == null) {
             return false;
         }
-        return this.structureParent.addBefore(this, element);
+        return this.structureParent.replaceStructure(owner, oldStructure, newStructure);
     }
 
     public TextRemoveResponse removeElement() {
@@ -127,7 +139,7 @@ public abstract class TextElement extends Glyph implements EffectHolder, TextDoc
         if (this.structureParent == null) {
             return;
         }
-        this.structureParent.notifyChange();
+        this.structureParent.notifyChangeUp();
     }
 
     public TextElement getTextElement() {

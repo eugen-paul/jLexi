@@ -1,8 +1,11 @@
 package net.eugenpaul.jlexi.command;
 
+import java.util.List;
+
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 
 public class TextElementAddBeforeCommand implements TextCommand {
 
@@ -10,20 +13,38 @@ public class TextElementAddBeforeCommand implements TextCommand {
     @Getter
     private TextPosition cursorPosition;
 
+    private TextStructure owner;
+    private TextStructure removedStructures;
+    private List<TextStructure> newStructures;
+
     public TextElementAddBeforeCommand(TextElement addedElement, TextPosition cursorPosition) {
         this.addedElement = addedElement;
         this.cursorPosition = cursorPosition;
+        this.removedStructures = null;
+        this.newStructures = null;
     }
 
     @Override
     public void execute() {
-        cursorPosition.addBefore(addedElement);
+        if (newStructures == null || removedStructures == null) {
+            var response = cursorPosition.addBefore(addedElement);
+            if (response.isStructureChanged()) {
+                this.owner = response.getOwner();
+                this.removedStructures = response.getRemovedStructures();
+                this.newStructures = response.getNewStructures();
+            }
+        } else {
+            cursorPosition.replaceStructure(owner, List.of(removedStructures), newStructures);
+        }
     }
 
     @Override
     public void unexecute() {
-        TextElementRemoveCommant undoCommand = new TextElementRemoveCommant(addedElement.getTextPosition());
-        undoCommand.execute();
+        if (newStructures == null || removedStructures == null) {
+            addedElement.getTextPosition().removeElement();
+        } else {
+            cursorPosition.replaceStructure(owner, newStructures, List.of(removedStructures));
+        }
     }
 
     @Override

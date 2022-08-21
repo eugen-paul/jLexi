@@ -179,8 +179,8 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
     @Override
     public void resizeTo(Size size) {
         notifyChange();
-        maxSize = size;
-        document.resetStructure();
+        this.maxSize = size;
+        document.notifyChangeDown();
     }
 
     @Override

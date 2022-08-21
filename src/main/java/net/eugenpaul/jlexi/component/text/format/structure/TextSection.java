@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.var;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
@@ -88,62 +87,94 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     @Override
-    protected TextElement mergeWithNext(TextStructure element) {
+    protected TextRemoveResponse mergeWith(TextStructure element) {
         if (!checkMergeWith(element)) {
-            return null;
+            return TextRemoveResponse.EMPTY;
         }
 
-        TextSection nextSection = (TextSection) element;
+        var nextSection = (TextSection) element;
 
-        TextStructure a = children.getLast();
-        TextStructure b = nextSection.children.getFirst();
+        // By merging of two Section we must remove the endOfSection-Element at the end of first section. To do this, we
+        // must merge the last child with the first child of incomming element.
+        var firstStructure = getLastChild();
+        var secondStructure = nextSection.getFirstChild();
 
-        nextSection.children.stream().forEach(v -> v.setParentStructure(this));
-        children.addAll(nextSection.children);
+        var removedData = firstStructure.mergeWith(secondStructure);
+        if (removedData == TextRemoveResponse.EMPTY) {
+            // Structures cann't be merged
+            return TextRemoveResponse.EMPTY;
+        }
 
-        TextElement responseSeparator = a.mergeWithNext(b);
+        var responseSection = new TextSection(parentStructure, configuration);
 
-        children.remove(b);
+        // take over own child elements except the last
+        var iteratorFirst = childListIterator();
+        while (iteratorFirst.hasNext()) {
+            responseSection.children.add(iteratorFirst.next());
+        }
 
-        representation = null;
+        responseSection.children.removeLast();
 
-        return responseSeparator;
+        // add new element created by mergeWith
+        responseSection.children.addAll(removedData.getNewStructures());
+
+        // take over child elements from following structure except the first
+        var iteratorSecond = nextSection.childListIterator(1);
+        while (iteratorSecond.hasNext()) {
+            responseSection.children.add(iteratorSecond.next());
+        }
+
+        responseSection.children.stream().forEach(v -> v.setParentStructure(responseSection));
+
+        return new TextRemoveResponse(//
+                removedData.getRemovedElement(), //
+                removedData.getNewCursorPosition(), //
+                this, //
+                List.of(this, nextSection), //
+                List.of(responseSection) //
+        );
     }
 
     @Override
-    protected TextElement mergeWithPrevious(TextStructure element) {
-        if (!checkMergeWith(element)) {
-            return null;
+    protected TextRemoveResponse mergeChildsWithNext(TextStructure child) {
+        var nextChild = getNextChild(child);
+
+        if (nextChild.isPresent()) {
+            var removedData = child.mergeWith(nextChild.get());
+            if (removedData != TextRemoveResponse.EMPTY) {
+                var iterator = this.children.listIterator();
+                while (iterator.hasNext()) {
+                    // TODO do it better
+                    var currentChild = iterator.next();
+                    if (currentChild == child) {
+                        iterator.remove();
+                        iterator.next();
+                        iterator.remove();
+
+                        removedData.getNewStructures().forEach(v -> {
+                            iterator.add(v);
+                            v.setParentStructure(this);
+                        });
+
+                        break;
+                    }
+                }
+            }
+
+            notifyChangeDown();
+            notifyChangeUp();
+
+            return new TextRemoveResponse(//
+                    removedData.getRemovedElement(), //
+                    removedData.getNewCursorPosition(), //
+                    this, //
+                    removedData.getRemovedStructures(), //
+                    removedData.getNewStructures() //
+            );
+        } else if (this.parentStructure != null) {
+            return this.parentStructure.mergeChildsWithNext(this);
         }
-
-        TextSection previousParagraph = (TextSection) element;
-
-        previousParagraph.children.stream().forEach(v -> v.setParentStructure(this));
-
-        TextElement position = children.getFirst().getFirstElement();
-
-        // After merging two sections, check whether you need to merge the last paragraph of section A with the first
-        // paragraph of section B.
-        TextStructure a = previousParagraph.children.getLast();
-        TextStructure b = children.getFirst();
-
-        children.addAll(0, previousParagraph.children);
-
-        TextElement positionAfterInnerMerge = b.mergeWithPrevious(a);
-
-        if (positionAfterInnerMerge != null) {
-            children.remove(a);
-            position = positionAfterInnerMerge;
-        }
-
-        representation = null;
-
-        return position;
-    }
-
-    @Override
-    public void resetStructure() {
-        representation = null;
+        return TextRemoveResponse.EMPTY;
     }
 
     @Override
@@ -159,6 +190,58 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         checkAndSplit();
 
         needRestruct = false;
+    }
+
+    @Override
+    public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
+
+        if (to.get(0).getLastElement().isEndOfSection() && this.parentStructure != null) {
+            var splitResult = replaceAndSplit(child, to);
+            return this.parentStructure.splitChild(this, splitResult);
+        }
+
+        var chiltIterator = this.children.listIterator();
+        while (chiltIterator.hasNext()) {
+            var elem = chiltIterator.next();
+            if (elem == child) {
+                chiltIterator.remove();
+                to.forEach(chiltIterator::add);
+                to.forEach(v -> v.setParentStructure(this));
+
+                notifyChangeUp();
+
+                return new TextAddResponse(//
+                        this, //
+                        child, //
+                        to //
+                );
+            }
+        }
+
+        throw new IllegalArgumentException("Cann't split section. Child to replace not found.");
+    }
+
+    private List<TextStructure> replaceAndSplit(TextStructure position, List<TextStructure> to) {
+        var first = new TextSection(this.parentStructure, this.configuration);
+        var second = new TextSection(this.parentStructure, this.configuration);
+        var current = first;
+
+        var chiltIterator = this.children.listIterator();
+        while (chiltIterator.hasNext()) {
+            var currentElement = chiltIterator.next();
+            if (currentElement == position) {
+                current.children.add(to.get(0));
+                to.get(0).setParentStructure(current);
+                current = second;
+                current.children.add(to.get(1));
+                to.get(1).setParentStructure(current);
+            } else {
+                current.children.add(currentElement);
+                currentElement.setParentStructure(current);
+            }
+        }
+
+        return List.of(first, second);
     }
 
     private void checkAndSplit() {
@@ -198,21 +281,6 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         setRestructIfNeeded(element);
     }
 
-    @Override
-    public boolean addBefore(TextElement position, TextElement element) {
-        var response = super.addBefore(position, element);
-        if (response) {
-            setRestructIfNeeded(element);
-        }
-        return response;
-    }
-
-    private void setRestructIfNeeded(TextElement addedElement) {
-        if (addedElement.isEndOfSection()) {
-            needRestruct = true;
-        }
-    }
-
     private void setRestructIfNeeded(TextParagraph addedElement) {
         if (addedElement.isEndOfSection()) {
             needRestruct = true;
@@ -226,8 +294,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     @Override
     public void clear() {
-        children.clear();
-        resetStructure();
+        this.children.clear();
+        this.representation = null;
     }
 
     @Override

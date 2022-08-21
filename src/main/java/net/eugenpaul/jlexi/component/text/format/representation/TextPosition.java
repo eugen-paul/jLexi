@@ -1,8 +1,12 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import java.util.List;
+
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 
 public class TextPosition {
 
@@ -21,8 +25,16 @@ public class TextPosition {
         return afterMove(MovePosition.NEXT);
     }
 
-    public boolean addBefore(TextElement element) {
+    public TextAddResponse addBefore(TextElement element) {
         return this.textElement.addBefore(element);
+    }
+
+    public boolean replaceStructure(//
+            TextStructure owner, //
+            List<TextStructure> oldStructure, //
+            List<TextStructure> newStructure //
+    ) {
+        return this.textElement.replaceStructure(owner, oldStructure, newStructure);
     }
 
     public TextRemoveResponse removeElement() {

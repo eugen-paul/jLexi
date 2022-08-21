@@ -19,8 +19,8 @@ public abstract class TextStructureOfStructure extends TextStructure {
 
     @Override
     public void clear() {
-        children.clear();
-        resetStructure();
+        this.children.clear();
+        this.representation = null;
     }
 
     @Override
@@ -31,6 +31,11 @@ public abstract class TextStructureOfStructure extends TextStructure {
     @Override
     protected ListIterator<TextStructure> childListIterator() {
         return children.listIterator();
+    }
+
+    @Override
+    protected ListIterator<TextStructure> childListIterator(int index) {
+        return children.listIterator(index);
     }
 
     @Override

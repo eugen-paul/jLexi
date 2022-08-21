@@ -41,4 +41,9 @@ public final class TextElementFactory {
             TextFormat format, TextFormatEffect formatEffect) {
         return new TextNewSection(parent, storage, parentStructure, format, formatEffect);
     }
+
+    public static TextElement genNewSectionChar(ResourceManager storage, TextFormat format,
+            TextFormatEffect formatEffect) {
+        return genNewSectionChar(null, storage, null, format, formatEffect);
+    }
 }
