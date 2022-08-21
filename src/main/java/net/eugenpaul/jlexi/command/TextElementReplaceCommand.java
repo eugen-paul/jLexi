@@ -8,29 +8,28 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 public class TextElementReplaceCommand implements TextCommand {
 
-    private TextElement addedElement;
     @Getter
     private TextPosition cursorPosition;
 
-    private TextElementRemoveSelectedCommand removeTextCommand;
+    private TextElementRemoveSelectedCommand removeCommand;
+    private TextElementAddBeforeCommand addCommand;
 
     public TextElementReplaceCommand(TextElement addedElement, List<TextElement> selectedText) {
-        this.addedElement = addedElement;
-        this.removeTextCommand = new TextElementRemoveSelectedCommand(selectedText);
+        this.addCommand = new TextElementAddBeforeCommand(addedElement, selectedText.get(0).getTextPosition());
+        this.removeCommand = new TextElementRemoveSelectedCommand(selectedText);
     }
 
     @Override
     public void execute() {
-        this.removeTextCommand.execute();
-        this.cursorPosition = this.removeTextCommand.getCursorPosition();
-        this.cursorPosition.addBefore(addedElement);
+        this.addCommand.execute();
+        this.removeCommand.execute();
+        this.cursorPosition = this.removeCommand.getCursorPosition();
     }
 
     @Override
     public void unexecute() {
-        TextElementRemoveCommand undoCommand = new TextElementRemoveCommand(addedElement.getTextPosition());
-        undoCommand.execute();
-        this.removeTextCommand.unexecute();
+        this.removeCommand.unexecute();
+        this.addCommand.unexecute();
     }
 
     @Override
