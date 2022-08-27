@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
-import java.util.Collections;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
@@ -124,16 +123,6 @@ public class TextPaneDocument extends TextStructureOfStructure {
         // Document ist the root class. No need to check if parentStructure is present.
 
         return TextRemoveResponse.EMPTY;
-    }
-
-    @Override
-    public List<TextStructure> getSplits() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void clearSplitter() {
-        // nothing to do.
     }
 
 }

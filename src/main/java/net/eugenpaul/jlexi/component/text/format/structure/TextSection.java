@@ -29,8 +29,6 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private final Size siteDrawSize;
 
-    private boolean needRestruct = true;
-
     public TextSection(TextStructure parentStructure, TextSectionConfiguration configuration) {
         super(parentStructure);
 
@@ -178,21 +176,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     @Override
-    protected void restructChildren() {
-        super.restructChildren();
-
-        checkRestruct();
-
-        if (!needRestruct) {
-            return;
-        }
-
-        checkAndSplit();
-
-        needRestruct = false;
-    }
-
-    @Override
+    //TODO replace this Function with replaceAndSplit
     public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
 
         if (to.get(0).getLastElement().isEndOfSection() && this.parentStructure != null) {
@@ -244,52 +228,9 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         return List.of(first, second);
     }
 
-    private void checkAndSplit() {
-        var iterator = this.children.listIterator();
-        var newSection = new TextSection(this.parentStructure, this.configuration.copy());
-
-        clearSplitter();
-
-        boolean doSplit = false;
-
-        while (iterator.hasNext()) {
-            var currentElement = (TextParagraph) iterator.next();
-
-            if (doSplit) {
-                newSection.add(currentElement);
-                currentElement.setParentStructure(newSection);
-                iterator.remove();
-            }
-
-            if (currentElement.isEndOfSection()) {
-                if (!newSection.isEmpty()) {
-                    splits.add(newSection);
-                }
-                newSection = new TextSection(this.parentStructure, this.configuration.copy());
-                doSplit = true;
-            }
-        }
-        if (!newSection.isEmpty()) {
-            splits.add(newSection);
-        }
-    }
-
     public void add(TextParagraph element) {
         this.children.add(element);
         element.setParentStructure(this);
-
-        setRestructIfNeeded(element);
-    }
-
-    private void setRestructIfNeeded(TextParagraph addedElement) {
-        if (addedElement.isEndOfSection()) {
-            needRestruct = true;
-        }
-    }
-
-    private void checkRestruct() {
-        needRestruct = children.stream()//
-                .anyMatch(v -> ((TextParagraph) v).isEndOfSection());
     }
 
     @Override

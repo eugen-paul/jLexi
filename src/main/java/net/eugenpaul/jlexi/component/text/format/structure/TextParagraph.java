@@ -19,8 +19,6 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
 
     private TextParagraphConfiguration config;
 
-    private boolean needRestruct = true;
-
     private ResourceManager storage;
 
     public TextParagraph(TextStructure parentStructure, ResourceManager storage) {
@@ -97,17 +95,6 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
     }
 
     @Override
-    protected void restructChildren() {
-        if (!this.needRestruct) {
-            return;
-        }
-
-        checkAndSplit();
-
-        this.needRestruct = false;
-    }
-
-    @Override
     protected void updateParentOfChildRecursiv() {
         var childIterator = children.iterator();
         while (childIterator.hasNext()) {
@@ -116,41 +103,9 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         }
     }
 
-    private void checkAndSplit() {
-        var iterator = this.children.listIterator();
-        var newParagraph = new TextParagraph(this.parentStructure, this.config.copy(), this.storage);
-
-        clearSplitter();
-
-        boolean doSplit = false;
-
-        while (iterator.hasNext()) {
-            var currentElement = iterator.next();
-
-            if (doSplit) {
-                newParagraph.add(currentElement);
-                currentElement.setStructureParent(newParagraph);
-                iterator.remove();
-            }
-
-            if (currentElement.isEndOfLine()) {
-                if (!newParagraph.isEmpty()) {
-                    splits.add(newParagraph);
-                }
-                newParagraph = new TextParagraph(this.parentStructure, this.config.copy(), this.storage);
-                doSplit = true;
-            }
-        }
-        if (!newParagraph.isEmpty()) {
-            splits.add(newParagraph);
-        }
-    }
-
     public void add(TextElement element) {
         this.children.add(element);
         element.setStructureParent(this);
-
-        setRestructIfNeeded(element);
     }
 
     @Override
@@ -242,12 +197,6 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
     @Override
     public void notifyChangeDown() {
         this.representation = null;
-    }
-
-    private void setRestructIfNeeded(TextElement addedElement) {
-        if (addedElement.isEndOfLine()) {
-            this.needRestruct = true;
-        }
     }
 
     private boolean isSplitNeeded(TextElement addedElement) {

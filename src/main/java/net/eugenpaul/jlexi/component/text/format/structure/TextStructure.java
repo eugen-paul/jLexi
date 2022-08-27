@@ -19,7 +19,7 @@ import net.eugenpaul.jlexi.utils.Size;
  * <code>TextStructure</code>. It provides the direct child objects with the functions to split, merge and access
  * previous/next objects.
  */
-public abstract class TextStructure implements TextDocumentElement, Splitable<TextStructure>, Empty {
+public abstract class TextStructure implements TextDocumentElement, Empty {
 
     @Getter
     @Setter
@@ -98,8 +98,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
         return Optional.empty();
     }
 
-    protected abstract void restructChildren();
-
     public void notifyChangeUp() {
         this.representation = null;
         if (null != this.parentStructure) {
@@ -126,7 +124,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
 
     public List<TextRepresentation> getRepresentation(Size size) {
         if (null == this.representation) {
-            restructChildren();
             this.representation = new LinkedList<>();
             var iterator = childListIterator();
             while (iterator.hasNext()) {
@@ -197,16 +194,6 @@ public abstract class TextStructure implements TextDocumentElement, Splitable<Te
             }
         }
         return null;
-    }
-
-    @Override
-    public List<TextStructure> getSplits() {
-        return splits;
-    }
-
-    @Override
-    public void clearSplitter() {
-        splits.clear();
     }
 
     protected abstract ListIterator<TextStructure> childListIterator();
