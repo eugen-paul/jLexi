@@ -101,7 +101,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         textPanel = new TextPanePanel(this);
         textPanel.set(document.getRepresentation(maxSize));
 
-        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
+        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
         this.cachedDrawable.addDrawable(textPanel.getDrawable(), 0, 0);
 
         return cachedDrawable.draw();
