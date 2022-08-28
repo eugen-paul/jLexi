@@ -52,7 +52,10 @@ public class Cursor implements ModelPropertyChangeListner {
     }
 
     public TextPosition getPosition() {
-        return this.textElement.getTextPosition();
+        if (this.textElement != null) {
+            return this.textElement.getTextPosition();
+        }
+        return null;
     }
 
     public boolean isTextSelected() {

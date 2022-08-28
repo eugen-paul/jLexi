@@ -125,17 +125,17 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         );
 
         this.compositor.setCenterH(!isHBarVisible());
-        this.compositor.setHOffset(hScrollPosition);
+        this.compositor.setHOffset(this.hScrollPosition);
 
         this.compositor.setCenterV(!isVBarVisible());
-        this.compositor.setVOffset(vScrollPosition);
+        this.compositor.setVOffset(this.vScrollPosition);
 
-        hBar.setIntervalOffset(hScrollPosition);
-        vBar.setIntervalOffset(vScrollPosition);
+        this.hBar.setIntervalOffset(this.hScrollPosition);
+        this.vBar.setIntervalOffset(this.vScrollPosition);
 
-        Glyph composedGlyphs = this.compositor.compose(component, childSize);
+        Glyph composedGlyphs = this.compositor.compose(this.component, childSize);
 
-        this.cachedDrawable = new DrawableSketchImpl(backgroundColor);
+        this.cachedDrawable = new DrawableSketchImpl(this.backgroundColor);
         var childDraw = composedGlyphs.getDrawable();
 
         this.cachedDrawable.addDrawable(childDraw, 0, 0, 0);
@@ -152,20 +152,20 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
             return;
         }
 
-        int componentHeight = component.getSize().getHeight();
+        int componentHeight = this.component.getSize().getHeight();
         int paneHeight = getSize().getHeight();
-        vBar.setIntervalTotal(componentHeight);
-        vBar.setIntervalDisplayed(paneHeight);
-        vBar.setIntervalOffset(vScrollPosition * (-1L));
-        vBar.setRelativPosition(new Vector2d(//
-                getSize().getWidth() - vBar.getSize().getWidth(), //
+        this.vBar.setIntervalTotal(componentHeight);
+        this.vBar.setIntervalDisplayed(paneHeight);
+        this.vBar.setIntervalOffset(this.vScrollPosition * (-1L));
+        this.vBar.setRelativPosition(new Vector2d(//
+                getSize().getWidth() - this.vBar.getSize().getWidth(), //
                 0 //
         ));
 
         this.cachedDrawable.addDrawable(//
-                vBar.getDrawable(), //
-                vBar.getRelativPosition().getX(), //
-                vBar.getRelativPosition().getY(), //
+                this.vBar.getDrawable(), //
+                this.vBar.getRelativPosition().getX(), //
+                this.vBar.getRelativPosition().getY(), //
                 1 //
         );
     }
@@ -179,7 +179,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         int hBarHeight = this.hBar.getSize().getHeight();
 
         DrawableSketch bar = new DrawableSketchImpl(//
-                scrollbarColor, //
+                this.scrollbarColor, //
                 new Size(vBarWidth, hBarHeight)//
         );
 
@@ -192,30 +192,28 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
     }
 
     private boolean isVBarVisible() {
-        if (showVBar == ScrollbarShowType.ALWAYS) {
+        if (this.showVBar == ScrollbarShowType.ALWAYS) {
             return true;
         }
-        if (showVBar == ScrollbarShowType.NOT) {
+        if (this.showVBar == ScrollbarShowType.NOT) {
             return false;
         }
-        int componentHeight = component.getSize().getHeight();
+        int componentHeight = this.component.getSize().getHeight();
         int paneHeight = getSize().getHeight();
-        paneHeight -= hBar.getSize().getHeight();
+        paneHeight -= this.hBar.getSize().getHeight();
         return paneHeight <= componentHeight;
     }
 
     private boolean isHBarVisible() {
-        if (showHBar == ScrollbarShowType.ALWAYS) {
+        if (this.showHBar == ScrollbarShowType.ALWAYS) {
             return true;
         }
-        if (showHBar == ScrollbarShowType.NOT) {
+        if (this.showHBar == ScrollbarShowType.NOT) {
             return false;
         }
-        int componentWidth = component.getSize().getWidth();
+        int componentWidth = this.component.getSize().getWidth();
         int paneWidth = getSize().getWidth();
-
-        paneWidth -= vBar.getSize().getWidth();
-
+        paneWidth -= this.vBar.getSize().getWidth();
         return paneWidth <= componentWidth;
     }
 
@@ -224,20 +222,20 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
             return;
         }
 
-        int componentWidth = component.getSize().getWidth();
+        int componentWidth = this.component.getSize().getWidth();
         int paneWidth = getSize().getWidth();
-        hBar.setIntervalTotal(componentWidth);
-        hBar.setIntervalDisplayed(paneWidth);
-        hBar.setIntervalOffset(hScrollPosition * (-1L));
-        hBar.setRelativPosition(new Vector2d(//
+        this.hBar.setIntervalTotal(componentWidth);
+        this.hBar.setIntervalDisplayed(paneWidth);
+        this.hBar.setIntervalOffset(this.hScrollPosition * (-1L));
+        this.hBar.setRelativPosition(new Vector2d(//
                 0, //
                 getSize().getHeight() - hBar.getSize().getHeight() //
         ));
 
         this.cachedDrawable.addDrawable(//
-                hBar.getDrawable(), //
-                hBar.getRelativPosition().getX(), //
-                hBar.getRelativPosition().getY(), //
+                this.hBar.getDrawable(), //
+                this.hBar.getRelativPosition().getX(), //
+                this.hBar.getRelativPosition().getY(), //
                 1 //
         );
     }
@@ -249,7 +247,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
 
     @Override
     public void resizeTo(Size size) {
-        cachedDrawable = null;
+        this.cachedDrawable = null;
         setSize(size);
         resizeComponent();
         getDrawable();
@@ -273,15 +271,15 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         LOGGER.trace("Click on Scrollbar. Position ({},{}).", mouseX, mouseY);
 
         if (isClickOnVBar(mouseX)) {
-            vBar.onMouseClick(//
-                    mouseX - vBar.getRelativPosition().getX(), //
-                    mouseY - vBar.getRelativPosition().getY(), //
+            this.vBar.onMouseClick(//
+                    mouseX - this.vBar.getRelativPosition().getX(), //
+                    mouseY - this.vBar.getRelativPosition().getY(), //
                     button //
             );
         } else if (isClickOnHBar(mouseY)) {
-            hBar.onMouseClick(//
-                    mouseX - hBar.getRelativPosition().getX(), //
-                    mouseY - hBar.getRelativPosition().getY(), //
+            this.hBar.onMouseClick(//
+                    mouseX - this.hBar.getRelativPosition().getX(), //
+                    mouseY - this.hBar.getRelativPosition().getY(), //
                     button //
             );
         }
@@ -293,12 +291,12 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         if (type == ScrollbarType.VERTICAL) {
             if (offset <= 0) {
                 // scroll up
-                vScrollPosition = 0;
+                this.vScrollPosition = 0;
             } else {
                 // scroll down
                 int componentHeight = component.getSize().getHeight();
                 int paneHeight = getSize().getHeight();
-                vScrollPosition = Math.max(//
+                this.vScrollPosition = Math.max(//
                         Math.min(0, -1 * (componentHeight - paneHeight)), //
                         -offset //
                 );
@@ -306,12 +304,12 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         } else {
             if (offset < 0) {
                 // scroll left
-                hScrollPosition = 0;
+                this.hScrollPosition = 0;
             } else {
                 // scroll right
                 int componenttWidth = component.getSize().getWidth();
                 int panetWidth = getSize().getWidth();
-                hScrollPosition = Math.max(//
+                this.hScrollPosition = Math.max(//
                         Math.min(0, -1 * (componenttWidth - panetWidth)), //
                         -offset //
                 );
@@ -322,7 +320,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
 
     @Override
     public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
-        vBar.onMouseWhellMoved(mouseX, mouseY, direction);
+        this.vBar.onMouseWhellMoved(mouseX, mouseY, direction);
         redraw();
     }
 
@@ -330,15 +328,15 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
     protected MouseDraggable onMousePressedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Pressed on Border. Position ({},{}).", mouseX, mouseY);
         if (isClickOnVBar(mouseX)) {
-            return vBar.onMousePressed(//
-                    mouseX - vBar.getRelativPosition().getX(), //
-                    mouseY - vBar.getRelativPosition().getY(), //
+            return this.vBar.onMousePressed(//
+                    mouseX - this.vBar.getRelativPosition().getX(), //
+                    mouseY - this.vBar.getRelativPosition().getY(), //
                     button //
             );
         } else if (isClickOnHBar(mouseY)) {
-            return hBar.onMousePressed(//
-                    mouseX - hBar.getRelativPosition().getX(), //
-                    mouseY - hBar.getRelativPosition().getY(), //
+            return this.hBar.onMousePressed(//
+                    mouseX - this.hBar.getRelativPosition().getX(), //
+                    mouseY - this.hBar.getRelativPosition().getY(), //
                     button //
             );
         }
@@ -349,15 +347,15 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
     protected MouseDraggable onMouseReleasedOutsideComponent(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Released on Border. Position ({},{}).", mouseX, mouseY);
         if (isClickOnVBar(mouseX)) {
-            return vBar.onMouseReleased(//
-                    mouseX - vBar.getRelativPosition().getX(), //
-                    mouseY - vBar.getRelativPosition().getY(), //
+            return this.vBar.onMouseReleased(//
+                    mouseX - this.vBar.getRelativPosition().getX(), //
+                    mouseY - this.vBar.getRelativPosition().getY(), //
                     button //
             );
         } else if (isClickOnHBar(mouseY)) {
-            return hBar.onMouseReleased(//
-                    mouseX - hBar.getRelativPosition().getX(), //
-                    mouseY - hBar.getRelativPosition().getY(), //
+            return this.hBar.onMouseReleased(//
+                    mouseX - this.hBar.getRelativPosition().getX(), //
+                    mouseY - this.hBar.getRelativPosition().getY(), //
                     button //
             );
         }

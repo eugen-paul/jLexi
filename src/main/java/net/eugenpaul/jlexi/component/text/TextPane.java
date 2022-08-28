@@ -98,11 +98,11 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
             return this.cachedDrawable.draw();
         }
 
-        textPanel = new TextPanePanel(this);
-        textPanel.set(document.getRepresentation(maxSize));
+        this.textPanel = new TextPanePanel(this);
+        this.textPanel.set(this.document.getRepresentation(this.maxSize));
 
         this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        this.cachedDrawable.addDrawable(textPanel.getDrawable(), 0, 0);
+        this.cachedDrawable.addDrawable(this.textPanel.getDrawable(), 0, 0);
 
         return cachedDrawable.draw();
     }
@@ -120,7 +120,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @Override
     public void setText(List<TextSection> text) {
         LOGGER.trace("Set Document.text from List<TextSection>");
-        document = new TextPaneDocument(text, this, this.storage);
+        this.document = new TextPaneDocument(text, this, this.storage);
         notifyChange();
     }
 
@@ -128,12 +128,13 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     public void resizeTo(Size size) {
         notifyChange();
         this.maxSize = size;
-        document.notifyChangeDown();
+        this.document.notifyChangeDown();
     }
 
     @Override
     public Size getSize() {
-        return textPanel.getSize();
+        getDrawable();
+        return this.textPanel.getSize();
     }
 
     @Override
@@ -150,7 +151,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
         if (this.textSelectionFrom != null) {
-            TextPosition textSelectionTo = textPanel.getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
+            TextPosition textSelectionTo = this.textPanel.getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
 
             if (textSelectionTo != null) {
                 LOGGER.trace("Selection from: {} to: {}", //
@@ -164,16 +165,16 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
                 );
 
                 if (!selectedText.isEmpty()) {
-                    mouseCursor.setTextSelection(selectedText);
+                    this.mouseCursor.setTextSelection(selectedText);
                 }
 
-                mouseCursor.moveCursorTo(textSelectionTo);
+                this.mouseCursor.moveCursorTo(textSelectionTo);
             }
         }
     }
 
     private List<TextElement> getSelectedText(TextElement posA, TextElement posB) {
-        Optional<Boolean> aIsFirst = document.isABeforB(posA, posB);
+        Optional<Boolean> aIsFirst = this.document.isABeforB(posA, posB);
 
         if (aIsFirst.isEmpty()) {
             LOGGER.trace("Empty selection");
@@ -182,21 +183,21 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         if (aIsFirst.get().booleanValue()) {
             LOGGER.trace("{} is first", posA);
-            return document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
+            return this.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
         }
 
         LOGGER.trace("{} is first", posB);
-        return document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
+        return this.document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
     }
 
     @Override
     public void undo(String name) {
-        keyHandler.undo();
+        this.keyHandler.undo();
     }
 
     @Override
     public void redo(String name) {
-        keyHandler.redo();
+        this.keyHandler.redo();
     }
 
     @Override
@@ -217,19 +218,19 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
     @Override
     public TextRepresentation getTextRepresentation() {
-        return textPanel;
+        return this.textPanel;
     }
 
     @Override
     public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
-        mouseCursor.removeSelection();
+        this.mouseCursor.removeSelection();
 
-        textSelectionFrom = textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
+        this.textSelectionFrom = this.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
 
-        if (textSelectionFrom != null) {
+        if (this.textSelectionFrom != null) {
             LOGGER.trace("MousePressed on TextPane. Position ({},{}). Element {}", mouseX, mouseY,
-                    textSelectionFrom.getTextElement());
+                    this.textSelectionFrom.getTextElement());
         } else {
             LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
         }
@@ -240,7 +241,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @Override
     public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("MouseReleased on TextPane. Position ({},{}).", mouseX, mouseY);
-        textSelectionFrom = null;
+        this.textSelectionFrom = null;
         return this;
     }
 
@@ -248,13 +249,13 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
         LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
 
-        mouseCursor.removeSelection();
+        this.mouseCursor.removeSelection();
 
-        var clickedElement = textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
+        var clickedElement = this.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
 
         if (clickedElement != null) {
             LOGGER.trace("Document Click on Element: {}.", clickedElement);
-            mouseCursor.moveCursorTo(clickedElement);
+            this.mouseCursor.moveCursorTo(clickedElement);
         } else {
             LOGGER.trace("Document Click on Element: NONE.");
         }
