@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,8 @@ import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextCommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.controller.AbstractController;
+import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
+import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.model.InterfaceModel;
@@ -40,7 +43,7 @@ import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 
 @Slf4j
 public class TextPanePanel extends TextRepresentationOfRepresentation implements ChangeListener, GuiEvents,
-        TextUpdateable, KeyHandlerable, MouseDraggable, UndoRedoable, InterfaceModel {
+        TextUpdateable, KeyHandlerable, MouseDraggable, UndoRedoable, InterfaceModel, ModelPropertyChangeListner {
 
     private TextPaneDocument document;
 
@@ -87,6 +90,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
         this.textSelectionFrom = null;
 
         controller.addModel(this);
+        controller.addView(this);
     }
 
     @Override
@@ -349,5 +353,21 @@ public class TextPanePanel extends TextRepresentationOfRepresentation implements
     @Override
     public void redo(String name) {
         keyHandler.redo();
+    }
+
+    @Override
+    public void modelPropertyChange(PropertyChangeEvent evt) {
+        if (!evt.getSource().equals(this.cursorName)) {
+            return;
+        }
+
+        ViewPropertyChangeType type = ViewPropertyChangeType.fromValue(evt.getPropertyName());
+        if (type != ViewPropertyChangeType.CURSOR_MOVE || !(evt.getNewValue() instanceof TextElement)) {
+            return;
+        }
+
+        var pos = ((TextElement) evt.getNewValue()).getRelativPositionTo(this);
+
+        LOGGER.debug("TextPanel get ViewPropertyChangeType.CURSOR_MOVE. " + pos);
     }
 }
