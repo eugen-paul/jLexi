@@ -6,12 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
-import net.eugenpaul.jlexi.component.helper.KeyEventAdapterToKeyPressable;
-import net.eugenpaul.jlexi.component.helper.MouseEventAdapterToMouseClickable;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
@@ -28,6 +27,9 @@ import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
+import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
+import net.eugenpaul.jlexi.design.listener.MouseDragAdapter;
+import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.model.InterfaceModel;
@@ -37,16 +39,14 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
-import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 
 @Slf4j
-public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, MouseDraggable,
-        UndoRedoable, InterfaceModel, ModelPropertyChangeListner {
+public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,
+        InterfaceModel, ModelPropertyChangeListner {
 
     private TextPanePanel textPanel;
-    private ResourceManager storage;
 
     private TextPaneDocument document;
     private AbstractKeyHandler keyHandler;
@@ -70,7 +70,6 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         );
 
         this.cursorName = cursorPrefix + "textPaneCursor";
-        this.storage = storage;
 
         TextCommandsDeque commandDeque = new TextCommandsDeque();
 
@@ -82,9 +81,9 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         this.textSelectionFrom = null;
 
-        // TODO move the event-functions to the event-adapter-classes
-        // this.mouseEventAdapter = new MouseEventAdapterToMouseClickable(this);
-        // this.keyEventAdapter = new KeyEventAdapterToKeyPressable(this);
+        this.mouseEventAdapter = new MouseEventAdapterIntern(this);
+        this.keyEventAdapter = new KeyEventAdapterIntern(this);
+        this.mouseDragAdapter = new MouseDraggedIntern(this);
 
         resizeTo(Size.ZERO_SIZE);
 
@@ -120,7 +119,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @Override
     public void setText(List<TextSection> text) {
         LOGGER.trace("Set Document.text from List<TextSection>");
-        this.document = new TextPaneDocument(text, this, this.storage);
+        this.document.setText(text);
         notifyChange();
     }
 
@@ -140,54 +139,6 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @Override
     public boolean isResizeble() {
         return true;
-    }
-
-    @Override
-    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        Vector2d relPosToMain = getRelativPositionToMainParent();
-
-        int mouseRelX = mouseX - relPosToMain.getX();
-        int mouseRelY = mouseY - relPosToMain.getY();
-
-        LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
-        if (this.textSelectionFrom != null) {
-            TextPosition textSelectionTo = this.textPanel.getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
-
-            if (textSelectionTo != null) {
-                LOGGER.trace("Selection from: {} to: {}", //
-                        this.textSelectionFrom.getTextElement(), //
-                        textSelectionTo.getTextElement() //
-                );
-
-                List<TextElement> selectedText = getSelectedText(//
-                        textSelectionFrom.getTextElement(), //
-                        textSelectionTo.getTextElement() //
-                );
-
-                if (!selectedText.isEmpty()) {
-                    this.mouseCursor.setTextSelection(selectedText);
-                }
-
-                this.mouseCursor.moveCursorTo(textSelectionTo);
-            }
-        }
-    }
-
-    private List<TextElement> getSelectedText(TextElement posA, TextElement posB) {
-        Optional<Boolean> aIsFirst = this.document.isABeforB(posA, posB);
-
-        if (aIsFirst.isEmpty()) {
-            LOGGER.trace("Empty selection");
-            return Collections.emptyList();
-        }
-
-        if (aIsFirst.get().booleanValue()) {
-            LOGGER.trace("{} is first", posA);
-            return this.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
-        }
-
-        LOGGER.trace("{} is first", posB);
-        return this.document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
     }
 
     @Override
@@ -221,66 +172,127 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         return this.textPanel;
     }
 
-    @Override
-    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
-        this.mouseCursor.removeSelection();
+    @AllArgsConstructor
+    private class MouseEventAdapterIntern implements MouseEventAdapter {
+        private TextPane textpane;
 
-        this.textSelectionFrom = this.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
+        @Override
+        public MouseDraggable mousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
 
-        if (this.textSelectionFrom != null) {
-            LOGGER.trace("MousePressed on TextPane. Position ({},{}). Element {}", mouseX, mouseY,
-                    this.textSelectionFrom.getTextElement());
-        } else {
             LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
+            this.textpane.mouseCursor.removeSelection();
+
+            this.textpane.textSelectionFrom = this.textpane.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
+
+            if (this.textpane.textSelectionFrom != null) {
+                LOGGER.trace("MousePressed on TextPane. Position ({},{}). Element {}", mouseX, mouseY,
+                        this.textpane.textSelectionFrom.getTextElement());
+            } else {
+                LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
+            }
+
+            return this.textpane;
         }
 
-        return this;
-    }
+        @Override
+        public MouseDraggable mouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+            LOGGER.trace("MouseReleased on TextPane. Position ({},{}).", mouseX, mouseY);
+            this.textpane.textSelectionFrom = null;
+            return this.textpane;
+        }
 
-    @Override
-    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("MouseReleased on TextPane. Position ({},{}).", mouseX, mouseY);
-        this.textSelectionFrom = null;
-        return this;
-    }
+        @Override
+        public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
+            LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
 
-    @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("Click on TextPane. Position ({},{}).", mouseX, mouseY);
+            this.textpane.mouseCursor.removeSelection();
 
-        this.mouseCursor.removeSelection();
+            var clickedElement = this.textpane.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
 
-        var clickedElement = this.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
-
-        if (clickedElement != null) {
-            LOGGER.trace("Document Click on Element: {}.", clickedElement);
-            this.mouseCursor.moveCursorTo(clickedElement);
-        } else {
-            LOGGER.trace("Document Click on Element: NONE.");
+            if (clickedElement != null) {
+                LOGGER.trace("Document Click on Element: {}.", clickedElement);
+                this.textpane.mouseCursor.moveCursorTo(clickedElement);
+            } else {
+                LOGGER.trace("Document Click on Element: NONE.");
+            }
         }
     }
 
-    @Override
-    public void onKeyTyped(Character key) {
-        LOGGER.trace("Key typed: {}", key);
-        this.keyHandler.onKeyTyped(key);
+    @AllArgsConstructor
+    private class KeyEventAdapterIntern implements KeyEventAdapter {
+
+        private TextPane textpane;
+
+        @Override
+        public void keyTyped(Character key) {
+            LOGGER.trace("Key typed: {}", key);
+            this.textpane.keyHandler.onKeyTyped(key);
+        }
+
+        @Override
+        public void keyPressed(KeyCode keyCode) {
+            LOGGER.trace("Key pressed: {}", keyCode);
+            this.textpane.keyHandler.onKeyPressed(keyCode);
+        }
+
+        @Override
+        public void keyReleased(KeyCode keyCode) {
+            LOGGER.trace("Key released: {}", keyCode);
+            this.textpane.keyHandler.onKeyReleased(keyCode);
+        }
     }
 
-    @Override
-    public void onKeyPressed(KeyCode keyCode) {
-        LOGGER.trace("Key pressed: {}", keyCode);
-        this.keyHandler.onKeyPressed(keyCode);
-    }
+    @AllArgsConstructor
+    private class MouseDraggedIntern implements MouseDragAdapter {
+        private TextPane textpane;
 
-    @Override
-    public void onKeyReleased(KeyCode keyCode) {
-        LOGGER.trace("Key released: {}", keyCode);
-        this.keyHandler.onKeyReleased(keyCode);
-    }
+        @Override
+        public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+            Vector2d relPosToMain = this.textpane.getRelativPositionToMainParent();
 
-    @Override
-    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
-        // TODO
+            int mouseRelX = mouseX - relPosToMain.getX();
+            int mouseRelY = mouseY - relPosToMain.getY();
+
+            LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
+            if (this.textpane.textSelectionFrom != null) {
+                TextPosition textSelectionTo = this.textpane.textPanel
+                        .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
+
+                if (textSelectionTo != null) {
+                    LOGGER.trace("Selection from: {} to: {}", //
+                            this.textpane.textSelectionFrom.getTextElement(), //
+                            textSelectionTo.getTextElement() //
+                    );
+
+                    List<TextElement> selectedText = getSelectedText(//
+                            textSelectionFrom.getTextElement(), //
+                            textSelectionTo.getTextElement() //
+                    );
+
+                    if (!selectedText.isEmpty()) {
+                        this.textpane.mouseCursor.setTextSelection(selectedText);
+                    }
+
+                    this.textpane.mouseCursor.moveCursorTo(textSelectionTo);
+                }
+            }
+        }
+
+        private List<TextElement> getSelectedText(TextElement posA, TextElement posB) {
+            Optional<Boolean> aIsFirst = this.textpane.document.isABeforB(posA, posB);
+
+            if (aIsFirst.isEmpty()) {
+                LOGGER.trace("Empty selection");
+                return Collections.emptyList();
+            }
+
+            if (aIsFirst.get().booleanValue()) {
+                LOGGER.trace("{} is first", posA);
+                return this.textpane.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
+            }
+
+            LOGGER.trace("{} is first", posB);
+            return this.textpane.document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
+        }
     }
 }

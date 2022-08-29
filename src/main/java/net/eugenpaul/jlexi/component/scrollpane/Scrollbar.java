@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import net.eugenpaul.jlexi.component.button.Button;
 import net.eugenpaul.jlexi.component.formatting.ToSingleGlyphCompositor;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.panes.ImageGlyph;
+import net.eugenpaul.jlexi.design.listener.MouseDragAdapter;
+import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.utils.Color;
@@ -27,7 +30,7 @@ import net.eugenpaul.jlexi.utils.helper.CollisionHelper;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 @Slf4j
-public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
+public abstract class Scrollbar extends GuiGlyph {
 
     public enum ScrollbarType {
         VERTICAL, HORIZONTAL
@@ -63,6 +66,8 @@ public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
 
     protected Scrollbar(Glyph parent) {
         super(parent);
+        this.mouseEventAdapter = new MouseEventAdapterIntern(this);
+        this.mouseDragAdapter = new MouseDraggedIntern(this);
     }
 
     @Override
@@ -213,101 +218,6 @@ public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
     }
 
     @Override
-    public void onMouseClick(Integer mouseX, Integer mouseY, MouseButton button) {
-        if (scrollCallback == null) {
-            return;
-        }
-
-        if (CollisionHelper.isPointOnArea(mouseX, mouseY, buttonFirst.getRelativPosition(), buttonFirst.getSize())) {
-            scrollCallback.scrolledTo((int) (intervalOffset - buttonStep));
-        } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, buttonLast.getRelativPosition(),
-                buttonLast.getSize())) {
-            scrollCallback.scrolledTo((int) (intervalOffset + buttonStep));
-        } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, runnerGlyph.getRelativPosition(),
-                runnerGlyph.getSize())) {
-            // TODO
-        } else if (CollisionHelper.isPointOnArea(mouseX, mouseY, backgroundGlyph.getRelativPosition(),
-                backgroundGlyph.getSize())) {
-            boolean isClickFirst;
-            if (type == ScrollbarType.VERTICAL) {
-                int barMiddle;
-                barMiddle = backgroundGlyph.getSize().getHeight() / 2 + backgroundGlyph.getRelativPosition().getY();
-                isClickFirst = mouseY < barMiddle;
-            } else {
-                int barMiddle;
-                barMiddle = backgroundGlyph.getSize().getWidth() / 2 + backgroundGlyph.getRelativPosition().getX();
-                isClickFirst = mouseX < barMiddle;
-            }
-
-            if (isClickFirst) {
-                scrollCallback.scrolledTo((int) (intervalOffset - barStep));
-            } else {
-                scrollCallback.scrolledTo((int) (intervalOffset + barStep));
-            }
-        }
-    }
-
-    @Override
-    public void onMouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-        Vector2d relPosToMain = getRelativPositionToMainParent();
-
-        int mouseToElement;
-        int mouseMin;
-        int mouseMax;
-        if (type == ScrollbarType.VERTICAL) {
-            mouseToElement = mouseY - relPosToMain.getY();
-
-            mouseMin = this.buttonFirst.getSize().getHeight() //
-                    + this.runnerGlyph.getSize().getHeight() / 2 //
-            ;
-            mouseMax = this.buttonFirst.getSize().getHeight() //
-                    + this.backgroundGlyph.getSize().getHeight() //
-                    - this.runnerGlyph.getSize().getHeight() / 2 //
-            ;
-        } else {
-            mouseToElement = mouseX - relPosToMain.getX();
-
-            mouseMin = this.buttonFirst.getSize().getWidth() //
-                    + this.runnerGlyph.getSize().getWidth() / 2 //
-            ;
-            mouseMax = this.buttonFirst.getSize().getWidth() //
-                    + this.backgroundGlyph.getSize().getWidth() //
-                    - this.runnerGlyph.getSize().getWidth() / 2 //
-            ;
-        }
-        int mouseArea = mouseMax - mouseMin;
-
-        int mouseToArea = Math.max(0, mouseToElement - mouseMin);
-        mouseToArea = Math.min(mouseArea, mouseToArea);
-
-        int offetPercent = mouseToArea * 100 / mouseArea;
-        long realOffet = offetPercent * (intervalTotal - intervalDisplayed) / 100L;
-
-        this.scrollCallback.scrolledTo((int) realOffet);
-    }
-
-    @Override
-    public MouseDraggable onMousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("Scrollbar onMousePressed. Position ({},{}).", mouseX, mouseY);
-        return this;
-    }
-
-    @Override
-    public MouseDraggable onMouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
-        LOGGER.trace("Scrollbar onMouseReleased. Position ({},{}).", mouseX, mouseY);
-        return this;
-    }
-
-    @Override
-    public void onMouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
-        if (direction == MouseWheelDirection.UP) {
-            scrollCallback.scrolledTo((int) (intervalOffset - barStep));
-        } else {
-            scrollCallback.scrolledTo((int) (intervalOffset + barStep));
-        }
-    }
-
-    @Override
     public Iterator<Glyph> iterator() {
         return Collections.emptyIterator();
     }
@@ -317,4 +227,117 @@ public abstract class Scrollbar extends GuiGlyph implements MouseDraggable {
         // TODO Auto-generated method stub
     }
 
+    @AllArgsConstructor
+    private class MouseEventAdapterIntern implements MouseEventAdapter {
+        private Scrollbar scrollbar;
+
+        @Override
+        public MouseDraggable mousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
+            LOGGER.trace("Scrollbar onMousePressed. Position ({},{}).", mouseX, mouseY);
+            return this.scrollbar;
+        }
+
+        @Override
+        public MouseDraggable mouseReleased(Integer mouseX, Integer mouseY, MouseButton button) {
+            LOGGER.trace("Scrollbar onMouseReleased. Position ({},{}).", mouseX, mouseY);
+            return this.scrollbar;
+        }
+
+        @Override
+        public void mouseWhellMoved(Integer mouseX, Integer mouseY, MouseWheelDirection direction) {
+            if (direction == MouseWheelDirection.UP) {
+                this.scrollbar.scrollCallback
+                        .scrolledTo((int) (this.scrollbar.intervalOffset - this.scrollbar.barStep));
+            } else {
+                this.scrollbar.scrollCallback
+                        .scrolledTo((int) (this.scrollbar.intervalOffset + this.scrollbar.barStep));
+            }
+        }
+
+        private boolean isClickOn(Integer mouseX, Integer mouseY, Glyph glyph) {
+            return CollisionHelper.isPointOnArea(mouseX, mouseY, glyph.getRelativPosition(), glyph.getSize());
+        }
+
+        @Override
+        public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
+            if (this.scrollbar.scrollCallback == null) {
+                return;
+            }
+
+            if (isClickOn(mouseX, mouseY, this.scrollbar.buttonFirst)) {
+                this.scrollbar.scrollCallback
+                        .scrolledTo((int) (this.scrollbar.intervalOffset - this.scrollbar.buttonStep));
+            } else if (isClickOn(mouseX, mouseY, this.scrollbar.buttonLast)) {
+                this.scrollbar.scrollCallback
+                        .scrolledTo((int) (this.scrollbar.intervalOffset + this.scrollbar.buttonStep));
+            } else if (isClickOn(mouseX, mouseY, this.scrollbar.runnerGlyph)) {
+                // TODO
+            } else if (isClickOn(mouseX, mouseY, this.scrollbar.backgroundGlyph)) {
+                boolean isClickFirst;
+                if (type == ScrollbarType.VERTICAL) {
+                    int barMiddle;
+                    barMiddle = this.scrollbar.backgroundGlyph.getSize().getHeight() / 2
+                            + this.scrollbar.backgroundGlyph.getRelativPosition().getY();
+                    isClickFirst = mouseY < barMiddle;
+                } else {
+                    int barMiddle;
+                    barMiddle = this.scrollbar.backgroundGlyph.getSize().getWidth() / 2
+                            + this.scrollbar.backgroundGlyph.getRelativPosition().getX();
+                    isClickFirst = mouseX < barMiddle;
+                }
+
+                if (isClickFirst) {
+                    this.scrollbar.scrollCallback
+                            .scrolledTo((int) (this.scrollbar.intervalOffset - this.scrollbar.barStep));
+                } else {
+                    this.scrollbar.scrollCallback
+                            .scrolledTo((int) (this.scrollbar.intervalOffset + this.scrollbar.barStep));
+                }
+            }
+        }
+    }
+
+    @AllArgsConstructor
+    private class MouseDraggedIntern implements MouseDragAdapter {
+        private Scrollbar scrollbar;
+
+        @Override
+        public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
+            Vector2d relPosToMain = this.scrollbar.getRelativPositionToMainParent();
+
+            int mouseToElement;
+            int mouseMin;
+            int mouseMax;
+            if (type == ScrollbarType.VERTICAL) {
+                mouseToElement = mouseY - relPosToMain.getY();
+
+                mouseMin = this.scrollbar.buttonFirst.getSize().getHeight() //
+                        + this.scrollbar.runnerGlyph.getSize().getHeight() / 2 //
+                ;
+                mouseMax = this.scrollbar.buttonFirst.getSize().getHeight() //
+                        + this.scrollbar.backgroundGlyph.getSize().getHeight() //
+                        - this.scrollbar.runnerGlyph.getSize().getHeight() / 2 //
+                ;
+            } else {
+                mouseToElement = mouseX - relPosToMain.getX();
+
+                mouseMin = this.scrollbar.buttonFirst.getSize().getWidth() //
+                        + this.scrollbar.runnerGlyph.getSize().getWidth() / 2 //
+                ;
+                mouseMax = this.scrollbar.buttonFirst.getSize().getWidth() //
+                        + this.scrollbar.backgroundGlyph.getSize().getWidth() //
+                        - this.scrollbar.runnerGlyph.getSize().getWidth() / 2 //
+                ;
+            }
+            int mouseArea = mouseMax - mouseMin;
+
+            int mouseToArea = Math.max(0, mouseToElement - mouseMin);
+            mouseToArea = Math.min(mouseArea, mouseToArea);
+
+            int offetPercent = mouseToArea * 100 / mouseArea;
+            long realOffet = offetPercent * (intervalTotal - intervalDisplayed) / 100L;
+
+            this.scrollbar.scrollCallback.scrolledTo((int) realOffet);
+        }
+    }
 }

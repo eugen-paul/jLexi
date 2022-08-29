@@ -26,12 +26,9 @@ public abstract class TextStructure implements TextDocumentElement, Empty {
     protected TextStructure parentStructure;
     protected List<TextRepresentation> representation;
 
-    protected List<TextStructure> splits;
-
     protected TextStructure(TextStructure parentStructure) {
         this.parentStructure = parentStructure;
         this.representation = null;
-        this.splits = new LinkedList<>();
     }
 
     /**

@@ -28,6 +28,13 @@ public class TextPaneDocument extends TextStructureOfStructure {
         initEmptyDocument();
     }
 
+    public void setText(List<TextSection> data) {
+        this.children.clear();
+        this.children.addAll(data);
+        this.children.forEach(v -> v.setParentStructure(this));
+        this.representation = null;
+    }
+
     private void initEmptyDocument() {
         TextSection section = new TextSection(this, TextSectionConfiguration.builder().build());
         TextParagraph paragraph = new TextParagraph(section, this.storage);
