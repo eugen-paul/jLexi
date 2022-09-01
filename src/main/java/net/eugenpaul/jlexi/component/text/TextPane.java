@@ -14,10 +14,11 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
+import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToPaneCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPanePanel;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSite;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
@@ -36,6 +37,7 @@ import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.AligmentH;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -54,7 +56,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     private TextPaneDocument document;
     private AbstractKeyHandler keyHandler;
 
-    private TextCompositor<TextRepresentation> compositor;
+    private List<TextCompositor<TextRepresentation>> compositors;
 
     @Getter
     private Cursor mouseCursor;
@@ -65,6 +67,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     private Size maxSize = Size.ZERO_SIZE;
 
     private TextPosition textSelectionFrom;
+    private Color backgroundColor;
 
     public TextPane(String cursorPrefix, Glyph parent, ResourceManager storage, AbstractController controller) {
         super(parent);
@@ -89,7 +92,12 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         this.keyEventAdapter = new KeyEventAdapterIntern(this);
         this.mouseDragAdapter = new MouseDraggedIntern(this);
 
-        this.compositor = new TextRepresentationToPaneCompositor();
+        this.backgroundColor = Color.GREY;
+
+        this.compositors = List.of(//
+                new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER_POSITIV),
+                new TextRepresentationToColumnCompositor(Color.GREEN, 0, 0) //
+        );
 
         resizeTo(Size.ZERO_SIZE);
 
@@ -103,15 +111,18 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
             return this.cachedDrawable.draw();
         }
 
-        var tempRepresentationList = this.compositor.compose(this.document.getRepresentation(this.maxSize).iterator(),
-                this.maxSize);
+        var currentIterator = this.document.getRepresentation(this.maxSize).iterator();
+        List<TextRepresentation> finalRepresentation = Collections.emptyList();
 
-        if (tempRepresentationList.isEmpty()) {
-            this.textRepresentation = new TextPanePanel(this);
+        for (var compositor : compositors) {
+            finalRepresentation = compositor.compose(currentIterator, this.maxSize);
+            currentIterator = finalRepresentation.iterator();
+        }
+
+        if (finalRepresentation.isEmpty()) {
+            this.textRepresentation = new TextPaneSite(this, new Size(320, 240));
         } else {
-            this.textRepresentation = this.compositor
-                    .compose(this.document.getRepresentation(this.maxSize).iterator(), this.maxSize)//
-                    .get(0);
+            this.textRepresentation = finalRepresentation.get(0);
             this.textRepresentation.setParent(this);
         }
 
