@@ -14,6 +14,8 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToPaneCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePanel;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
@@ -46,10 +48,13 @@ import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,
         InterfaceModel, ModelPropertyChangeListner {
 
-    private TextPanePanel textPanel;
+    @Getter
+    private TextRepresentation textRepresentation;
 
     private TextPaneDocument document;
     private AbstractKeyHandler keyHandler;
+
+    private TextCompositor<TextRepresentation> compositor;
 
     @Getter
     private Cursor mouseCursor;
@@ -75,15 +80,16 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         this.mouseCursor = new Cursor(null, controller, this.cursorName, commandDeque);
 
-        this.textPanel = new TextPanePanel(this);
-
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage, commandDeque);
 
         this.textSelectionFrom = null;
+        this.textRepresentation = null;
 
         this.mouseEventAdapter = new MouseEventAdapterIntern(this);
         this.keyEventAdapter = new KeyEventAdapterIntern(this);
         this.mouseDragAdapter = new MouseDraggedIntern(this);
+
+        this.compositor = new TextRepresentationToPaneCompositor();
 
         resizeTo(Size.ZERO_SIZE);
 
@@ -97,11 +103,20 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
             return this.cachedDrawable.draw();
         }
 
-        this.textPanel = new TextPanePanel(this);
-        this.textPanel.set(this.document.getRepresentation(this.maxSize));
+        var tempRepresentationList = this.compositor.compose(this.document.getRepresentation(this.maxSize).iterator(),
+                this.maxSize);
+
+        if (tempRepresentationList.isEmpty()) {
+            this.textRepresentation = new TextPanePanel(this);
+        } else {
+            this.textRepresentation = this.compositor
+                    .compose(this.document.getRepresentation(this.maxSize).iterator(), this.maxSize)//
+                    .get(0);
+            this.textRepresentation.setParent(this);
+        }
 
         this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        this.cachedDrawable.addDrawable(this.textPanel.getDrawable(), 0, 0);
+        this.cachedDrawable.addDrawable(this.textRepresentation.getDrawable(), 0, 0);
 
         return cachedDrawable.draw();
     }
@@ -133,7 +148,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @Override
     public Size getSize() {
         getDrawable();
-        return this.textPanel.getSize();
+        return this.textRepresentation.getSize();
     }
 
     @Override
@@ -167,11 +182,6 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         LOGGER.debug("TextPanel get ViewPropertyChangeType.CURSOR_MOVE. " + pos);
     }
 
-    @Override
-    public TextRepresentation getTextRepresentation() {
-        return this.textPanel;
-    }
-
     @AllArgsConstructor
     private class MouseEventAdapterIntern implements MouseEventAdapter {
         private TextPane textpane;
@@ -182,7 +192,8 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
             LOGGER.trace("MousePressed on TextPane. Position ({},{}).", mouseX, mouseY);
             this.textpane.mouseCursor.removeSelection();
 
-            this.textpane.textSelectionFrom = this.textpane.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
+            this.textpane.textSelectionFrom = this.textpane.textRepresentation
+                    .getCursorElementAt(new Vector2d(mouseX, mouseY));
 
             if (this.textpane.textSelectionFrom != null) {
                 LOGGER.trace("MousePressed on TextPane. Position ({},{}). Element {}", mouseX, mouseY,
@@ -207,7 +218,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
             this.textpane.mouseCursor.removeSelection();
 
-            var clickedElement = this.textpane.textPanel.getCursorElementAt(new Vector2d(mouseX, mouseY));
+            var clickedElement = this.textpane.textRepresentation.getCursorElementAt(new Vector2d(mouseX, mouseY));
 
             if (clickedElement != null) {
                 LOGGER.trace("Document Click on Element: {}.", clickedElement);
@@ -255,7 +266,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
             LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
             if (this.textpane.textSelectionFrom != null) {
-                TextPosition textSelectionTo = this.textpane.textPanel
+                TextPosition textSelectionTo = this.textpane.textRepresentation
                         .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
 
                 if (textSelectionTo != null) {

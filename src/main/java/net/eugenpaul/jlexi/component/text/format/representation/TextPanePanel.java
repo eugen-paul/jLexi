@@ -35,6 +35,47 @@ public class TextPanePanel extends TextRepresentationOfRepresentation {
         this.yPositionToSite = new TreeMap<>();
     }
 
+    public void add(TextRepresentation child) {
+        this.children.add(child);
+        child.setParent(this);
+
+        this.cachedDrawable = null;
+    }
+
+    @Override
+    public Drawable getDrawable() {
+        if (cachedDrawable != null) {
+            return cachedDrawable.draw();
+        }
+
+        int maxSiteWidth = 0;
+        for (var site : this.children) {
+            maxSiteWidth = Math.max(maxSiteWidth, site.getSize().getWidth());
+        }
+
+        var centeredSites = compositor.compose(this.children.iterator(), new Size(maxSiteWidth, Integer.MAX_VALUE));
+
+        this.cachedDrawable = new DrawableSketchImpl(backgroundColor);
+        this.yPositionToSite.clear();
+
+        int currentY = 0;
+
+        for (var el : centeredSites) {
+            this.cachedDrawable.addDrawable(el.getDrawable(), 0, currentY);
+
+            this.yPositionToSite.put(currentY, el);
+
+            el.setRelativPosition(new Vector2d(0, currentY));
+            el.setParent(this);
+
+            currentY += el.getSize().getHeight();
+        }
+
+        this.setSize(new Size(maxSiteWidth, currentY));
+
+        return this.cachedDrawable.draw();
+    }
+
     public void set(List<TextRepresentation> sites) {
         this.children.clear();
 
@@ -68,8 +109,7 @@ public class TextPanePanel extends TextRepresentationOfRepresentation {
         this.setSize(new Size(maxSiteWidth, currentY));
     }
 
-    @Override
-    public Drawable getDrawable() {
+    public Drawable getDrawableOld() {
         if (cachedDrawable != null) {
             return cachedDrawable.draw();
         }
