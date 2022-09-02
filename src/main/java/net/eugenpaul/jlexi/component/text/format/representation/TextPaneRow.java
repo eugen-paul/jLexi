@@ -2,6 +2,8 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 
 import java.util.TreeMap;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
@@ -14,11 +16,16 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 @Slf4j
 public class TextPaneRow extends TextRepresentationOfRepresentation {
 
-    private TreeMap<Integer, TextRepresentation> xPositionToRow;
+    private TreeMap<Integer, TextRepresentation> xPositionToColumn;
+
+    @Getter
+    @Setter
+    private Color background;
 
     public TextPaneRow(Glyph parent) {
         super(parent);
-        this.xPositionToRow = new TreeMap<>();
+        this.xPositionToColumn = new TreeMap<>();
+        this.background = Color.INVISIBLE;
     }
 
     public void add(TextRepresentation child) {
@@ -32,11 +39,12 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
         ));
 
         this.cachedDrawable = null;
+        this.xPositionToColumn.put(child.getRelativPosition().getX(), child);
     }
 
     @Override
     public TextPosition getCursorElementAt(Vector2d pos) {
-        var row = this.xPositionToRow.floorEntry(pos.getX());
+        var row = this.xPositionToColumn.floorEntry(pos.getX());
         if (null == row) {
             return null;
         }
@@ -60,20 +68,14 @@ public class TextPaneRow extends TextRepresentationOfRepresentation {
             return this.cachedDrawable.draw();
         }
 
-        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        this.xPositionToRow.clear();
+        this.cachedDrawable = new DrawableSketchImpl(this.background);
 
-        int currentX = 0;
-        for (var el : children) {
-            int currentY = getSize().getHeight() - el.getSize().getHeight();
-
-            this.cachedDrawable.addDrawable(el.getDrawable(), currentX, currentY);
-
-            this.xPositionToRow.put(currentX, el);
-
-            el.setRelativPosition(new Vector2d(currentX, currentY));
-
-            currentX += el.getSize().getWidth();
+        for (var el : this.children) {
+            this.cachedDrawable.addDrawable( //
+                    el.getDrawable(), //
+                    el.getRelativPosition().getX(), //
+                    el.getRelativPosition().getY() //
+            );
         }
 
         return this.cachedDrawable.draw();

@@ -26,12 +26,9 @@ public abstract class TextStructure implements TextDocumentElement, Empty {
     protected TextStructure parentStructure;
     protected List<TextRepresentation> representation;
 
-    protected List<TextStructure> splits;
-
     protected TextStructure(TextStructure parentStructure) {
         this.parentStructure = parentStructure;
         this.representation = null;
-        this.splits = new LinkedList<>();
     }
 
     /**
@@ -122,14 +119,24 @@ public abstract class TextStructure implements TextDocumentElement, Empty {
         }
     }
 
+    /**
+     * Returns the list of {@code TextRepresentation} that represent the object. Depending on the type, the
+     * {@code TextRepresentation} object can be a row, a column, a site or other.
+     * 
+     * @param size - max size of the returned object
+     * @return response
+     */
     public List<TextRepresentation> getRepresentation(Size size) {
-        if (null == this.representation) {
-            this.representation = new LinkedList<>();
-            var iterator = childListIterator();
-            while (iterator.hasNext()) {
-                this.representation.addAll(iterator.next().getRepresentation(size));
-            }
+        if (this.representation != null) {
+            return this.representation;
         }
+
+        this.representation = new LinkedList<>();
+        var iterator = childListIterator();
+        while (iterator.hasNext()) {
+            this.representation.addAll(iterator.next().getRepresentation(size));
+        }
+
         return this.representation;
     }
 

@@ -8,6 +8,8 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
+// TODO: If the document is empty, then an empty page must be created and returned by the representation when it is
+// called. Otherwise the function returns an empty list.
 public class TextPaneDocument extends TextStructureOfStructure {
 
     private ChangeListener parent;
@@ -26,6 +28,13 @@ public class TextPaneDocument extends TextStructureOfStructure {
         this.parent = parent;
         this.storage = storage;
         initEmptyDocument();
+    }
+
+    public void setText(List<TextSection> data) {
+        this.children.clear();
+        this.children.addAll(data);
+        this.children.forEach(v -> v.setParentStructure(this));
+        this.representation = null;
     }
 
     private void initEmptyDocument() {

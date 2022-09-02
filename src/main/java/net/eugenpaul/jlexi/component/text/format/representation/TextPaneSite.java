@@ -15,6 +15,8 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
 
     private static final int DEFAULT_MARGIN_TOP = 5;
     private static final int DEFAULT_MARGIN_BOTTOM = 5;
+    private static final int DEFAULT_MARGIN_LEFT = 5;
+    private static final int DEFAULT_MARGIN_RIGHT = 5;
 
     private TreeMap<Integer, TextRepresentation> xPositionToColumn;
 
@@ -23,6 +25,8 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
         setSize(size);
         setMarginTop(DEFAULT_MARGIN_TOP);
         setMarginBottom(DEFAULT_MARGIN_BOTTOM);
+        setMarginLeft(DEFAULT_MARGIN_LEFT);
+        setMarginRight(DEFAULT_MARGIN_RIGHT);
 
         this.xPositionToColumn = new TreeMap<>();
     }
