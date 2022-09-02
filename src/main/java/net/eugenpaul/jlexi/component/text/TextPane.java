@@ -17,6 +17,7 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToRowCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSite;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
@@ -95,6 +96,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         this.backgroundColor = Color.GREY;
 
         this.compositors = List.of(//
+                TextRepresentationToRowCompositor.builder().build(), //
                 new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER_POSITIV),
                 new TextRepresentationToColumnCompositor(Color.GREEN, 0, 0) //
         );
