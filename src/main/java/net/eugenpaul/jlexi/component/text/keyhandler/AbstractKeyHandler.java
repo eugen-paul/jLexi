@@ -1,7 +1,15 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
+import net.eugenpaul.jlexi.command.TextElementAddRowTextBeforeCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommand;
 import net.eugenpaul.jlexi.command.TextElementReplaceCommand;
@@ -15,6 +23,7 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
 
+@Slf4j
 public class AbstractKeyHandler {
 
     private final KeyHandlerable component;
@@ -66,10 +75,19 @@ public class AbstractKeyHandler {
             ctrlPressed = true;
             break;
         case F1:
+            this.component.getMouseCursor().removeSelection();
             undo();
             break;
         case F2:
+            this.component.getMouseCursor().removeSelection();
             redo();
+            break;
+        case F3:
+            copy();
+            break;
+        case F4:
+            this.component.getMouseCursor().removeSelection();
+            paste();
             break;
         default:
             break;
@@ -92,6 +110,39 @@ public class AbstractKeyHandler {
         cursor.moveCursorTo(cursorPosition);
 
         this.component.getTextRepresentation().redraw();
+    }
+
+    public void copy() {
+        LOGGER.trace("COPY");
+        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        var cursor = this.component.getMouseCursor();
+        StringBuilder textSelected = new StringBuilder(cursor.getSelectedText().size());
+        for (var element : cursor.getSelectedText()) {
+            textSelected.append(element.toString());
+        }
+
+        StringSelection strSel = new StringSelection(textSelected.toString());
+
+        clipboard.setContents(strSel, null);
+    }
+
+    public void paste() {
+        LOGGER.trace("PASTE");
+        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+        String textFromClipboard;
+
+        try {
+            textFromClipboard = clipboard.getData(DataFlavor.stringFlavor).toString();
+        } catch (UnsupportedFlavorException | IOException e) {
+            LOGGER.error("Can't read data from clipboard. ", e);
+            return;
+        }
+
+        var cursor = this.component.getMouseCursor();
+        var command = new TextElementAddRowTextBeforeCommand(storage, textFromClipboard, cursor.getPosition());
+
+        doTextCommand(command);
     }
 
     private void doTextCommand(TextCommand command) {

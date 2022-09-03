@@ -22,6 +22,8 @@ public enum KeyCode {
     ENTER(10), //
     F1(11), //
     F2(12), //
+    F3(13), //
+    F4(14), //
     ;
 
     @Getter

@@ -60,6 +60,12 @@ public class KeyListener extends KeyAdapter {
         case KeyEvent.VK_F2:
             code = KeyCode.F2;
             break;
+        case KeyEvent.VK_F3:
+            code = KeyCode.F3;
+            break;
+        case KeyEvent.VK_F4:
+            code = KeyCode.F4;
+            break;
         default:
             break;
         }
