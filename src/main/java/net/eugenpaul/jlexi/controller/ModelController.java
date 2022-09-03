@@ -81,6 +81,14 @@ public class ModelController extends AbstractController {
         setModelPropertyWithoutDispose(ModelPropertyChangeType.TEXT_REDO, name);
     }
 
+    public void copy(String name) {
+        setModelPropertyWithoutDispose(ModelPropertyChangeType.TEXT_COPY, name);
+    }
+
+    public void paste(String name) {
+        setModelPropertyWithoutDispose(ModelPropertyChangeType.TEXT_PASTE, name);
+    }
+
     public void keyTyped(String name, Character key) {
         setModelProperty(ModelPropertyChangeType.KEY_TYPED, name, key);
     }

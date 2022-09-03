@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.controller;
 import java.time.Duration;
 
 import lombok.Getter;
+import net.eugenpaul.jlexi.window.interfaces.CopyPasteable;
 import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsKeyPressable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseClickable;
@@ -17,6 +18,8 @@ public enum ModelPropertyChangeType {
     MOUSE_DRAGGED(null, null, Duration.ZERO), //
     TEXT_UNDO(UndoRedoable.class, "undo", Duration.ZERO), //
     TEXT_REDO(UndoRedoable.class, "redo", Duration.ZERO), //
+    TEXT_COPY(CopyPasteable.class, "copy", Duration.ZERO), //
+    TEXT_PASTE(CopyPasteable.class, "paste", Duration.ZERO), //
     MOUSE_WHEEL(WindowsMouseWheel.class, "onMouseWheelMooved", Duration.ZERO), //
     KEY_TYPED(WindowsKeyPressable.class, "onKeyTyped", Duration.ZERO), //
     KEY_PRESSED(WindowsKeyPressable.class, "onKeyPressed", Duration.ZERO), //

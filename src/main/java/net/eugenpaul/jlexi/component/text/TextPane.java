@@ -45,11 +45,12 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
+import net.eugenpaul.jlexi.window.interfaces.CopyPasteable;
 import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 
 @Slf4j
 public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,
-        InterfaceModel, ModelPropertyChangeListner {
+        CopyPasteable, InterfaceModel, ModelPropertyChangeListner {
 
     @Getter
     private TextRepresentation textRepresentation;
@@ -177,6 +178,16 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @Override
     public void redo(String name) {
         this.keyHandler.redo();
+    }
+
+    @Override
+    public void copy(String name) {
+        this.keyHandler.copy();
+    }
+
+    @Override
+    public void paste(String name) {
+        this.keyHandler.paste();
     }
 
     @Override

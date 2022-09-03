@@ -75,18 +75,15 @@ public class AbstractKeyHandler {
             ctrlPressed = true;
             break;
         case F1:
-            this.component.getMouseCursor().removeSelection();
             undo();
             break;
         case F2:
-            this.component.getMouseCursor().removeSelection();
             redo();
             break;
         case F3:
             copy();
             break;
         case F4:
-            this.component.getMouseCursor().removeSelection();
             paste();
             break;
         default:
@@ -128,6 +125,7 @@ public class AbstractKeyHandler {
 
     public void paste() {
         LOGGER.trace("PASTE");
+
         var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
         String textFromClipboard;
@@ -140,6 +138,8 @@ public class AbstractKeyHandler {
         }
 
         var cursor = this.component.getMouseCursor();
+        cursor.removeSelection();
+
         var command = new TextElementAddRowTextBeforeCommand(storage, textFromClipboard, cursor.getPosition());
 
         doTextCommand(command);

@@ -65,6 +65,9 @@ public class MainWindow extends ApplicationWindow {
 
         addUndoButton(menubar, cursorName);
         addRedoButton(menubar, cursorName);
+
+        addCopyButton(menubar, cursorName);
+        addPasteButton(menubar, cursorName);
     }
 
     private void addBoldButton(MenuBar menubar, String cursorName) {
@@ -110,6 +113,26 @@ public class MainWindow extends ApplicationWindow {
         menubar.addMenuButton(button);
 
         MouseEventAdapter mouseEventAdapter = new RedoActivate(cursorName, this.controller);
+        button.setMouseEventAdapter(mouseEventAdapter);
+    }
+
+    private void addCopyButton(MenuBar menubar, String cursorName) {
+        TextButton button = guiFactory.createTextButton(menubar, "C", storage);
+        button.setTextFormat(button.getTextFormat());
+        button.setSize(new Size(20, 20));
+        menubar.addMenuButton(button);
+
+        MouseEventAdapter mouseEventAdapter = new CopyActivate(cursorName, this.controller);
+        button.setMouseEventAdapter(mouseEventAdapter);
+    }
+
+    private void addPasteButton(MenuBar menubar, String cursorName) {
+        TextButton button = guiFactory.createTextButton(menubar, "P", storage);
+        button.setTextFormat(button.getTextFormat());
+        button.setSize(new Size(20, 20));
+        menubar.addMenuButton(button);
+
+        MouseEventAdapter mouseEventAdapter = new PasteActivate(cursorName, this.controller);
         button.setMouseEventAdapter(mouseEventAdapter);
     }
 

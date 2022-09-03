@@ -9,9 +9,15 @@ In the implementation I only use two Java Swing classes: JFrame and JPanel to cr
 ## Progress
 
 ### Step 7
+Selected text can be copied to the system clipboard using F3 or the C button.
+Selected text can be copied from the system clipboard using F4 or the P button.
+
+![Progress_8](doc/img/Progress_8.png).
+
+### Step 7
 The structure of the page display has been partially redesigned. Almost all components are combined into the lines and/or column. The approach allows to display several pages of a document side by side without any effort, if the window is large enough.
 
-![Progress_6](doc/img/Progress_7.gif).
+![Progress_7](doc/img/Progress_7.gif).
 
 ### Step 6
 Undo (**<**) and Redo (**>**) buttons.
