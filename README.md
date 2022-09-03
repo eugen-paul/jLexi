@@ -8,7 +8,7 @@ In the implementation I only use two Java Swing classes: JFrame and JPanel to cr
 
 ## Progress
 
-### Step 7
+### Step 8
 Selected text can be copied to the system clipboard using F3 or the C button.
 Selected text can be copied from the system clipboard using F4 or the P button.
 
