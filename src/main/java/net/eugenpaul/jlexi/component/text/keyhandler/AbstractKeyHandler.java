@@ -15,6 +15,8 @@ import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommand;
 import net.eugenpaul.jlexi.command.TextElementReplaceCommand;
 import net.eugenpaul.jlexi.command.TextRemoveBevorCommand;
 import net.eugenpaul.jlexi.component.text.Cursor;
+import net.eugenpaul.jlexi.component.text.converter.ClipboardConverter;
+import net.eugenpaul.jlexi.component.text.converter.clipboard.ClipboardConverterImpl;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
@@ -29,6 +31,7 @@ public class AbstractKeyHandler {
     private final KeyHandlerable component;
     private final ResourceManager storage;
     private final TextCommandsDeque commandDeque;
+    private final ClipboardConverter clipboardConverter;
 
     // TODO just for test. refactor it
     private boolean ctrlPressed;
@@ -37,6 +40,7 @@ public class AbstractKeyHandler {
         this.component = component;
         this.storage = storage;
         this.commandDeque = commandDeque;
+        this.clipboardConverter = new ClipboardConverterImpl(storage);
         this.ctrlPressed = false;
     }
 
@@ -131,6 +135,10 @@ public class AbstractKeyHandler {
         String textFromClipboard;
 
         try {
+
+            //TODO
+            clipboardConverter.read();
+
             textFromClipboard = clipboard.getData(DataFlavor.stringFlavor).toString();
         } catch (UnsupportedFlavorException | IOException e) {
             LOGGER.error("Can't read data from clipboard. ", e);

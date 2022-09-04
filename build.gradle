@@ -39,6 +39,8 @@ dependencies {
 
     implementation          commonDependencies.reactor_core
 
+    implementation          commonDependencies.jsoup
+
     implementation          commonDependencies.logback_core
     implementation          commonDependencies.logback_classic
     implementation          commonDependencies.slf4j_api
