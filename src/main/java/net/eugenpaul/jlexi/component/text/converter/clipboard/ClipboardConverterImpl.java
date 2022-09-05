@@ -34,7 +34,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     private ResourceManager storage;
 
     @Override
-    public List<TextElement> read() throws NotYetImplementedException {
+    public List<TextElement> read(TextFormat format, TextFormatEffect effect) throws NotYetImplementedException {
         String textFromClipboard;
         var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
@@ -44,7 +44,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
                 return htmlToText(textFromClipboard, storage);
             }
             textFromClipboard = clipboard.getData(DataFlavor.stringFlavor).toString();
-            return plainToText(textFromClipboard, storage);
+            return plainToText(textFromClipboard, storage, format, effect);
         } catch (UnsupportedFlavorException | IOException e) {
             LOGGER.error(READ_ERROR, e);
             throw new UnsupportedException(READ_ERROR, e);
@@ -52,7 +52,8 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     }
 
     @Override
-    public List<TextElement> readHtml() throws NotYetImplementedException, UnsupportedException {
+    public List<TextElement> readHtml(TextFormat format, TextFormatEffect effect)
+            throws NotYetImplementedException, UnsupportedException {
         String textFromClipboard;
         var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
@@ -67,7 +68,8 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     }
 
     @Override
-    public List<TextElement> readPlain() throws NotYetImplementedException, UnsupportedException {
+    public List<TextElement> readPlain(TextFormat format, TextFormatEffect effect)
+            throws NotYetImplementedException, UnsupportedException {
         String textFromClipboard;
         var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
@@ -78,7 +80,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
             throw new UnsupportedException(READ_ERROR, e);
         }
 
-        return plainToText(textFromClipboard, storage);
+        return plainToText(textFromClipboard, storage, format, effect);
     }
 
     @Override
@@ -107,7 +109,8 @@ public class ClipboardConverterImpl implements ClipboardConverter {
         return responseText;
     }
 
-    private static List<TextElement> plainToText(String html, ResourceManager storage) {
+    private static List<TextElement> plainToText(String html, ResourceManager storage, TextFormat format,
+            TextFormatEffect effect) {
 
         List<TextElement> responseText = new LinkedList<>();
 
@@ -115,8 +118,8 @@ public class ClipboardConverterImpl implements ClipboardConverter {
             var element = TextElementFactory.fromChar(//
                     storage, //
                     c, //
-                    TextFormat.DEFAULT, //
-                    TextFormatEffect.DEFAULT_FORMAT_EFFECT);
+                    format, //
+                    effect);
 
             responseText.add(element);
         }

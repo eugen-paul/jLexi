@@ -132,12 +132,13 @@ public class AbstractKeyHandler {
 
         var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
+        var cursor = this.component.getMouseCursor();
         String textFromClipboard;
 
         try {
 
-            //TODO
-            clipboardConverter.read();
+            // TODO
+            clipboardConverter.read(cursor.getTextFormat(), cursor.getTextFormatEffect());
 
             textFromClipboard = clipboard.getData(DataFlavor.stringFlavor).toString();
         } catch (UnsupportedFlavorException | IOException e) {
@@ -145,7 +146,6 @@ public class AbstractKeyHandler {
             return;
         }
 
-        var cursor = this.component.getMouseCursor();
         cursor.removeSelection();
 
         var command = new TextElementAddRowTextBeforeCommand(storage, textFromClipboard, cursor.getPosition());
