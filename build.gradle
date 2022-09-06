@@ -40,6 +40,7 @@ dependencies {
     implementation          commonDependencies.reactor_core
 
     implementation          commonDependencies.jsoup
+    implementation          commonDependencies.ph_css
 
     implementation          commonDependencies.logback_core
     implementation          commonDependencies.logback_classic

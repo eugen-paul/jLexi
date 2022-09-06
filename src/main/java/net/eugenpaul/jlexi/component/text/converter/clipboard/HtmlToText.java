@@ -4,8 +4,17 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+
+import com.helger.css.ECSSVersion;
+import com.helger.css.decl.CSSDeclarationList;
+import com.helger.css.decl.CascadingStyleSheet;
+import com.helger.css.reader.CSSReader;
+import com.helger.css.reader.CSSReaderDeclarationList;
+import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
+import com.helger.css.writer.CSSWriterSettings;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -34,6 +43,17 @@ public class HtmlToText {
         System.out.println("---------------------------------");
 
         this.storage = storage;
+    }
+
+    private static void readCss(String css) {
+        CascadingStyleSheet r = CSSReader.readFromString(css, //
+                ECSSVersion.CSS30, //
+                new DoNothingCSSParseErrorHandler() //
+        );
+
+        // System.out.println("rules: " + r.getAllRules());
+        System.out.println(r.getAllStyleRules().get(0).getDeclarationAtIndex(0).getProperty());
+
     }
 
     private static String getHtml(String clipboardHtml) {
@@ -83,9 +103,16 @@ public class HtmlToText {
     }
 
     private void printChilds(Node node, int deep) {
-        System.out.println(String.format("%" + deep + "s%s", " ", "nodename = " + node.nodeName() + " "));
-        for (Node child : node.childNodes()) {
-            printChilds(child, deep + 1);
+        if (node.nodeName().equals("style")) {
+            if (node.childNodeSize() == 1 && node.childNode(0) instanceof DataNode) {
+                readCss(node.childNode(0).toString());
+            }
+
+        } else {
+            System.out.println(String.format("%" + deep + "s%s", " ", "nodename = " + node.nodeName() + " "));
+            for (Node child : node.childNodes()) {
+                printChilds(child, deep + 1);
+            }
         }
     }
 }
