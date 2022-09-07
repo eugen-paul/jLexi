@@ -1,22 +1,22 @@
 package net.eugenpaul.jlexi.component.text.converter.clipboard;
 
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 
 import com.helger.css.ECSSVersion;
-import com.helger.css.decl.CSSDeclarationList;
 import com.helger.css.decl.CascadingStyleSheet;
 import com.helger.css.reader.CSSReader;
-import com.helger.css.reader.CSSReaderDeclarationList;
 import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
-import com.helger.css.writer.CSSWriterSettings;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 public class HtmlToText {
@@ -45,15 +45,11 @@ public class HtmlToText {
         this.storage = storage;
     }
 
-    private static void readCss(String css) {
-        CascadingStyleSheet r = CSSReader.readFromString(css, //
+    private static CascadingStyleSheet readCss(String css) {
+        return CSSReader.readFromString(css, //
                 ECSSVersion.CSS30, //
                 new DoNothingCSSParseErrorHandler() //
         );
-
-        // System.out.println("rules: " + r.getAllRules());
-        System.out.println(r.getAllStyleRules().get(0).getDeclarationAtIndex(0).getProperty());
-
     }
 
     private static String getHtml(String clipboardHtml) {
@@ -94,25 +90,55 @@ public class HtmlToText {
     }
 
     public List<TextElement> convert() {
+        List<CascadingStyleSheet> globalCss = new LinkedList<>();
 
-        for (var element : this.doc.childNodes()) {
-            printChilds(element, 1);
+        var styles = doc.getElementsByTag("style");
+        var iterator = styles.listIterator();
+        while (iterator.hasNext()) {
+            var css = readCss(iterator.next().html());
+            if (css != null) {
+                globalCss.add(css);
+            }
         }
 
-        return Collections.emptyList();
+        List<TextElement> response = new LinkedList<>();
+
+        for (var element : this.doc.body().childNodes()) {
+            printChilds(globalCss, element, response, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
+        }
+
+        return response;
     }
 
-    private void printChilds(Node node, int deep) {
-        if (node.nodeName().equals("style")) {
-            if (node.childNodeSize() == 1 && node.childNode(0) instanceof DataNode) {
-                readCss(node.childNode(0).toString());
-            }
+    private void printChilds(List<CascadingStyleSheet> globalCss, Node node, List<TextElement> response,
+            TextFormat currentFormat, TextFormatEffect currentEffect) {
+        TextFormat format = currentFormat;
+        TextFormatEffect effect = currentEffect;
 
-        } else {
-            System.out.println(String.format("%" + deep + "s%s", " ", "nodename = " + node.nodeName() + " "));
-            for (Node child : node.childNodes()) {
-                printChilds(child, deep + 1);
+        switch (node.nodeName()) {
+        case "i":
+            format = format.withItalic(true);
+            break;
+        case "b":
+            format = format.withBold(true);
+            break;
+        default:
+            break;
+        }
+
+        for (Node child : node.childNodes()) {
+            if (child instanceof TextNode) {
+                textNodeToResponse(globalCss, (TextNode) child, response, format, effect);
+            } else {
+                printChilds(globalCss, child, response, format, effect);
             }
+        }
+    }
+
+    private void textNodeToResponse(List<CascadingStyleSheet> globalCss, TextNode node, List<TextElement> response,
+            TextFormat format, TextFormatEffect formatEffect) {
+        for (var c : node.toString().toCharArray()) {
+            response.add(TextElementFactory.fromChar(this.storage, c, format, formatEffect));
         }
     }
 }

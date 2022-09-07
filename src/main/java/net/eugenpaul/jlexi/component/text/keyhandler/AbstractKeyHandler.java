@@ -5,10 +5,12 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
+import net.eugenpaul.jlexi.command.TextElementAddFormatTextBeforeCommand;
 import net.eugenpaul.jlexi.command.TextElementAddRowTextBeforeCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommand;
@@ -21,6 +23,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.exception.UnsupportedException;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.helper.CharacterHelper;
@@ -130,25 +133,21 @@ public class AbstractKeyHandler {
     public void paste() {
         LOGGER.trace("PASTE");
 
-        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-
         var cursor = this.component.getMouseCursor();
-        String textFromClipboard;
+        List<TextElement> textFromClipboard;
 
         try {
 
             // TODO
-            clipboardConverter.read(cursor.getTextFormat(), cursor.getTextFormatEffect());
-
-            textFromClipboard = clipboard.getData(DataFlavor.stringFlavor).toString();
-        } catch (UnsupportedFlavorException | IOException e) {
+            textFromClipboard = clipboardConverter.read(cursor.getTextFormat(), cursor.getTextFormatEffect());
+        } catch (UnsupportedException e) {
             LOGGER.error("Can't read data from clipboard. ", e);
             return;
         }
 
         cursor.removeSelection();
 
-        var command = new TextElementAddRowTextBeforeCommand(storage, textFromClipboard, cursor.getPosition());
+        var command = new TextElementAddFormatTextBeforeCommand(textFromClipboard, cursor.getPosition());
 
         doTextCommand(command);
     }

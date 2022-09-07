@@ -90,23 +90,8 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     }
 
     private static List<TextElement> htmlToText(String html, ResourceManager storage) {
-
         HtmlToText conv = new HtmlToText(html, storage);
-        conv.convert();
-
-        List<TextElement> responseText = new LinkedList<>();
-
-        for (var c : html.toCharArray()) {
-            var element = TextElementFactory.fromChar(//
-                    storage, //
-                    c, //
-                    TextFormat.DEFAULT, //
-                    TextFormatEffect.DEFAULT_FORMAT_EFFECT);
-
-            responseText.add(element);
-        }
-
-        return responseText;
+        return conv.convert();
     }
 
     private static List<TextElement> plainToText(String html, ResourceManager storage, TextFormat format,
