@@ -5,11 +5,16 @@ import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import com.helger.css.ECSSVersion;
+import com.helger.css.decl.CSSSelector;
 import com.helger.css.decl.CascadingStyleSheet;
+import com.helger.css.decl.visit.CSSVisitor;
+import com.helger.css.decl.visit.DefaultCSSVisitor;
+import com.helger.css.decl.visit.ICSSVisitor;
 import com.helger.css.reader.CSSReader;
 import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
 
@@ -126,17 +131,62 @@ public class HtmlToText {
             break;
         }
 
+        if (node instanceof Element) {
+            var element = (Element) node;
+            format = getFormat(element, globalCss, format);
+            effect = getFormat(element, globalCss, effect);
+        }
+
         for (Node child : node.childNodes()) {
             if (child instanceof TextNode) {
-                textNodeToResponse(globalCss, (TextNode) child, response, format, effect);
+                textNodeToResponse((TextNode) child, response, format, effect);
             } else {
                 printChilds(globalCss, child, response, format, effect);
             }
         }
+
+        if (node instanceof Element) {
+            var element = (Element) node;
+            if (element.tag().isBlock()) {
+                response.add(TextElementFactory.genNewLineChar(this.storage, format, effect));
+            }
+        }
     }
 
-    private void textNodeToResponse(List<CascadingStyleSheet> globalCss, TextNode node, List<TextElement> response,
-            TextFormat format, TextFormatEffect formatEffect) {
+    private TextFormat getFormat(Element element, List<CascadingStyleSheet> globalCss, TextFormat format) {
+        String tag = element.tagName();
+
+        String[] classNames = element.className().split(" ");
+        String id = element.id();
+
+        for (var css : globalCss) {
+            var styles = css.getAllStyleRules().getAll(v -> {
+                for (var d : v.getAllSelectors()) {
+                    if (d.equals(tag)) {
+                        return true;
+                    }
+                    if (d.equals(tag) || d.equals(classNames) || d.equals(id)) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
+        if (tag.equals("h1")) {
+            System.out.println("h1");
+        }
+        // String class = element.
+
+        return format;
+    }
+
+    private TextFormatEffect getFormat(Element element, List<CascadingStyleSheet> globalCss, TextFormatEffect effect) {
+        return effect;
+    }
+
+    private void textNodeToResponse(TextNode node, List<TextElement> response, TextFormat format,
+            TextFormatEffect formatEffect) {
         for (var c : node.toString().toCharArray()) {
             response.add(TextElementFactory.fromChar(this.storage, c, format, formatEffect));
         }
