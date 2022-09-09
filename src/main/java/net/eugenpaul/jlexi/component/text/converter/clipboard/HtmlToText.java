@@ -11,18 +11,21 @@ import org.jsoup.nodes.TextNode;
 
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSSelector;
+import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
 import com.helger.css.decl.visit.CSSVisitor;
 import com.helger.css.decl.visit.DefaultCSSVisitor;
 import com.helger.css.decl.visit.ICSSVisitor;
 import com.helger.css.reader.CSSReader;
 import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
+import com.helger.css.utils.CSSColorHelper;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.Color;
 
 public class HtmlToText {
 
@@ -127,6 +130,20 @@ public class HtmlToText {
         case "b":
             format = format.withBold(true);
             break;
+        case "u":
+            effect = effect.withUnderlineColor(Color.BLACK);
+            break;
+        case "font":
+            if (node.hasAttr("face")) {
+                format = format.withFontName(node.attr("face").split(",")[0]);
+            }
+            if (node.hasAttr("color")) {
+                var color = parseColor(node.attr("color"));
+                if (color != null) {
+                    format = format.withFontColor(color);
+                }
+            }
+            break;
         default:
             break;
         }
@@ -153,30 +170,60 @@ public class HtmlToText {
         }
     }
 
+    private static Color parseColor(String color) {
+        if (CSSColorHelper.isHexColorValue(color)) {
+            return Color.fromHexArgb("0xFF" + color.substring(1));
+        }
+        if (CSSColorHelper.isRGBColorValue(color)) {
+            String[] rgb = color.trim().split("\\(\\)");
+            if (rgb.length == 3) {
+                String[] values = rgb[1].split(",");
+                if (values.length == 3) {
+                    return new Color( //
+                            Integer.parseInt(values[0]), //
+                            Integer.parseInt(values[1]), //
+                            Integer.parseInt(values[2]) //
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
     private TextFormat getFormat(Element element, List<CascadingStyleSheet> globalCss, TextFormat format) {
         String tag = element.tagName();
 
         String[] classNames = element.className().split(" ");
         String id = element.id();
 
+        CSSStyleRule rule = new CSSStyleRule();
+
         for (var css : globalCss) {
-            var styles = css.getAllStyleRules().getAll(v -> {
-                for (var d : v.getAllSelectors()) {
-                    if (d.equals(tag)) {
-                        return true;
+            // TODO How to choose the best style parameter?
+            for (var st : css.getAllStyleRules()) {
+                for (var sel : st.getAllSelectors()) {
+                    if (sel.getAsCSSString().equals(tag) //
+                            || sel.getAsCSSString().equals(id) //
+                    ) {
+                        for (var d : st.getAllDeclarations()) {
+                            rule.addDeclaration(d);
+                        }
                     }
-                    if (d.equals(tag) || d.equals(classNames) || d.equals(id)) {
-                        return true;
+                    for (var className : classNames) {
+                        if (sel.getAsCSSString().equals(tag + "." + className)) {
+                            for (var d : st.getAllDeclarations()) {
+                                rule.addDeclaration(d);
+                            }
+                        }
                     }
                 }
-                return false;
-            });
+            }
         }
 
-        if (tag.equals("h1")) {
-            System.out.println("h1");
+        var font = rule.getAllDeclarationsOfPropertyName("font-family");
+        if (font.isNotEmpty()) {
+            format = format.withFontName(font.get(0).getAsCSSString());
         }
-        // String class = element.
 
         return format;
     }

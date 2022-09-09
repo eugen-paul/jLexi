@@ -43,6 +43,11 @@ public final class Color {
         this.valueRgbA = valueArgb << 8 | valueArgb >>> 24;
     }
 
+    public Color(int r, int g, int b) {
+        this.valueArgb = 0xFF << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | (b & 0xFF);
+        this.valueRgbA = valueArgb << 8 | valueArgb >>> 24;
+    }
+
     public int getArgb() {
         return valueArgb;
     }
@@ -100,6 +105,13 @@ public final class Color {
         throw new IllegalArgumentException(EXCEPTION_TEXT + input);
     }
 
+    /**
+     * Parse Color from HEX-Value. Example: 0xFF010203
+     * 
+     * @param input
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static Color fromHexArgb(String input) throws IllegalArgumentException {
         Matcher matcher = HEX_PATTERN.matcher(input);
         if (matcher.find()) {
