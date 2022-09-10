@@ -43,8 +43,42 @@ public final class Color {
         this.valueRgbA = valueArgb << 8 | valueArgb >>> 24;
     }
 
+    /**
+     * Constructor
+     * 
+     * @param r - red value [0,255]
+     * @param g - green value [0,255]
+     * @param b - blue value [0,255]
+     */
     public Color(int r, int g, int b) {
         this.valueArgb = 0xFF << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | (b & 0xFF);
+        this.valueRgbA = valueArgb << 8 | valueArgb >>> 24;
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param r - red value [0,255]
+     * @param g - green value [0,255]
+     * @param b - blue value [0,255]
+     * @param a - alpha value [0,255]
+     */
+    public Color(int r, int g, int b, int a) {
+        this.valueArgb = (a & 0xFF) << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | (b & 0xFF);
+        this.valueRgbA = valueArgb << 8 | valueArgb >>> 24;
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param r - red value [0,255]
+     * @param g - green value [0,255]
+     * @param b - blue value [0,255]
+     * @param o - opacity value [0,1]
+     */
+    public Color(int r, int g, int b, float o) {
+        int a = (int) (o * 0xFF / 1f);
+        this.valueArgb = (a & 0xFF) << 24 | (r & 0xFF) << 16 | (g & 0xFF) << 8 | (b & 0xFF);
         this.valueRgbA = valueArgb << 8 | valueArgb >>> 24;
     }
 

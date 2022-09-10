@@ -10,15 +10,13 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import com.helger.css.ECSSVersion;
-import com.helger.css.decl.CSSSelector;
+import com.helger.css.decl.CSSDeclarationList;
 import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
-import com.helger.css.decl.visit.CSSVisitor;
-import com.helger.css.decl.visit.DefaultCSSVisitor;
-import com.helger.css.decl.visit.ICSSVisitor;
+import com.helger.css.parser.CSSParseHelper;
 import com.helger.css.reader.CSSReader;
+import com.helger.css.reader.CSSReaderDeclarationList;
 import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
-import com.helger.css.utils.CSSColorHelper;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
@@ -138,7 +136,7 @@ public class HtmlToText {
                 format = format.withFontName(node.attr("face").split(",")[0]);
             }
             if (node.hasAttr("color")) {
-                var color = parseColor(node.attr("color"));
+                var color = HtmlColorHelper.parseColor(node.attr("color"));
                 if (color != null) {
                     format = format.withFontColor(color);
                 }
@@ -152,6 +150,12 @@ public class HtmlToText {
             var element = (Element) node;
             format = getFormat(element, globalCss, format);
             effect = getFormat(element, globalCss, effect);
+        }
+
+        if (node.hasAttr("style")) {
+            var tagStyle = node.attr("style");
+            format = getFormat(node, tagStyle, format);
+            effect = getFormat(node, tagStyle, effect);
         }
 
         for (Node child : node.childNodes()) {
@@ -170,24 +174,46 @@ public class HtmlToText {
         }
     }
 
-    private static Color parseColor(String color) {
-        if (CSSColorHelper.isHexColorValue(color)) {
-            return Color.fromHexArgb("0xFF" + color.substring(1));
+    private TextFormat getFormat(Node node, String tagStyle, TextFormat format) {
+        CSSDeclarationList declList = CSSReaderDeclarationList.readFromString(//
+                tagStyle, //
+                ECSSVersion.CSS30, //
+                new DoNothingCSSParseErrorHandler() //
+        );
+
+        if (declList == null) {
+            return format;
         }
-        if (CSSColorHelper.isRGBColorValue(color)) {
-            String[] rgb = color.trim().split("\\(\\)");
-            if (rgb.length == 3) {
-                String[] values = rgb[1].split(",");
-                if (values.length == 3) {
-                    return new Color( //
-                            Integer.parseInt(values[0]), //
-                            Integer.parseInt(values[1]), //
-                            Integer.parseInt(values[2]) //
-                    );
-                }
+
+        var font = declList.getAllDeclarationsOfPropertyName("font-family");
+        if (font.isNotEmpty()) {
+            format = format
+                    .withFontName(CSSParseHelper.extractStringValue(font.get(0).getExpression().getAsCSSString()));
+        }
+
+        var colorValue = declList.getAllDeclarationsOfPropertyName("color");
+        if (colorValue.isNotEmpty()) {
+            var color = HtmlColorHelper
+                    .parseColor(colorValue.get(colorValue.size() - 1).getExpression().getAsCSSString());
+            if (color != null) {
+                format = format.withFontColor(color);
             }
         }
-        return null;
+
+        var bgColorValue = declList.getAllDeclarationsOfPropertyName("background-color");
+        if (bgColorValue.isNotEmpty()) {
+            var bgColor = HtmlColorHelper
+                    .parseColor(bgColorValue.get(bgColorValue.size() - 1).getExpression().getAsCSSString());
+            if (bgColor != null) {
+                format = format.withBackgroundColor(bgColor);
+            }
+        }
+
+        return format;
+    }
+
+    private TextFormatEffect getFormat(Node node, String tagStyle, TextFormatEffect effect) {
+        return effect;
     }
 
     private TextFormat getFormat(Element element, List<CascadingStyleSheet> globalCss, TextFormat format) {
@@ -210,7 +236,8 @@ public class HtmlToText {
                         }
                     }
                     for (var className : classNames) {
-                        if (sel.getAsCSSString().equals(tag + "." + className)) {
+                        if (sel.getAsCSSString().equals(tag + "." + className)
+                                || sel.getAsCSSString().equals("." + className)) {
                             for (var d : st.getAllDeclarations()) {
                                 rule.addDeclaration(d);
                             }
@@ -222,7 +249,26 @@ public class HtmlToText {
 
         var font = rule.getAllDeclarationsOfPropertyName("font-family");
         if (font.isNotEmpty()) {
-            format = format.withFontName(font.get(0).getAsCSSString());
+            format = format
+                    .withFontName(CSSParseHelper.extractStringValue(font.get(0).getExpression().getAsCSSString()));
+        }
+
+        var colorValue = rule.getAllDeclarationsOfPropertyName("color");
+        if (colorValue.isNotEmpty()) {
+            var color = HtmlColorHelper
+                    .parseColor(colorValue.get(colorValue.size() - 1).getExpression().getAsCSSString());
+            if (color != null) {
+                format = format.withFontColor(color);
+            }
+        }
+
+        var bgColorValue = rule.getAllDeclarationsOfPropertyName("background-color");
+        if (bgColorValue.isNotEmpty()) {
+            var bgColor = HtmlColorHelper
+                    .parseColor(bgColorValue.get(bgColorValue.size() - 1).getExpression().getAsCSSString());
+            if (bgColor != null) {
+                format = format.withBackgroundColor(bgColor);
+            }
         }
 
         return format;
@@ -234,7 +280,7 @@ public class HtmlToText {
 
     private void textNodeToResponse(TextNode node, List<TextElement> response, TextFormat format,
             TextFormatEffect formatEffect) {
-        for (var c : node.toString().toCharArray()) {
+        for (var c : node.getWholeText().toCharArray()) {
             response.add(TextElementFactory.fromChar(this.storage, c, format, formatEffect));
         }
     }
