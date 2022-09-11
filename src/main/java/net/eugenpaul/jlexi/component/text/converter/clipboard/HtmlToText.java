@@ -10,24 +10,25 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import com.helger.css.ECSSVersion;
-import com.helger.css.decl.CSSDeclarationList;
-import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
-import com.helger.css.parser.CSSParseHelper;
 import com.helger.css.reader.CSSReader;
-import com.helger.css.reader.CSSReaderDeclarationList;
 import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
 
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
-import net.eugenpaul.jlexi.utils.Color;
 
+@Slf4j
 public class HtmlToText {
 
-    private static final List<String> TAGS = List.of(//
+    private static final String STYLE_ATTR = "style";
+    private static final String STYLE_TAG = "style";
+
+    private static final List<String> CLIPBOARD_KEYWORDS = List.of(//
             "Version", //
             "StartHTML", //
             "EndHTML", //
@@ -40,15 +41,19 @@ public class HtmlToText {
     private ResourceManager storage;
     private Document doc;
 
+    @Setter
+    private static HtmlFormatHelper defaultFormatHelper = new HtmlFormatHelperImpl();
+
+    private HtmlFormatHelper currentFormatHelper;
+
     public HtmlToText(String clipboardHtml, ResourceManager storage) {
-        var html = getHtml(clipboardHtml);
+        var html = extractHtml(clipboardHtml);
         this.doc = Jsoup.parse(html);
-        System.out.println(html);
-        System.out.println("---------------------------------");
-        System.out.println(this.doc.outerHtml());
-        System.out.println("---------------------------------");
+        LOGGER.trace("HTML read:");
+        LOGGER.trace(this.doc.outerHtml());
 
         this.storage = storage;
+        this.currentFormatHelper = defaultFormatHelper;
     }
 
     private static CascadingStyleSheet readCss(String css) {
@@ -58,11 +63,10 @@ public class HtmlToText {
         );
     }
 
-    private static String getHtml(String clipboardHtml) {
-
+    private static String extractHtml(String clipboardHtml) {
         int offset = 0;
 
-        for (var tag : TAGS) {
+        for (var tag : CLIPBOARD_KEYWORDS) {
             offset = readTag(clipboardHtml, offset, tag);
         }
 
@@ -96,9 +100,20 @@ public class HtmlToText {
     }
 
     public List<TextElement> convert() {
-        List<CascadingStyleSheet> globalCss = new LinkedList<>();
+        var globalCss = readStyleTags();
 
-        var styles = doc.getElementsByTag("style");
+        List<TextElement> response = new LinkedList<>();
+
+        for (var element : this.doc.body().childNodes()) {
+            parseChilds(globalCss, element, response, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
+        }
+
+        return response;
+    }
+
+    private CascadingStyleSheet readStyleTags() {
+        List<CascadingStyleSheet> globalCss = new LinkedList<>();
+        var styles = doc.getElementsByTag(STYLE_TAG);
         var iterator = styles.listIterator();
         while (iterator.hasNext()) {
             var css = readCss(iterator.next().html());
@@ -107,62 +122,53 @@ public class HtmlToText {
             }
         }
 
-        List<TextElement> response = new LinkedList<>();
-
-        for (var element : this.doc.body().childNodes()) {
-            printChilds(globalCss, element, response, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
-        }
-
-        return response;
+        return globalCss.stream().reduce(new CascadingStyleSheet(), HtmlToText::addRules);
     }
 
-    private void printChilds(List<CascadingStyleSheet> globalCss, Node node, List<TextElement> response,
+    /**
+     * Copy all needed rules from source to target
+     * 
+     * @param target
+     * @param source
+     */
+    private static CascadingStyleSheet addRules(CascadingStyleSheet target, CascadingStyleSheet source) {
+        // We are only interested in the style rules.
+        for (var rule : source.getAllStyleRules()) {
+            target.addRule(rule);
+        }
+        return target;
+    }
+
+    private void parseChilds(CascadingStyleSheet globalCss, Node node, List<TextElement> response,
             TextFormat currentFormat, TextFormatEffect currentEffect) {
         TextFormat format = currentFormat;
         TextFormatEffect effect = currentEffect;
 
-        switch (node.nodeName()) {
-        case "i":
-            format = format.withItalic(true);
-            break;
-        case "b":
-            format = format.withBold(true);
-            break;
-        case "u":
-            effect = effect.withUnderlineColor(Color.BLACK);
-            break;
-        case "font":
-            if (node.hasAttr("face")) {
-                format = format.withFontName(node.attr("face").split(",")[0]);
-            }
-            if (node.hasAttr("color")) {
-                var color = HtmlColorHelper.parseColor(node.attr("color"));
-                if (color != null) {
-                    format = format.withFontColor(color);
-                }
-            }
-            break;
-        default:
-            break;
-        }
+        format = this.currentFormatHelper.applyTagFormat( //
+                node.nodeName(), //
+                new AttrReadIterator<>(node.attributes().asList()), //
+                format //
+        );
+
+        effect = this.currentFormatHelper.applyTagEffect(node.nodeName(), effect);
 
         if (node instanceof Element) {
             var element = (Element) node;
-            format = getFormat(element, globalCss, format);
-            effect = getFormat(element, globalCss, effect);
+            format = this.currentFormatHelper.applyStyleTagAttr(element, globalCss, format);
+            effect = this.currentFormatHelper.applyStyleTagAttr(element, globalCss, effect);
         }
 
-        if (node.hasAttr("style")) {
-            var tagStyle = node.attr("style");
-            format = getFormat(node, tagStyle, format);
-            effect = getFormat(node, tagStyle, effect);
+        if (node.hasAttr(STYLE_ATTR)) {
+            var tagStyle = node.attr(STYLE_ATTR);
+            format = this.currentFormatHelper.applyStyleAttr(tagStyle, format);
+            effect = this.currentFormatHelper.applyStyleAttr(node, tagStyle, effect);
         }
 
         for (Node child : node.childNodes()) {
             if (child instanceof TextNode) {
                 textNodeToResponse((TextNode) child, response, format, effect);
             } else {
-                printChilds(globalCss, child, response, format, effect);
+                parseChilds(globalCss, child, response, format, effect);
             }
         }
 
@@ -172,110 +178,6 @@ public class HtmlToText {
                 response.add(TextElementFactory.genNewLineChar(this.storage, format, effect));
             }
         }
-    }
-
-    private TextFormat getFormat(Node node, String tagStyle, TextFormat format) {
-        CSSDeclarationList declList = CSSReaderDeclarationList.readFromString(//
-                tagStyle, //
-                ECSSVersion.CSS30, //
-                new DoNothingCSSParseErrorHandler() //
-        );
-
-        if (declList == null) {
-            return format;
-        }
-
-        var font = declList.getAllDeclarationsOfPropertyName("font-family");
-        if (font.isNotEmpty()) {
-            format = format
-                    .withFontName(CSSParseHelper.extractStringValue(font.get(0).getExpression().getAsCSSString()));
-        }
-
-        var colorValue = declList.getAllDeclarationsOfPropertyName("color");
-        if (colorValue.isNotEmpty()) {
-            var color = HtmlColorHelper
-                    .parseColor(colorValue.get(colorValue.size() - 1).getExpression().getAsCSSString());
-            if (color != null) {
-                format = format.withFontColor(color);
-            }
-        }
-
-        var bgColorValue = declList.getAllDeclarationsOfPropertyName("background-color");
-        if (bgColorValue.isNotEmpty()) {
-            var bgColor = HtmlColorHelper
-                    .parseColor(bgColorValue.get(bgColorValue.size() - 1).getExpression().getAsCSSString());
-            if (bgColor != null) {
-                format = format.withBackgroundColor(bgColor);
-            }
-        }
-
-        return format;
-    }
-
-    private TextFormatEffect getFormat(Node node, String tagStyle, TextFormatEffect effect) {
-        return effect;
-    }
-
-    private TextFormat getFormat(Element element, List<CascadingStyleSheet> globalCss, TextFormat format) {
-        String tag = element.tagName();
-
-        String[] classNames = element.className().split(" ");
-        String id = element.id();
-
-        CSSStyleRule rule = new CSSStyleRule();
-
-        for (var css : globalCss) {
-            // TODO How to choose the best style parameter?
-            for (var st : css.getAllStyleRules()) {
-                for (var sel : st.getAllSelectors()) {
-                    if (sel.getAsCSSString().equals(tag) //
-                            || sel.getAsCSSString().equals(id) //
-                    ) {
-                        for (var d : st.getAllDeclarations()) {
-                            rule.addDeclaration(d);
-                        }
-                    }
-                    for (var className : classNames) {
-                        if (sel.getAsCSSString().equals(tag + "." + className)
-                                || sel.getAsCSSString().equals("." + className)) {
-                            for (var d : st.getAllDeclarations()) {
-                                rule.addDeclaration(d);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        var font = rule.getAllDeclarationsOfPropertyName("font-family");
-        if (font.isNotEmpty()) {
-            format = format
-                    .withFontName(CSSParseHelper.extractStringValue(font.get(0).getExpression().getAsCSSString()));
-        }
-
-        var colorValue = rule.getAllDeclarationsOfPropertyName("color");
-        if (colorValue.isNotEmpty()) {
-            var color = HtmlColorHelper
-                    .parseColor(colorValue.get(colorValue.size() - 1).getExpression().getAsCSSString());
-            if (color != null) {
-                format = format.withFontColor(color);
-            }
-        }
-
-        var bgColorValue = rule.getAllDeclarationsOfPropertyName("background-color");
-        if (bgColorValue.isNotEmpty()) {
-            var bgColor = HtmlColorHelper
-                    .parseColor(bgColorValue.get(bgColorValue.size() - 1).getExpression().getAsCSSString());
-            if (bgColor != null) {
-                format = format.withBackgroundColor(bgColor);
-            }
-        }
-
-        return format;
-    }
-
-    private TextFormatEffect getFormat(Element element, List<CascadingStyleSheet> globalCss, TextFormatEffect effect) {
-        return effect;
     }
 
     private void textNodeToResponse(TextNode node, List<TextElement> response, TextFormat format,

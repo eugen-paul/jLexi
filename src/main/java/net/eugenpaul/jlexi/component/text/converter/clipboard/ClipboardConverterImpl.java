@@ -112,6 +112,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
         return responseText;
     }
 
+    // TODO: Add copy/paste RTF formatted text
     private static String rtfToHtml(Reader rtf) throws IOException {
         JEditorPane p = new JEditorPane();
         p.setContentType("text/rtf");

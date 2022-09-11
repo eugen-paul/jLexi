@@ -16,7 +16,18 @@ public final class HtmlColorHelper {
     private static final String FORMAT_HEX = "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$";
     private static final Pattern PATTERN_HEX = Pattern.compile(FORMAT_HEX);
 
+    public static boolean isColor(String value) {
+        return isTextColor(value) //
+                || isHexColor(value) //
+                || isRgbaColor(value);
+    }
+
     public static Color parseColor(String value) {
+
+        if (isTextColor(value)) {
+            return parseTextColor(value);
+        }
+
         if (isHexColor(value)) {
             return parseHexColor(value);
         }
@@ -26,6 +37,46 @@ public final class HtmlColorHelper {
         }
 
         return null;
+    }
+
+    /**
+     * Check if the passed String is valid text color value.
+     * <p>
+     * Example value:
+     * <ul>
+     * <li>red</li>
+     * <li>brown</li>
+     * </ul>
+     * 
+     * @param value
+     * @return
+     */
+    public static boolean isTextColor(String value) {
+        if (value == null) {
+            return false;
+        }
+
+        try {
+            Color.fromText(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Parse text-value to Color. The value must be a text color.
+     * 
+     * @param value - hex color {@link #isHexColor(String)}
+     * @return Color or null
+     */
+    public static Color parseTextColor(String value) {
+        try {
+            return Color.fromText(value);
+        } catch (Exception e) {
+            LOGGER.trace("cann't parse text color " + value, e);
+            return null;
+        }
     }
 
     /**
