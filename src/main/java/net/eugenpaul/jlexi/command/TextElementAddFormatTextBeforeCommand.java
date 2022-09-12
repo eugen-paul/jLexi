@@ -17,7 +17,9 @@ public class TextElementAddFormatTextBeforeCommand implements TextCommand {
         this.cursorPosition = cursorPosition;
         this.addcommands = new LinkedList<>();
         for (var element : text) {
-            this.addcommands.add(new TextElementAddBeforeCommand(element, cursorPosition));
+            if (element != null) {
+                this.addcommands.add(new TextElementAddBeforeCommand(element, cursorPosition));
+            }
         }
     }
 

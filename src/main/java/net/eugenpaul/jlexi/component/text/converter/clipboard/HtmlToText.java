@@ -161,7 +161,7 @@ public class HtmlToText {
         if (node.hasAttr(STYLE_ATTR)) {
             var tagStyle = node.attr(STYLE_ATTR);
             format = this.currentFormatHelper.applyStyleAttr(tagStyle, format);
-            effect = this.currentFormatHelper.applyStyleAttr(node, tagStyle, effect);
+            effect = this.currentFormatHelper.applyStyleAttr(tagStyle, effect);
         }
 
         for (Node child : node.childNodes()) {
@@ -183,7 +183,10 @@ public class HtmlToText {
     private void textNodeToResponse(TextNode node, List<TextElement> response, TextFormat format,
             TextFormatEffect formatEffect) {
         for (var c : node.getWholeText().toCharArray()) {
-            response.add(TextElementFactory.fromChar(this.storage, c, format, formatEffect));
+            var textChar = TextElementFactory.fromChar(this.storage, c, format, formatEffect);
+            if (textChar != null) {
+                response.add(textChar);
+            }
         }
     }
 }

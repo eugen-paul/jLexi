@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 
 import com.helger.css.decl.CascadingStyleSheet;
 
@@ -19,14 +18,13 @@ public interface HtmlFormatHelper {
             TextFormat currentFormat //
     );
 
-    public TextFormatEffect applyTagEffect(String tagName, TextFormatEffect currentEffect);
+    TextFormatEffect applyTagEffect(String tagName, TextFormatEffect currentEffect);
 
-    public TextFormat applyStyleAttr(String styleAttr, TextFormat format);
+    TextFormat applyStyleAttr(String styleAttr, TextFormat format);
 
-    public TextFormat applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormat format);
+    TextFormat applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormat format);
 
-    public TextFormatEffect applyStyleAttr(Node node, String tagStyle, TextFormatEffect effect);
+    TextFormatEffect applyStyleAttr(String tagStyle, TextFormatEffect effect);
 
-    public TextFormatEffect applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormatEffect effect);
-
+    TextFormatEffect applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormatEffect effect);
 }

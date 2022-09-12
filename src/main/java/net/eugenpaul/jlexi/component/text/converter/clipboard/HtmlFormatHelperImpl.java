@@ -1,16 +1,17 @@
 package net.eugenpaul.jlexi.component.text.converter.clipboard;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.TreeMap;
 
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CSSDeclarationList;
+import com.helger.css.decl.CSSSelector;
 import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
 import com.helger.css.parser.CSSParseHelper;
@@ -120,71 +121,110 @@ public class HtmlFormatHelperImpl implements HtmlFormatHelper {
             return format;
         }
 
-        format = applyFormatAttributes(format, declList::getAllDeclarationsOfPropertyName);
+        Map<String, TreeMap<Integer, CSSDeclaration>> response = new HashMap<>();
+
+        declList.stream()//
+                .forEach(v -> response.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
+                        .put(1, v)//
+                );
+
+        format = applyFormatAttributes(format, response);
 
         return format;
     }
 
     @Override
     public TextFormat applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormat format) {
+        var properties = getBestAttribute(globalCss.getAllStyleRules(), element);
+        return applyFormatAttributes(format, properties);
+    }
+
+    private Map<String, TreeMap<Integer, CSSDeclaration>> getBestAttribute(//
+            ICommonsList<CSSStyleRule> rules, //
+            Element element //
+    ) {
+        Map<String, TreeMap<Integer, CSSDeclaration>> response = new HashMap<>();
+
         String tag = element.tagName();
 
         String[] classNames = element.className().split(" ");
         String id = element.id();
 
-        CSSStyleRule rule = computeBestRule(globalCss, tag, classNames, id);
-
-        format = applyFormatAttributes(format, rule::getAllDeclarationsOfPropertyName);
-
-        return format;
-    }
-
-    private CSSStyleRule computeBestRule(CascadingStyleSheet globalCss, String tag, String[] classNames, String id) {
-        CSSStyleRule rule = new CSSStyleRule();
-
-        // TODO How to choose the best style parameter?
-        for (var st : globalCss.getAllStyleRules()) {
-            for (var sel : st.getAllSelectors()) {
-                if (sel.getAsCSSString().equals(tag) //
-                        || sel.getAsCSSString().equals("#" + id) //
-                ) {
-                    for (var d : st.getAllDeclarations()) {
-                        rule.addDeclaration(d);
-                    }
-                }
-                for (var className : classNames) {
-                    if (sel.getAsCSSString().equals(tag + "." + className)
-                            || sel.getAsCSSString().equals("." + className)) {
-                        for (var d : st.getAllDeclarations()) {
-                            rule.addDeclaration(d);
-                        }
-                    }
+        for (var rule : rules) {
+            for (var sel : rule.getAllSelectors()) {
+                int cost = getCost(sel, tag, classNames, id);
+                if (cost > 0) {
+                    rule.getAllDeclarations().stream()//
+                            .forEach(v -> response.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
+                                    .put(cost, v)//
+                            );
                 }
             }
         }
-        return rule;
+
+        return response;
+    }
+
+    private int getCost(CSSSelector selector, String tag, String[] classNames, String id) {
+        int cost = 0;
+
+        if (selector.getAsCSSString().equals(tag)) {
+            cost = 10;
+        } else if (selector.getAsCSSString().equals("#" + id) //
+        ) {
+            cost = 1000;
+        } else {
+            for (var className : classNames) {
+                if (selector.getAsCSSString().equals(tag + "." + className)) {
+                    cost = 110;
+                }
+                if (selector.getAsCSSString().equals("." + className)) {
+                    cost = 100;
+                }
+            }
+        }
+
+        // TODO check if combinator matches the element ("div p", "div > p", ...)
+
+        return cost;
     }
 
     private TextFormat applyFormatAttributes(TextFormat format,
-            Function<String, ICommonsList<CSSDeclaration>> getProperty) {
-        var font = getProperty.apply("font-family");
+            Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        var font = bestDeclaration(properties, "font-family");
         format = applyFont(format, font);
 
-        var colorValue = getProperty.apply("color");
+        var colorValue = bestDeclaration(properties, "color");
         format = applyFontColor(format, colorValue);
 
-        var bgColorValue = getProperty.apply("background-color");
+        var bgColorValue = bestDeclaration(properties, "background-color");
         format = applyBgColor(format, bgColorValue);
 
-        var bgColorShortValue = getProperty.apply("background");
+        var bgColorShortValue = bestDeclaration(properties, "background");
         format = applyBgColor(format, bgColorShortValue);
         return format;
     }
 
-    private TextFormat applyBgColor(TextFormat format, ICommonsList<CSSDeclaration> bgColorValue) {
-        if (bgColorValue.isNotEmpty()) {
-            var bgColor = HtmlColorHelper
-                    .parseColor(bgColorValue.get(bgColorValue.size() - 1).getExpression().getAsCSSString());
+    private TextFormatEffect applyEffectAttributes(TextFormatEffect effect,
+            Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        var font = bestDeclaration(properties, "border-bottom");
+        effect = applyUnderline(effect, font);
+        return effect;
+    }
+
+    private CSSDeclaration bestDeclaration(Map<String, TreeMap<Integer, CSSDeclaration>> properties,
+            String propertyName) {
+        var propertyMap = properties.get(propertyName);
+        if (propertyMap == null || propertyMap.isEmpty()) {
+            return null;
+        }
+
+        return propertyMap.lastEntry().getValue();
+    }
+
+    private TextFormat applyBgColor(TextFormat format, CSSDeclaration bgColorValue) {
+        if (bgColorValue != null) {
+            var bgColor = HtmlColorHelper.parseColor(bgColorValue.getExpression().getAsCSSString());
             if (bgColor != null) {
                 format = format.withBackgroundColor(bgColor);
             }
@@ -192,10 +232,9 @@ public class HtmlFormatHelperImpl implements HtmlFormatHelper {
         return format;
     }
 
-    private TextFormat applyFontColor(TextFormat format, ICommonsList<CSSDeclaration> colorValue) {
-        if (colorValue.isNotEmpty()) {
-            var color = HtmlColorHelper
-                    .parseColor(colorValue.get(colorValue.size() - 1).getExpression().getAsCSSString());
+    private TextFormat applyFontColor(TextFormat format, CSSDeclaration colorValue) {
+        if (colorValue != null) {
+            var color = HtmlColorHelper.parseColor(colorValue.getExpression().getAsCSSString());
             if (color != null) {
                 format = format.withFontColor(color);
             }
@@ -203,24 +242,16 @@ public class HtmlFormatHelperImpl implements HtmlFormatHelper {
         return format;
     }
 
-    private TextFormat applyFont(TextFormat format, ICommonsList<CSSDeclaration> font) {
-        if (font.isNotEmpty()) {
-            format = format
-                    .withFontName(CSSParseHelper.extractStringValue(font.get(0).getExpression().getAsCSSString()));
+    private TextFormat applyFont(TextFormat format, CSSDeclaration font) {
+        if (font != null) {
+            format = format.withFontName(CSSParseHelper.extractStringValue(font.getExpression().getAsCSSString()));
         }
         return format;
     }
 
-    private TextFormatEffect applyEffectAttributes(TextFormatEffect effect,
-            Function<String, ICommonsList<CSSDeclaration>> getProperty) {
-        var font = getProperty.apply("border-bottom");
-        effect = applyUnderline(effect, font);
-        return effect;
-    }
-
-    private TextFormatEffect applyUnderline(TextFormatEffect effect, ICommonsList<CSSDeclaration> font) {
-        if (font.isNotEmpty()) {
-            var borderAttr = font.get(0).getExpression().getAsCSSString().split(" ");
+    private TextFormatEffect applyUnderline(TextFormatEffect effect, CSSDeclaration font) {
+        if (font != null) {
+            var borderAttr = font.getExpression().getAsCSSString().split(" ");
 
             for (String attr : borderAttr) {
                 if (attr.equals("solid")) {
@@ -234,13 +265,12 @@ public class HtmlFormatHelperImpl implements HtmlFormatHelper {
                     }
                 }
             }
-
         }
         return effect;
     }
 
     @Override
-    public TextFormatEffect applyStyleAttr(Node node, String styleAttr, TextFormatEffect effect) {
+    public TextFormatEffect applyStyleAttr(String styleAttr, TextFormatEffect effect) {
         CSSDeclarationList declList = CSSReaderDeclarationList.readFromString(//
                 styleAttr, //
                 ECSSVersion.CSS30, //
@@ -251,22 +281,21 @@ public class HtmlFormatHelperImpl implements HtmlFormatHelper {
             return effect;
         }
 
-        effect = applyEffectAttributes(effect, declList::getAllDeclarationsOfPropertyName);
+        Map<String, TreeMap<Integer, CSSDeclaration>> response = new HashMap<>();
+
+        declList.stream()//
+                .forEach(v -> response.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
+                        .put(1, v)//
+                );
+
+        effect = applyEffectAttributes(effect, response);
 
         return effect;
     }
 
     @Override
     public TextFormatEffect applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormatEffect effect) {
-        String tag = element.tagName();
-
-        String[] classNames = element.className().split(" ");
-        String id = element.id();
-
-        CSSStyleRule rule = computeBestRule(globalCss, tag, classNames, id);
-
-        effect = applyEffectAttributes(effect, rule::getAllDeclarationsOfPropertyName);
-
-        return effect;
+        var properties = getBestAttribute(globalCss.getAllStyleRules(), element);
+        return applyEffectAttributes(effect, properties);
     }
 }
