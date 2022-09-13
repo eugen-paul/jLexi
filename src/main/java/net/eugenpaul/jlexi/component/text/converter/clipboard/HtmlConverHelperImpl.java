@@ -2,10 +2,12 @@ package net.eugenpaul.jlexi.component.text.converter.clipboard;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.css.ECSSVersion;
@@ -23,7 +25,12 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
 import net.eugenpaul.jlexi.utils.Color;
 
-public class HtmlFormatHelperImpl implements HtmlFormatHelper {
+public class HtmlConverHelperImpl implements HtmlConvertHelper {
+
+    @Override
+    public Map<String, TreeMap<Integer, CSSDeclaration>> stylesProirities(Node node, CascadingStyleSheet globalCss) {
+        return null;
+    }
 
     @Override
     public TextFormat applyTagFormat( //
@@ -100,6 +107,7 @@ public class HtmlFormatHelperImpl implements HtmlFormatHelper {
 
         switch (tagName) {
         case "u":
+            effect = effect.withUnderline(FormatUnderlineType.SINGLE);
             effect = effect.withUnderlineColor(Color.BLACK);
             break;
         default:

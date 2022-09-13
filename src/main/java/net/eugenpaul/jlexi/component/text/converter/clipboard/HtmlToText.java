@@ -14,7 +14,6 @@ import com.helger.css.decl.CascadingStyleSheet;
 import com.helger.css.reader.CSSReader;
 import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
@@ -28,32 +27,13 @@ public class HtmlToText {
     private static final String STYLE_ATTR = "style";
     private static final String STYLE_TAG = "style";
 
-    private static final List<String> CLIPBOARD_KEYWORDS = List.of(//
-            "Version", //
-            "StartHTML", //
-            "EndHTML", //
-            "StartFragment", //
-            "EndFragment", //
-            "StartSelection", //
-            "EndSelection" //
-    );
-
     private ResourceManager storage;
-    private Document doc;
 
-    @Setter
-    private static HtmlFormatHelper defaultFormatHelper = new HtmlFormatHelperImpl();
+    private HtmlConvertHelper currentFormatHelper;
 
-    private HtmlFormatHelper currentFormatHelper;
-
-    public HtmlToText(String clipboardHtml, ResourceManager storage) {
-        var html = extractHtml(clipboardHtml);
-        this.doc = Jsoup.parse(html);
-        LOGGER.trace("HTML read:");
-        LOGGER.trace(this.doc.outerHtml());
-
+    public HtmlToText(ResourceManager storage) {
         this.storage = storage;
-        this.currentFormatHelper = defaultFormatHelper;
+        this.currentFormatHelper = new HtmlConverHelperImpl();
     }
 
     private static CascadingStyleSheet readCss(String css) {
@@ -63,55 +43,23 @@ public class HtmlToText {
         );
     }
 
-    private static String extractHtml(String clipboardHtml) {
-        int offset = 0;
+    public List<TextElement> convert(String html) {
+        Document doc = Jsoup.parse(html);
+        LOGGER.trace("HTML read:");
+        LOGGER.trace(doc.outerHtml());
 
-        for (var tag : CLIPBOARD_KEYWORDS) {
-            offset = readTag(clipboardHtml, offset, tag);
-        }
-
-        return clipboardHtml.substring(offset);
-    }
-
-    private static int readTag(String clipboardHtml, int offset, String tag) {
-        if (clipboardHtml.startsWith(tag, offset)) {
-            // tag
-            offset += tag.length();
-            // :
-            offset++;
-            // length
-            while (isDigitOrDot(clipboardHtml.charAt(offset))) {
-                offset++;
-            }
-            // EOL
-            while (isEol(clipboardHtml.charAt(offset))) {
-                offset++;
-            }
-        }
-        return offset;
-    }
-
-    private static boolean isDigitOrDot(char c) {
-        return c >= '0' && c <= '9' || c == '.';
-    }
-
-    private static boolean isEol(char c) {
-        return c == '\n' || c == 'r';
-    }
-
-    public List<TextElement> convert() {
-        var globalCss = readStyleTags();
+        var globalCss = readStyleTags(doc);
 
         List<TextElement> response = new LinkedList<>();
 
-        for (var element : this.doc.body().childNodes()) {
+        for (var element : doc.body().childNodes()) {
             parseChilds(globalCss, element, response, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
         }
 
         return response;
     }
 
-    private CascadingStyleSheet readStyleTags() {
+    private CascadingStyleSheet readStyleTags(Document doc) {
         List<CascadingStyleSheet> globalCss = new LinkedList<>();
         var styles = doc.getElementsByTag(STYLE_TAG);
         var iterator = styles.listIterator();

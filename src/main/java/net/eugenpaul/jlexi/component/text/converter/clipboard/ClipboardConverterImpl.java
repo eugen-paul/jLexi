@@ -14,7 +14,6 @@ import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.EditorKit;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.text.converter.ClipboardConverter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
@@ -26,12 +25,17 @@ import net.eugenpaul.jlexi.exception.UnsupportedException;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 
 @Slf4j
-@AllArgsConstructor
 public class ClipboardConverterImpl implements ClipboardConverter {
 
     private static final String READ_ERROR = "Can't read data from clipboard. ";
 
-    private ResourceManager storage;
+    private final ResourceManager storage;
+    private final HtmlToText conv;
+
+    public ClipboardConverterImpl(ResourceManager storage) {
+        this.storage = storage;
+        this.conv = new HtmlToText(storage);
+    }
 
     @Override
     public List<TextElement> read(TextFormat format, TextFormatEffect effect) throws NotYetImplementedException {
@@ -41,7 +45,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
         try {
             if (clipboard.isDataFlavorAvailable(DataFlavor.allHtmlFlavor)) {
                 textFromClipboard = clipboard.getData(DataFlavor.allHtmlFlavor).toString();
-                return htmlToText(textFromClipboard, storage);
+                return clipboardHtmlToText(textFromClipboard);
             }
             textFromClipboard = clipboard.getData(DataFlavor.stringFlavor).toString();
             return plainToText(textFromClipboard, storage, format, effect);
@@ -64,7 +68,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
             throw new UnsupportedException(READ_ERROR, e);
         }
 
-        return htmlToText(textFromClipboard, storage);
+        return clipboardHtmlToText(textFromClipboard);
     }
 
     @Override
@@ -89,9 +93,9 @@ public class ClipboardConverterImpl implements ClipboardConverter {
 
     }
 
-    private static List<TextElement> htmlToText(String html, ResourceManager storage) {
-        HtmlToText conv = new HtmlToText(html, storage);
-        return conv.convert();
+    private List<TextElement> clipboardHtmlToText(String clipboardHtml) {
+        var html = ClipboardHelper.extractHtml(clipboardHtml);
+        return conv.convert(html);
     }
 
     private static List<TextElement> plainToText(String html, ResourceManager storage, TextFormat format,

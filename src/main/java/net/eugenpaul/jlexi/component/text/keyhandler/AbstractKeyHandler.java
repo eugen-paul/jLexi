@@ -1,17 +1,13 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
 import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementAddBeforeCommand;
 import net.eugenpaul.jlexi.command.TextElementAddFormatTextBeforeCommand;
-import net.eugenpaul.jlexi.command.TextElementAddRowTextBeforeCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveCommand;
 import net.eugenpaul.jlexi.command.TextElementRemoveSelectedCommand;
 import net.eugenpaul.jlexi.command.TextElementReplaceCommand;

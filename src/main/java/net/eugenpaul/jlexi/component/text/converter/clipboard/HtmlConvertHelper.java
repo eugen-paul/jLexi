@@ -2,15 +2,20 @@ package net.eugenpaul.jlexi.component.text.converter.clipboard;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
+import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CascadingStyleSheet;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 
-public interface HtmlFormatHelper {
+public interface HtmlConvertHelper {
+
+    Map<String, TreeMap<Integer, CSSDeclaration>> stylesProirities(Node node, CascadingStyleSheet globalCss);
 
     TextFormat applyTagFormat( //
             String tagName, //
