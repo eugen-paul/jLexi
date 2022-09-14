@@ -24,7 +24,6 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 @Slf4j
 public class HtmlToText {
 
-    private static final String STYLE_ATTR = "style";
     private static final String STYLE_TAG = "style";
 
     private ResourceManager storage;
@@ -92,30 +91,15 @@ public class HtmlToText {
         TextFormat format = currentFormat;
         TextFormatEffect effect = currentEffect;
 
-        format = this.currentFormatHelper.applyTagFormat( //
-                node.nodeName(), //
-                new AttrReadIterator<>(node.attributes().asList()), //
-                format //
-        );
-
-        effect = this.currentFormatHelper.applyTagEffect(node.nodeName(), effect);
-
-        if (node instanceof Element) {
-            var element = (Element) node;
-            format = this.currentFormatHelper.applyStyleTagAttr(element, globalCss, format);
-            effect = this.currentFormatHelper.applyStyleTagAttr(element, globalCss, effect);
-        }
-
-        if (node.hasAttr(STYLE_ATTR)) {
-            var tagStyle = node.attr(STYLE_ATTR);
-            format = this.currentFormatHelper.applyStyleAttr(tagStyle, format);
-            effect = this.currentFormatHelper.applyStyleAttr(tagStyle, effect);
-        }
+        var properties = this.currentFormatHelper.stylesProperties(node, globalCss);
+        format = this.currentFormatHelper.applyFormatAttributes(format, properties);
+        effect = this.currentFormatHelper.applyEffectAttributes(effect, properties);
 
         for (Node child : node.childNodes()) {
             if (child instanceof TextNode) {
                 textNodeToResponse((TextNode) child, response, format, effect);
             } else {
+                // TODO should the current format be passed here or should the current properties be passed here?
                 parseChilds(globalCss, child, response, format, effect);
             }
         }

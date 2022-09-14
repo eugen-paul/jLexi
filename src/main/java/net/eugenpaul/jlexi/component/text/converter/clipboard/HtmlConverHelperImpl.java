@@ -2,7 +2,6 @@ package net.eugenpaul.jlexi.component.text.converter.clipboard;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -13,6 +12,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CSSDeclarationList;
+import com.helger.css.decl.CSSExpression;
 import com.helger.css.decl.CSSSelector;
 import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
@@ -23,136 +23,43 @@ import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
-import net.eugenpaul.jlexi.utils.Color;
 
 public class HtmlConverHelperImpl implements HtmlConvertHelper {
 
-    @Override
-    public Map<String, TreeMap<Integer, CSSDeclaration>> stylesProirities(Node node, CascadingStyleSheet globalCss) {
-        return null;
-    }
+    private static final String STYLE_ATTR = "style";
 
     @Override
-    public TextFormat applyTagFormat( //
-            String tagName, //
-            Iterator<Map.Entry<String, String>> attributesiterator, //
-            TextFormat currentFormat //
-    ) {
-        TextFormat format = currentFormat;
+    public Map<String, TreeMap<Integer, CSSDeclaration>> stylesProperties(Node node, CascadingStyleSheet globalCss) {
 
-        switch (tagName) {
-        case "i":
-            format = format.withItalic(true);
-            break;
-        case "b", "strong":
-            format = format.withBold(true);
-            break;
-        case "h1":
-            format = format.withBold(true);
-            format = format.withFontsize(32);
-            break;
-        case "h2":
-            format = format.withBold(true);
-            format = format.withFontsize(24);
-            break;
-        case "h3":
-            format = format.withBold(true);
-            format = format.withFontsize(18);
-            break;
-        case "h4":
-            format = format.withBold(true);
-            format = format.withFontsize(16);
-            break;
-        case "h5":
-            format = format.withBold(true);
-            format = format.withFontsize(13);
-            break;
-        case "h6":
-            format = format.withBold(true);
-            format = format.withFontsize(10);
-            break;
-        case "font":
-            format = applyFontTagArrtibutes(attributesiterator, format);
-            break;
-        default:
-            break;
+        Map<String, TreeMap<Integer, CSSDeclaration>> properties = new HashMap<>();
+
+        addTagProperties(node.nodeName(), properties);
+
+        if (node.nodeName().equals("font")) {
+            addFontAttributes( //
+                    properties, //
+                    new AttrReadIterator<>(node.attributes().asList()) //
+            );
         }
 
-        return format;
-    }
-
-    private TextFormat applyFontTagArrtibutes(Iterator<Map.Entry<String, String>> attributesiterator,
-            TextFormat format) {
-        while (attributesiterator.hasNext()) {
-            var attr = attributesiterator.next();
-            if (attr.getKey().equals("face")) {
-                var fonts = attr.getValue().split(",");
-                if (fonts.length > 0) {
-                    format = format.withFontName(fonts[0]);
-                }
-            }
-            if (attr.getKey().equals("color")) {
-                var color = HtmlColorHelper.parseColor(attr.getValue());
-                if (color != null) {
-                    format = format.withFontColor(color);
-                }
-            }
-        }
-        return format;
-    }
-
-    @Override
-    public TextFormatEffect applyTagEffect(String tagName, TextFormatEffect currentEffect) {
-        TextFormatEffect effect = currentEffect;
-
-        switch (tagName) {
-        case "u":
-            effect = effect.withUnderline(FormatUnderlineType.SINGLE);
-            effect = effect.withUnderlineColor(Color.BLACK);
-            break;
-        default:
-            break;
+        if (node.hasAttr(STYLE_ATTR)) {
+            var styleAttr = node.attr(STYLE_ATTR);
+            addStyleAttr(styleAttr, properties);
         }
 
-        return effect;
-    }
-
-    @Override
-    public TextFormat applyStyleAttr(String styleAttr, TextFormat format) {
-        CSSDeclarationList declList = CSSReaderDeclarationList.readFromString(//
-                styleAttr, //
-                ECSSVersion.CSS30, //
-                new DoNothingCSSParseErrorHandler() //
-        );
-
-        if (declList == null) {
-            return format;
+        if (node instanceof Element) {
+            var element = (Element) node;
+            addStyleTagAttr(element, globalCss.getAllStyleRules(), properties);
         }
 
-        Map<String, TreeMap<Integer, CSSDeclaration>> response = new HashMap<>();
-
-        declList.stream()//
-                .forEach(v -> response.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
-                        .put(1, v)//
-                );
-
-        format = applyFormatAttributes(format, response);
-
-        return format;
+        return properties;
     }
 
-    @Override
-    public TextFormat applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormat format) {
-        var properties = getBestAttribute(globalCss.getAllStyleRules(), element);
-        return applyFormatAttributes(format, properties);
-    }
-
-    private Map<String, TreeMap<Integer, CSSDeclaration>> getBestAttribute(//
+    private void addStyleTagAttr(//
+            Element element, //
             ICommonsList<CSSStyleRule> rules, //
-            Element element //
+            Map<String, TreeMap<Integer, CSSDeclaration>> properties //
     ) {
-        Map<String, TreeMap<Integer, CSSDeclaration>> response = new HashMap<>();
-
         String tag = element.tagName();
 
         String[] classNames = element.className().split(" ");
@@ -163,14 +70,113 @@ public class HtmlConverHelperImpl implements HtmlConvertHelper {
                 int cost = getCost(sel, tag, classNames, id);
                 if (cost > 0) {
                     rule.getAllDeclarations().stream()//
-                            .forEach(v -> response.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
+                            .forEach(v -> properties.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
                                     .put(cost, v)//
                             );
                 }
             }
         }
+    }
 
-        return response;
+    private void addTagProperties(String tagName, Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        switch (tagName) {
+        case "i":
+            addItalic(properties);
+            break;
+        case "u":
+            addUnderline(properties);
+            break;
+        case "b", "strong":
+            addBold(properties);
+            break;
+        case "h1":
+            addBold(properties);
+            addSize(properties, 32);
+            break;
+        case "h2":
+            addBold(properties);
+            addSize(properties, 24);
+            break;
+        case "h3":
+            addBold(properties);
+            addSize(properties, 18);
+            break;
+        case "h4":
+            addBold(properties);
+            addSize(properties, 16);
+            break;
+        case "h5":
+            addBold(properties);
+            addSize(properties, 13);
+            break;
+        case "h6":
+            addBold(properties);
+            addSize(properties, 10);
+            break;
+        default:
+            break;
+        }
+    }
+
+    private void addBold(Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        CSSDeclaration decl = new CSSDeclaration("font-weight", CSSExpression.createSimple("bold"));
+        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
+                .put(1, decl);
+    }
+
+    private void addItalic(Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        CSSDeclaration decl = new CSSDeclaration("font-style", CSSExpression.createSimple("italic"));
+        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
+                .put(1, decl);
+    }
+
+    private void addUnderline(Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        CSSDeclaration decl = new CSSDeclaration("border-bottom", CSSExpression.createSimple("solid"));
+        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
+                .put(1, decl);
+    }
+
+    private void addSize(Map<String, TreeMap<Integer, CSSDeclaration>> properties, int sizePx) {
+        CSSDeclaration decl = new CSSDeclaration("font-size", CSSExpression.createSimple(sizePx + "px"));
+        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
+                .put(1, decl);
+    }
+
+    private void addFontAttributes(Map<String, TreeMap<Integer, CSSDeclaration>> properties,
+            Iterator<Map.Entry<String, String>> attributesiterator) {
+        while (attributesiterator.hasNext()) {
+            var attr = attributesiterator.next();
+            if (attr.getKey().equals("face")) {
+                var fonts = attr.getValue().split(",");
+                if (fonts.length > 0) {
+                    CSSDeclaration decl = new CSSDeclaration("font-family", CSSExpression.createSimple(fonts[0]));
+                    properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
+                            .put(10, decl);
+                }
+            }
+            if (attr.getKey().equals("color") && HtmlColorHelper.isColor(attr.getValue())) {
+                CSSDeclaration decl = new CSSDeclaration("color", CSSExpression.createSimple(attr.getValue()));
+                properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
+                        .put(10, decl);
+            }
+        }
+    }
+
+    public void addStyleAttr(String styleAttr, Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        CSSDeclarationList declList = CSSReaderDeclarationList.readFromString(//
+                styleAttr, //
+                ECSSVersion.CSS30, //
+                new DoNothingCSSParseErrorHandler() //
+        );
+
+        if (declList == null) {
+            return;
+        }
+
+        declList.stream()//
+                .forEach(v -> properties.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
+                        .put(100, v)//
+                );
     }
 
     private int getCost(CSSSelector selector, String tag, String[] classNames, String id) {
@@ -197,10 +203,17 @@ public class HtmlConverHelperImpl implements HtmlConvertHelper {
         return cost;
     }
 
-    private TextFormat applyFormatAttributes(TextFormat format,
+    @Override
+    public TextFormat applyFormatAttributes(TextFormat format,
             Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
         var font = bestDeclaration(properties, "font-family");
         format = applyFont(format, font);
+
+        var fontWeight = bestDeclaration(properties, "font-weight");
+        format = applyFontWeight(format, fontWeight);
+
+        var fontStyle = bestDeclaration(properties, "font-style");
+        format = applyFontStyle(format, fontStyle);
 
         var colorValue = bestDeclaration(properties, "color");
         format = applyFontColor(format, colorValue);
@@ -213,7 +226,8 @@ public class HtmlConverHelperImpl implements HtmlConvertHelper {
         return format;
     }
 
-    private TextFormatEffect applyEffectAttributes(TextFormatEffect effect,
+    @Override
+    public TextFormatEffect applyEffectAttributes(TextFormatEffect effect,
             Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
         var font = bestDeclaration(properties, "border-bottom");
         effect = applyUnderline(effect, font);
@@ -257,6 +271,40 @@ public class HtmlConverHelperImpl implements HtmlConvertHelper {
         return format;
     }
 
+    private TextFormat applyFontWeight(TextFormat format, CSSDeclaration fontWeight) {
+        if (fontWeight != null) {
+            var value = fontWeight.getExpression().getAsCSSString();
+            switch (value) {
+            case "normal":
+                format = format.withBold(false);
+                break;
+            case "bold":
+                format = format.withBold(true);
+                break;
+            default:
+                break;
+            }
+        }
+        return format;
+    }
+
+    private TextFormat applyFontStyle(TextFormat format, CSSDeclaration fontStyle) {
+        if (fontStyle != null) {
+            var value = fontStyle.getExpression().getAsCSSString();
+            switch (value) {
+            case "normal":
+                format = format.withItalic(false);
+                break;
+            case "italic":
+                format = format.withItalic(true);
+                break;
+            default:
+                break;
+            }
+        }
+        return format;
+    }
+
     private TextFormatEffect applyUnderline(TextFormatEffect effect, CSSDeclaration font) {
         if (font != null) {
             var borderAttr = font.getExpression().getAsCSSString().split(" ");
@@ -277,33 +325,4 @@ public class HtmlConverHelperImpl implements HtmlConvertHelper {
         return effect;
     }
 
-    @Override
-    public TextFormatEffect applyStyleAttr(String styleAttr, TextFormatEffect effect) {
-        CSSDeclarationList declList = CSSReaderDeclarationList.readFromString(//
-                styleAttr, //
-                ECSSVersion.CSS30, //
-                new DoNothingCSSParseErrorHandler() //
-        );
-
-        if (declList == null) {
-            return effect;
-        }
-
-        Map<String, TreeMap<Integer, CSSDeclaration>> response = new HashMap<>();
-
-        declList.stream()//
-                .forEach(v -> response.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
-                        .put(1, v)//
-                );
-
-        effect = applyEffectAttributes(effect, response);
-
-        return effect;
-    }
-
-    @Override
-    public TextFormatEffect applyStyleTagAttr(Element element, CascadingStyleSheet globalCss, TextFormatEffect effect) {
-        var properties = getBestAttribute(globalCss.getAllStyleRules(), element);
-        return applyEffectAttributes(effect, properties);
-    }
 }
