@@ -44,5 +44,11 @@ public interface ClipboardConverter {
     public List<TextElement> readPlain(TextFormat format, TextFormatEffect effect)
             throws NotYetImplementedException, UnsupportedException;
 
-    public void write(List<TextElement> data) throws NotYetImplementedException;
+    /**
+     * copy text to clipboard
+     * 
+     * @param text
+     * @throws NotYetImplementedException
+     */
+    public void write(List<TextElement> text) throws NotYetImplementedException;
 }

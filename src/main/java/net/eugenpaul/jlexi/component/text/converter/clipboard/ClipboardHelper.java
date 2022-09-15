@@ -53,4 +53,32 @@ public final class ClipboardHelper {
     private static boolean isEol(char c) {
         return c == '\n' || c == 'r';
     }
+
+    public static String addClipboardTags(String html) {
+        StringBuilder response = new StringBuilder(html.length() + 200);
+
+        response.append("Version:0.9\n");
+        response.append("StartHTML:0000000000\n");
+        response.append("EndHTML:0000000000\n");
+        response.append("StartFragment:0000000000\n");
+        response.append("EndFragment:0000000000\n");
+
+        int startPos = response.toString().length();
+        int fullLength = startPos + html.getBytes().length;
+
+        response = new StringBuilder(html.length() + 200);
+        response.append("Version:0.9\n");
+        response.append("StartHTML:" + toOffset(startPos) + "\n");
+        response.append("EndHTML:" + toOffset(fullLength) + "\n");
+        response.append("StartFragment:" + toOffset(startPos) + "\n");
+        response.append("EndFragment:" + toOffset(fullLength) + "\n");
+
+        response.append(html);
+
+        return response.toString();
+    }
+
+    private static String toOffset(int startPos) {
+        return String.format("%010d", startPos);
+    }
 }

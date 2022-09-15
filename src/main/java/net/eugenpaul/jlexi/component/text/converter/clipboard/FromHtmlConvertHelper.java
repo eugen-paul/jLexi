@@ -11,7 +11,7 @@ import com.helger.css.decl.CascadingStyleSheet;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 
-public interface HtmlConvertHelper {
+public interface FromHtmlConvertHelper {
 
     Map<String, TreeMap<Integer, CSSDeclaration>> stylesProperties(Node node, CascadingStyleSheet globalCss);
 

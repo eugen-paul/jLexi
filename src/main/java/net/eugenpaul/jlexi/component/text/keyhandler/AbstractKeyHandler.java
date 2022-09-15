@@ -114,16 +114,8 @@ public class AbstractKeyHandler {
 
     public void copy() {
         LOGGER.trace("COPY");
-        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         var cursor = this.component.getMouseCursor();
-        StringBuilder textSelected = new StringBuilder(cursor.getSelectedText().size());
-        for (var element : cursor.getSelectedText()) {
-            textSelected.append(element.toString());
-        }
-
-        StringSelection strSel = new StringSelection(textSelected.toString());
-
-        clipboard.setContents(strSel, null);
+        clipboardConverter.write(cursor.getSelectedText());
     }
 
     public void paste() {

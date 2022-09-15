@@ -28,11 +28,11 @@ public class HtmlToText {
 
     private ResourceManager storage;
 
-    private HtmlConvertHelper currentFormatHelper;
+    private FromHtmlConvertHelper currentFormatHelper;
 
     public HtmlToText(ResourceManager storage) {
         this.storage = storage;
-        this.currentFormatHelper = new HtmlConverHelperImpl();
+        this.currentFormatHelper = new FromHtmlConverHelperImpl();
     }
 
     private static CascadingStyleSheet readCss(String css) {

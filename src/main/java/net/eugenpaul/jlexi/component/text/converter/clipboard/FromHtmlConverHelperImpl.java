@@ -24,7 +24,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
 
-public class HtmlConverHelperImpl implements HtmlConvertHelper {
+public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
 
     private static final String STYLE_ATTR = "style";
 

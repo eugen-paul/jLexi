@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.component.text.converter.clipboard;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.io.Reader;
@@ -30,11 +31,13 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     private static final String READ_ERROR = "Can't read data from clipboard. ";
 
     private final ResourceManager storage;
-    private final HtmlToText conv;
+    private final HtmlToText htmlToTextConv;
+    private final TextToClipboard textToClipboardConv;
 
     public ClipboardConverterImpl(ResourceManager storage) {
         this.storage = storage;
-        this.conv = new HtmlToText(storage);
+        this.htmlToTextConv = new HtmlToText(storage);
+        this.textToClipboardConv = new TextToClipboard();
     }
 
     @Override
@@ -88,14 +91,15 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     }
 
     @Override
-    public void write(List<TextElement> data) throws NotYetImplementedException {
-        // TODO Auto-generated method stub
-
+    public void write(List<TextElement> text) throws NotYetImplementedException {
+        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable transferData = textToClipboardConv.generateSelection(text);
+        clipboard.setContents(transferData, null);
     }
 
     private List<TextElement> clipboardHtmlToText(String clipboardHtml) {
         var html = ClipboardHelper.extractHtml(clipboardHtml);
-        return conv.convert(html);
+        return htmlToTextConv.convert(html);
     }
 
     private static List<TextElement> plainToText(String html, ResourceManager storage, TextFormat format,
