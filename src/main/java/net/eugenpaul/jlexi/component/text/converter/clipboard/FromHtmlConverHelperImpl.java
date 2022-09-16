@@ -19,6 +19,7 @@ import com.helger.css.decl.CascadingStyleSheet;
 import com.helger.css.parser.CSSParseHelper;
 import com.helger.css.reader.CSSReaderDeclarationList;
 import com.helger.css.reader.errorhandler.DoNothingCSSParseErrorHandler;
+import com.helger.css.utils.CSSNumberHelper;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
@@ -209,6 +210,9 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
         var font = bestDeclaration(properties, "font-family");
         format = applyFont(format, font);
 
+        var size = bestDeclaration(properties, "font-size");
+        format = applyFontSize(format, size);
+
         var fontWeight = bestDeclaration(properties, "font-weight");
         format = applyFontWeight(format, fontWeight);
 
@@ -267,6 +271,27 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
     private TextFormat applyFont(TextFormat format, CSSDeclaration font) {
         if (font != null) {
             format = format.withFontName(CSSParseHelper.extractStringValue(font.getExpression().getAsCSSString()));
+        }
+        return format;
+    }
+
+    private TextFormat applyFontSize(TextFormat format, CSSDeclaration fontSize) {
+        if (fontSize != null) {
+            var size = CSSNumberHelper.getValueWithUnit(fontSize.getExpression().getAsCSSString());
+            int px = TextFormat.DEFAULT.getFontsize();
+            if (size != null) {
+                switch (size.getUnit()) {
+                case LENGTH_PT:
+                    px = (int) (96.0 / 72.0 * size.getAsIntValue());
+                    break;
+                case PX:
+                    px = (int) (96.0 / 72.0 * size.getAsIntValue());
+                    break;
+                default:
+                    break;
+                }
+                format = format.withFontsize(px);
+            }
         }
         return format;
     }

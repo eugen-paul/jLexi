@@ -75,6 +75,10 @@ public final class ClipboardHelper {
 
         response.append(html);
 
+        System.out.println("---------------------------------------");
+        System.out.println(response.toString());
+        System.out.println("---------------------------------------");
+
         return response.toString();
     }
 

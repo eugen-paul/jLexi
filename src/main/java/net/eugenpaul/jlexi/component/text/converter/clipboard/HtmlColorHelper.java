@@ -16,6 +16,14 @@ public final class HtmlColorHelper {
     private static final String FORMAT_HEX = "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$";
     private static final Pattern PATTERN_HEX = Pattern.compile(FORMAT_HEX);
 
+    public static String toHexRGBColor(Color color) {
+        return "#" + String.format("%02X%02X%02X", //
+                color.getR() & 0xFF, //
+                color.getG() & 0xFF, //
+                color.getB() & 0xFF //
+        );
+    }
+
     public static boolean isColor(String value) {
         return isTextColor(value) //
                 || isHexColor(value) //

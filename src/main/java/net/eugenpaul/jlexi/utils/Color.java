@@ -231,6 +231,15 @@ public final class Color {
         );
     }
 
+    public String getHexRgba() {
+        return String.format("0x%02X_%02X_%02X_%02X", //
+                (valueArgb >>> 16) & 0xFF, //
+                (valueArgb >>> 8) & 0xFF, //
+                valueArgb & 0xFF, //
+                valueArgb >>> 24 //
+        );
+    }
+
     public int getA() {
         return (valueArgb & 0xFF_00_00_00) >>> 24;
     }

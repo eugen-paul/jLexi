@@ -49,6 +49,12 @@ public class ClipboardConverterImpl implements ClipboardConverter {
             if (clipboard.isDataFlavorAvailable(DataFlavor.allHtmlFlavor)) {
                 textFromClipboard = clipboard.getData(DataFlavor.allHtmlFlavor).toString();
                 return clipboardHtmlToText(textFromClipboard);
+            } else if (clipboard.isDataFlavorAvailable(DataFlavor.selectionHtmlFlavor)) {
+                textFromClipboard = clipboard.getData(DataFlavor.selectionHtmlFlavor).toString();
+                return clipboardHtmlToText(textFromClipboard);
+            } else if (clipboard.isDataFlavorAvailable(DataFlavor.fragmentHtmlFlavor)) {
+                textFromClipboard = clipboard.getData(DataFlavor.fragmentHtmlFlavor).toString();
+                return clipboardHtmlToText(textFromClipboard);
             }
             textFromClipboard = clipboard.getData(DataFlavor.stringFlavor).toString();
             return plainToText(textFromClipboard, storage, format, effect);

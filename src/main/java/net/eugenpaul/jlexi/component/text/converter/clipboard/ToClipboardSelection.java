@@ -13,7 +13,7 @@ public class ToClipboardSelection implements Transferable {
 
     private static List<DataFlavor> textFlavors = List.of(//
             DataFlavor.stringFlavor, //
-            DataFlavor.allHtmlFlavor //
+            DataFlavor.fragmentHtmlFlavor //
     );
 
     private String plainText;
@@ -47,7 +47,7 @@ public class ToClipboardSelection implements Transferable {
         String toBeExported = null;
         if (flavor == DataFlavor.stringFlavor) {
             toBeExported = plainText;
-        } else if (flavor == DataFlavor.allHtmlFlavor) {
+        } else if (flavor == DataFlavor.fragmentHtmlFlavor) {
             toBeExported = html;
         } else {
             throw new UnsupportedFlavorException(flavor);

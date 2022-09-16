@@ -1,7 +1,5 @@
 package net.eugenpaul.jlexi.component.text.keyhandler;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
