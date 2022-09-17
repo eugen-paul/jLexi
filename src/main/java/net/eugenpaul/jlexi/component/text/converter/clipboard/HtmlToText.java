@@ -123,6 +123,9 @@ public class HtmlToText {
         for (var c : node.getWholeText().toCharArray()) {
             var textChar = TextElementFactory.fromChar(this.storage, c, format, formatEffect);
             if (textChar != null) {
+                if (textChar.isEndOfLine()) {
+                    textChar = TextElementFactory.fromChar(this.storage, ' ', format, formatEffect);
+                }
                 response.add(textChar);
             }
         }
