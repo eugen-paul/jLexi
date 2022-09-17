@@ -95,6 +95,10 @@ public class HtmlToText {
         format = this.currentFormatHelper.applyFormatAttributes(format, properties);
         effect = this.currentFormatHelper.applyEffectAttributes(effect, properties);
 
+        if (this.currentFormatHelper.isSizeBreakBefore(node, properties)) {
+            response.add(TextElementFactory.genNewSectionChar(this.storage, format, effect));
+        }
+
         for (Node child : node.childNodes()) {
             if (child instanceof TextNode) {
                 textNodeToResponse((TextNode) child, response, format, effect);
@@ -106,7 +110,9 @@ public class HtmlToText {
 
         if (node instanceof Element) {
             var element = (Element) node;
-            if (element.tag().isBlock()) {
+            if (this.currentFormatHelper.isSizeBreakAfter(node, properties)) {
+                response.add(TextElementFactory.genNewSectionChar(this.storage, format, effect));
+            } else if (element.tag().isBlock()) {
                 response.add(TextElementFactory.genNewLineChar(this.storage, format, effect));
             }
         }

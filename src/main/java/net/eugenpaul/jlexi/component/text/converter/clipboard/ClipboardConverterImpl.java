@@ -127,6 +127,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     }
 
     // TODO: Add copy/paste RTF formatted text
+    @SuppressWarnings("unused")
     private static String rtfToHtml(Reader rtf) throws IOException {
         JEditorPane p = new JEditorPane();
         p.setContentType("text/rtf");

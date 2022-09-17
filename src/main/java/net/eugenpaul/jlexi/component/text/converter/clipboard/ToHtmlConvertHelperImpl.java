@@ -36,12 +36,11 @@ public class ToHtmlConvertHelperImpl implements ToHtmlConvertHelper {
         Element currentSpan = new Element("span");
         currentParagraph.appendChild(currentSpan);
 
-        addStyle(lastFormat, lastEffect, currentSpan);
+        addStyle(lastFormat, lastEffect, false, currentSpan);
         StringBuilder currentText = new StringBuilder();
 
         for (var c : text) {
             if (!c.isEndOfLine()) {
-
                 if (!c.getFormat().equals(lastFormat) || !c.getFormatEffect().equals(lastEffect)) {
                     currentSpan.text(currentText.toString());
                     lastFormat = c.getFormat();
@@ -50,13 +49,14 @@ public class ToHtmlConvertHelperImpl implements ToHtmlConvertHelper {
                     currentSpan = new Element("span");
                     currentParagraph.appendChild(currentSpan);
 
-                    addStyle(lastFormat, lastEffect, currentSpan);
+                    addStyle(lastFormat, lastEffect, false, currentSpan);
 
                     currentText = new StringBuilder();
                 }
 
                 currentText.append(c.toString());
             } else {
+                boolean addSizeBreak = c.isEndOfSection();
                 currentSpan.text(currentText.toString());
 
                 currentParagraph = new Element("p");
@@ -68,7 +68,7 @@ public class ToHtmlConvertHelperImpl implements ToHtmlConvertHelper {
                 lastFormat = c.getFormat();
                 lastEffect = c.getFormatEffect();
 
-                addStyle(lastFormat, lastEffect, currentSpan);
+                addStyle(lastFormat, lastEffect, addSizeBreak, currentSpan);
                 currentText = new StringBuilder();
             }
         }
@@ -77,8 +77,17 @@ public class ToHtmlConvertHelperImpl implements ToHtmlConvertHelper {
         return response;
     }
 
-    private void addStyle(TextFormat lastFormat, TextFormatEffect lastEffect, Element currentSpan) {
+    private void addStyle(TextFormat lastFormat, TextFormatEffect lastEffect, boolean addSizeBreak,
+            Element currentSpan) {
         var declaration = genDeclaration(lastFormat, lastEffect);
+
+        if (addSizeBreak) {
+            var sizeBreak = new CSSDeclaration(//
+                    "page-break-before", //
+                    CSSExpression.createSimple("always"));
+            declaration.add(sizeBreak);
+        }
+
         currentSpan.attr("style", declaration.getAsCSSString());
     }
 

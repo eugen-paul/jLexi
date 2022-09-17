@@ -19,4 +19,8 @@ public interface FromHtmlConvertHelper {
 
     TextFormatEffect applyEffectAttributes(TextFormatEffect effect,
             Map<String, TreeMap<Integer, CSSDeclaration>> properties);
+
+    boolean isSizeBreakBefore(Node node, Map<String, TreeMap<Integer, CSSDeclaration>> properties);
+
+    boolean isSizeBreakAfter(Node node, Map<String, TreeMap<Integer, CSSDeclaration>> properties);
 }

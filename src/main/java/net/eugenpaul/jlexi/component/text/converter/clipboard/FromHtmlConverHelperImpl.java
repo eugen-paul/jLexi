@@ -350,4 +350,24 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
         return effect;
     }
 
+    @Override
+    public boolean isSizeBreakAfter(Node node, Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        var isBreak = bestDeclaration(properties, "page-break-after");
+        return checkIsBreak(isBreak);
+    }
+
+    @Override
+    public boolean isSizeBreakBefore(Node node, Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
+        var isBreak = bestDeclaration(properties, "page-break-before");
+        return checkIsBreak(isBreak);
+    }
+
+    private boolean checkIsBreak(CSSDeclaration isBreak) {
+        if (isBreak != null) {
+            var breakValue = isBreak.getExpression().getAsCSSString();
+            return breakValue.equals("always");
+        }
+        return false;
+    }
+
 }
