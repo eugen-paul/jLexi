@@ -94,12 +94,12 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         this.keyEventAdapter = new KeyEventAdapterIntern(this);
         this.mouseDragAdapter = new MouseDraggedIntern(this);
 
-        this.backgroundColor = Color.GREY;
+        this.backgroundColor = Color.INVISIBLE;
 
         this.compositors = List.of(//
                 TextRepresentationToRowCompositor.builder().build(), //
                 new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER_POSITIV),
-                new TextRepresentationToColumnCompositor(Color.GREEN, 0, 0) //
+                new TextRepresentationToColumnCompositor(Color.INVISIBLE, 0, 0) //
         );
 
         resizeTo(Size.ZERO_SIZE);
@@ -129,7 +129,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
             this.textRepresentation.setParent(this);
         }
 
-        this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
+        this.cachedDrawable = new DrawableSketchImpl(Color.INVISIBLE);
         this.cachedDrawable.addDrawable(this.textRepresentation.getDrawable(), 0, 0);
 
         return cachedDrawable.draw();

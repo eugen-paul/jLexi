@@ -5,7 +5,7 @@ apply plugin: 'java'
 sourceCompatibility=14
 
 buildscript {
-    ext.dependency_check_version = "7.1.1"
+    ext.dependency_check_version = "7.1.2"
 
     repositories {
         mavenCentral()
@@ -38,6 +38,9 @@ dependencies {
     implementation          commonDependencies.jackson
 
     implementation          commonDependencies.reactor_core
+
+    implementation          commonDependencies.jsoup
+    implementation          commonDependencies.ph_css
 
     implementation          commonDependencies.logback_core
     implementation          commonDependencies.logback_classic

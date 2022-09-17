@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
-import lombok.var;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
 public abstract class TextStructureOfStructure extends TextStructure {

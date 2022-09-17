@@ -6,12 +6,18 @@ ext {
     mockito_version = "4.6.1"
     reactor_core_version = "3.4.21"
     slf4j_api_version = "1.7.36"
+    jsoup_version = "1.15.3"
+    ph_css_version = "6.5.0"
 
     commonDependencies = [
             lombok                 : "org.projectlombok:lombok:$lombok_version",
             jackson                : "com.fasterxml.jackson.core:jackson-databind:$jackson_version",
 
             reactor_core           : "io.projectreactor:reactor-core:$reactor_core_version",
+
+            //html and css parser
+            jsoup                  : "org.jsoup:jsoup:$jsoup_version",
+            ph_css                 : "com.helger:ph-css:$ph_css_version",
 
             //Logger
             logback_core           : "ch.qos.logback:logback-core:$logback_version",

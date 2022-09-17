@@ -4,7 +4,6 @@ import java.util.TreeMap;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.draw.Drawable;

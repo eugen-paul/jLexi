@@ -1,0 +1,70 @@
+{
+    "sections": [
+        {
+            "paragraphs": [
+                {
+                    "elements": [
+                        {
+                            "text": "Row1: "
+                        },
+                        {
+                            "format": {
+                                "bold": true,
+                                "fontsize": 12,
+                                "fontName": "Monospaced",
+                                "fontColor": "white",
+                                "backgroundColor": "black"
+                            },
+                            "text": "Copy"
+                        },
+                        {
+                            "format": {
+                                "fontColor": "RED"
+                            },
+                            "text": " me "
+                        },
+                        {
+                            "formatEffect": {
+                                "underline": "DOUBLE",
+                                "underlineColor": "green"
+                            },
+                            "text": "from"
+                        },
+                        {
+                            "format": {
+                                "fontsize": 18,
+                                "fontName": "Comic Sans MS"
+                            },
+                            "formatEffect": {
+                                "underline": "SINGLE"
+                            },
+                            "text": " jLexi"
+                        },                        {
+                            "text": "!"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "Row2 is empty :)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "numberOfColumns": 2,
+            "siteHeightPx": 400,
+            "paragraphs": [
+                {
+                    "elements": [
+                        {
+                            "text": "Paragraph 1 of section 2."
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

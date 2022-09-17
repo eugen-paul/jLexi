@@ -158,7 +158,54 @@
                 {
                     "elements": [
                         {
-                            "text": "   - Textscroll"
+                            "text": "   - Textscroll."
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - "
+                        },
+                        {
+                            "format": {
+                                "bold": true
+                            },
+                            "text": "Copy"
+                        },
+                        {
+                            "text": " and "
+                        },
+                        {
+                            "format": {
+                                "italic": true
+                            },
+                            "text": "paste"
+                        },
+                        {
+                            "text": " "
+                        },
+                        {
+                            "format": {
+                                "fontColor": "blue",
+                                "bold": true,
+                                "italic": true,
+                                "backgroundColor": "yellow"
+                            },
+                            "text": "formatted"
+                        },
+                        {
+                            "text": " text from and to "
+                        },
+                        {
+                            "format": {
+                                "fontsize": 18,
+                                "fontName": "Comic Sans MS"
+                            },
+                            "formatEffect": {
+                                "underline": "SINGLE"
+                            },
+                            "text": "jLexi."
                         }
                     ]
                 },

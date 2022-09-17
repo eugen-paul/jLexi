@@ -23,13 +23,13 @@ class ColorTest {
         assertEquals(Color.WHITE, Color.fromHexArgb("0xFF_FF_FF_FF"));
         assertEquals(Color.BLACK, Color.fromHexArgb("0xFF_00_00_00"));
         assertEquals(Color.RED, Color.fromHexArgb("0xFF_FF_00_00"));
-        assertEquals(Color.GREEN, Color.fromHexArgb("0xFF_00_FF_00"));
+        assertEquals(Color.GREEN, Color.fromHexArgb("0xFF_00_80_00"));
         assertEquals(Color.BLUE, Color.fromHexArgb("0xFF_00_00_FF"));
 
         assertEquals(Color.WHITE, Color.fromHexArgb("0xFFFFFFFF"));
         assertEquals(Color.BLACK, Color.fromHexArgb("0xFF000000"));
         assertEquals(Color.RED, Color.fromHexArgb("0xFFFF0000"));
-        assertEquals(Color.GREEN, Color.fromHexArgb("0xFF00FF00"));
+        assertEquals(Color.GREEN, Color.fromHexArgb("0xFF008000"));
         assertEquals(Color.BLUE, Color.fromHexArgb("0xFF0000FF"));
     }
 
@@ -63,7 +63,7 @@ class ColorTest {
         assertEquals(0xFF_FF_FF_FF, Color.WHITE.getArgb());
         assertEquals(0xFF_00_00_00, Color.BLACK.getArgb());
         assertEquals(0xFF_FF_00_00, Color.RED.getArgb());
-        assertEquals(0xFF_00_FF_00, Color.GREEN.getArgb());
+        assertEquals(0xFF_00_80_00, Color.GREEN.getArgb());
         assertEquals(0xFF_00_00_FF, Color.BLUE.getArgb());
     }
 
@@ -72,7 +72,7 @@ class ColorTest {
         assertEquals("0xFF_FF_FF_FF", Color.WHITE.getHexArgb());
         assertEquals("0xFF_00_00_00", Color.BLACK.getHexArgb());
         assertEquals("0xFF_FF_00_00", Color.RED.getHexArgb());
-        assertEquals("0xFF_00_FF_00", Color.GREEN.getHexArgb());
+        assertEquals("0xFF_00_80_00", Color.GREEN.getHexArgb());
         assertEquals("0xFF_00_00_FF", Color.BLUE.getHexArgb());
     }
 }
