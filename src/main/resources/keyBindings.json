@@ -1,0 +1,8 @@
+{
+    "textEditor": {
+        "copy": "control c",
+        "paste": "control v",
+        "undo": "control z",
+        "redo": "control y"
+    }
+}
