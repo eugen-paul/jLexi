@@ -1,10 +1,10 @@
-package net.eugenpaul.jlexi.window.impl.swing;
+package net.eugenpaul.jlexi.appl.impl.swing;
 
+import net.eugenpaul.jlexi.appl.impl.swing.frame.MainFrame;
+import net.eugenpaul.jlexi.appl.impl.swing.frame.MainPanel;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.window.AbstractView;
 import net.eugenpaul.jlexi.window.Windowlmp;
-import net.eugenpaul.jlexi.window.impl.swing.frame.MainFrame;
-import net.eugenpaul.jlexi.window.impl.swing.frame.MainPanel;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class SwingWindowImpl extends Windowlmp {

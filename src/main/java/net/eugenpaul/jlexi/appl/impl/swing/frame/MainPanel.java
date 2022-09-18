@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.window.impl.swing.frame;
+package net.eugenpaul.jlexi.appl.impl.swing.frame;
 
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;

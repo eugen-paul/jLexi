@@ -1,10 +1,16 @@
-package net.eugenpaul.jlexi.window;
+package net.eugenpaul.jlexi.appl;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import net.eugenpaul.jlexi.appl.action.BoldActivate;
+import net.eugenpaul.jlexi.appl.action.CopyActivate;
+import net.eugenpaul.jlexi.appl.action.ItalicActivate;
+import net.eugenpaul.jlexi.appl.action.PasteActivate;
+import net.eugenpaul.jlexi.appl.action.RedoActivate;
+import net.eugenpaul.jlexi.appl.action.UndoActivate;
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
@@ -18,6 +24,7 @@ import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.window.ApplicationWindow;
 
 public class MainWindow extends ApplicationWindow {
 
