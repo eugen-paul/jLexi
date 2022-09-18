@@ -9,6 +9,8 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.eugenpaul.jlexi.appl.interfaces.CopyPasteable;
+import net.eugenpaul.jlexi.appl.interfaces.UndoRedoable;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
@@ -45,8 +47,6 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.window.interfaces.CopyPasteable;
-import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
 
 @Slf4j
 public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,

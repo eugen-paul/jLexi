@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.action;
+package net.eugenpaul.jlexi.appl.action;
 
 import java.awt.event.ActionEvent;
 

@@ -2,6 +2,8 @@ package net.eugenpaul.jlexi;
 
 import java.io.File;
 
+import net.eugenpaul.jlexi.appl.MainWindow;
+import net.eugenpaul.jlexi.appl.impl.swing.SwingWindowFactory;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.design.dark.DarkFactory;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
@@ -10,9 +12,7 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.resourcesmanager.font.FontStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.impl.FormatStorageImpl;
-import net.eugenpaul.jlexi.window.MainWindow;
 import net.eugenpaul.jlexi.window.Window;
-import net.eugenpaul.jlexi.window.impl.swing.SwingWindowFactory;
 
 public class JLexi {
 
