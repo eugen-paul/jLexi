@@ -1,24 +1,24 @@
 package net.eugenpaul.jlexi.appl.action;
 
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+
+import javax.swing.AbstractAction;
 
 import lombok.AllArgsConstructor;
 import net.eugenpaul.jlexi.component.button.Button;
 import net.eugenpaul.jlexi.component.button.ButtonState;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
-import net.eugenpaul.jlexi.utils.event.MouseButton;
 
 @AllArgsConstructor
-public class BoldActivate implements MouseEventAdapter {
-
+public class BoldAction extends AbstractAction {
     private final String name;
     private final Button button;
     private final AbstractController controller;
 
     @Override
-    public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
+    public void actionPerformed(ActionEvent e) {
         if (this.button.getState() == ButtonState.NORMAL) {
             this.button.setState(ButtonState.PUSHED);
             this.button.redraw();
@@ -41,4 +41,5 @@ public class BoldActivate implements MouseEventAdapter {
             ));
         }
     }
+
 }

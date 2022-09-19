@@ -12,4 +12,6 @@ public final class TextEditorKeysDto {
     private String paste;
     private String undo;
     private String redo;
+    private String textFormatBold;
+    private String textFormatItalic;
 }
