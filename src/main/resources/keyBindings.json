@@ -3,6 +3,8 @@
         "copy": "control c",
         "paste": "control v",
         "undo": "control z",
-        "redo": "control y"
+        "redo": "control y",
+        "textFormatBold": "control b",
+        "textFormatItalic": "control i"
     }
 }
