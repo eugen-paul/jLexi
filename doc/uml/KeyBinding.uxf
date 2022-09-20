@@ -1,0 +1,12 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>220</x><y>80</y><w>340</w><h>180</h></coordinates><panel_attributes>/KeyBinding/
+(abstract)
+--
+-PropertyChangeSupport propertyChangeSupport
+--
+/+doAction/
++addListener
++removeListener</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>330</y><w>340</w><h>180</h></coordinates><panel_attributes>KeyBindingSwing
+--
+-action: Action
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>390</x><y>250</y><w>30</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element></diagram>
