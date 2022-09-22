@@ -5,6 +5,8 @@
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>120</y><w>360</w><h>190</h></coordinates><panel_attributes>GuiGlyph
 --
 -propertyChangeSupport: PropertyChangeSupport 
+-parent:GuiGlyph
+-childs:List&lt;GuiGlyphs&gt;
 --
 getEvents
 addListner(listner, event)
@@ -16,10 +18,27 @@ registerActions</panel_attributes><additional_attributes></additional_attributes
 --
 isFocusable
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>150</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>150</y><w>80</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>370</y><w>360</w><h>190</h></coordinates><panel_attributes>EmbeddedActionListner
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>150</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>150</y><w>80</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>540</y><w>210</w><h>140</h></coordinates><panel_attributes>EmbeddedActionListner
 --
-innerMap
+
 --
 add(keyBinding, keys, Rules)
 remove(actionName)
-notify(keys)</panel_attributes><additional_attributes></additional_attributes></element></diagram>
+notify(keys)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>360</x><y>540</y><w>200</w><h>140</h></coordinates><panel_attributes>InnerMap
+--
+Map&lt;keys, List&lt;Action&gt;&gt;
+--
+getAction(keys): List&lt;Action&gt;
+add(keys, Action): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>590</y><w>90</w><h>40</h></coordinates><panel_attributes>lt=&lt;-
+m1=1</panel_attributes><additional_attributes>70;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>390</x><y>380</y><w>210</w><h>110</h></coordinates><panel_attributes>Window
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>480</y><w>40</w><h>80</h></coordinates><panel_attributes>lt=&lt;-
+m1=1</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>380</y><w>210</w><h>110</h></coordinates><panel_attributes>GlobalSystem
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>430</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=&lt;-
+m1=0..n
+m2=1</panel_attributes><additional_attributes>100;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>490</x><y>300</y><w>30</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element></diagram>
