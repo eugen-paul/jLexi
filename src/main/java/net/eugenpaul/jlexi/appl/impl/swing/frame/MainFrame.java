@@ -1,8 +1,13 @@
 package net.eugenpaul.jlexi.appl.impl.swing.frame;
 
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.function.Consumer;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -70,6 +75,29 @@ public class MainFrame extends AbstractView {
         if (data.getTarget().equals(name)) {
             SwingUtilities.invokeLater(() -> this.frame.setTitle(data.getNewTitle()));
         }
+    }
+
+    @Override
+    public void registerKeyBinding(String name, String keys, Consumer<String> action) {
+        SwingUtilities.invokeLater(() -> {
+            mainPanel.getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(keys), name);
+
+            mainPanel.getPanel().getActionMap().put(name, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    action.accept(e.toString());
+                }
+            });
+        });
+    }
+
+    @Override
+    public void unregisterKeyBinding(String name, String keys) {
+        SwingUtilities.invokeLater(() -> {
+            mainPanel.getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).remove(KeyStroke.getKeyStroke(keys));
+
+            mainPanel.getPanel().getActionMap().remove(name);
+        });
     }
 
 }
