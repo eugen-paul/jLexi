@@ -84,7 +84,7 @@ public class MainWindow extends ApplicationWindow {
         menubar.addMenuButton(button);
 
         BoldFormatChangeListner listner = new BoldFormatChangeListner(button, cursorName);
-        this.controller.addView(listner);
+        this.controller.addViewChangeListner(listner);
 
         MouseEventAdapter mouseEventAdapter = new BoldActivate(cursorName, button, this.controller);
         button.setMouseEventAdapter(mouseEventAdapter);
@@ -97,7 +97,7 @@ public class MainWindow extends ApplicationWindow {
         menubar.addMenuButton(button);
 
         ItalicFormatChangeListner listner = new ItalicFormatChangeListner(button, cursorName);
-        this.controller.addView(listner);
+        this.controller.addViewChangeListner(listner);
 
         MouseEventAdapter mouseEventAdapter = new ItalicActivate(cursorName, button, this.controller);
         button.setMouseEventAdapter(mouseEventAdapter);

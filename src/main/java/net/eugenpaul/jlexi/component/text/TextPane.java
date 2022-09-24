@@ -105,7 +105,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         resizeTo(Size.ZERO_SIZE);
 
         controller.addModel(this);
-        controller.addView(this);
+        controller.addViewChangeListner(this);
     }
 
     @Override

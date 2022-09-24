@@ -1,11 +1,12 @@
 package net.eugenpaul.jlexi.window;
 
 import java.beans.PropertyChangeEvent;
+import java.util.function.Consumer;
 
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
-import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
@@ -34,7 +35,7 @@ public abstract class Window extends MonoGlyph
     protected final ModelController controller;
 
     protected AbstractView view;
-    private GuiEvents mainGlyph;
+    private GuiGlyph mainGlyph;
     protected KeyPressable focusOn;
 
     protected Window(String name, Size size, Windowlmp windowlmp, ModelController controller) {
@@ -48,9 +49,9 @@ public abstract class Window extends MonoGlyph
         this.mainGlyph = null;
     }
 
-    protected <T extends Glyph & GuiEvents> void setMainGlyph(T glyph) {
-        mainGlyph = glyph;
-        component = glyph;
+    protected void setMainGlyph(GuiGlyph glyph) {
+        this.mainGlyph = glyph;
+        this.component = glyph;
     }
 
     public Glyph getGlyph() {
@@ -63,16 +64,16 @@ public abstract class Window extends MonoGlyph
             throw new NotInitializedException("WindowSystemFactory ist not initialized/set.");
         }
 
-        if (view != null) {
-            return view;
+        if (this.view != null) {
+            return this.view;
         }
 
         setContent();
-        view = windowlmp.deviceCreateMainWindow(getSize(), name);
+        this.view = windowlmp.deviceCreateMainWindow(getSize(), name);
 
         redraw();
 
-        return view;
+        return this.view;
     }
 
     @Override
@@ -155,6 +156,14 @@ public abstract class Window extends MonoGlyph
         if (mainGlyph != null) {
             mainGlyph.resizeTo(size);
         }
+    }
+
+    public void registerKeyBinding(String name, String keys, Consumer<String> action) {
+        view.registerKeyBinding(name, keys, action);
+    }
+
+    public void unregisterKeyBinding(String name, String keys) {
+        view.unregisterKeyBinding(name, keys);
     }
 
 }
