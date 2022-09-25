@@ -1,5 +1,8 @@
 package net.eugenpaul.jlexi.component;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
@@ -19,8 +22,12 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
     @Setter
     protected MouseDragAdapter mouseDragAdapter;
 
+    private List<GuiGlyph> guiChilds;
+
     protected GuiGlyph(Glyph parent) {
         super(parent);
+        this.guiChilds = new LinkedList<>();
+
         this.mouseEventAdapter = new MouseEventAdapter() {
 
         };
@@ -30,6 +37,14 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
         this.mouseDragAdapter = new MouseDragAdapter() {
 
         };
+    }
+
+    protected void addGuiChild(GuiGlyph child) {
+        this.guiChilds.add(child);
+    }
+
+    protected boolean removeGuiChild(GuiGlyph child) {
+        return this.guiChilds.remove(child);
     }
 
     @Override
