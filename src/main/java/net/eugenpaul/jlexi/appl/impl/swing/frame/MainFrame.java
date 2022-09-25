@@ -11,6 +11,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import net.eugenpaul.jlexi.appl.impl.swing.SwingKeyBindingMainInputMap;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.window.AbstractView;
@@ -23,11 +24,14 @@ public class MainFrame extends AbstractView {
     private MainPanel mainPanel;
     private String name;
 
+    private SwingKeyBindingMainInputMap mainInputMap;
+
     public MainFrame(ModelController controller, String name) {
         super(controller);
         this.name = name;
-        frame = new JFrame(TITLE_PREFIX + name);
-        mainPanel = null;
+        this.frame = new JFrame(TITLE_PREFIX + name);
+        this.mainPanel = null;
+        this.mainInputMap = null;
     }
 
     @Override
@@ -47,19 +51,23 @@ public class MainFrame extends AbstractView {
             frame.remove(this.mainPanel.getPanel());
         }
         this.mainPanel = panel;
-
+        
         if (null == panel) {
+            this.mainInputMap = null;
             return;
         }
 
-        frame.add(mainPanel.getPanel());
-        mainPanel.getPanel().requestFocusInWindow();
-        frame.pack();
+        this.mainInputMap = new SwingKeyBindingMainInputMap(this.mainPanel.getPanel());
+        this.mainPanel.getPanel().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, this.mainInputMap);
+
+        this.frame.add(this.mainPanel.getPanel());
+        this.mainPanel.getPanel().requestFocusInWindow();
+        this.frame.pack();
     }
 
     @Override
     public void setVisible(boolean status) {
-        SwingUtilities.invokeLater(() -> frame.setVisible(status));
+        SwingUtilities.invokeLater(() -> this.frame.setVisible(status));
     }
 
     @Override
@@ -68,7 +76,7 @@ public class MainFrame extends AbstractView {
             updateTitle((UpdateTitle) evt.getNewValue());
         }
 
-        mainPanel.modelPropertyChange(evt);
+        this.mainPanel.modelPropertyChange(evt);
     }
 
     private void updateTitle(UpdateTitle data) {
