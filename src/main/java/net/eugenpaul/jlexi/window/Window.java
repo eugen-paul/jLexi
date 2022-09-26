@@ -1,7 +1,6 @@
 package net.eugenpaul.jlexi.window;
 
 import java.beans.PropertyChangeEvent;
-import java.util.function.Consumer;
 
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
@@ -49,11 +48,6 @@ public abstract class Window extends MonoGlyph
         this.mainGlyph = null;
     }
 
-    protected void setMainGlyph(GuiGlyph glyph) {
-        this.mainGlyph = glyph;
-        this.component = glyph;
-    }
-
     public Glyph getGlyph() {
         return component;
     }
@@ -68,8 +62,9 @@ public abstract class Window extends MonoGlyph
             return this.view;
         }
 
-        setContent();
-        this.view = windowlmp.deviceCreateMainWindow(getSize(), name);
+        this.mainGlyph = setContent();
+        this.component = mainGlyph;
+        this.view = windowlmp.deviceCreateMainWindow(getSize(), name, mainGlyph);
 
         redraw();
 
@@ -89,7 +84,7 @@ public abstract class Window extends MonoGlyph
         );
     }
 
-    protected abstract void setContent();
+    protected abstract GuiGlyph setContent();
 
     public void setTitle(String title) {
         view.modelPropertyChange(new PropertyChangeEvent(name, //
@@ -156,14 +151,6 @@ public abstract class Window extends MonoGlyph
         if (mainGlyph != null) {
             mainGlyph.resizeTo(size);
         }
-    }
-
-    public void registerKeyBinding(String name, String keys, Consumer<String> action) {
-        view.registerKeyBinding(name, keys, action);
-    }
-
-    public void unregisterKeyBinding(String name, String keys) {
-        view.unregisterKeyBinding(name, keys);
     }
 
 }

@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.appl.impl.swing;
 
 import net.eugenpaul.jlexi.appl.impl.swing.frame.MainFrame;
 import net.eugenpaul.jlexi.appl.impl.swing.frame.MainPanel;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.window.AbstractView;
 import net.eugenpaul.jlexi.window.Windowlmp;
@@ -14,12 +15,12 @@ public class SwingWindowImpl extends Windowlmp {
     }
 
     @Override
-    public AbstractView deviceCreateMainWindow(Size defaultSize, String name) {
+    public AbstractView deviceCreateMainWindow(Size defaultSize, String name, GuiGlyph mainGlyph) {
 
         MainFrame mFrame = new MainFrame(controller, name);
         mFrame.init();
 
-        MainPanel dPanel = new MainPanel(defaultSize, controller, name);
+        MainPanel dPanel = new MainPanel(defaultSize, controller, name, mainGlyph);
         dPanel.init();
 
         mFrame.setMainPanel(dPanel);

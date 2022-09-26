@@ -1,7 +1,11 @@
 package net.eugenpaul.jlexi.window.action;
 
 public interface KeyBindingChildInputMap {
-    boolean addAction(String keys, KeyBindingRule rule, KeyBindingAction action);
+    void addAction(String keys, KeyBindingRule rule, KeyBindingAction action);
 
-    boolean removeAction(String keys, KeyBindingRule rule, KeyBindingAction action);
+    void removeAction(String keys, KeyBindingRule rule, KeyBindingAction action);
+
+    KeyBindingAction getAction(String keys);
+
+    boolean isKeysSets(String keys);
 }
