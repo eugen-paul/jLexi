@@ -11,6 +11,7 @@ import net.eugenpaul.jlexi.appl.action.ItalicActivate;
 import net.eugenpaul.jlexi.appl.action.PasteActivate;
 import net.eugenpaul.jlexi.appl.action.RedoActivate;
 import net.eugenpaul.jlexi.appl.action.UndoActivate;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
@@ -48,7 +49,7 @@ public class MainWindow extends ApplicationWindow {
     }
 
     @Override
-    protected void setContent() {
+    protected GuiGlyph setContent() {
         var textPane = new TextPane(name, null, storage, controller);
         var scrollPane = guiFactory.createScrollpane(null, textPane);
         var border = guiFactory.createBorder(null, scrollPane);
@@ -63,7 +64,7 @@ public class MainWindow extends ApplicationWindow {
         controller.addModel(this);
 
         focusOn = textPane;
-        setMainGlyph(menubar);
+        return menubar;
     }
 
     private void initMenu(MenuBar menubar, String cursorName) {

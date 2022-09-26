@@ -2,7 +2,9 @@ package net.eugenpaul.jlexi.component;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
@@ -12,6 +14,8 @@ import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
+import net.eugenpaul.jlexi.window.action.KeyBindingChildInputMap;
+import net.eugenpaul.jlexi.window.action.KeyBindingChildInputMapImpl;
 
 public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
@@ -24,9 +28,17 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
     private List<GuiGlyph> guiChilds;
 
+    @Getter
+    private KeyBindingChildInputMap keyBindingMap;
+
     protected GuiGlyph(Glyph parent) {
         super(parent);
         this.guiChilds = new LinkedList<>();
+        this.keyBindingMap = new KeyBindingChildInputMapImpl( //
+                () -> guiChilds.stream()//
+                        .map(GuiGlyph::getKeyBindingMap)//
+                        .collect(Collectors.toList()) //
+        );
 
         this.mouseEventAdapter = new MouseEventAdapter() {
 

@@ -1,7 +1,5 @@
 package net.eugenpaul.jlexi.window;
 
-import java.util.function.Consumer;
-
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
 
@@ -36,13 +34,5 @@ public abstract class AbstractView implements ModelPropertyChangeListner {
      * @param status - true show. false - hide.
      */
     public abstract void setVisible(boolean status);
-
-    public void registerKeyBinding(String name, String keys, Consumer<String> action){
-
-    }
-
-    public void unregisterKeyBinding(String name, String keys){
-
-    }
 
 }

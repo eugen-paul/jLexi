@@ -51,13 +51,13 @@ public class MainFrame extends AbstractView {
             frame.remove(this.mainPanel.getPanel());
         }
         this.mainPanel = panel;
-        
+
         if (null == panel) {
             this.mainInputMap = null;
             return;
         }
 
-        this.mainInputMap = new SwingKeyBindingMainInputMap(this.mainPanel.getPanel());
+        this.mainInputMap = new SwingKeyBindingMainInputMap(this.mainPanel.getPanel(), this.mainPanel.getMainGlyph());
         this.mainPanel.getPanel().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, this.mainInputMap);
 
         this.frame.add(this.mainPanel.getPanel());
@@ -85,9 +85,9 @@ public class MainFrame extends AbstractView {
         }
     }
 
-    @Override
     public void registerKeyBinding(String name, String keys, Consumer<String> action) {
         SwingUtilities.invokeLater(() -> {
+
             mainPanel.getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(keys), name);
 
             mainPanel.getPanel().getActionMap().put(name, new AbstractAction() {
@@ -96,15 +96,6 @@ public class MainFrame extends AbstractView {
                     action.accept(e.toString());
                 }
             });
-        });
-    }
-
-    @Override
-    public void unregisterKeyBinding(String name, String keys) {
-        SwingUtilities.invokeLater(() -> {
-            mainPanel.getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).remove(KeyStroke.getKeyStroke(keys));
-
-            mainPanel.getPanel().getActionMap().remove(name);
         });
     }
 

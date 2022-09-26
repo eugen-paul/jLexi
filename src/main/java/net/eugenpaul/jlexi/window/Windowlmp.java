@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.window;
 
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -11,6 +12,6 @@ public abstract class Windowlmp {
         this.controller = controller;
     }
 
-    public abstract AbstractView deviceCreateMainWindow(Size defaultSize, String name);
+    public abstract AbstractView deviceCreateMainWindow(Size defaultSize, String name, GuiGlyph mainGlyph);
 
 }

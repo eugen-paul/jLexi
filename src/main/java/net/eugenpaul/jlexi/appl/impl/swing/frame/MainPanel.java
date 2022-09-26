@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.utils.Size;
@@ -19,7 +20,10 @@ public class MainPanel extends AbstractView {
 
     private String name;
 
-    public MainPanel(Size defaultSize, ModelController controller, String name) {
+    @Getter
+    private GuiGlyph mainGlyph;
+
+    public MainPanel(Size defaultSize, ModelController controller, String name, GuiGlyph mainGlyph) {
         super(controller);
         this.name = name;
         this.panel = new ImagePanel();
@@ -27,6 +31,8 @@ public class MainPanel extends AbstractView {
         this.panel.addComponentListener(new ResizeListner(name, controller));
         this.panel.setPreferredSize(new Dimension(defaultSize.getWidth(), defaultSize.getHeight()));
         this.panel.setFocusable(true);
+
+        this.mainGlyph = mainGlyph;
 
         var mouseListner = new MouseListner(name, controller);
         this.panel.addMouseListener(mouseListner);
