@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.window.action;
 
+import java.util.List;
+
 public interface KeyBindingChildInputMap {
     void addAction(String keys, KeyBindingRule rule, KeyBindingAction action);
 
@@ -8,4 +10,6 @@ public interface KeyBindingChildInputMap {
     KeyBindingAction getAction(String keys);
 
     boolean isKeysSets(String keys);
+
+    List<String> getAllKeys();
 }

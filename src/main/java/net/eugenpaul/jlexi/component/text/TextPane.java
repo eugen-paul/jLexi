@@ -47,6 +47,8 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
+import net.eugenpaul.jlexi.window.action.KeyBindingAction;
+import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 @Slf4j
 public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,
@@ -106,6 +108,23 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         controller.addModel(this);
         controller.addViewChangeListner(this);
+
+        registerTestKeyBindings();
+    }
+
+    private void registerTestKeyBindings() {
+        getKeyBindingMap().addAction("F9", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
+            @Override
+            public void doAction() {
+                System.out.println("=> F9 <=");
+            }
+        });
+        getKeyBindingMap().addAction("control SPACE", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
+            @Override
+            public void doAction() {
+                System.out.println("=> control SPACE <=");
+            }
+        });
     }
 
     @Override

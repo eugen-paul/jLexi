@@ -45,6 +45,8 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
         this.menuButtons = new LinkedList<>();
 
         computeBackground();
+
+        addGuiChild(component);
     }
 
     public boolean addMenuButton(Button button) {

@@ -1,9 +1,12 @@
 package net.eugenpaul.jlexi.window.action;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class KeyBindingChildInputMapImpl implements KeyBindingChildInputMap {
 
@@ -48,6 +51,17 @@ public class KeyBindingChildInputMapImpl implements KeyBindingChildInputMap {
     // @Override
     private List<KeyBindingChildInputMap> getChildsMaps() {
         return this.childListSupplier.get();
+    }
+
+    @Override
+    public List<String> getAllKeys() {
+        Set<String> response = new HashSet<>();
+        keysToActionMap.keySet().forEach(response::add);
+
+        for (var child : childListSupplier.get()) {
+            response.addAll(child.getAllKeys());
+        }
+        return response.stream().collect(Collectors.toList());
     }
 
 }
