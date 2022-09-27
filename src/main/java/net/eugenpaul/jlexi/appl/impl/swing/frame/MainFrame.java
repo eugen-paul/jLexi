@@ -59,6 +59,12 @@ public class MainFrame extends AbstractView {
 
         this.mainInputMap = new SwingKeyBindingMainInputMap(this.mainPanel.getPanel(), this.mainPanel.getMainGlyph());
         this.mainPanel.getPanel().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, this.mainInputMap);
+        this.mainPanel.getPanel().getActionMap().put("found", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("=> AbstractAction <=");
+            }
+        });
 
         this.frame.add(this.mainPanel.getPanel());
         this.mainPanel.getPanel().requestFocusInWindow();

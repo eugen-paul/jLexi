@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.appl.impl.swing;
 
+import java.util.stream.Collectors;
+
 import javax.swing.ComponentInputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -21,6 +23,19 @@ public class SwingKeyBindingMainInputMap extends ComponentInputMap {
         var isSet = glyph.getKeyBindingMap().isKeysSets(keyStroke.toString());
 
         return (isSet) ? null : "found";
+    }
+
+    @Override
+    public KeyStroke[] keys() {
+        return allKeys();
+    }
+
+    @Override
+    public KeyStroke[] allKeys() {
+        return glyph.getKeyBindingMap().getAllKeys().stream()//
+                .map(KeyStroke::getKeyStroke) //
+                .collect(Collectors.toList()) //
+                .toArray(new KeyStroke[0]);
     }
 
 }
