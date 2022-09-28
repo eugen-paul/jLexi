@@ -12,4 +12,6 @@ public interface KeyBindingChildInputMap {
     boolean isKeysSets(String keys);
 
     List<String> getAllKeys();
+
+    List<KeyBindingAction> getActions(String keys);
 }
