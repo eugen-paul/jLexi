@@ -113,16 +113,16 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     }
 
     private void registerTestKeyBindings() {
-        getKeyBindingMap().addAction("F9", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
+        getKeyBindingMap().addAction("ctrl pressed C", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
             @Override
             public void doAction() {
-                System.out.println("=> F9 <=");
+                keyHandler.copy();
             }
         });
-        getKeyBindingMap().addAction("control SPACE", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
+        getKeyBindingMap().addAction("ctrl pressed V", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
             @Override
             public void doAction() {
-                System.out.println("=> control SPACE <=");
+                keyHandler.paste();
             }
         });
     }

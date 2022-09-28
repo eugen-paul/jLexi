@@ -19,10 +19,7 @@ public class SwingKeyBindingMainInputMap extends ComponentInputMap {
 
     @Override
     public Object get(KeyStroke keyStroke) {
-
-        var isSet = glyph.getKeyBindingMap().isKeysSets(keyStroke.toString());
-
-        return (isSet) ? null : "found";
+        return new ListOfActions(glyph.getKeyBindingMap().getActions(keyStroke.toString()));
     }
 
     @Override
