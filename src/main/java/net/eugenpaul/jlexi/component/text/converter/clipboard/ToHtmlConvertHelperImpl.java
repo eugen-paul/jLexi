@@ -104,6 +104,11 @@ public class ToHtmlConvertHelperImpl implements ToHtmlConvertHelper {
         var font = new CSSDeclaration("font-family", CSSExpression.createSimple(format.getFontName()));
         declaration.add(font);
 
+        var size = new CSSDeclaration(//
+                "font-size", //
+                CSSExpression.createSimple(format.getFontsize() + "px"));
+        declaration.add(size);
+
         var weight = new CSSDeclaration(//
                 "font-weight", //
                 CSSExpression.createSimple(//

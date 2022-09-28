@@ -285,7 +285,7 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
                     px = (int) (96.0 / 72.0 * size.getAsIntValue());
                     break;
                 case PX:
-                    px = (int) (96.0 / 72.0 * size.getAsIntValue());
+                    px = size.getAsIntValue();
                     break;
                 default:
                     break;
