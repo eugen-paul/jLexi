@@ -16,6 +16,10 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
+import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
+import net.eugenpaul.jlexi.component.text.action.TextPanePasteAction;
+import net.eugenpaul.jlexi.component.text.action.TextPaneRedoAction;
+import net.eugenpaul.jlexi.component.text.action.TextPaneUndoAction;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
@@ -47,7 +51,6 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.window.action.KeyBindingAction;
 import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 @Slf4j
@@ -109,22 +112,19 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         controller.addModel(this);
         controller.addViewChangeListner(this);
 
-        registerTestKeyBindings();
+        registerDefaultKeyBindings();
+
+        registerDefaultKeyBindings("TEXT COPY", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed C");
+        registerDefaultKeyBindings("TEXT PASTE", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed V");
+        registerDefaultKeyBindings("TEXT UNDO", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed Z");
+        registerDefaultKeyBindings("TEXT REDO", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed Y");
     }
 
-    private void registerTestKeyBindings() {
-        getKeyBindingMap().addAction("ctrl pressed C", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
-            @Override
-            public void doAction() {
-                keyHandler.copy();
-            }
-        });
-        getKeyBindingMap().addAction("ctrl pressed V", KeyBindingRule.FOCUS_WINDOW, new KeyBindingAction() {
-            @Override
-            public void doAction() {
-                keyHandler.paste();
-            }
-        });
+    private void registerDefaultKeyBindings() {
+        addDefaultKeyBindings("TEXT COPY", new TextPaneCopyAction(keyHandler));
+        addDefaultKeyBindings("TEXT PASTE", new TextPanePasteAction(keyHandler));
+        addDefaultKeyBindings("TEXT UNDO", new TextPaneUndoAction(keyHandler));
+        addDefaultKeyBindings("TEXT REDO", new TextPaneRedoAction(keyHandler));
     }
 
     @Override
