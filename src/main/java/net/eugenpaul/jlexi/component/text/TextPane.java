@@ -113,18 +113,17 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         controller.addViewChangeListner(this);
 
         registerDefaultKeyBindings();
-
-        registerDefaultKeyBindings("TEXT COPY", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed C");
-        registerDefaultKeyBindings("TEXT PASTE", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed V");
-        registerDefaultKeyBindings("TEXT UNDO", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed Z");
-        registerDefaultKeyBindings("TEXT REDO", KeyBindingRule.FOCUS_WINDOW, "ctrl pressed Y");
     }
 
     private void registerDefaultKeyBindings() {
-        addDefaultKeyBindings("TEXT COPY", new TextPaneCopyAction(keyHandler));
-        addDefaultKeyBindings("TEXT PASTE", new TextPanePasteAction(keyHandler));
-        addDefaultKeyBindings("TEXT UNDO", new TextPaneUndoAction(keyHandler));
-        addDefaultKeyBindings("TEXT REDO", new TextPaneRedoAction(keyHandler));
+        addDefaultKeyBindings("TEXT COPY", new TextPaneCopyAction(this.keyHandler));
+        addDefaultKeyBindings("TEXT PASTE", new TextPanePasteAction(this.keyHandler));
+        addDefaultKeyBindings("TEXT UNDO", new TextPaneUndoAction(this.keyHandler));
+        addDefaultKeyBindings("TEXT REDO", new TextPaneRedoAction(this.keyHandler));
+    }
+
+    public boolean registerKeyAction(String keys, String actionName) {
+        return registerDefaultKeyBindings(actionName, KeyBindingRule.FOCUS_WINDOW, keys);
     }
 
     @Override

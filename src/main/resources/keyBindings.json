@@ -1,10 +1,10 @@
 {
     "textEditor": {
-        "copy": "control c",
-        "paste": "control v",
-        "undo": "control z",
-        "redo": "control y",
-        "textFormatBold": "control b",
-        "textFormatItalic": "control i"
+        "copy": "ctrl pressed C",
+        "paste": "ctrl pressed V",
+        "undo": "ctrl pressed Z",
+        "redo": "ctrl pressed Y",
+        "textFormatBold": "ctrl pressed B",
+        "textFormatItalic": "ctrl pressed I"
     }
 }

@@ -9,22 +9,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import lombok.extern.slf4j.Slf4j;
-import net.eugenpaul.jlexi.config.dto.KeyBindingsDto;
-import net.eugenpaul.jlexi.config.dto.TextEditorKeysDto;
+import net.eugenpaul.jlexi.config.dto.GlobalConfigurationDto;
 
 @Slf4j
-public class KeyBindingsDao {
-
+public class GlobalConfiguration {
     private final ObjectMapper mapper;
 
-    private String configPath;
-    private KeyBindingsDto keyBindings;
+    private GlobalConfigurationDto config;
 
-    public KeyBindingsDao(String configPath) {
+    private String configPath;
+
+    public GlobalConfiguration(String configPath) {
         this.mapper = new ObjectMapper();
         this.mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         this.configPath = configPath;
-        this.keyBindings = null;
+        this.config = null;
     }
 
     /**
@@ -36,10 +35,10 @@ public class KeyBindingsDao {
         var file = new File(configPath);
 
         try {
-            keyBindings = mapper.readValue(file, KeyBindingsDto.class);
+            config = mapper.readValue(file, GlobalConfigurationDto.class);
             return true;
         } catch (IOException e) {
-            LOGGER.error("Error by load the keyBindings", e);
+            LOGGER.error("Error by load the configuration", e);
             return false;
         }
     }
@@ -51,14 +50,19 @@ public class KeyBindingsDao {
      * @return true by success
      */
     public boolean save(String path) {
+        if (config == null) {
+            LOGGER.error("Configuration is empty");
+            return false;
+        }
+
         var file = new File(configPath);
 
         try {
             ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-            writer.writeValue(file, keyBindings);
+            writer.writeValue(file, config);
             return true;
         } catch (IOException e) {
-            LOGGER.error("Error by writing the keyBindings", e);
+            LOGGER.error("Error by writing the configuration", e);
             return false;
         }
     }
@@ -70,13 +74,5 @@ public class KeyBindingsDao {
      */
     public boolean save() {
         return save(configPath);
-    }
-
-    public TextEditorKeysDto loadTextEditorKeys() {
-        if (keyBindings == null) {
-            return null;
-        }
-
-        return keyBindings.getTextEditor();
     }
 }

@@ -51,6 +51,8 @@ public class MainWindow extends ApplicationWindow {
     @Override
     protected GuiGlyph setContent() {
         var textPane = new TextPane(name, null, storage, controller);
+        registerTextPaneKeys(textPane);
+
         var scrollPane = guiFactory.createScrollpane(null, textPane);
         var border = guiFactory.createBorder(null, scrollPane);
 
@@ -65,6 +67,13 @@ public class MainWindow extends ApplicationWindow {
 
         focusOn = textPane;
         return menubar;
+    }
+
+    private void registerTextPaneKeys(TextPane textPane) {
+        textPane.registerKeyAction("ctrl pressed C", "TEXT COPY");
+        textPane.registerKeyAction("ctrl pressed V", "TEXT PASTE");
+        textPane.registerKeyAction("ctrl pressed Z", "TEXT UNDO");
+        textPane.registerKeyAction("ctrl pressed Y", "TEXT REDO");
     }
 
     private void initMenu(MenuBar menubar, String cursorName) {
