@@ -9,34 +9,53 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 public class KeyBindingChildInputMapImpl implements KeyBindingChildInputMap {
 
-    private final Map<String, KeyBindingAction> keysToActionMap;
+    @AllArgsConstructor
+    @Getter
+    private class Data {
+        private String name;
+        private String keys;
+        private KeyBindingRule rule;
+        private KeyBindingAction action;
+    }
+
+    private final Map<String, Data> nameToActionMap;
     private final Supplier<List<KeyBindingChildInputMap>> childListSupplier;
 
     public KeyBindingChildInputMapImpl(Supplier<List<KeyBindingChildInputMap>> childListSupplier) {
-        this.keysToActionMap = new HashMap<>();
+        this.nameToActionMap = new HashMap<>();
         this.childListSupplier = childListSupplier;
     }
 
     @Override
-    public void addAction(String keys, KeyBindingRule rule, KeyBindingAction action) {
-        this.keysToActionMap.put(keys, action);
+    public void addAction(String name, String keys, KeyBindingRule rule, KeyBindingAction action) {
+        var data = new Data(name, keys, rule, action);
+        this.nameToActionMap.put(name, data);
     }
 
     @Override
-    public void removeAction(String keys, KeyBindingRule rule, KeyBindingAction action) {
-        this.keysToActionMap.remove(keys);
+    public void removeAction(String name) {
+        this.nameToActionMap.remove(name);
     }
 
     @Override
-    public KeyBindingAction getAction(String keys) {
-        return this.keysToActionMap.get(keys);
+    public List<KeyBindingAction> getCurrentByKeyAction(String keys) {
+        return this.nameToActionMap.values().stream()//
+                .filter(v -> v.keys.equals(keys))//
+                .map(Data::getAction)//
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean isKeysSets(String keys) {
-        if (keysToActionMap.containsKey(keys)) {
+        boolean isInSelf = this.nameToActionMap.values().stream()//
+                .anyMatch(v -> v.getKeys().equals(keys));
+
+        if (isInSelf) {
             return true;
         }
 
@@ -49,7 +68,6 @@ public class KeyBindingChildInputMapImpl implements KeyBindingChildInputMap {
         return false;
     }
 
-    // @Override
     private List<KeyBindingChildInputMap> getChildsMaps() {
         return this.childListSupplier.get();
     }
@@ -57,7 +75,7 @@ public class KeyBindingChildInputMapImpl implements KeyBindingChildInputMap {
     @Override
     public List<String> getAllKeys() {
         Set<String> response = new HashSet<>();
-        keysToActionMap.keySet().forEach(response::add);
+        nameToActionMap.values().forEach(v -> response.add(v.getKeys()));
 
         for (var child : childListSupplier.get()) {
             response.addAll(child.getAllKeys());
@@ -66,16 +84,13 @@ public class KeyBindingChildInputMapImpl implements KeyBindingChildInputMap {
     }
 
     @Override
-    public List<KeyBindingAction> getActions(String keys) {
+    public List<KeyBindingAction> getAllByKeyActions(String keys) {
         List<KeyBindingAction> response = new LinkedList<>();
 
-        var action = keysToActionMap.get(keys);
-        if (action != null) {
-            response.add(action);
-        }
+        response.addAll(getCurrentByKeyAction(keys));
 
         for (var child : childListSupplier.get()) {
-            response.addAll(child.getActions(keys));
+            response.addAll(child.getAllByKeyActions(keys));
         }
 
         return response;

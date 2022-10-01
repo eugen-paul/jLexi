@@ -10,36 +10,48 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.config.dto.GlobalConfigurationDto;
+import net.eugenpaul.jlexi.config.dto.KeyBindingsDto;
 
 @Slf4j
-public class GlobalConfiguration {
+public class GlobalConfigurationDao {
     private final ObjectMapper mapper;
+    private final ObjectWriter writer;
 
     private GlobalConfigurationDto config;
 
+    private KeyBindingsDao keys;
+
     private String configPath;
 
-    public GlobalConfiguration(String configPath) {
+    public GlobalConfigurationDao(String configPath) {
         this.mapper = new ObjectMapper();
         this.mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        this.writer = mapper.writer(new DefaultPrettyPrinter());
+
         this.configPath = configPath;
         this.config = null;
+        this.keys = null;
     }
 
     /**
      * Load/Reload configuration from file
      * 
      * @return true by success
+     * @throws IOException
      */
-    public boolean load() {
-        var file = new File(configPath);
+    public void load() throws IOException {
+        var file = new File(this.configPath);
 
         try {
-            config = mapper.readValue(file, GlobalConfigurationDto.class);
-            return true;
+            this.config = mapper.readValue(file, GlobalConfigurationDto.class);
+
+            this.keys = new KeyBindingsDao(this.config.getKeyBindingsPath());
+            this.keys.load();
         } catch (IOException e) {
             LOGGER.error("Error by load the configuration", e);
-            return false;
+            this.config = null;
+            this.keys = null;
+            throw e;
         }
     }
 
@@ -50,16 +62,15 @@ public class GlobalConfiguration {
      * @return true by success
      */
     public boolean save(String path) {
-        if (config == null) {
+        if (this.config == null) {
             LOGGER.error("Configuration is empty");
             return false;
         }
 
-        var file = new File(configPath);
+        var file = new File(this.configPath);
 
         try {
-            ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-            writer.writeValue(file, config);
+            this.writer.writeValue(file, this.config);
             return true;
         } catch (IOException e) {
             LOGGER.error("Error by writing the configuration", e);
@@ -74,5 +85,13 @@ public class GlobalConfiguration {
      */
     public boolean save() {
         return save(configPath);
+    }
+
+    public KeyBindingsDto getKeys(String name) {
+        if (keys == null) {
+            return null;
+        }
+
+        return keys.getKeys(name);
     }
 }

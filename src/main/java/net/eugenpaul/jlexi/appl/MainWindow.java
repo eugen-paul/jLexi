@@ -18,6 +18,7 @@ import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
 import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
 import net.eugenpaul.jlexi.component.text.keyhandler.ItalicFormatChangeListner;
+import net.eugenpaul.jlexi.config.Configurator;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.GuiFactory;
@@ -35,8 +36,10 @@ public class MainWindow extends ApplicationWindow {
     private ResourceManager storage;
     private String textPaneName;
     private GuiFactory guiFactory;
+    private Configurator configurator;
 
-    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory guiFactory) {
+    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory guiFactory,
+            Configurator configurator) {
         super(//
                 name, //
                 controller, //
@@ -46,12 +49,14 @@ public class MainWindow extends ApplicationWindow {
         this.storage = storage;
         this.guiFactory = guiFactory;
         this.textPaneName = name + DEFAULT_TEXT_PANE_SUFFIX;
+        this.configurator = configurator;
     }
 
     @Override
     protected GuiGlyph setContent() {
         var textPane = new TextPane(name, null, storage, controller);
-        registerTextPaneKeys(textPane);
+        configurator.registerGui("textEditor", textPane);
+        configurator.setAllsKeyBindings("textEditor");
 
         var scrollPane = guiFactory.createScrollpane(null, textPane);
         var border = guiFactory.createBorder(null, scrollPane);
@@ -67,13 +72,6 @@ public class MainWindow extends ApplicationWindow {
 
         focusOn = textPane;
         return menubar;
-    }
-
-    private void registerTextPaneKeys(TextPane textPane) {
-        textPane.registerKeyAction("ctrl pressed C", "TEXT COPY");
-        textPane.registerKeyAction("ctrl pressed V", "TEXT PASTE");
-        textPane.registerKeyAction("ctrl pressed Z", "TEXT UNDO");
-        textPane.registerKeyAction("ctrl pressed Y", "TEXT REDO");
     }
 
     private void initMenu(MenuBar menubar, String cursorName) {

@@ -116,10 +116,10 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     }
 
     private void registerDefaultKeyBindings() {
-        addDefaultKeyBindings("TEXT COPY", new TextPaneCopyAction(this.keyHandler));
-        addDefaultKeyBindings("TEXT PASTE", new TextPanePasteAction(this.keyHandler));
-        addDefaultKeyBindings("TEXT UNDO", new TextPaneUndoAction(this.keyHandler));
-        addDefaultKeyBindings("TEXT REDO", new TextPaneRedoAction(this.keyHandler));
+        addDefaultKeyBindings("copy", new TextPaneCopyAction(this.keyHandler));
+        addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
+        addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
+        addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
     }
 
     public boolean registerKeyAction(String keys, String actionName) {

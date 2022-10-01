@@ -1,7 +1,5 @@
 package net.eugenpaul.jlexi.config.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public final class KeyBindingsDto {
+public final class KeyBindingsParameterDto {
     private String name;
-    private List<KeyBindingsParameterDto> parameter;
+    private String keys;
+    private String description;
 }

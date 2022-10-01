@@ -1,9 +1,12 @@
 package net.eugenpaul.jlexi;
 
 import java.io.File;
+import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.appl.MainWindow;
 import net.eugenpaul.jlexi.appl.impl.swing.SwingWindowFactory;
+import net.eugenpaul.jlexi.config.Configurator;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.design.dark.DarkFactory;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
@@ -14,9 +17,10 @@ import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.impl.FormatStorageImpl;
 import net.eugenpaul.jlexi.window.Window;
 
+@Slf4j
 public class JLexi {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         ModelController controller = new ModelController();
 
         FontStorage fonts = new FontStorageImpl(new FontGenerator());
@@ -25,11 +29,20 @@ public class JLexi {
 
         Window.setFactory(new SwingWindowFactory());
 
+        Configurator config = new Configurator("src/main/resources/configuratioin.json");
+        try {
+            config.init();
+        } catch (IOException e) {
+            LOGGER.error("Load configuration error", e);
+            throw e;
+        }
+
         MainWindow mainWindow = new MainWindow(//
                 "MainWindow", //
                 controller, //
                 storage, //
-                new DarkFactory() //
+                new DarkFactory(), //
+                config //
         );
 
         mainWindow.createWindow();

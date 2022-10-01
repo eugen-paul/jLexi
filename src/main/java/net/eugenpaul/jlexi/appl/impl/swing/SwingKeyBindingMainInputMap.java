@@ -19,7 +19,7 @@ public class SwingKeyBindingMainInputMap extends ComponentInputMap {
 
     @Override
     public Object get(KeyStroke keyStroke) {
-        return new ListOfActions(glyph.getKeyBindingMap().getActions(keyStroke.toString()));
+        return new ListOfActions(glyph.getKeyBindingMap().getAllByKeyActions(keyStroke.toString()));
     }
 
     @Override

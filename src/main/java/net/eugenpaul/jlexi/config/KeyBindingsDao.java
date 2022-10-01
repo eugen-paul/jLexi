@@ -2,15 +2,19 @@ package net.eugenpaul.jlexi.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.config.dto.KeyBindingsDto;
-import net.eugenpaul.jlexi.config.dto.TextEditorKeysDto;
 
 @Slf4j
 public class KeyBindingsDao {
@@ -18,13 +22,13 @@ public class KeyBindingsDao {
     private final ObjectMapper mapper;
 
     private String configPath;
-    private KeyBindingsDto keyBindings;
+    private Map<String, KeyBindingsDto> keyBindings;
 
     public KeyBindingsDao(String configPath) {
         this.mapper = new ObjectMapper();
         this.mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         this.configPath = configPath;
-        this.keyBindings = null;
+        this.keyBindings = new HashMap<>();
     }
 
     /**
@@ -36,7 +40,11 @@ public class KeyBindingsDao {
         var file = new File(configPath);
 
         try {
-            keyBindings = mapper.readValue(file, KeyBindingsDto.class);
+            List<KeyBindingsDto> data = mapper.readValue(file, new TypeReference<List<KeyBindingsDto>>() {
+            });
+
+            keyBindings = data.stream().collect(Collectors.toMap(KeyBindingsDto::getName, v -> v));
+
             return true;
         } catch (IOException e) {
             LOGGER.error("Error by load the keyBindings", e);
@@ -72,11 +80,7 @@ public class KeyBindingsDao {
         return save(configPath);
     }
 
-    public TextEditorKeysDto loadTextEditorKeys() {
-        if (keyBindings == null) {
-            return null;
-        }
-
-        return keyBindings.getTextEditor();
+    public KeyBindingsDto getKeys(String name) {
+        return keyBindings.get(name);
     }
 }
