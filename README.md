@@ -8,6 +8,11 @@ In the implementation I only use two Java Swing classes: JFrame and JPanel to cr
 
 ## Progress
 
+### Step 10
+New keysboard shortcuts.
+
+The keysboard shortcuts using [keybinding](https://docs.oracle.com/javase/tutorial/uiswing/misc/keybinding.html). The shortcuts are loaded from the configuration file.
+
 ### Step 9
 Copy and paste formatted text from and to jLexi.
 
