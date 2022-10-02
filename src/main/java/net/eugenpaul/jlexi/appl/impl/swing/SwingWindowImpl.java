@@ -3,14 +3,14 @@ package net.eugenpaul.jlexi.appl.impl.swing;
 import net.eugenpaul.jlexi.appl.impl.swing.frame.MainFrame;
 import net.eugenpaul.jlexi.appl.impl.swing.frame.MainPanel;
 import net.eugenpaul.jlexi.component.GuiGlyph;
-import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.window.AbstractView;
 import net.eugenpaul.jlexi.window.Windowlmp;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class SwingWindowImpl extends Windowlmp {
 
-    public SwingWindowImpl(ModelController controller) {
+    public SwingWindowImpl(WindowController controller) {
         super(controller);
     }
 

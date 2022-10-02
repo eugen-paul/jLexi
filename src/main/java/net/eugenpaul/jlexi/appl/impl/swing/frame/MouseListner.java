@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import lombok.AllArgsConstructor;
-import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 
@@ -13,7 +13,7 @@ import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 public class MouseListner extends MouseAdapter {
 
     private String name;
-    private ModelController controller;
+    private WindowController controller;
 
     @Override
     public void mouseClicked(MouseEvent e) {

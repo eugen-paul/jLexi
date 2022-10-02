@@ -19,7 +19,7 @@ import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
 import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
 import net.eugenpaul.jlexi.component.text.keyhandler.ItalicFormatChangeListner;
 import net.eugenpaul.jlexi.config.Configurator;
-import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
@@ -38,11 +38,11 @@ public class MainWindow extends ApplicationWindow {
     private GuiFactory guiFactory;
     private Configurator configurator;
 
-    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory guiFactory,
+    public MainWindow(String name, WindowController windowController, ResourceManager storage, GuiFactory guiFactory,
             Configurator configurator) {
         super(//
                 name, //
-                controller, //
+                windowController, //
                 DEFAULT_SIZE //
         );
 

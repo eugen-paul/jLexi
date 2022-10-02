@@ -8,6 +8,7 @@ import net.eugenpaul.jlexi.appl.MainWindow;
 import net.eugenpaul.jlexi.appl.impl.swing.SwingWindowFactory;
 import net.eugenpaul.jlexi.config.Configurator;
 import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.design.dark.DarkFactory;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
@@ -22,6 +23,7 @@ public class JLexi {
 
     public static void main(String[] args) throws IOException {
         ModelController controller = new ModelController();
+        WindowController windowController = new WindowController();
 
         FontStorage fonts = new FontStorageImpl(new FontGenerator());
         FormatStorage formats = new FormatStorageImpl();
@@ -39,7 +41,7 @@ public class JLexi {
 
         MainWindow mainWindow = new MainWindow(//
                 "MainWindow", //
-                controller, //
+                windowController, //
                 storage, //
                 new DarkFactory(), //
                 config //

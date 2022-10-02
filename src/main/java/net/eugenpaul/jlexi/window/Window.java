@@ -7,8 +7,8 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
-import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.exception.NotInitializedException;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Size;
@@ -31,18 +31,18 @@ public abstract class Window extends MonoGlyph
     protected static WindowSystemFactory factory = null;
     protected final String name;
     protected final Windowlmp windowlmp;
-    protected final ModelController controller;
+    protected final WindowController controller;
 
     protected AbstractView view;
     private GuiGlyph mainGlyph;
     protected KeyPressable focusOn;
 
-    protected Window(String name, Size size, Windowlmp windowlmp, ModelController controller) {
+    protected Window(String name, Size size, Windowlmp windowlmp, WindowController windowController) {
         super(null, null);
         this.windowlmp = windowlmp;
         this.name = name;
         setSize(size);
-        this.controller = controller;
+        this.controller = windowController;
         this.view = null;
         this.focusOn = null;
         this.mainGlyph = null;

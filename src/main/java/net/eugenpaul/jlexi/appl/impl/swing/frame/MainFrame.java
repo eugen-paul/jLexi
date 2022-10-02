@@ -13,8 +13,8 @@ import javax.swing.WindowConstants;
 
 import net.eugenpaul.jlexi.appl.impl.swing.SwingKeyBindingMainActionMap;
 import net.eugenpaul.jlexi.appl.impl.swing.SwingKeyBindingMainInputMap;
-import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.window.AbstractView;
 import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
 
@@ -27,7 +27,7 @@ public class MainFrame extends AbstractView {
 
     private SwingKeyBindingMainInputMap mainInputMap;
 
-    public MainFrame(ModelController controller, String name) {
+    public MainFrame(WindowController controller, String name) {
         super(controller);
         this.name = name;
         this.frame = new JFrame(TITLE_PREFIX + name);
