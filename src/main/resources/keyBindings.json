@@ -1,0 +1,37 @@
+[
+    {
+        "name": "textEditor",
+        "parameter": [
+            {
+                "name": "copy",
+                "keys": "ctrl pressed C",
+                "description": "Copy selected text to clipboard."
+            },
+            {
+                "name": "paste",
+                "keys": "ctrl pressed V",
+                "description": "Paste text from clipboard."
+            },
+            {
+                "name": "undo",
+                "keys": "ctrl pressed Z",
+                "description": "Erase the last change."
+            },
+            {
+                "name": "redo",
+                "keys": "ctrl pressed Y",
+                "description": "Reverse the undo."
+            },
+            {
+                "name": "textFormatBold",
+                "keys": "ctrl pressed B",
+                "description": "Set selected text to bold."
+            },
+            {
+                "name": "textFormatItalic",
+                "keys": "ctrl pressed I",
+                "description": "Set selected text to italic."
+            }
+        ]
+    }
+]

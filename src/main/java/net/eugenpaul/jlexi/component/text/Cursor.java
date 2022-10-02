@@ -48,7 +48,7 @@ public class Cursor implements ModelPropertyChangeListner {
         this.selectedText = null;
         this.selectedTextEffect = null;
 
-        this.controller.addView(this);
+        this.controller.addViewChangeListner(this);
     }
 
     public TextPosition getPosition() {

@@ -1,31 +1,31 @@
-package net.eugenpaul.jlexi.window;
+package net.eugenpaul.jlexi.appl.action;
 
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+
+import javax.swing.AbstractAction;
 
 import lombok.AllArgsConstructor;
 import net.eugenpaul.jlexi.component.button.Button;
 import net.eugenpaul.jlexi.component.button.ButtonState;
 import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
-import net.eugenpaul.jlexi.utils.event.MouseButton;
 
 @AllArgsConstructor
-public class ItalicActivate implements MouseEventAdapter {
-
+public class BoldAction extends AbstractAction {
     private final String name;
     private final Button button;
     private final AbstractController controller;
 
     @Override
-    public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
+    public void actionPerformed(ActionEvent e) {
         if (this.button.getState() == ButtonState.NORMAL) {
             this.button.setState(ButtonState.PUSHED);
             this.button.redraw();
 
-            controller.propertyChange(new PropertyChangeEvent(//
-                    name, //
-                    ViewPropertyChangeType.CURSOR_SET_FORMAT_ITALIC.getTypeName(), //
+            this.controller.propertyChange(new PropertyChangeEvent(//
+                    this.name, //
+                    ViewPropertyChangeType.CURSOR_SET_FORMAT_BOLD.getTypeName(), //
                     null, //
                     Boolean.TRUE //
             ));
@@ -33,12 +33,13 @@ public class ItalicActivate implements MouseEventAdapter {
             this.button.setState(ButtonState.NORMAL);
             this.button.redraw();
 
-            controller.propertyChange(new PropertyChangeEvent(//
-                    name, //
-                    ViewPropertyChangeType.CURSOR_SET_FORMAT_ITALIC.getTypeName(), //
+            this.controller.propertyChange(new PropertyChangeEvent(//
+                    this.name, //
+                    ViewPropertyChangeType.CURSOR_SET_FORMAT_BOLD.getTypeName(), //
                     null, //
                     Boolean.FALSE //
             ));
         }
     }
+
 }

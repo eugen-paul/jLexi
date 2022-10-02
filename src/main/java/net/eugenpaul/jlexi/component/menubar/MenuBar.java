@@ -45,10 +45,13 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
         this.menuButtons = new LinkedList<>();
 
         computeBackground();
+
+        addGuiChild(component);
     }
 
     public boolean addMenuButton(Button button) {
         this.menuButtons.add(button);
+        addGuiChild(button);
 
         this.menubarHeight = this.menuButtons.stream().map(v -> v.getSize().getHeight()).reduce(0, Math::max);
         if (this.menubarHeight > 0) {

@@ -1,5 +1,12 @@
 package net.eugenpaul.jlexi.component;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
@@ -9,6 +16,10 @@ import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
+import net.eugenpaul.jlexi.window.action.KeyBindingAction;
+import net.eugenpaul.jlexi.window.action.KeyBindingChildInputMap;
+import net.eugenpaul.jlexi.window.action.KeyBindingChildInputMapImpl;
+import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
@@ -19,8 +30,23 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
     @Setter
     protected MouseDragAdapter mouseDragAdapter;
 
+    private List<GuiGlyph> guiChilds;
+
+    @Getter
+    private KeyBindingChildInputMap keyBindingMap;
+
+    private Map<String, KeyBindingAction> defaultKeyBindings;
+
     protected GuiGlyph(Glyph parent) {
         super(parent);
+        this.guiChilds = new LinkedList<>();
+        this.keyBindingMap = new KeyBindingChildInputMapImpl( //
+                () -> guiChilds.stream()//
+                        .map(GuiGlyph::getKeyBindingMap)//
+                        .collect(Collectors.toList()) //
+        );
+        this.defaultKeyBindings = new HashMap<>();
+
         this.mouseEventAdapter = new MouseEventAdapter() {
 
         };
@@ -30,6 +56,39 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
         this.mouseDragAdapter = new MouseDragAdapter() {
 
         };
+    }
+
+    protected void addGuiChild(GuiGlyph child) {
+        this.guiChilds.add(child);
+    }
+
+    protected boolean removeGuiChild(GuiGlyph child) {
+        return this.guiChilds.remove(child);
+    }
+
+    protected void addDefaultKeyBindings(String name, KeyBindingAction creator) {
+        defaultKeyBindings.put(name, creator);
+    }
+
+    @Override
+    public List<String> getDefaultKeyBindings() {
+        return defaultKeyBindings.keySet().stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean registerDefaultKeyBindings(String name, KeyBindingRule rule, String keys) {
+        var action = defaultKeyBindings.get(name);
+        if (action == null) {
+            return false;
+        }
+        getKeyBindingMap().addAction(name, keys, rule, action);
+
+        return true;
+    }
+
+    @Override
+    public void unregisterDefaultKeyBindings(String name) {
+        getKeyBindingMap().removeAction(name);
     }
 
     @Override

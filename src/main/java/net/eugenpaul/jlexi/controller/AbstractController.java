@@ -35,7 +35,7 @@ import reactor.core.scheduler.Schedulers;
 @Slf4j
 public abstract class AbstractController implements PropertyChangeListener, EffectController {
 
-    private List<ModelPropertyChangeListner> registeredViews;
+    private List<ModelPropertyChangeListner> viewsChangeListner;
     private List<InterfaceModel> registeredModels;
 
     private Map<String, Window> windowsMap;
@@ -49,7 +49,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * C*tor
      */
     protected AbstractController() {
-        registeredViews = new ArrayList<>();
+        viewsChangeListner = new ArrayList<>();
         registeredModels = new ArrayList<>();
         windowsMap = new HashMap<>();
 
@@ -63,8 +63,8 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * 
      * @param view
      */
-    public void addView(ModelPropertyChangeListner view) {
-        registeredViews.add(view);
+    public void addViewChangeListner(ModelPropertyChangeListner view) {
+        viewsChangeListner.add(view);
     }
 
     /**
@@ -72,8 +72,8 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * 
      * @param view
      */
-    public void removeView(ModelPropertyChangeListner view) {
-        registeredViews.remove(view);
+    public void removeViewChangeListner(ModelPropertyChangeListner view) {
+        viewsChangeListner.remove(view);
     }
 
     public void addWindow(Window glyph, String name) {
@@ -82,7 +82,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        registeredViews.forEach(v -> v.modelPropertyChange(evt));
+        viewsChangeListner.forEach(v -> v.modelPropertyChange(evt));
     }
 
     public void addModel(InterfaceModel model) {

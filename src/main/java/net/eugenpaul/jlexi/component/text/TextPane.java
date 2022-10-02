@@ -9,11 +9,17 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.eugenpaul.jlexi.appl.interfaces.CopyPasteable;
+import net.eugenpaul.jlexi.appl.interfaces.UndoRedoable;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
+import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
+import net.eugenpaul.jlexi.component.text.action.TextPanePasteAction;
+import net.eugenpaul.jlexi.component.text.action.TextPaneRedoAction;
+import net.eugenpaul.jlexi.component.text.action.TextPaneUndoAction;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
@@ -45,8 +51,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.visitor.Visitor;
-import net.eugenpaul.jlexi.window.interfaces.CopyPasteable;
-import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
+import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 @Slf4j
 public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,
@@ -105,7 +110,20 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         resizeTo(Size.ZERO_SIZE);
 
         controller.addModel(this);
-        controller.addView(this);
+        controller.addViewChangeListner(this);
+
+        registerDefaultKeyBindings();
+    }
+
+    private void registerDefaultKeyBindings() {
+        addDefaultKeyBindings("copy", new TextPaneCopyAction(this.keyHandler));
+        addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
+        addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
+        addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
+    }
+
+    public boolean registerKeyAction(String keys, String actionName) {
+        return registerDefaultKeyBindings(actionName, KeyBindingRule.FOCUS_WINDOW, keys);
     }
 
     @Override

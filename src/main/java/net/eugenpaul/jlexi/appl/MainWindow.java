@@ -1,16 +1,24 @@
-package net.eugenpaul.jlexi.window;
+package net.eugenpaul.jlexi.appl;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import net.eugenpaul.jlexi.appl.action.BoldActivate;
+import net.eugenpaul.jlexi.appl.action.CopyActivate;
+import net.eugenpaul.jlexi.appl.action.ItalicActivate;
+import net.eugenpaul.jlexi.appl.action.PasteActivate;
+import net.eugenpaul.jlexi.appl.action.RedoActivate;
+import net.eugenpaul.jlexi.appl.action.UndoActivate;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
 import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
 import net.eugenpaul.jlexi.component.text.keyhandler.ItalicFormatChangeListner;
+import net.eugenpaul.jlexi.config.Configurator;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.GuiFactory;
@@ -18,6 +26,7 @@ import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
+import net.eugenpaul.jlexi.window.ApplicationWindow;
 
 public class MainWindow extends ApplicationWindow {
 
@@ -27,8 +36,10 @@ public class MainWindow extends ApplicationWindow {
     private ResourceManager storage;
     private String textPaneName;
     private GuiFactory guiFactory;
+    private Configurator configurator;
 
-    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory guiFactory) {
+    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory guiFactory,
+            Configurator configurator) {
         super(//
                 name, //
                 controller, //
@@ -38,11 +49,15 @@ public class MainWindow extends ApplicationWindow {
         this.storage = storage;
         this.guiFactory = guiFactory;
         this.textPaneName = name + DEFAULT_TEXT_PANE_SUFFIX;
+        this.configurator = configurator;
     }
 
     @Override
-    protected void setContent() {
+    protected GuiGlyph setContent() {
         var textPane = new TextPane(name, null, storage, controller);
+        configurator.registerGui("textEditor", textPane);
+        configurator.setAllsKeyBindings("textEditor");
+
         var scrollPane = guiFactory.createScrollpane(null, textPane);
         var border = guiFactory.createBorder(null, scrollPane);
 
@@ -56,7 +71,7 @@ public class MainWindow extends ApplicationWindow {
         controller.addModel(this);
 
         focusOn = textPane;
-        setMainGlyph(menubar);
+        return menubar;
     }
 
     private void initMenu(MenuBar menubar, String cursorName) {
@@ -77,7 +92,7 @@ public class MainWindow extends ApplicationWindow {
         menubar.addMenuButton(button);
 
         BoldFormatChangeListner listner = new BoldFormatChangeListner(button, cursorName);
-        this.controller.addView(listner);
+        this.controller.addViewChangeListner(listner);
 
         MouseEventAdapter mouseEventAdapter = new BoldActivate(cursorName, button, this.controller);
         button.setMouseEventAdapter(mouseEventAdapter);
@@ -90,7 +105,7 @@ public class MainWindow extends ApplicationWindow {
         menubar.addMenuButton(button);
 
         ItalicFormatChangeListner listner = new ItalicFormatChangeListner(button, cursorName);
-        this.controller.addView(listner);
+        this.controller.addViewChangeListner(listner);
 
         MouseEventAdapter mouseEventAdapter = new ItalicActivate(cursorName, button, this.controller);
         button.setMouseEventAdapter(mouseEventAdapter);

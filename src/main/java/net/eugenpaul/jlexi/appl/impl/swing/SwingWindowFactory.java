@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.window.impl.swing;
+package net.eugenpaul.jlexi.appl.impl.swing;
 
 import java.util.function.Function;
 

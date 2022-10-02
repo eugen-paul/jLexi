@@ -64,6 +64,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
         this.compositor = new ScrollGlypthCompositor<>(backgroundColor, vScrollPosition, hScrollPosition, true, true);
 
         this.component.setRelativPosition(new Vector2d(0, 0));
+        addGuiChild(component);
         resizeTo(Size.ZERO_SIZE);
     }
 

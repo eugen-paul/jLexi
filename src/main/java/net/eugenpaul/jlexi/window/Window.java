@@ -4,8 +4,8 @@ import java.beans.PropertyChangeEvent;
 
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
-import net.eugenpaul.jlexi.component.interfaces.GuiEvents;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
@@ -34,7 +34,7 @@ public abstract class Window extends MonoGlyph
     protected final ModelController controller;
 
     protected AbstractView view;
-    private GuiEvents mainGlyph;
+    private GuiGlyph mainGlyph;
     protected KeyPressable focusOn;
 
     protected Window(String name, Size size, Windowlmp windowlmp, ModelController controller) {
@@ -48,11 +48,6 @@ public abstract class Window extends MonoGlyph
         this.mainGlyph = null;
     }
 
-    protected <T extends Glyph & GuiEvents> void setMainGlyph(T glyph) {
-        mainGlyph = glyph;
-        component = glyph;
-    }
-
     public Glyph getGlyph() {
         return component;
     }
@@ -63,16 +58,17 @@ public abstract class Window extends MonoGlyph
             throw new NotInitializedException("WindowSystemFactory ist not initialized/set.");
         }
 
-        if (view != null) {
-            return view;
+        if (this.view != null) {
+            return this.view;
         }
 
-        setContent();
-        view = windowlmp.deviceCreateMainWindow(getSize(), name);
+        this.mainGlyph = setContent();
+        this.component = mainGlyph;
+        this.view = windowlmp.deviceCreateMainWindow(getSize(), name, mainGlyph);
 
         redraw();
 
-        return view;
+        return this.view;
     }
 
     @Override
@@ -88,7 +84,7 @@ public abstract class Window extends MonoGlyph
         );
     }
 
-    protected abstract void setContent();
+    protected abstract GuiGlyph setContent();
 
     public void setTitle(String title) {
         view.modelPropertyChange(new PropertyChangeEvent(name, //

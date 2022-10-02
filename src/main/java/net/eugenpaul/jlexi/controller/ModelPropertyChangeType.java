@@ -3,8 +3,8 @@ package net.eugenpaul.jlexi.controller;
 import java.time.Duration;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.window.interfaces.CopyPasteable;
-import net.eugenpaul.jlexi.window.interfaces.UndoRedoable;
+import net.eugenpaul.jlexi.appl.interfaces.CopyPasteable;
+import net.eugenpaul.jlexi.appl.interfaces.UndoRedoable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsKeyPressable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseClickable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseWheel;

@@ -1,11 +1,18 @@
-package net.eugenpaul.jlexi.window.impl.swing.frame;
+package net.eugenpaul.jlexi.appl.impl.swing.frame;
 
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.function.Consumer;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import net.eugenpaul.jlexi.appl.impl.swing.SwingKeyBindingMainActionMap;
+import net.eugenpaul.jlexi.appl.impl.swing.SwingKeyBindingMainInputMap;
 import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.window.AbstractView;
@@ -18,11 +25,14 @@ public class MainFrame extends AbstractView {
     private MainPanel mainPanel;
     private String name;
 
+    private SwingKeyBindingMainInputMap mainInputMap;
+
     public MainFrame(ModelController controller, String name) {
         super(controller);
         this.name = name;
-        frame = new JFrame(TITLE_PREFIX + name);
-        mainPanel = null;
+        this.frame = new JFrame(TITLE_PREFIX + name);
+        this.mainPanel = null;
+        this.mainInputMap = null;
     }
 
     @Override
@@ -44,17 +54,23 @@ public class MainFrame extends AbstractView {
         this.mainPanel = panel;
 
         if (null == panel) {
+            this.mainInputMap = null;
             return;
         }
 
-        frame.add(mainPanel.getPanel());
-        mainPanel.getPanel().requestFocusInWindow();
-        frame.pack();
+        this.mainInputMap = new SwingKeyBindingMainInputMap(this.mainPanel.getPanel(), this.mainPanel.getMainGlyph());
+        this.mainPanel.getPanel().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, this.mainInputMap);
+
+        this.mainPanel.getPanel().setActionMap(new SwingKeyBindingMainActionMap());
+
+        this.frame.add(this.mainPanel.getPanel());
+        this.mainPanel.getPanel().requestFocusInWindow();
+        this.frame.pack();
     }
 
     @Override
     public void setVisible(boolean status) {
-        SwingUtilities.invokeLater(() -> frame.setVisible(status));
+        SwingUtilities.invokeLater(() -> this.frame.setVisible(status));
     }
 
     @Override
@@ -63,13 +79,27 @@ public class MainFrame extends AbstractView {
             updateTitle((UpdateTitle) evt.getNewValue());
         }
 
-        mainPanel.modelPropertyChange(evt);
+        this.mainPanel.modelPropertyChange(evt);
     }
 
     private void updateTitle(UpdateTitle data) {
         if (data.getTarget().equals(name)) {
             SwingUtilities.invokeLater(() -> this.frame.setTitle(data.getNewTitle()));
         }
+    }
+
+    public void registerKeyBinding(String name, String keys, Consumer<String> action) {
+        SwingUtilities.invokeLater(() -> {
+
+            mainPanel.getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(keys), name);
+
+            mainPanel.getPanel().getActionMap().put(name, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    action.accept(e.toString());
+                }
+            });
+        });
     }
 
 }
