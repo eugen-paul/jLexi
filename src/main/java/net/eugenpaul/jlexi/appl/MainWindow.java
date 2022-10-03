@@ -20,9 +20,11 @@ import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
 import net.eugenpaul.jlexi.component.text.keyhandler.ItalicFormatChangeListner;
 import net.eugenpaul.jlexi.config.Configurator;
 import net.eugenpaul.jlexi.controller.WindowController;
+import net.eugenpaul.jlexi.controller.AbstractController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.GuiFactory;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
+import net.eugenpaul.jlexi.pubsub.EventManager;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
@@ -36,10 +38,11 @@ public class MainWindow extends ApplicationWindow {
     private ResourceManager storage;
     private String textPaneName;
     private GuiFactory guiFactory;
-    private Configurator configurator;
+    private EventManager eventManager;
+    private AbstractController controller;
 
     public MainWindow(String name, WindowController windowController, ResourceManager storage, GuiFactory guiFactory,
-            Configurator configurator) {
+            AbstractController controller, EventManager eventManager) {
         super(//
                 name, //
                 windowController, //
@@ -49,14 +52,13 @@ public class MainWindow extends ApplicationWindow {
         this.storage = storage;
         this.guiFactory = guiFactory;
         this.textPaneName = name + DEFAULT_TEXT_PANE_SUFFIX;
-        this.configurator = configurator;
+        this.eventManager = eventManager;
+        this.controller = controller;
     }
 
     @Override
     protected GuiGlyph setContent() {
-        var textPane = new TextPane(name, null, storage, controller);
-        configurator.registerGui("textEditor", textPane);
-        configurator.setAllsKeyBindings("textEditor");
+        var textPane = new TextPane(name, "textEditor", null, storage, controller, eventManager);
 
         var scrollPane = guiFactory.createScrollpane(null, textPane);
         var border = guiFactory.createBorder(null, scrollPane);

@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
@@ -21,24 +22,25 @@ public class WindowController extends AbstractControllerV2 {
     private MouseDraggable currentDraggable;
     private Map<String, Window> windowsMap;
 
-    public WindowController() {
+    public WindowController(ExecutorService pool) {
+        super(pool);
         this.currentDraggable = null;
         this.windowsMap = new HashMap<>();
     }
 
     public void addWindow(Window glyph, String name) {
-        windowsMap.put(name, glyph);
+        this.windowsMap.put(name, glyph);
     }
 
     public Mono<Drawable> getDrawable(String source) {
         return Mono.fromCallable(() -> {
-            Glyph destinationGlyph = windowsMap.get(source).getGlyph();
+            Glyph destinationGlyph = this.windowsMap.get(source).getGlyph();
             if (destinationGlyph != null) {
                 return destinationGlyph.getDrawable();
             }
             throw new IllegalArgumentException("cann't find glyph: " + source);
         }) //
-                .publishOn(modelScheduler)//
+                .publishOn(this.modelScheduler)//
         ;
     }
 
@@ -77,8 +79,8 @@ public class WindowController extends AbstractControllerV2 {
     public void mouseDragged(String name, int mouseX, int mouseY, MouseButton button) {
         doOnModel(ModelPropertyChangeType.MOUSE_DRAGGED, //
                 () -> {
-                    if (currentDraggable != null) {
-                        currentDraggable.onMouseDragged(mouseX, mouseY, button);
+                    if (this.currentDraggable != null) {
+                        this.currentDraggable.onMouseDragged(mouseX, mouseY, button);
                     }
                 }, //
                 true);

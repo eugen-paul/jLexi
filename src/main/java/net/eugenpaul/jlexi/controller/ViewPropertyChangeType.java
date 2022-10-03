@@ -30,4 +30,9 @@ public enum ViewPropertyChangeType {
         return nameToEnum.get(name);
     }
 
+    @Override
+    public String toString() {
+        return this.typeName;
+    }
+
 }

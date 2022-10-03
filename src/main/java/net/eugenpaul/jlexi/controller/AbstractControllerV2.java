@@ -8,9 +8,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,7 +31,6 @@ public abstract class AbstractControllerV2 implements PropertyChangeListener {
     private List<ModelPropertyChangeListner> registeredViews;
     private List<InterfaceModel> registeredModels;
 
-    private ThreadPoolExecutor pool;
     protected Scheduler modelScheduler;
 
     private Map<ModelPropertyChangeType, Disposable> modelPropChangeMap;
@@ -41,11 +38,10 @@ public abstract class AbstractControllerV2 implements PropertyChangeListener {
     /**
      * C*tor
      */
-    protected AbstractControllerV2() {
+    protected AbstractControllerV2(ExecutorService pool) {
         registeredViews = new ArrayList<>();
         registeredModels = new ArrayList<>();
 
-        pool = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         modelScheduler = Schedulers.fromExecutorService(pool);
         modelPropChangeMap = Collections.synchronizedMap(new EnumMap<>(ModelPropertyChangeType.class));
     }

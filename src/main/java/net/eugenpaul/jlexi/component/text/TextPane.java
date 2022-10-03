@@ -43,6 +43,7 @@ import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.model.InterfaceModel;
+import net.eugenpaul.jlexi.pubsub.EventManager;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.AligmentH;
 import net.eugenpaul.jlexi.utils.Color;
@@ -76,7 +77,8 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     private TextPosition textSelectionFrom;
     private Color backgroundColor;
 
-    public TextPane(String cursorPrefix, Glyph parent, ResourceManager storage, AbstractController controller) {
+    public TextPane(String cursorPrefix, String name, Glyph parent, ResourceManager storage,
+            AbstractController controller, EventManager eventManager) {
         super(parent);
 
         this.document = new TextPaneDocument(//
@@ -88,12 +90,14 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         TextCommandsDeque commandDeque = new TextCommandsDeque();
 
-        this.mouseCursor = new Cursor(null, controller, this.cursorName, commandDeque);
+        this.mouseCursor = new Cursor(null, eventManager, this.cursorName, commandDeque);
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage, commandDeque);
 
         this.textSelectionFrom = null;
         this.textRepresentation = null;
+
+        this.name = name;
 
         this.mouseEventAdapter = new MouseEventAdapterIntern(this);
         this.keyEventAdapter = new KeyEventAdapterIntern(this);

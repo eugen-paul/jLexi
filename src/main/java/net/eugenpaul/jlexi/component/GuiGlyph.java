@@ -37,8 +37,12 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
 
     private Map<String, KeyBindingAction> defaultKeyBindings;
 
+    @Getter
+    protected String name;
+
     protected GuiGlyph(Glyph parent) {
         super(parent);
+        this.name = null;
         this.guiChilds = new LinkedList<>();
         this.keyBindingMap = new KeyBindingChildInputMapImpl( //
                 () -> guiChilds.stream()//

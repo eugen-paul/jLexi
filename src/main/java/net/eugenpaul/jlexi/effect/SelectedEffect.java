@@ -30,14 +30,13 @@ public class SelectedEffect implements GlyphEffect {
     }
 
     @Override
-    public GlyphEffect doEffect() {
+    public void execute() {
         for (var glyph : glyphs) {
             glyph.updateEffect(this);
         }
         if (!glyphs.isEmpty()) {
             glyphs.get(0).redraw();
         }
-        return this;
     }
 
     @Override

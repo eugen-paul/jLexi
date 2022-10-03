@@ -2,34 +2,39 @@ package net.eugenpaul.jlexi;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.appl.MainWindow;
 import net.eugenpaul.jlexi.appl.impl.swing.SwingWindowFactory;
+import net.eugenpaul.jlexi.appl.subscriber.ConfiguratorSub;
+import net.eugenpaul.jlexi.appl.subscriber.SchedulerSub;
 import net.eugenpaul.jlexi.config.Configurator;
-import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.design.dark.DarkFactory;
+import net.eugenpaul.jlexi.pubsub.EventManager;
 import net.eugenpaul.jlexi.resourcesmanager.FontStorage;
 import net.eugenpaul.jlexi.resourcesmanager.FormatStorage;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.resourcesmanager.font.FontStorageImpl;
 import net.eugenpaul.jlexi.resourcesmanager.font.fontgenerator.FontGenerator;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.impl.FormatStorageImpl;
+import net.eugenpaul.jlexi.scheduler.DynamicScheduler;
 import net.eugenpaul.jlexi.window.Window;
 
 @Slf4j
 public class JLexi {
 
     public static void main(String[] args) throws IOException {
-        ModelController controller = new ModelController();
-        WindowController windowController = new WindowController();
+        ExecutorService pool = Executors.newSingleThreadExecutor();
 
-        FontStorage fonts = new FontStorageImpl(new FontGenerator());
-        FormatStorage formats = new FormatStorageImpl();
-        ResourceManager storage = new ResourceManager(fonts, formats);
+        EventManager eventManager = new EventManager(pool);
+        DynamicScheduler scheduler = new DynamicScheduler(pool);
+        WindowController windowController = new WindowController(pool);
 
-        Window.setFactory(new SwingWindowFactory());
+        SchedulerSub schedulerSub = new SchedulerSub(scheduler);
+        eventManager.addSubscriber(schedulerSub);
 
         Configurator config = new Configurator("src/main/resources/configuratioin.json");
         try {
@@ -39,12 +44,21 @@ public class JLexi {
             throw e;
         }
 
+        ConfiguratorSub configuratorSub = new ConfiguratorSub(config);
+        eventManager.addSubscriber(configuratorSub);
+
+        FontStorage fonts = new FontStorageImpl(new FontGenerator());
+        FormatStorage formats = new FormatStorageImpl();
+        ResourceManager storage = new ResourceManager(fonts, formats);
+
+        Window.setFactory(new SwingWindowFactory());
+
         MainWindow mainWindow = new MainWindow(//
                 "MainWindow", //
                 windowController, //
                 storage, //
                 new DarkFactory(), //
-                config //
+                eventManager //
         );
 
         mainWindow.createWindow();

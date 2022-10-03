@@ -132,7 +132,7 @@ public class ModelController extends AbstractController {
         return Mono.empty()//
                 .publishOn(modelScheduler)//
                 .delaySubscription(effect.timeToNextExecute())//
-                .doOnSubscribe(v -> effect.doEffect())//
+                .doOnSubscribe(v -> effect.execute())//
                 .doOnCancel(() -> {
                     effect.terminate();
                     effectMap.remove(effect);
