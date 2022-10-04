@@ -125,6 +125,20 @@ public class Cursor implements EventSubscriber {
         }
     }
 
+    public void switchBold() {
+        if (this.textElement == null) {
+            return;
+        }
+        setBold(!this.textElement.getFormat().getBold().booleanValue());
+    }
+
+    public void switchItalic() {
+        if (this.textElement == null) {
+            return;
+        }
+        setItalic(!this.textElement.getFormat().getItalic().booleanValue());
+    }
+
     private void setBold(Boolean isBold) {
         this.textFormat = this.textFormat.withBold(isBold);
 

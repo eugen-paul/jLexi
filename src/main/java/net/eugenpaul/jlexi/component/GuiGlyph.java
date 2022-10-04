@@ -80,6 +80,11 @@ public abstract class GuiGlyph extends Glyph implements GuiEvents {
     }
 
     @Override
+    public KeyBindingAction getDefaultKeyBinding(String name) {
+        return defaultKeyBindings.get(name);
+    }
+
+    @Override
     public boolean registerDefaultKeyBindings(String name, KeyBindingRule rule, String keys) {
         var action = defaultKeyBindings.get(name);
         if (action == null) {

@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 /**
  * Implementation of {@link AbstractController} for GUI-/Windows-events (like Mouseclick, key type, window resize, ...)
  */
-public class WindowController extends AbstractControllerV2 {
+public class WindowController extends AbstractController {
 
     private MouseDraggable currentDraggable;
     private Map<String, Window> windowsMap;
