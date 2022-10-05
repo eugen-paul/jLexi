@@ -4,13 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 public class TextElementRemoveSelectedCommand implements TextCommand {
 
-    @Getter
     private TextPosition cursorPosition;
     private LinkedList<TextElementRemoveCommand> removedCommands;
 
@@ -25,7 +23,7 @@ public class TextElementRemoveSelectedCommand implements TextCommand {
     public void execute() {
         for (var command : this.removedCommands) {
             command.execute();
-            this.cursorPosition = command.getCursorPosition();
+            this.cursorPosition = command.getData();
         }
     }
 
@@ -35,7 +33,7 @@ public class TextElementRemoveSelectedCommand implements TextCommand {
         while (invertIterator.hasNext()) {
             var command = invertIterator.next();
             command.unexecute();
-            this.cursorPosition = command.getCursorPosition();
+            this.cursorPosition = command.getData();
         }
     }
 
@@ -47,5 +45,10 @@ public class TextElementRemoveSelectedCommand implements TextCommand {
     @Override
     public boolean isEmpty() {
         return this.removedCommands.isEmpty();
+    }
+
+    @Override
+    public TextPosition getData() {
+        return this.cursorPosition;
     }
 }

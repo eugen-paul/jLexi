@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
 import net.eugenpaul.jlexi.appl.subscriber.SchedulerSub;
+import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementChangeFormatCommand;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
-import net.eugenpaul.jlexi.component.text.keyhandler.TextCommandsDeque;
+import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.effect.CursorEffect;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.effect.SelectedEffect;
@@ -22,7 +23,7 @@ public class Cursor implements EventSubscriber {
 
     @Getter
     private final String name;
-    private final TextCommandsDeque commandDeque;
+    private final CommandsDeque<TextPosition, TextCommand> commandDeque;
 
     private TextElement textElement;
 
@@ -38,7 +39,8 @@ public class Cursor implements EventSubscriber {
     private List<TextElement> selectedText;
     private GlyphEffect selectedTextEffect;
 
-    public Cursor(TextElement glyphElement, EventManager eventManager, String name, TextCommandsDeque commandDeque) {
+    public Cursor(TextElement glyphElement, EventManager eventManager, String name,
+            CommandsDeque<TextPosition, TextCommand> commandDeque) {
         this.name = name;
         this.commandDeque = commandDeque;
         this.textElement = glyphElement;

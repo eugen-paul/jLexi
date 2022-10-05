@@ -2,7 +2,6 @@ package net.eugenpaul.jlexi.command;
 
 import java.util.LinkedList;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -10,7 +9,6 @@ import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 public class TextElementAddRowTextBeforeCommand implements TextCommand {
 
     private LinkedList<TextElementAddBeforeCommand> addcommands;
-    @Getter
     private TextPosition cursorPosition;
 
     public TextElementAddRowTextBeforeCommand(ResourceManager storage, String text, TextPosition cursorPosition) {
@@ -48,6 +46,11 @@ public class TextElementAddRowTextBeforeCommand implements TextCommand {
     @Override
     public boolean isEmpty() {
         return addcommands.isEmpty();
+    }
+
+    @Override
+    public TextPosition getData() {
+        return this.cursorPosition;
     }
 
 }

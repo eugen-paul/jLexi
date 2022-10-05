@@ -8,14 +8,15 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.eugenpaul.jlexi.appl.interfaces.CopyPasteable;
-import net.eugenpaul.jlexi.appl.interfaces.UndoRedoable;
 import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
+import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
+import net.eugenpaul.jlexi.component.interfaces.CopyPasteable;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
+import net.eugenpaul.jlexi.component.interfaces.UndoRedoable;
 import net.eugenpaul.jlexi.component.text.action.TextPaneBoldAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneItalicAction;
@@ -34,7 +35,7 @@ import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
-import net.eugenpaul.jlexi.component.text.keyhandler.TextCommandsDeque;
+import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseDragAdapter;
@@ -88,7 +89,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         this.cursorName = cursorPrefix + "textPaneCursor";
 
-        TextCommandsDeque commandDeque = new TextCommandsDeque();
+        CommandsDeque<TextPosition, TextCommand> commandDeque = new CommandsDeque<>();
 
         this.mouseCursor = new Cursor(null, eventManager, this.cursorName, commandDeque);
 

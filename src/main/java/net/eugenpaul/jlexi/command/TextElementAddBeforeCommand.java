@@ -2,7 +2,6 @@ package net.eugenpaul.jlexi.command;
 
 import java.util.List;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
@@ -10,7 +9,6 @@ import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 public class TextElementAddBeforeCommand implements TextCommand {
 
     private TextElement addedElement;
-    @Getter
     private TextPosition cursorPosition;
 
     private TextStructure owner;
@@ -55,6 +53,11 @@ public class TextElementAddBeforeCommand implements TextCommand {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public TextPosition getData() {
+        return this.cursorPosition;
     }
 
 }

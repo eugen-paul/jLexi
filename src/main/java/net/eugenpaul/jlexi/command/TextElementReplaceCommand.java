@@ -2,13 +2,11 @@ package net.eugenpaul.jlexi.command;
 
 import java.util.List;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 public class TextElementReplaceCommand implements TextCommand {
 
-    @Getter
     private TextPosition cursorPosition;
 
     private TextElementRemoveSelectedCommand removeCommand;
@@ -23,7 +21,7 @@ public class TextElementReplaceCommand implements TextCommand {
     public void execute() {
         this.addCommand.execute();
         this.removeCommand.execute();
-        this.cursorPosition = this.removeCommand.getCursorPosition();
+        this.cursorPosition = this.removeCommand.getData();
     }
 
     @Override
@@ -40,6 +38,11 @@ public class TextElementReplaceCommand implements TextCommand {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public TextPosition getData() {
+        return this.cursorPosition;
     }
 
 }

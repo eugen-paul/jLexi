@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.appl.interfaces;
+package net.eugenpaul.jlexi.component.interfaces;
 
 /**
  * Object that can receive undo/redo notification from gui.

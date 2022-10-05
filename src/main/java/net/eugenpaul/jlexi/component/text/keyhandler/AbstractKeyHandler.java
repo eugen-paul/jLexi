@@ -27,13 +27,14 @@ public class AbstractKeyHandler {
 
     private final KeyHandlerable component;
     private final ResourceManager storage;
-    private final TextCommandsDeque commandDeque;
+    private final CommandsDeque<TextPosition, TextCommand> commandDeque;
     private final ClipboardConverter clipboardConverter;
 
     // TODO just for test. refactor it
     private boolean ctrlPressed;
 
-    protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage, TextCommandsDeque commandDeque) {
+    protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage,
+            CommandsDeque<TextPosition, TextCommand> commandDeque) {
         this.component = component;
         this.storage = storage;
         this.commandDeque = commandDeque;
@@ -196,7 +197,7 @@ public class AbstractKeyHandler {
 
         doTextCommand(addCommand);
 
-        cursor.moveCursorTo(addCommand.getCursorPosition());
+        cursor.moveCursorTo(addCommand.getData());
     }
 
     private void keyPressedBackSpace() {
@@ -212,7 +213,7 @@ public class AbstractKeyHandler {
 
         doTextCommand(deleteCommand);
 
-        cursor.moveCursorTo(deleteCommand.getCursorPosition());
+        cursor.moveCursorTo(deleteCommand.getData());
     }
 
     private void keyPressedDelete() {
@@ -228,7 +229,7 @@ public class AbstractKeyHandler {
 
         doTextCommand(deleteCommand);
 
-        cursor.moveCursorTo(deleteCommand.getCursorPosition());
+        cursor.moveCursorTo(deleteCommand.getData());
 
     }
 

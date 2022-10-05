@@ -14,8 +14,6 @@ import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
-import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
-import net.eugenpaul.jlexi.component.text.keyhandler.ItalicFormatChangeListner;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.design.GuiFactory;
@@ -85,9 +83,6 @@ public class MainWindow extends ApplicationWindow {
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
 
-        BoldFormatChangeListner listner = new BoldFormatChangeListner(button, cursorName);
-        this.controller.addViewChangeListner(listner);
-
         var buttonAction = new ButtonBoldAction(button, action, cursorName);
         eventManager.addSubscriber(buttonAction);
         button.setMouseEventAdapter(buttonAction);
@@ -98,9 +93,6 @@ public class MainWindow extends ApplicationWindow {
         button.setTextFormat(button.getTextFormat().withItalic(true));
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
-
-        ItalicFormatChangeListner listner = new ItalicFormatChangeListner(button, cursorName);
-        this.controller.addViewChangeListner(listner);
 
         var buttonAction = new ButtonItalicAction(button, action, cursorName);
         eventManager.addSubscriber(buttonAction);
