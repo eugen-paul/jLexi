@@ -17,6 +17,7 @@ import net.eugenpaul.jlexi.component.interfaces.CopyPasteable;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.interfaces.UndoRedoable;
+import net.eugenpaul.jlexi.component.text.action.TextPaneAddSpecialCharracter;
 import net.eugenpaul.jlexi.component.text.action.TextPaneBoldAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneItalicAction;
@@ -35,6 +36,7 @@ import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
+import net.eugenpaul.jlexi.component.text.keyhandler.SpecialCharacter;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
@@ -126,6 +128,11 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
         addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
         addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
+
+        addDefaultKeyBindings("addNewLine",
+                new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
+        addDefaultKeyBindings("addSideBreak",
+                new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.SIDE_BREAK));
     }
 
     public boolean registerKeyAction(String keys, String actionName) {

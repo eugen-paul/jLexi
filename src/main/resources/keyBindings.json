@@ -31,6 +31,16 @@
                 "name": "italic",
                 "keys": "ctrl pressed I",
                 "description": "Set selected text to italic."
+            },
+            {
+                "name": "addSideBreak",
+                "keys": "ctrl pressed ENTER",
+                "description": "Set selected text to italic."
+            },
+            {
+                "name": "addNewLine",
+                "keys": "pressed ENTER",
+                "description": "Set selected text to italic."
             }
         ]
     }
