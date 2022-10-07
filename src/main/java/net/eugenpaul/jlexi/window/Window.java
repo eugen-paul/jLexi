@@ -27,6 +27,8 @@ import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
 public abstract class Window extends MonoGlyph
         implements WindowsKeyPressable, WindowsMouseClickable, WindowsResizeable, WindowsMouseWheel, InterfaceModel {
 
+    private static final String DEFAULT_TITLE = "Window";
+
     @Setter
     protected static WindowSystemFactory factory = null;
     protected final String name;
@@ -34,6 +36,7 @@ public abstract class Window extends MonoGlyph
     protected final WindowController controller;
 
     protected AbstractView view;
+    protected String title;
     private GuiGlyph mainGlyph;
     protected KeyPressable focusOn;
 
@@ -46,6 +49,7 @@ public abstract class Window extends MonoGlyph
         this.view = null;
         this.focusOn = null;
         this.mainGlyph = null;
+        this.title = DEFAULT_TITLE;
     }
 
     public Glyph getGlyph() {
@@ -75,22 +79,29 @@ public abstract class Window extends MonoGlyph
     public void redraw() {
         getDrawable();
 
-        view.modelPropertyChange(//
-                new PropertyChangeEvent(name, //
+        controller.propertyChange(//
+                new PropertyChangeEvent(//
+                        name, //
                         ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
                         null, //
                         getSize()//
-                )//
+                ) //
         );
     }
 
     protected abstract GuiGlyph setContent();
 
     public void setTitle(String title) {
-        view.modelPropertyChange(new PropertyChangeEvent(name, //
-                ViewPropertyChangeType.SET_TITLE.getTypeName(), //
-                null, //
-                new UpdateTitle(name, title)));
+        this.title = title;
+
+        controller.propertyChange(//
+                new PropertyChangeEvent(//
+                        name, //
+                        ViewPropertyChangeType.SET_TITLE.getTypeName(), //
+                        null, //
+                        new UpdateTitle(name, title) //
+                ) //
+        );
     }
 
     @Override

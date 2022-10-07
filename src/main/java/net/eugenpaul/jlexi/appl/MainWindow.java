@@ -156,14 +156,14 @@ public class MainWindow extends ApplicationWindow {
             return false;
         }
 
-        view.modelPropertyChange(//
-                new PropertyChangeEvent(name, //
+        controller.propertyChange(//
+                new PropertyChangeEvent(//
+                        name, //
                         ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
                         null, //
-                        getSize()//
-                )//
+                        getSize() //
+                ) //
         );
-
         return true;
     }
 

@@ -75,7 +75,7 @@ public class MainFrame extends AbstractView {
 
     @Override
     public void modelPropertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(ViewPropertyChangeType.SET_TITLE.toString())) {
+        if (isType(evt, ViewPropertyChangeType.SET_TITLE)) {
             updateTitle((UpdateTitle) evt.getNewValue());
         }
 

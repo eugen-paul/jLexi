@@ -36,7 +36,7 @@ public class JLexi {
         SchedulerSub schedulerSub = new SchedulerSub(scheduler);
         eventManager.addSubscriber(schedulerSub);
 
-        Configurator config = new Configurator("src/main/resources/configuratioin.json");
+        Configurator config = new Configurator("src/main/resources/configuration.json");
         try {
             config.init();
         } catch (IOException e) {

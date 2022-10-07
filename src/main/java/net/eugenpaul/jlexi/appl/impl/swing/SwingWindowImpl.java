@@ -27,6 +27,7 @@ public class SwingWindowImpl extends Windowlmp {
         mFrame.setVisible(true);
 
         controller.addViewChangeListner(mFrame);
+        controller.addViewChangeListner(dPanel);
 
         return mFrame;
     }
