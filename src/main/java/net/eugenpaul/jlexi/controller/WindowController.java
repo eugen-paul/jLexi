@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.event.KeyCode;
@@ -19,12 +18,10 @@ import reactor.core.publisher.Mono;
  */
 public class WindowController extends AbstractController {
 
-    private MouseDraggable currentDraggable;
     private Map<String, Window> windowsMap;
 
     public WindowController(ExecutorService pool) {
         super(pool);
-        this.currentDraggable = null;
         this.windowsMap = new HashMap<>();
     }
 
@@ -77,17 +74,7 @@ public class WindowController extends AbstractController {
     }
 
     public void mouseDragged(String name, int mouseX, int mouseY, MouseButton button) {
-        doOnModel(ModelPropertyChangeType.MOUSE_DRAGGED, //
-                () -> {
-                    if (this.currentDraggable != null) {
-                        this.currentDraggable.onMouseDragged(mouseX, mouseY, button);
-                    }
-                }, //
-                true);
-    }
-
-    public void mousePressedOn(MouseDraggable currentDraggable) {
-        this.currentDraggable = currentDraggable;
+        setModelProperty(ModelPropertyChangeType.MOUSE_DRAGGED, name, mouseX, mouseY, button);
     }
 
     public void keyTyped(String name, Character key) {

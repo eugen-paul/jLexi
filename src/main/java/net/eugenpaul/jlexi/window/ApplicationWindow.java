@@ -9,8 +9,7 @@ public abstract class ApplicationWindow extends Window {
         super(//
                 name, //
                 size, //
-                factory.createApplicationWindow().apply(windowController), //
-                windowController //
+                factory.createApplicationWindow().apply(windowController) //
         );
     }
 

@@ -5,6 +5,7 @@ import java.time.Duration;
 import lombok.Getter;
 import net.eugenpaul.jlexi.window.interfaces.WindowsKeyPressable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseClickable;
+import net.eugenpaul.jlexi.window.interfaces.WindowsMouseDrugable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseWheel;
 import net.eugenpaul.jlexi.window.interfaces.WindowsResizeable;
 
@@ -13,7 +14,7 @@ public enum ModelPropertyChangeType {
     MOUSE_CLICK(WindowsMouseClickable.class, "onMouseClick", Duration.ZERO), //
     MOUSE_PRESSED(WindowsMouseClickable.class, "onMousePressed", Duration.ZERO), //
     MOUSE_RELEASED(WindowsMouseClickable.class, "onMouseReleased", Duration.ZERO), //
-    MOUSE_DRAGGED(null, null, Duration.ZERO), //
+    MOUSE_DRAGGED(WindowsMouseDrugable.class, "onMouseDrug", Duration.ZERO), //
     MOUSE_WHEEL(WindowsMouseWheel.class, "onMouseWheelMooved", Duration.ZERO), //
     KEY_TYPED(WindowsKeyPressable.class, "onKeyTyped", Duration.ZERO), //
     KEY_PRESSED(WindowsKeyPressable.class, "onKeyPressed", Duration.ZERO), //

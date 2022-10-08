@@ -9,8 +9,8 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.MonoGlyph;
 import net.eugenpaul.jlexi.component.interfaces.KeyPressable;
+import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
-import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.exception.NotInitializedException;
 import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.utils.Size;
@@ -19,6 +19,7 @@ import net.eugenpaul.jlexi.utils.event.MouseButton;
 import net.eugenpaul.jlexi.utils.event.MouseWheelDirection;
 import net.eugenpaul.jlexi.window.interfaces.WindowsKeyPressable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseClickable;
+import net.eugenpaul.jlexi.window.interfaces.WindowsMouseDrugable;
 import net.eugenpaul.jlexi.window.interfaces.WindowsMouseWheel;
 import net.eugenpaul.jlexi.window.interfaces.WindowsResizeable;
 import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
@@ -26,17 +27,17 @@ import net.eugenpaul.jlexi.window.propertychanges.UpdateTitle;
 /**
  * Abstraction of a Window.
  */
-public abstract class Window extends MonoGlyph
-        implements WindowsKeyPressable, WindowsMouseClickable, WindowsResizeable, WindowsMouseWheel, InterfaceModel {
+public abstract class Window extends MonoGlyph implements WindowsKeyPressable, WindowsMouseClickable, WindowsResizeable,
+        WindowsMouseWheel, WindowsMouseDrugable, InterfaceModel {
 
     private static final String DEFAULT_TITLE = "Window";
 
     @Setter
     protected static WindowSystemFactory factory = null;
+
     @Getter
     protected final String name;
     protected final Windowlmp windowlmp;
-    protected final WindowController controller;
 
     protected AbstractView view;
     protected String title;
@@ -45,12 +46,13 @@ public abstract class Window extends MonoGlyph
 
     private PropertyChangeSupport propertyChangeSupport;
 
-    protected Window(String name, Size size, Windowlmp windowlmp, WindowController windowController) {
+    private MouseDraggable mousePressedOn;
+
+    protected Window(String name, Size size, Windowlmp windowlmp) {
         super(null, null);
         this.windowlmp = windowlmp;
         this.name = name;
         setSize(size);
-        this.controller = windowController;
         this.view = null;
         this.focusOn = null;
         this.mainGlyph = null;
@@ -125,12 +127,18 @@ public abstract class Window extends MonoGlyph
     }
 
     @Override
+    public void onMouseDrug(String name, Integer mouseX, Integer mouseY, MouseButton button) {
+        if (mousePressedOn != null) {
+            mousePressedOn.onMouseDragged(mouseX, mouseY, button);
+        }
+    }
+
+    @Override
     public void onMousePressed(String name, Integer mouseX, Integer mouseY, MouseButton button) {
         if (mainGlyph != null) {
-            var mousePressedOn = mainGlyph.onMousePressed(mouseX, mouseY, button);
-            controller.mousePressedOn(mousePressedOn);
+            mousePressedOn = mainGlyph.onMousePressed(mouseX, mouseY, button);
         } else {
-            controller.mousePressedOn(null);
+            mousePressedOn = null;
         }
     }
 
@@ -139,7 +147,7 @@ public abstract class Window extends MonoGlyph
         if (mainGlyph != null) {
             mainGlyph.onMouseReleased(mouseX, mouseY, button);
         }
-        controller.mousePressedOn(null);
+        mousePressedOn = null;
     }
 
     @Override
