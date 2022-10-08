@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.appl;
 
-import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,9 +57,6 @@ public class MainWindow extends ApplicationWindow {
         var menubar = guiFactory.createMenuBar(this, border, getSize());
         initMenu(menubar, textPane.getCursorName(), textPane);
         menubar.setRelativPosition(Vector2d.zero());
-
-        controller.addWindow(this, name);
-        controller.addModel(this);
 
         focusOn = textPane;
         return menubar;
@@ -146,24 +142,17 @@ public class MainWindow extends ApplicationWindow {
      * @return
      */
     public boolean loadFile(Path path) {
-        JsonConverter converter = new JsonConverter(storage);
+        JsonConverter converter = new JsonConverter(this.storage);
         try {
             var fileData = Files.readString(path);
             var textSections = converter.read(fileData);
-            textPane.setText(textSections);
+            this.textPane.setText(textSections);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
 
-        controller.propertyChange(//
-                new PropertyChangeEvent(//
-                        name, //
-                        ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
-                        null, //
-                        getSize() //
-                ) //
-        );
+        firePropertyChange(ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), null, name);
         return true;
     }
 

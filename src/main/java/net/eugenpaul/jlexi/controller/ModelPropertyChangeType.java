@@ -9,7 +9,7 @@ import net.eugenpaul.jlexi.window.interfaces.WindowsMouseWheel;
 import net.eugenpaul.jlexi.window.interfaces.WindowsResizeable;
 
 public enum ModelPropertyChangeType {
-    FORM_RESIZE(WindowsResizeable.class, "resizeTo", Duration.ofMillis(50)), //
+    FORM_RESIZE(WindowsResizeable.class, "resizeTo", Duration.ofMillis(10)), //
     MOUSE_CLICK(WindowsMouseClickable.class, "onMouseClick", Duration.ZERO), //
     MOUSE_PRESSED(WindowsMouseClickable.class, "onMousePressed", Duration.ZERO), //
     MOUSE_RELEASED(WindowsMouseClickable.class, "onMouseReleased", Duration.ZERO), //

@@ -54,7 +54,7 @@ public class MainPanel extends AbstractView {
     @Override
     public void modelPropertyChange(PropertyChangeEvent evt) {
         if (isType(evt, ViewPropertyChangeType.TRIGGER_FULL_DRAW)) {
-            triggerFullDraw((String) evt.getSource());
+            triggerFullDraw((String) evt.getNewValue());
         }
     }
 

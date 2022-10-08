@@ -13,10 +13,8 @@ import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
-import net.eugenpaul.jlexi.component.interfaces.CopyPasteable;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
-import net.eugenpaul.jlexi.component.interfaces.UndoRedoable;
 import net.eugenpaul.jlexi.component.text.action.TextPaneAddSpecialCharracter;
 import net.eugenpaul.jlexi.component.text.action.TextPaneBoldAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
@@ -35,16 +33,15 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentati
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
+import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
 import net.eugenpaul.jlexi.component.text.keyhandler.SpecialCharacter;
-import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseDragAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
-import net.eugenpaul.jlexi.model.InterfaceModel;
 import net.eugenpaul.jlexi.pubsub.EventManager;
 import net.eugenpaul.jlexi.pubsub.EventSubscriber;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
@@ -58,8 +55,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 @Slf4j
-public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,
-        CopyPasteable, InterfaceModel, EventSubscriber {
+public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, EventSubscriber {
 
     @Getter
     private TextRepresentation textRepresentation;
@@ -199,26 +195,6 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @Override
     public boolean isResizeble() {
         return true;
-    }
-
-    @Override
-    public void undo(String name) {
-        this.keyHandler.undo();
-    }
-
-    @Override
-    public void redo(String name) {
-        this.keyHandler.redo();
-    }
-
-    @Override
-    public void copy(String name) {
-        this.keyHandler.copy();
-    }
-
-    @Override
-    public void paste(String name) {
-        this.keyHandler.paste();
     }
 
     @Override

@@ -1,7 +1,9 @@
 package net.eugenpaul.jlexi.window;
 
-import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
+import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
@@ -31,6 +33,7 @@ public abstract class Window extends MonoGlyph
 
     @Setter
     protected static WindowSystemFactory factory = null;
+    @Getter
     protected final String name;
     protected final Windowlmp windowlmp;
     protected final WindowController controller;
@@ -39,6 +42,8 @@ public abstract class Window extends MonoGlyph
     protected String title;
     private GuiGlyph mainGlyph;
     protected KeyPressable focusOn;
+
+    private PropertyChangeSupport propertyChangeSupport;
 
     protected Window(String name, Size size, Windowlmp windowlmp, WindowController windowController) {
         super(null, null);
@@ -50,6 +55,7 @@ public abstract class Window extends MonoGlyph
         this.focusOn = null;
         this.mainGlyph = null;
         this.title = DEFAULT_TITLE;
+        this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     public Glyph getGlyph() {
@@ -79,14 +85,7 @@ public abstract class Window extends MonoGlyph
     public void redraw() {
         getDrawable();
 
-        controller.propertyChange(//
-                new PropertyChangeEvent(//
-                        name, //
-                        ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
-                        null, //
-                        getSize()//
-                ) //
-        );
+        firePropertyChange(ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), null, name);
     }
 
     protected abstract GuiGlyph setContent();
@@ -94,14 +93,7 @@ public abstract class Window extends MonoGlyph
     public void setTitle(String title) {
         this.title = title;
 
-        controller.propertyChange(//
-                new PropertyChangeEvent(//
-                        name, //
-                        ViewPropertyChangeType.SET_TITLE.getTypeName(), //
-                        null, //
-                        new UpdateTitle(name, title) //
-                ) //
-        );
+        firePropertyChange(ViewPropertyChangeType.SET_MAIN_TITLE.getTypeName(), null, new UpdateTitle(name, title));
     }
 
     @Override
@@ -162,6 +154,20 @@ public abstract class Window extends MonoGlyph
         if (mainGlyph != null) {
             mainGlyph.resizeTo(size);
         }
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
+    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
 
 }

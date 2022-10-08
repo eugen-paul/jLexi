@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.appl.impl.swing.frame;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
@@ -24,12 +25,14 @@ public class MainFrame extends AbstractView {
     private JFrame frame;
     private MainPanel mainPanel;
     private String name;
+    private ExecutorService pool;
 
     private SwingKeyBindingMainInputMap mainInputMap;
 
-    public MainFrame(WindowController controller, String name) {
+    public MainFrame(WindowController controller, String name, ExecutorService pool) {
         super(controller);
         this.name = name;
+        this.pool = pool;
         this.frame = new JFrame(TITLE_PREFIX + name);
         this.mainPanel = null;
         this.mainInputMap = null;
@@ -61,7 +64,7 @@ public class MainFrame extends AbstractView {
         this.mainInputMap = new SwingKeyBindingMainInputMap(this.mainPanel.getPanel(), this.mainPanel.getMainGlyph());
         this.mainPanel.getPanel().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, this.mainInputMap);
 
-        this.mainPanel.getPanel().setActionMap(new SwingKeyBindingMainActionMap());
+        this.mainPanel.getPanel().setActionMap(new SwingKeyBindingMainActionMap(pool));
 
         this.frame.add(this.mainPanel.getPanel());
         this.mainPanel.getPanel().requestFocusInWindow();
@@ -75,11 +78,9 @@ public class MainFrame extends AbstractView {
 
     @Override
     public void modelPropertyChange(PropertyChangeEvent evt) {
-        if (isType(evt, ViewPropertyChangeType.SET_TITLE)) {
+        if (isType(evt, ViewPropertyChangeType.SET_MAIN_TITLE)) {
             updateTitle((UpdateTitle) evt.getNewValue());
         }
-
-        this.mainPanel.modelPropertyChange(evt);
     }
 
     private void updateTitle(UpdateTitle data) {

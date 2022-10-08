@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.appl.impl.swing;
 
+import java.util.concurrent.ExecutorService;
+
 import net.eugenpaul.jlexi.appl.impl.swing.frame.MainFrame;
 import net.eugenpaul.jlexi.appl.impl.swing.frame.MainPanel;
 import net.eugenpaul.jlexi.component.GuiGlyph;
@@ -10,14 +12,17 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public class SwingWindowImpl extends Windowlmp {
 
-    public SwingWindowImpl(WindowController controller) {
+    private ExecutorService pool;
+
+    public SwingWindowImpl(WindowController controller, ExecutorService pool) {
         super(controller);
+        this.pool = pool;
     }
 
     @Override
     public AbstractView deviceCreateMainWindow(Size defaultSize, String name, GuiGlyph mainGlyph) {
 
-        MainFrame mFrame = new MainFrame(controller, name);
+        MainFrame mFrame = new MainFrame(controller, name, pool);
         mFrame.init();
 
         MainPanel dPanel = new MainPanel(defaultSize, controller, name, mainGlyph);

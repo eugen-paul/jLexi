@@ -51,7 +51,7 @@ public class JLexi {
         FormatStorage formats = new FormatStorageImpl();
         ResourceManager storage = new ResourceManager(fonts, formats);
 
-        Window.setFactory(new SwingWindowFactory());
+        Window.setFactory(new SwingWindowFactory(pool));
 
         MainWindow mainWindow = new MainWindow(//
                 "MainWindow", //
@@ -61,6 +61,9 @@ public class JLexi {
                 eventManager //
         );
 
+        mainWindow.addPropertyChangeListener(windowController);
+        windowController.addWindow(mainWindow, mainWindow.getName());
+        windowController.addModel(mainWindow);
         mainWindow.createWindow();
 
         mainWindow.loadFile((new File("src/main/resources/testexamples/json/Progress.json")).toPath());

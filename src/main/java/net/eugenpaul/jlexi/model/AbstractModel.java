@@ -3,7 +3,7 @@ package net.eugenpaul.jlexi.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public abstract class AbstractModel {
+public abstract class AbstractModel implements InterfaceModel {
 
     protected PropertyChangeSupport propertyChangeSupport;
 
@@ -11,10 +11,12 @@ public abstract class AbstractModel {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
