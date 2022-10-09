@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.converter.clipboard;
+package net.eugenpaul.jlexi.component.text.converter.clipboard.html;
 
 import java.util.List;
 

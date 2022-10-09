@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.converter.clipboard;
+package net.eugenpaul.jlexi.component.text.converter.clipboard.html;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +36,9 @@ public class HtmlToText {
     }
 
     private static CascadingStyleSheet readCss(String css) {
+        if (css == null) {
+            return null;
+        }
         return CSSReader.readFromString(css, //
                 ECSSVersion.CSS30, //
                 new DoNothingCSSParseErrorHandler() //
@@ -81,7 +84,9 @@ public class HtmlToText {
     private static CascadingStyleSheet addRules(CascadingStyleSheet target, CascadingStyleSheet source) {
         // We are only interested in the style rules.
         for (var rule : source.getAllStyleRules()) {
-            target.addRule(rule);
+            if (rule != null) {
+                target.addRule(rule);
+            }
         }
         return target;
     }

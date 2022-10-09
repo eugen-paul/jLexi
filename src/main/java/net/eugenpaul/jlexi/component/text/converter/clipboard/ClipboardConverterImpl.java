@@ -17,6 +17,8 @@ import javax.swing.text.EditorKit;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.text.converter.ClipboardConverter;
+import net.eugenpaul.jlexi.component.text.converter.clipboard.html.HtmlClipboardFormatHelper;
+import net.eugenpaul.jlexi.component.text.converter.clipboard.html.HtmlToText;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
@@ -104,7 +106,7 @@ public class ClipboardConverterImpl implements ClipboardConverter {
     }
 
     private List<TextElement> clipboardHtmlToText(String clipboardHtml) {
-        var html = ClipboardHelper.extractHtml(clipboardHtml);
+        var html = HtmlClipboardFormatHelper.extractHtml(clipboardHtml);
         return htmlToTextConv.convert(html);
     }
 

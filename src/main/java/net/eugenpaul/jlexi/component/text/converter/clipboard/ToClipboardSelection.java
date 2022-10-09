@@ -7,6 +7,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
+import net.eugenpaul.jlexi.component.text.converter.clipboard.html.ToHtmlConvertHelper;
+import net.eugenpaul.jlexi.component.text.converter.clipboard.html.ToHtmlConvertHelperImpl;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 
 public class ToClipboardSelection implements Transferable {

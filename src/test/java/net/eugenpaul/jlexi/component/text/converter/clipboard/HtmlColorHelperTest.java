@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.eugenpaul.jlexi.component.text.converter.clipboard.html.HtmlColorHelper;
 import net.eugenpaul.jlexi.utils.Color;
 
 class HtmlColorHelperTest {

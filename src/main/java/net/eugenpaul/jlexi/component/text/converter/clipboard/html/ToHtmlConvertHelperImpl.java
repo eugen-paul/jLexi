@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.converter.clipboard;
+package net.eugenpaul.jlexi.component.text.converter.clipboard.html;
 
 import java.util.List;
 
@@ -101,7 +101,12 @@ public class ToHtmlConvertHelperImpl implements ToHtmlConvertHelper {
     }
 
     private void addFormatToDeclaration(CSSDeclarationList declaration, TextFormat format) {
-        var font = new CSSDeclaration("font-family", CSSExpression.createSimple(format.getFontName()));
+        var fontName = format.getFontName();
+        if (fontName.isEmpty()) {
+            return;
+        }
+
+        var font = new CSSDeclaration("font-family", CSSExpression.createSimple(fontName));
         declaration.add(font);
 
         var size = new CSSDeclaration(//

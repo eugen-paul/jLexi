@@ -1,6 +1,8 @@
-package net.eugenpaul.jlexi.component.text.converter.clipboard;
+package net.eugenpaul.jlexi.component.text.converter.clipboard.html;
 
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
 
 import com.helger.css.utils.CSSColorHelper;
 
@@ -16,6 +18,7 @@ public final class HtmlColorHelper {
     private static final String FORMAT_HEX = "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$";
     private static final Pattern PATTERN_HEX = Pattern.compile(FORMAT_HEX);
 
+    @Nonnull
     public static String toHexRGBColor(Color color) {
         return "#" + String.format("%02X%02X%02X", //
                 color.getR() & 0xFF, //
@@ -24,24 +27,43 @@ public final class HtmlColorHelper {
         );
     }
 
-    public static boolean isColor(String value) {
-        return isTextColor(value) //
-                || isHexColor(value) //
-                || isRgbaColor(value);
+    /**
+     * Check if cssColor is a valid css-format-color.
+     * 
+     * @param cssColor - color to chech
+     * @return true - cssColor is a valid css-format-color.
+     */
+    public static boolean isColor(String cssColor) {
+        return isTextColor(cssColor) //
+                || isHexColor(cssColor) //
+                || isRgbaColor(cssColor);
     }
 
-    public static Color parseColor(String value) {
+    /**
+     * Parse css color to {@link Color}.
+     * <p>
+     * Example value:
+     * <ul>
+     * <li>color name: Red or Violet or ... {@link #parseTextColor(String)}</li>
+     * <li>RGB Value: RGB(r, g, b) or rgba(r,g,b,a) {@link #parseRgbaColor(String)}</li>
+     * <li>HEX Value: #RRGGBB or #RRBBGGAA or ... {@link #parseHexColor(String)}</li>
+     * </ul>
+     * 
+     * @param cssColor - css color
+     * @return Response
+     */
+    public static Color parseColor(String cssColor) {
 
-        if (isTextColor(value)) {
-            return parseTextColor(value);
+        if (isTextColor(cssColor)) {
+            return parseTextColor(cssColor);
         }
 
-        if (isHexColor(value)) {
-            return parseHexColor(value);
+        if (isHexColor(cssColor)) {
+            return parseHexColor(cssColor);
         }
 
-        if (isRgbaColor(value)) {
-            return parseRgbaColor(value);
+        if (isRgbaColor(cssColor)) {
+            return parseRgbaColor(cssColor);
         }
 
         return null;

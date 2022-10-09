@@ -1,4 +1,4 @@
-package net.eugenpaul.jlexi.component.text.converter.clipboard;
+package net.eugenpaul.jlexi.component.text.converter.clipboard.html;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,7 +11,6 @@ import org.jsoup.nodes.Node;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
-import com.helger.css.decl.CSSDeclarationList;
 import com.helger.css.decl.CSSExpression;
 import com.helger.css.decl.CSSSelector;
 import com.helger.css.decl.CSSStyleRule;
@@ -26,6 +25,18 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.resourcesmanager.textformat.params.FormatUnderlineType;
 
 public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
+
+    private static final String ATTRIBUTE_FACE = "face";
+    private static final String ATTRIBUTE_COLOR = "color";
+
+    private static final String PROPERTY_BACKGROUND = "background";
+    private static final String PROPERTY_BACKGROUND_COLOR = "background-color";
+    private static final String PROPERTY_BORDER_BOTTOM = "border-bottom";
+    private static final String PROPERTY_COLOR = "color";
+    private static final String PROPERTY_FONT_FAMILY = "font-family";
+    private static final String PROPERTY_FONT_SIZE = "font-size";
+    private static final String PROPERTY_FONT_STYLE = "font-style";
+    private static final String PROPERTY_FONT_WEIGHT = "font-weight";
 
     private static final String STYLE_ATTR = "style";
 
@@ -120,51 +131,54 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
     }
 
     private void addBold(Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
-        CSSDeclaration decl = new CSSDeclaration("font-weight", CSSExpression.createSimple("bold"));
-        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
-                .put(1, decl);
+        var decl = new CSSDeclaration(PROPERTY_FONT_WEIGHT, CSSExpression.createSimple("bold"));
+        addDeclarationToProperties(properties, decl, 1);
     }
 
     private void addItalic(Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
-        CSSDeclaration decl = new CSSDeclaration("font-style", CSSExpression.createSimple("italic"));
-        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
-                .put(1, decl);
+        var decl = new CSSDeclaration(PROPERTY_FONT_STYLE, CSSExpression.createSimple("italic"));
+        addDeclarationToProperties(properties, decl, 1);
     }
 
     private void addUnderline(Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
-        CSSDeclaration decl = new CSSDeclaration("border-bottom", CSSExpression.createSimple("solid"));
-        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
-                .put(1, decl);
+        var decl = new CSSDeclaration(PROPERTY_BORDER_BOTTOM, CSSExpression.createSimple("solid"));
+        addDeclarationToProperties(properties, decl, 1);
     }
 
     private void addSize(Map<String, TreeMap<Integer, CSSDeclaration>> properties, int sizePx) {
-        CSSDeclaration decl = new CSSDeclaration("font-size", CSSExpression.createSimple(sizePx + "px"));
-        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
-                .put(1, decl);
+        var decl = new CSSDeclaration(PROPERTY_FONT_SIZE, CSSExpression.createSimple(sizePx + "px"));
+        addDeclarationToProperties(properties, decl, 1);
     }
 
     private void addFontAttributes(Map<String, TreeMap<Integer, CSSDeclaration>> properties,
             Iterator<Map.Entry<String, String>> attributesiterator) {
         while (attributesiterator.hasNext()) {
             var attr = attributesiterator.next();
-            if (attr.getKey().equals("face")) {
+            if (attr.getKey().equals(ATTRIBUTE_FACE)) {
                 var fonts = attr.getValue().split(",");
                 if (fonts.length > 0) {
-                    CSSDeclaration decl = new CSSDeclaration("font-family", CSSExpression.createSimple(fonts[0]));
-                    properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
-                            .put(10, decl);
+                    var font = fonts[0];
+                    if (font != null) {
+                        var decl = new CSSDeclaration(PROPERTY_FONT_FAMILY, CSSExpression.createSimple(font));
+                        addDeclarationToProperties(properties, decl, 10);
+                    }
                 }
             }
-            if (attr.getKey().equals("color") && HtmlColorHelper.isColor(attr.getValue())) {
-                CSSDeclaration decl = new CSSDeclaration("color", CSSExpression.createSimple(attr.getValue()));
-                properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
-                        .put(10, decl);
+
+            var color = attr.getValue();
+            if (attr.getKey().equals(ATTRIBUTE_COLOR) && color != null && HtmlColorHelper.isColor(color)) {
+                var decl = new CSSDeclaration(PROPERTY_COLOR, CSSExpression.createSimple(color));
+                addDeclarationToProperties(properties, decl, 10);
             }
         }
     }
 
     public void addStyleAttr(String styleAttr, Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
-        CSSDeclarationList declList = CSSReaderDeclarationList.readFromString(//
+        if (styleAttr == null) {
+            return;
+        }
+
+        var declList = CSSReaderDeclarationList.readFromString(//
                 styleAttr, //
                 ECSSVersion.CSS30, //
                 new DoNothingCSSParseErrorHandler() //
@@ -175,9 +189,16 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
         }
 
         declList.stream()//
-                .forEach(v -> properties.computeIfAbsent(v.getProperty(), k -> new TreeMap<>())//
-                        .put(100, v)//
-                );
+                .forEach(v -> addDeclarationToProperties(properties, v, 100));
+    }
+
+    private void addDeclarationToProperties(//
+            Map<String, TreeMap<Integer, CSSDeclaration>> properties, //
+            CSSDeclaration decl, //
+            int cost //
+    ) {
+        properties.computeIfAbsent(decl.getProperty(), v -> new TreeMap<>())//
+                .put(cost, decl);
     }
 
     private int getCost(CSSSelector selector, String tag, String[] classNames, String id) {
@@ -207,25 +228,25 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
     @Override
     public TextFormat applyFormatAttributes(TextFormat format,
             Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
-        var font = bestDeclaration(properties, "font-family");
+        var font = bestDeclaration(properties, PROPERTY_FONT_FAMILY);
         format = applyFont(format, font);
 
-        var size = bestDeclaration(properties, "font-size");
+        var size = bestDeclaration(properties, PROPERTY_FONT_SIZE);
         format = applyFontSize(format, size);
 
-        var fontWeight = bestDeclaration(properties, "font-weight");
+        var fontWeight = bestDeclaration(properties, PROPERTY_FONT_WEIGHT);
         format = applyFontWeight(format, fontWeight);
 
-        var fontStyle = bestDeclaration(properties, "font-style");
+        var fontStyle = bestDeclaration(properties, PROPERTY_FONT_STYLE);
         format = applyFontStyle(format, fontStyle);
 
-        var colorValue = bestDeclaration(properties, "color");
+        var colorValue = bestDeclaration(properties, PROPERTY_COLOR);
         format = applyFontColor(format, colorValue);
 
-        var bgColorValue = bestDeclaration(properties, "background-color");
+        var bgColorValue = bestDeclaration(properties, PROPERTY_BACKGROUND_COLOR);
         format = applyBgColor(format, bgColorValue);
 
-        var bgColorShortValue = bestDeclaration(properties, "background");
+        var bgColorShortValue = bestDeclaration(properties, PROPERTY_BACKGROUND);
         format = applyBgColor(format, bgColorShortValue);
         return format;
     }
@@ -233,7 +254,7 @@ public class FromHtmlConverHelperImpl implements FromHtmlConvertHelper {
     @Override
     public TextFormatEffect applyEffectAttributes(TextFormatEffect effect,
             Map<String, TreeMap<Integer, CSSDeclaration>> properties) {
-        var font = bestDeclaration(properties, "border-bottom");
+        var font = bestDeclaration(properties, PROPERTY_BORDER_BOTTOM);
         effect = applyUnderline(effect, font);
         return effect;
     }
