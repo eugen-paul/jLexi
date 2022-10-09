@@ -3,19 +3,18 @@ package net.eugenpaul.jlexi.component.text.keyhandler;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import net.eugenpaul.jlexi.command.TextCommand;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.command.Command;
 
-public class TextCommandsDeque {
-    private final Deque<TextCommand> undoCommands;
-    private final Deque<TextCommand> redoCommands;
+public class CommandsDeque<D, T extends Command<D>> {
+    private final Deque<T> undoCommands;
+    private final Deque<T> redoCommands;
 
-    public TextCommandsDeque() {
+    public CommandsDeque() {
         this.undoCommands = new LinkedList<>();
         this.redoCommands = new LinkedList<>();
     }
 
-    public void addCommand(TextCommand command) {
+    public void addCommand(T command) {
         if (command.reversible()) {
             this.undoCommands.add(command);
         } else {
@@ -25,7 +24,7 @@ public class TextCommandsDeque {
         this.redoCommands.clear();
     }
 
-    public TextPosition undo() {
+    public D undo() {
         var command = this.undoCommands.pollLast();
         if (null == command) {
             return null;
@@ -34,10 +33,10 @@ public class TextCommandsDeque {
         command.unexecute();
         this.redoCommands.add(command);
 
-        return command.getCursorPosition();
+        return command.getData();
     }
 
-    public TextPosition redo() {
+    public D redo() {
         var command = this.redoCommands.pollLast();
         if (null == command) {
             return null;
@@ -46,6 +45,6 @@ public class TextCommandsDeque {
         command.execute();
         this.undoCommands.add(command);
 
-        return command.getCursorPosition();
+        return command.getData();
     }
 }

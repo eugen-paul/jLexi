@@ -23,14 +23,24 @@
                 "description": "Reverse the undo."
             },
             {
-                "name": "textFormatBold",
+                "name": "bold",
                 "keys": "ctrl pressed B",
                 "description": "Set selected text to bold."
             },
             {
-                "name": "textFormatItalic",
+                "name": "italic",
                 "keys": "ctrl pressed I",
                 "description": "Set selected text to italic."
+            },
+            {
+                "name": "addSideBreak",
+                "keys": "ctrl pressed ENTER",
+                "description": "Add side break to text."
+            },
+            {
+                "name": "addNewLine",
+                "keys": "pressed ENTER",
+                "description": "Add new line to text."
             }
         ]
     }

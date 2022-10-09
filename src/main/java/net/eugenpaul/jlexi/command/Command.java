@@ -1,6 +1,6 @@
 package net.eugenpaul.jlexi.command;
 
-public interface Command {
+public interface Command<D> {
     public boolean isEmpty();
 
     public void execute();
@@ -8,4 +8,6 @@ public interface Command {
     public void unexecute();
 
     public boolean reversible();
+
+    public D getData();
 }

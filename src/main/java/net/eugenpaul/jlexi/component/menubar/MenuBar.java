@@ -53,7 +53,7 @@ public abstract class MenuBar extends GuiCompenentMonoGlyph {
         this.menuButtons.add(button);
         addGuiChild(button);
 
-        this.menubarHeight = this.menuButtons.stream().map(v -> v.getSize().getHeight()).reduce(0, Math::max);
+        this.menubarHeight = this.menuButtons.stream().mapToInt(v -> v.getSize().getHeight()).max().orElse(0);
         if (this.menubarHeight > 0) {
             this.menubarHeight += this.menubarPadding * 2;
         }

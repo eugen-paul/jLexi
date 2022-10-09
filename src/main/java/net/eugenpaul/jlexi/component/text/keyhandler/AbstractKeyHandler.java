@@ -27,18 +27,15 @@ public class AbstractKeyHandler {
 
     private final KeyHandlerable component;
     private final ResourceManager storage;
-    private final TextCommandsDeque commandDeque;
+    private final CommandsDeque<TextPosition, TextCommand> commandDeque;
     private final ClipboardConverter clipboardConverter;
 
-    // TODO just for test. refactor it
-    private boolean ctrlPressed;
-
-    protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage, TextCommandsDeque commandDeque) {
+    protected AbstractKeyHandler(KeyHandlerable component, ResourceManager storage,
+            CommandsDeque<TextPosition, TextCommand> commandDeque) {
         this.component = component;
         this.storage = storage;
         this.commandDeque = commandDeque;
         this.clipboardConverter = new ClipboardConverterImpl(storage);
-        this.ctrlPressed = false;
     }
 
     public void onKeyTyped(Character key) {
@@ -59,9 +56,6 @@ public class AbstractKeyHandler {
 
     public void onKeyPressed(KeyCode keyCode) {
         switch (keyCode) {
-        case ENTER:
-            keyPressedEnter();
-            break;
         case RIGHT, LEFT, UP, DOWN:
             this.component.getMouseCursor().removeSelection();
             keyPressedCursorMove(keyCode);
@@ -72,20 +66,30 @@ public class AbstractKeyHandler {
         case BACK_SPACE:
             keyPressedBackSpace();
             break;
-        case CTRL:
-            ctrlPressed = true;
+        default:
             break;
-        case F1:
-            undo();
+        }
+    }
+
+    public void addSpecialCharacter(SpecialCharacter sc) {
+        var cursor = this.component.getMouseCursor();
+
+        switch (sc) {
+        case SIDE_BREAK:
+            TextElement sideBreakElement = TextElementFactory.genNewSectionChar(//
+                    this.storage, //
+                    cursor.getTextFormat(), //
+                    cursor.getTextFormatEffect()//
+            );
+            addTextElement(cursor, sideBreakElement);
             break;
-        case F2:
-            redo();
-            break;
-        case F3:
-            copy();
-            break;
-        case F4:
-            paste();
+        case NEW_LINE:
+            TextElement newLineElement = TextElementFactory.genNewLineChar(//
+                    this.storage, //
+                    cursor.getTextFormat(), //
+                    cursor.getTextFormatEffect()//
+            );
+            addTextElement(cursor, newLineElement);
             break;
         default:
             break;
@@ -123,8 +127,6 @@ public class AbstractKeyHandler {
         List<TextElement> textFromClipboard;
 
         try {
-
-            // TODO
             textFromClipboard = clipboardConverter.read(cursor.getTextFormat(), cursor.getTextFormatEffect());
         } catch (UnsupportedException e) {
             LOGGER.error("Can't read data from clipboard. ", e);
@@ -152,33 +154,9 @@ public class AbstractKeyHandler {
 
     public void onKeyReleased(KeyCode keyCode) {
         switch (keyCode) {
-        case CTRL:
-            ctrlPressed = false;
-            break;
         default:
             break;
         }
-    }
-
-    private void keyPressedEnter() {
-        var cursor = this.component.getMouseCursor();
-
-        TextElement addedElement;
-
-        if (ctrlPressed) {
-            addedElement = TextElementFactory.genNewSectionChar(//
-                    this.storage, //
-                    cursor.getTextFormat(), //
-                    cursor.getTextFormatEffect()//
-            );
-        } else {
-            addedElement = TextElementFactory.genNewLineChar(//
-                    this.storage, //
-                    cursor.getTextFormat(), //
-                    cursor.getTextFormatEffect()//
-            );
-        }
-        addTextElement(cursor, addedElement);
     }
 
     private void addTextElement(Cursor cursor, TextElement addedElement) {
@@ -196,7 +174,7 @@ public class AbstractKeyHandler {
 
         doTextCommand(addCommand);
 
-        cursor.moveCursorTo(addCommand.getCursorPosition());
+        cursor.moveCursorTo(addCommand.getData());
     }
 
     private void keyPressedBackSpace() {
@@ -212,7 +190,7 @@ public class AbstractKeyHandler {
 
         doTextCommand(deleteCommand);
 
-        cursor.moveCursorTo(deleteCommand.getCursorPosition());
+        cursor.moveCursorTo(deleteCommand.getData());
     }
 
     private void keyPressedDelete() {
@@ -228,7 +206,7 @@ public class AbstractKeyHandler {
 
         doTextCommand(deleteCommand);
 
-        cursor.moveCursorTo(deleteCommand.getCursorPosition());
+        cursor.moveCursorTo(deleteCommand.getData());
 
     }
 

@@ -1,7 +1,11 @@
 package net.eugenpaul.jlexi.window;
 
-import net.eugenpaul.jlexi.controller.AbstractController;
+import net.eugenpaul.jlexi.controller.WindowController;
+
+import java.beans.PropertyChangeEvent;
+
 import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
+import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 
 /**
  * AbstractView to display Data.
@@ -10,14 +14,14 @@ import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
  */
 public abstract class AbstractView implements ModelPropertyChangeListner {
 
-    protected AbstractController controller;
+    protected WindowController controller;
 
     /**
      * C'tor
      * 
      * @param controller Controller to send/recive actions to/from model.
      */
-    protected AbstractView(AbstractController controller) {
+    protected AbstractView(WindowController controller) {
         this.controller = controller;
     }
 
@@ -34,5 +38,9 @@ public abstract class AbstractView implements ModelPropertyChangeListner {
      * @param status - true show. false - hide.
      */
     public abstract void setVisible(boolean status);
+
+    protected static boolean isType(PropertyChangeEvent evt, ViewPropertyChangeType type) {
+        return evt.getPropertyName().equals(type.toString());
+    }
 
 }

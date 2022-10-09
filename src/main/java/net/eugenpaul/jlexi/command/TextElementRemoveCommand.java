@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.command;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
@@ -10,7 +9,6 @@ public class TextElementRemoveCommand implements TextCommand {
     private TextElement removedElement;
     private TextPosition positionBeforeRemove;
     private TextPosition positionAfterRemove;
-    @Getter
     private TextPosition cursorPosition;
 
     private TextRemoveResponse removedData;
@@ -68,5 +66,10 @@ public class TextElementRemoveCommand implements TextCommand {
     @Override
     public boolean isEmpty() {
         return this.removedElement == null;
+    }
+
+    @Override
+    public TextPosition getData() {
+        return this.cursorPosition;
     }
 }

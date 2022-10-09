@@ -1,16 +1,15 @@
 package net.eugenpaul.jlexi.window;
 
-import net.eugenpaul.jlexi.controller.ModelController;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.utils.Size;
 
 public abstract class ApplicationWindow extends Window {
 
-    protected ApplicationWindow(String name, ModelController controller, Size size) {
+    protected ApplicationWindow(String name, WindowController windowController, Size size) {
         super(//
                 name, //
                 size, //
-                factory.createApplicationWindow().apply(controller), //
-                controller //
+                factory.createApplicationWindow().apply(windowController) //
         );
     }
 

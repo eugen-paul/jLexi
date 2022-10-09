@@ -6,21 +6,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
-import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.draw.Drawable;
-import net.eugenpaul.jlexi.effect.EffectController;
 import net.eugenpaul.jlexi.model.InterfaceModel;
-import net.eugenpaul.jlexi.window.Window;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -33,14 +26,11 @@ import reactor.core.scheduler.Schedulers;
  * This is a View of MVC
  */
 @Slf4j
-public abstract class AbstractController implements PropertyChangeListener, EffectController {
+public abstract class AbstractController implements PropertyChangeListener {
 
-    private List<ModelPropertyChangeListner> viewsChangeListner;
+    private List<ModelPropertyChangeListner> registeredViews;
     private List<InterfaceModel> registeredModels;
 
-    private Map<String, Window> windowsMap;
-
-    private ThreadPoolExecutor pool;
     protected Scheduler modelScheduler;
 
     private Map<ModelPropertyChangeType, Disposable> modelPropChangeMap;
@@ -48,12 +38,10 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
     /**
      * C*tor
      */
-    protected AbstractController() {
-        viewsChangeListner = new ArrayList<>();
+    protected AbstractController(ExecutorService pool) {
+        registeredViews = new ArrayList<>();
         registeredModels = new ArrayList<>();
-        windowsMap = new HashMap<>();
 
-        pool = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         modelScheduler = Schedulers.fromExecutorService(pool);
         modelPropChangeMap = Collections.synchronizedMap(new EnumMap<>(ModelPropertyChangeType.class));
     }
@@ -64,7 +52,7 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * @param view
      */
     public void addViewChangeListner(ModelPropertyChangeListner view) {
-        viewsChangeListner.add(view);
+        registeredViews.add(view);
     }
 
     /**
@@ -73,32 +61,16 @@ public abstract class AbstractController implements PropertyChangeListener, Effe
      * @param view
      */
     public void removeViewChangeListner(ModelPropertyChangeListner view) {
-        viewsChangeListner.remove(view);
-    }
-
-    public void addWindow(Window glyph, String name) {
-        windowsMap.put(name, glyph);
+        registeredViews.remove(view);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        viewsChangeListner.forEach(v -> v.modelPropertyChange(evt));
+        registeredViews.forEach(v -> v.modelPropertyChange(evt));
     }
 
     public void addModel(InterfaceModel model) {
         registeredModels.add(model);
-    }
-
-    public Mono<Drawable> getDrawable(String source) {
-        return Mono.fromCallable(() -> {
-            Glyph destinationGlyph = windowsMap.get(source).getGlyph();
-            if (destinationGlyph != null) {
-                return destinationGlyph.getDrawable();
-            }
-            throw new IllegalArgumentException("cann't find glyph: " + source);
-        }) //
-                .publishOn(modelScheduler)//
-        ;
     }
 
     /**

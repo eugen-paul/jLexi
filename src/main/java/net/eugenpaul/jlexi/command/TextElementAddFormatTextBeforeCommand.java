@@ -3,14 +3,12 @@ package net.eugenpaul.jlexi.command;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 
 public class TextElementAddFormatTextBeforeCommand implements TextCommand {
 
     private LinkedList<TextElementAddBeforeCommand> addcommands;
-    @Getter
     private TextPosition cursorPosition;
 
     public TextElementAddFormatTextBeforeCommand(List<TextElement> text, TextPosition cursorPosition) {
@@ -44,6 +42,11 @@ public class TextElementAddFormatTextBeforeCommand implements TextCommand {
     @Override
     public boolean isEmpty() {
         return addcommands.isEmpty();
+    }
+
+    @Override
+    public TextPosition getData() {
+        return this.cursorPosition;
     }
 
 }

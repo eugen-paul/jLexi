@@ -1,45 +1,40 @@
 package net.eugenpaul.jlexi.appl;
 
-import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import net.eugenpaul.jlexi.appl.action.BoldActivate;
-import net.eugenpaul.jlexi.appl.action.CopyActivate;
-import net.eugenpaul.jlexi.appl.action.ItalicActivate;
-import net.eugenpaul.jlexi.appl.action.PasteActivate;
-import net.eugenpaul.jlexi.appl.action.RedoActivate;
-import net.eugenpaul.jlexi.appl.action.UndoActivate;
+import net.eugenpaul.jlexi.appl.action.ButtonAction;
+import net.eugenpaul.jlexi.appl.action.ButtonBoldAction;
+import net.eugenpaul.jlexi.appl.action.ButtonItalicAction;
+import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
 import net.eugenpaul.jlexi.component.text.TextPane;
 import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
-import net.eugenpaul.jlexi.component.text.keyhandler.BoldFormatChangeListner;
-import net.eugenpaul.jlexi.component.text.keyhandler.ItalicFormatChangeListner;
-import net.eugenpaul.jlexi.config.Configurator;
-import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
+import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.design.GuiFactory;
-import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
+import net.eugenpaul.jlexi.pubsub.EventManager;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.window.ApplicationWindow;
+import net.eugenpaul.jlexi.window.action.KeyBindingAction;
 
 public class MainWindow extends ApplicationWindow {
 
-    private static final String DEFAULT_TEXT_PANE_SUFFIX = "-TextPane";
     private static final Size DEFAULT_SIZE = new Size(800, 600);
 
     private ResourceManager storage;
-    private String textPaneName;
     private GuiFactory guiFactory;
-    private Configurator configurator;
+    private EventManager eventManager;
 
-    public MainWindow(String name, ModelController controller, ResourceManager storage, GuiFactory guiFactory,
-            Configurator configurator) {
+    private TextPane textPane;
+
+    public MainWindow(String name, WindowController controller, ResourceManager storage, GuiFactory guiFactory,
+            EventManager eventManager) {
         super(//
                 name, //
                 controller, //
@@ -48,107 +43,96 @@ public class MainWindow extends ApplicationWindow {
 
         this.storage = storage;
         this.guiFactory = guiFactory;
-        this.textPaneName = name + DEFAULT_TEXT_PANE_SUFFIX;
-        this.configurator = configurator;
+        this.eventManager = eventManager;
     }
 
     @Override
     protected GuiGlyph setContent() {
-        var textPane = new TextPane(name, null, storage, controller);
-        configurator.registerGui("textEditor", textPane);
-        configurator.setAllsKeyBindings("textEditor");
+        textPane = new TextPane(name, "textEditor", null, storage, eventManager);
+        eventManager.fireEvent(this, GlobalSubscribeTypes.REGISTER_GUI_ELEMENT, textPane);
 
         var scrollPane = guiFactory.createScrollpane(null, textPane);
         var border = guiFactory.createBorder(null, scrollPane);
 
         var menubar = guiFactory.createMenuBar(this, border, getSize());
-        initMenu(menubar, textPane.getCursorName());
+        initMenu(menubar, textPane.getCursorName(), textPane);
         menubar.setRelativPosition(Vector2d.zero());
-
-        controller.addTextPane(textPaneName, textPane);
-
-        controller.addWindow(this, name);
-        controller.addModel(this);
 
         focusOn = textPane;
         return menubar;
     }
 
-    private void initMenu(MenuBar menubar, String cursorName) {
-        addBoldButton(menubar, cursorName);
-        addItalicButton(menubar, cursorName);
+    private void initMenu(MenuBar menubar, String cursorName, GuiGlyph textPane) {
+        addBoldButton(menubar, cursorName, textPane.getDefaultKeyBinding("bold"));
+        addItalicButton(menubar, cursorName, textPane.getDefaultKeyBinding("italic"));
 
-        addUndoButton(menubar, cursorName);
-        addRedoButton(menubar, cursorName);
+        addUndoButton(menubar, textPane.getDefaultKeyBinding("undo"));
+        addRedoButton(menubar, textPane.getDefaultKeyBinding("redo"));
 
-        addCopyButton(menubar, cursorName);
-        addPasteButton(menubar, cursorName);
+        addCopyButton(menubar, textPane.getDefaultKeyBinding("copy"));
+        addPasteButton(menubar, textPane.getDefaultKeyBinding("paste"));
     }
 
-    private void addBoldButton(MenuBar menubar, String cursorName) {
+    private void addBoldButton(MenuBar menubar, String cursorName, KeyBindingAction action) {
         TextButton button = guiFactory.createTextButton(menubar, "B", storage);
         button.setTextFormat(button.getTextFormat().withBold(true));
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
 
-        BoldFormatChangeListner listner = new BoldFormatChangeListner(button, cursorName);
-        this.controller.addViewChangeListner(listner);
-
-        MouseEventAdapter mouseEventAdapter = new BoldActivate(cursorName, button, this.controller);
-        button.setMouseEventAdapter(mouseEventAdapter);
+        var buttonAction = new ButtonBoldAction(button, action, cursorName);
+        eventManager.addSubscriber(buttonAction);
+        button.setMouseEventAdapter(buttonAction);
     }
 
-    private void addItalicButton(MenuBar menubar, String cursorName) {
+    private void addItalicButton(MenuBar menubar, String cursorName, KeyBindingAction action) {
         TextButton button = guiFactory.createTextButton(menubar, "I", storage);
         button.setTextFormat(button.getTextFormat().withItalic(true));
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
 
-        ItalicFormatChangeListner listner = new ItalicFormatChangeListner(button, cursorName);
-        this.controller.addViewChangeListner(listner);
-
-        MouseEventAdapter mouseEventAdapter = new ItalicActivate(cursorName, button, this.controller);
-        button.setMouseEventAdapter(mouseEventAdapter);
+        var buttonAction = new ButtonItalicAction(button, action, cursorName);
+        eventManager.addSubscriber(buttonAction);
+        button.setMouseEventAdapter(buttonAction);
     }
 
-    private void addUndoButton(MenuBar menubar, String cursorName) {
+    private void addUndoButton(MenuBar menubar, KeyBindingAction action) {
         TextButton button = guiFactory.createTextButton(menubar, "<", storage);
         button.setTextFormat(button.getTextFormat());
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
 
-        MouseEventAdapter mouseEventAdapter = new UndoActivate(cursorName, this.controller);
-        button.setMouseEventAdapter(mouseEventAdapter);
+        var buttonAction = new ButtonAction(action);
+        button.setMouseEventAdapter(buttonAction);
     }
 
-    private void addRedoButton(MenuBar menubar, String cursorName) {
+    private void addRedoButton(MenuBar menubar, KeyBindingAction action) {
         TextButton button = guiFactory.createTextButton(menubar, ">", storage);
         button.setTextFormat(button.getTextFormat());
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
 
-        MouseEventAdapter mouseEventAdapter = new RedoActivate(cursorName, this.controller);
-        button.setMouseEventAdapter(mouseEventAdapter);
+        var buttonAction = new ButtonAction(action);
+        button.setMouseEventAdapter(buttonAction);
     }
 
-    private void addCopyButton(MenuBar menubar, String cursorName) {
+    private void addCopyButton(MenuBar menubar, KeyBindingAction action) {
         TextButton button = guiFactory.createTextButton(menubar, "C", storage);
         button.setTextFormat(button.getTextFormat());
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
 
-        MouseEventAdapter mouseEventAdapter = new CopyActivate(cursorName, this.controller);
-        button.setMouseEventAdapter(mouseEventAdapter);
+        var buttonAction = new ButtonAction(action);
+        button.setMouseEventAdapter(buttonAction);
     }
 
-    private void addPasteButton(MenuBar menubar, String cursorName) {
+    private void addPasteButton(MenuBar menubar, KeyBindingAction action) {
         TextButton button = guiFactory.createTextButton(menubar, "P", storage);
         button.setTextFormat(button.getTextFormat());
         button.setSize(new Size(20, 20));
         menubar.addMenuButton(button);
 
-        MouseEventAdapter mouseEventAdapter = new PasteActivate(cursorName, this.controller);
-        button.setMouseEventAdapter(mouseEventAdapter);
+        var buttonAction = new ButtonAction(action);
+        button.setMouseEventAdapter(buttonAction);
     }
 
     /**
@@ -158,24 +142,17 @@ public class MainWindow extends ApplicationWindow {
      * @return
      */
     public boolean loadFile(Path path) {
-        JsonConverter converter = new JsonConverter(storage);
+        JsonConverter converter = new JsonConverter(this.storage);
         try {
             var fileData = Files.readString(path);
             var textSections = converter.read(fileData);
-            controller.setText(textPaneName, textSections);
+            this.textPane.setText(textSections);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
 
-        view.modelPropertyChange(//
-                new PropertyChangeEvent(name, //
-                        ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), //
-                        null, //
-                        getSize()//
-                )//
-        );
-
+        firePropertyChange(ViewPropertyChangeType.TRIGGER_FULL_DRAW.getTypeName(), null, name);
         return true;
     }
 

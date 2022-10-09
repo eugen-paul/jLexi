@@ -36,7 +36,7 @@ public class CursorEffect implements GlyphEffect {
     }
 
     @Override
-    public GlyphEffect doEffect() {
+    public void execute() {
         if (this.showCursor) {
             this.showCursor = false;
             LOGGER.trace("hide Cursor on {}.", this.glyph);
@@ -47,7 +47,6 @@ public class CursorEffect implements GlyphEffect {
 
         this.glyph.updateEffect(this);
         this.glyph.redraw();
-        return this;
     }
 
     @Override

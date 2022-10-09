@@ -70,7 +70,7 @@ public class TextElementChangeFormatCommand implements TextCommand {
     }
 
     @Override
-    public TextPosition getCursorPosition() {
+    public TextPosition getData() {
         if (isEmpty()) {
             return null;
         }

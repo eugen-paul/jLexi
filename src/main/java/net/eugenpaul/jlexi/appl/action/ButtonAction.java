@@ -1,18 +1,17 @@
 package net.eugenpaul.jlexi.appl.action;
 
 import lombok.AllArgsConstructor;
-import net.eugenpaul.jlexi.controller.ModelController;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.utils.event.MouseButton;
+import net.eugenpaul.jlexi.window.action.KeyBindingAction;
 
 @AllArgsConstructor
-public class RedoActivate implements MouseEventAdapter {
+public class ButtonAction implements MouseEventAdapter {
 
-    private final String name;
-    private final ModelController controller;
+    private KeyBindingAction action;
 
     @Override
     public void mouseClicked(Integer mouseX, Integer mouseY, MouseButton button) {
-        this.controller.redo(name);
+        action.doAction();
     }
 }

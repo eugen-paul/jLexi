@@ -1,6 +1,5 @@
 package net.eugenpaul.jlexi.component.text;
 
-import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -9,14 +8,17 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.eugenpaul.jlexi.appl.interfaces.CopyPasteable;
-import net.eugenpaul.jlexi.appl.interfaces.UndoRedoable;
+import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
+import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
+import net.eugenpaul.jlexi.component.text.action.TextPaneAddSpecialCharracter;
+import net.eugenpaul.jlexi.component.text.action.TextPaneBoldAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
+import net.eugenpaul.jlexi.component.text.action.TextPaneItalicAction;
 import net.eugenpaul.jlexi.component.text.action.TextPanePasteAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneRedoAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneUndoAction;
@@ -31,18 +33,17 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentati
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
+import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
-import net.eugenpaul.jlexi.component.text.keyhandler.TextCommandsDeque;
+import net.eugenpaul.jlexi.component.text.keyhandler.SpecialCharacter;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
-import net.eugenpaul.jlexi.controller.AbstractController;
-import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
-import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseDragAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
-import net.eugenpaul.jlexi.model.InterfaceModel;
+import net.eugenpaul.jlexi.pubsub.EventManager;
+import net.eugenpaul.jlexi.pubsub.EventSubscriber;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.AligmentH;
 import net.eugenpaul.jlexi.utils.Color;
@@ -54,8 +55,7 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 @Slf4j
-public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, UndoRedoable,
-        CopyPasteable, InterfaceModel, ModelPropertyChangeListner {
+public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, EventSubscriber {
 
     @Getter
     private TextRepresentation textRepresentation;
@@ -76,7 +76,8 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     private TextPosition textSelectionFrom;
     private Color backgroundColor;
 
-    public TextPane(String cursorPrefix, Glyph parent, ResourceManager storage, AbstractController controller) {
+    public TextPane(String cursorPrefix, String name, Glyph parent, ResourceManager storage,
+            EventManager eventManager) {
         super(parent);
 
         this.document = new TextPaneDocument(//
@@ -86,14 +87,16 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         this.cursorName = cursorPrefix + "textPaneCursor";
 
-        TextCommandsDeque commandDeque = new TextCommandsDeque();
+        CommandsDeque<TextPosition, TextCommand> commandDeque = new CommandsDeque<>();
 
-        this.mouseCursor = new Cursor(null, controller, this.cursorName, commandDeque);
+        this.mouseCursor = new Cursor(null, eventManager, this.cursorName, commandDeque);
 
         this.keyHandler = new TextPaneExtendedKeyHandler(this, storage, commandDeque);
 
         this.textSelectionFrom = null;
         this.textRepresentation = null;
+
+        this.name = name;
 
         this.mouseEventAdapter = new MouseEventAdapterIntern(this);
         this.keyEventAdapter = new KeyEventAdapterIntern(this);
@@ -109,17 +112,23 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
         resizeTo(Size.ZERO_SIZE);
 
-        controller.addModel(this);
-        controller.addViewChangeListner(this);
+        eventManager.addSubscriber(this);
 
         registerDefaultKeyBindings();
     }
 
     private void registerDefaultKeyBindings() {
+        addDefaultKeyBindings("bold", new TextPaneBoldAction(this.mouseCursor));
+        addDefaultKeyBindings("italic", new TextPaneItalicAction(this.mouseCursor));
         addDefaultKeyBindings("copy", new TextPaneCopyAction(this.keyHandler));
         addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
         addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
         addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
+
+        addDefaultKeyBindings("addNewLine",
+                new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
+        addDefaultKeyBindings("addSideBreak",
+                new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.SIDE_BREAK));
     }
 
     public boolean registerKeyAction(String keys, String actionName) {
@@ -189,39 +198,16 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     }
 
     @Override
-    public void undo(String name) {
-        this.keyHandler.undo();
-    }
-
-    @Override
-    public void redo(String name) {
-        this.keyHandler.redo();
-    }
-
-    @Override
-    public void copy(String name) {
-        this.keyHandler.copy();
-    }
-
-    @Override
-    public void paste(String name) {
-        this.keyHandler.paste();
-    }
-
-    @Override
-    public void modelPropertyChange(PropertyChangeEvent evt) {
-        if (!evt.getSource().equals(this.cursorName)) {
+    public void update(Object source, Object type, Object data) {
+        if (type != GlobalSubscribeTypes.TEXT_CURSOR_MOVE || !(data instanceof TextElement)) {
             return;
         }
 
-        ViewPropertyChangeType type = ViewPropertyChangeType.fromValue(evt.getPropertyName());
-        if (type != ViewPropertyChangeType.CURSOR_MOVE || !(evt.getNewValue() instanceof TextElement)) {
-            return;
-        }
+        var textElement = (TextElement) data;
 
-        var pos = ((TextElement) evt.getNewValue()).getRelativPositionTo(this);
+        var pos = textElement.getRelativPositionTo(this);
 
-        LOGGER.debug("TextPanel get ViewPropertyChangeType.CURSOR_MOVE. " + pos);
+        LOGGER.debug("TextPanel get GlobalSubscribeTypes.TEXT_CURSOR_MOVE. " + pos);
     }
 
     @AllArgsConstructor

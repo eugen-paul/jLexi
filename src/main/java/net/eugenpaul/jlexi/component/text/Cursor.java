@@ -1,27 +1,29 @@
 package net.eugenpaul.jlexi.component.text;
 
-import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
+import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
+import net.eugenpaul.jlexi.appl.subscriber.SchedulerSub;
+import net.eugenpaul.jlexi.command.TextCommand;
 import net.eugenpaul.jlexi.command.TextElementChangeFormatCommand;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
-import net.eugenpaul.jlexi.component.text.keyhandler.TextCommandsDeque;
-import net.eugenpaul.jlexi.controller.AbstractController;
-import net.eugenpaul.jlexi.controller.ModelPropertyChangeListner;
-import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
+import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.effect.CursorEffect;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 import net.eugenpaul.jlexi.effect.SelectedEffect;
+import net.eugenpaul.jlexi.pubsub.EventManager;
+import net.eugenpaul.jlexi.pubsub.EventSubscriber;
 
-public class Cursor implements ModelPropertyChangeListner {
+public class Cursor implements EventSubscriber {
 
+    @Getter
     private final String name;
-    private final TextCommandsDeque commandDeque;
+    private final CommandsDeque<TextPosition, TextCommand> commandDeque;
 
     private TextElement textElement;
 
@@ -31,24 +33,24 @@ public class Cursor implements ModelPropertyChangeListner {
     private TextFormatEffect textFormatEffect;
 
     private GlyphEffect cursorEffect;
-    private AbstractController controller;
+    private EventManager eventManager;
 
     @Getter
     private List<TextElement> selectedText;
     private GlyphEffect selectedTextEffect;
 
-    public Cursor(TextElement glyphElement, AbstractController controller, String name,
-            TextCommandsDeque commandDeque) {
+    public Cursor(TextElement glyphElement, EventManager eventManager, String name,
+            CommandsDeque<TextPosition, TextCommand> commandDeque) {
         this.name = name;
         this.commandDeque = commandDeque;
         this.textElement = glyphElement;
         this.cursorEffect = null;
-        this.controller = controller;
+        this.eventManager = eventManager;
+        this.eventManager.addSubscriber(this);
 
         this.selectedText = null;
         this.selectedTextEffect = null;
 
-        this.controller.addViewChangeListner(this);
     }
 
     public TextPosition getPosition() {
@@ -72,7 +74,7 @@ public class Cursor implements ModelPropertyChangeListner {
         }
 
         this.selectedTextEffect = new SelectedEffect(this.selectedText);
-        this.controller.addEffectToController(selectedTextEffect);
+        this.eventManager.fireEvent(this, SchedulerSub.ADD_EVENT, selectedTextEffect);
     }
 
     private void removeSelectedEffect() {
@@ -85,7 +87,7 @@ public class Cursor implements ModelPropertyChangeListner {
             element.removeEffect(selectedTextEffect);
         }
 
-        this.controller.removeEffectFromController(selectedTextEffect);
+        this.eventManager.fireEvent(this, SchedulerSub.REMOVE_EVENT, selectedTextEffect);
 
         this.selectedText = null;
         this.selectedTextEffect = null;
@@ -100,7 +102,7 @@ public class Cursor implements ModelPropertyChangeListner {
     public void moveCursorTo(TextPosition cursorPosition) {
         if (null != this.textElement && null != this.cursorEffect) {
             this.textElement.removeEffect(this.cursorEffect);
-            this.controller.removeEffectFromController(this.cursorEffect);
+            this.eventManager.fireEvent(this, SchedulerSub.REMOVE_EVENT, cursorEffect);
         }
 
         if (null == cursorPosition) {
@@ -112,37 +114,31 @@ public class Cursor implements ModelPropertyChangeListner {
         this.textFormatEffect = this.textElement.getFormatEffect();
 
         this.cursorEffect = new CursorEffect(this.textElement);
-        this.controller.addEffectToController(this.cursorEffect);
-
-        this.controller.propertyChange(new PropertyChangeEvent(//
-                this.name, //
-                ViewPropertyChangeType.CURSOR_MOVE.getTypeName(), //
-                null, //
-                this.textElement //
-        ));
+        this.eventManager.fireEvent(this, SchedulerSub.ADD_EVENT, cursorEffect);
+        this.eventManager.fireEvent(this, GlobalSubscribeTypes.TEXT_CURSOR_MOVE, this.textElement);
     }
 
     @Override
-    public void modelPropertyChange(PropertyChangeEvent evt) {
-        if (this.textFormat == null || !evt.getSource().equals(this.name)) {
+    public void update(Object source, Object type, Object data) {
+        // TODO check source
+        if (type == GlobalSubscribeTypes.TEXT_FORMAT_ELEMENT && data instanceof TextFormat) {
+            setBold(((TextFormat) data).getBold());
+            setItalic(((TextFormat) data).getItalic());
+        }
+    }
+
+    public void switchBold() {
+        if (this.textElement == null) {
             return;
         }
+        setBold(!this.textElement.getFormat().getBold().booleanValue());
+    }
 
-        ViewPropertyChangeType type = ViewPropertyChangeType.fromValue(evt.getPropertyName());
-        if (type == null) {
+    public void switchItalic() {
+        if (this.textElement == null) {
             return;
         }
-
-        switch (type) {
-        case CURSOR_SET_FORMAT_BOLD:
-            setBold((Boolean) evt.getNewValue());
-            break;
-        case CURSOR_SET_FORMAT_ITALIC:
-            setItalic((Boolean) evt.getNewValue());
-            break;
-        default:
-            break;
-        }
+        setItalic(!this.textElement.getFormat().getItalic().booleanValue());
     }
 
     private void setBold(Boolean isBold) {
