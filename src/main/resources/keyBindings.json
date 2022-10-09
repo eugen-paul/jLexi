@@ -35,12 +35,12 @@
             {
                 "name": "addSideBreak",
                 "keys": "ctrl pressed ENTER",
-                "description": "Set selected text to italic."
+                "description": "Add side break to text."
             },
             {
                 "name": "addNewLine",
                 "keys": "pressed ENTER",
-                "description": "Set selected text to italic."
+                "description": "Add new line to text."
             }
         ]
     }
