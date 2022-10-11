@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>760</x><y>280</y><w>310</w><h>150</h></coordinates><panel_attributes>abstract HtmlTag
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>770</x><y>320</y><w>310</w><h>150</h></coordinates><panel_attributes>abstract HtmlTag
 --
 
 --
@@ -7,36 +7,33 @@
 #addItalic(property)
 #addSize(property, size, format)
 #addUnderline(property)
-#addDeclarationToProperties(properties, decl, cost);</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>950</x><y>570</y><w>210</w><h>40</h></coordinates><panel_attributes>HtmlTagB
+#addDeclarationToProperties(properties, decl, cost);</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>940</x><y>610</y><w>210</w><h>40</h></coordinates><panel_attributes>HtmlTagB
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>900</x><y>420</y><w>100</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;80;150</additional_attributes></element><element><id>Relation</id><coordinates><x>960</x><y>420</y><w>70</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;100</additional_attributes></element><element><id>Relation</id><coordinates><x>1020</x><y>420</y><w>40</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;20;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>990</x><y>520</y><w>210</w><h>40</h></coordinates><panel_attributes>HtmlTagH1
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>910</x><y>460</y><w>80</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;150</additional_attributes></element><element><id>Relation</id><coordinates><x>970</x><y>460</y><w>50</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;30;100</additional_attributes></element><element><id>Relation</id><coordinates><x>1010</x><y>460</y><w>40</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;20;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>980</x><y>560</y><w>210</w><h>40</h></coordinates><panel_attributes>HtmlTagH1
 --
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1020</x><y>450</y><w>210</w><h>60</h></coordinates><panel_attributes>HtmlTagFont
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1010</x><y>490</y><w>210</w><h>60</h></coordinates><panel_attributes>HtmlTagFont
 --
 -setFontFamily(property, fontName)
--setColor(property, color)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>280</y><w>320</w><h>140</h></coordinates><panel_attributes>PropertyAnalyser
+-setColor(property, color)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>340</y><w>310</w><h>80</h></coordinates><panel_attributes>CssAnalyser
 --
 List&lt;HtmlTag&gt; tags
 --
-+stylesProperties(HtmlNode, StyleRule): Property&lt;T&gt;
-+applyFormatAttributes(TextFormat , properties);
-+applyEffectAttributes(TextFormatEffect , properties);
-+isSizeBreakBefore(properties);
-+isSizeBreakAfter(properties);</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>690</x><y>320</y><w>90</w><h>40</h></coordinates><panel_attributes>lt=&lt;-
-m1=0..n</panel_attributes><additional_attributes>70;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>400</x><y>160</y><w>300</w><h>90</h></coordinates><panel_attributes>Property&lt;T&gt; (T = CSSDeclaration)
++generateDeclarations(HtmlNode, StyleRule): Ruleset
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>360</y><w>80</w><h>40</h></coordinates><panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes><additional_attributes>60;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>200</y><w>370</w><h>90</h></coordinates><panel_attributes>Ruleset
 --
-Map&lt;String, TreeMap&lt;Integer, T&gt;&gt; properties
+Map&lt;String, TreeMap&lt;Integer, Declaration&gt;&gt; ruleset
 --
-+add(propertyName: String, cost: Integer, value: T)
-+getBest(propertyName: String)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>920</x><y>620</y><w>210</w><h>40</h></coordinates><panel_attributes>HtmlTag...
++add(propertyName: String, cost: Integer, value: Declaration)
++getBest(propertyName: String)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>910</x><y>660</y><w>210</w><h>40</h></coordinates><panel_attributes>HtmlTag...
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>850</x><y>420</y><w>110</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;90;200</additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>160</y><w>310</w><h>100</h></coordinates><panel_attributes>StyleRule&lt;T&gt; (T = CSSDeclaration)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>860</x><y>460</y><w>90</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;70;200</additional_attributes></element><element><id>UMLClass</id><coordinates><x>770</x><y>200</y><w>290</w><h>100</h></coordinates><panel_attributes>StyleRule
 --
 Selectors: List&lt;String&gt;
-Declarations: List&lt;T&gt;
+DeclarationBlock: block
 --
-+getCost(tag, classNames[], id): int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>10</y><w>310</w><h>130</h></coordinates><panel_attributes>/HtmlNode/
++getCost(tag, classNames[], id): int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>50</y><w>180</w><h>130</h></coordinates><panel_attributes>abstract HtmlNode
 --
 
 --
@@ -44,21 +41,43 @@ Declarations: List&lt;T&gt;
 +getStyleAttr: String
 +isElement: booelan
 +getClassNames: String[]
-+getId: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>110</x><y>280</y><w>230</w><h>100</h></coordinates><panel_attributes>abstract PropertyData
++getId: String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>140</x><y>390</y><w>230</w><h>100</h></coordinates><panel_attributes>abstract PropertyData
 --
 -name: String
 --
 +applyTextFormat(format, property)
-+applyTextEffect(effect, property)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>400</y><w>210</w><h>50</h></coordinates><panel_attributes>PropertyFontFamily
++applyTextEffect(effect, property)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>20</x><y>510</y><w>210</w><h>50</h></coordinates><panel_attributes>PropertyFontFamily
 --
 --
--applyFont</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>370</y><w>40</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>20;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>460</y><w>210</w><h>50</h></coordinates><panel_attributes>PropertyFontColor
+-applyFont</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>190</x><y>480</y><w>50</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>30;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>570</y><w>210</w><h>50</h></coordinates><panel_attributes>PropertyFontColor
 --
 --
--applyFontColor</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>210</x><y>370</y><w>50</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>30;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>520</y><w>210</w><h>50</h></coordinates><panel_attributes>PropertyUnderline
+-applyFontColor</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>480</y><w>60</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>40;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>80</x><y>630</y><w>210</w><h>50</h></coordinates><panel_attributes>PropertyUnderline
 --
 --
--applyUnderline</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>370</y><w>60</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>40;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>580</y><w>210</w><h>50</h></coordinates><panel_attributes>Property...
+-applyUnderline</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>480</y><w>70</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>110</x><y>690</y><w>210</w><h>50</h></coordinates><panel_attributes>Property...
 --
 --
--apply...</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>370</y><w>60</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>40;10;10;210</additional_attributes></element></diagram>
+-apply...</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>480</y><w>70</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>500</x><y>50</y><w>160</w><h>90</h></coordinates><panel_attributes>abstract Declaration
+--
+-property:String
+-value:String
+--
++getProperty
++getValue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>450</y><w>310</w><h>130</h></coordinates><panel_attributes>RulesetToInternConverter
+--
+List&lt;PropertyData&gt; properties
+--
++applyFormatAttributes(TextFormat , Ruleset);
++applyEffectAttributes(TextFormatEffect , Ruleset);
++isSizeBreakBefore(Ruleset);
++isSizeBreakAfter(Ruleset);</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>460</y><w>70</w><h>40</h></coordinates><panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>890</x><y>50</y><w>180</w><h>70</h></coordinates><panel_attributes>JsoupNode
+--
+node: org.jsoup.nodes.Node
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>850</x><y>70</y><w>60</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;40;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>50</y><w>290</w><h>70</h></coordinates><panel_attributes>HelgerCssDeclaration
+--
+declaration: com.helger.css.decl.CSSDeclaration
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>60</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;10</additional_attributes></element></diagram>
