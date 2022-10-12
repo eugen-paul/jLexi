@@ -1,0 +1,41 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>40</x><y>30</y><w>410</w><h>560</h></coordinates><panel_attributes>Text Pane</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>70</y><w>170</w><h>240</h></coordinates><panel_attributes>Page 1
+group=group-6</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>260</x><y>70</y><w>170</w><h>240</h></coordinates><panel_attributes>Page 1
+group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>330</y><w>170</w><h>240</h></coordinates><panel_attributes>Page 3
+group=group-8</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>90</y><w>150</w><h>30</h></coordinates><panel_attributes>Header 1
+group=group-6</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>90</y><w>150</w><h>30</h></coordinates><panel_attributes>Header 2
+group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>350</y><w>150</w><h>30</h></coordinates><panel_attributes>Header 3
+group=group-8</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>270</y><w>150</w><h>30</h></coordinates><panel_attributes>Footer 1
+group=group-6</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>270</y><w>150</w><h>30</h></coordinates><panel_attributes>Footer 2
+group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>530</y><w>150</w><h>30</h></coordinates><panel_attributes>Footer 3
+group=group-8</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>130</y><w>150</w><h>130</h></coordinates><panel_attributes>Row 1
+group=group-6</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>130</y><w>150</w><h>130</h></coordinates><panel_attributes>Row 2
+group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>390</y><w>150</w><h>130</h></coordinates><panel_attributes>Row 3
+group=group-8</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>30</y><w>220</w><h>240</h></coordinates><panel_attributes>halign=left
+Move Cursor Down
+--
+From:
+Page 1 -&gt; Row 1 -&gt; Column 1
+To:
+Page 2 -&gt; Row 2 -&gt; Column 2.1
+--
+From:
+Page 2 -&gt; Row 2 -&gt; Column 2.1
+To:
+Page 2 -&gt; Row 2 -&gt; Column 2.2
+--
+From:
+Page 2 -&gt; Row 2 -&gt; Column 2.2
+To:
+Page 3 -&gt; Row 3 -&gt; Column 3</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>80</x><y>150</y><w>130</w><h>100</h></coordinates><panel_attributes>Column 1
+group=group-6</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>280</x><y>150</y><w>60</w><h>100</h></coordinates><panel_attributes>Column
+2.1
+group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>150</y><w>60</w><h>100</h></coordinates><panel_attributes>Column
+2.2
+group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>410</y><w>130</w><h>100</h></coordinates><panel_attributes>Column 3
+group=group-8</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>290</y><w>340</w><h>140</h></coordinates><panel_attributes>halign=left
+style=wordwrap
+The following information is required when moving the cursor
+--
+-What is the starting position of the cursor. Cursor can be moved only to the object of the same type.
+-Possible object types: Body, Header/Footer
+-In the structure of type "row" cursor will be moved to the next element in the row. </panel_attributes><additional_attributes></additional_attributes></element></diagram>
