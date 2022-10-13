@@ -32,10 +32,16 @@ group=group-6</panel_attributes><additional_attributes></additional_attributes><
 group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>150</y><w>60</w><h>100</h></coordinates><panel_attributes>Column
 2.2
 group=group-7</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>410</y><w>130</w><h>100</h></coordinates><panel_attributes>Column 3
-group=group-8</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>290</y><w>340</w><h>140</h></coordinates><panel_attributes>halign=left
+group=group-8</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>290</y><w>340</w><h>110</h></coordinates><panel_attributes>halign=left
 style=wordwrap
 The following information is required when moving the cursor
 --
 -What is the starting position of the cursor. Cursor can be moved only to the object of the same type.
--Possible object types: Body, Header/Footer
--In the structure of type "row" cursor will be moved to the next element in the row. </panel_attributes><additional_attributes></additional_attributes></element></diagram>
+-Possible object types: Body, Header/Footer</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>420</y><w>340</w><h>210</h></coordinates><panel_attributes>halign=left
+style=wordwrap
+HowTo
+--
+-In the structure of type "row" cursor will be moved to the next element in the row not out of the row. Only if there is no following element, then the superstructure is searched for the element following the row.
+-For all structure types the following element is searched for.
+-As offset for the X-position, the X-position of the cursor is to be passed on without change from the lowest column (from Column 1 or from Column 2.1 ...).
+-Exceptions: when moving down or up in the TextPaneElementRow, jumps out of the element.</panel_attributes><additional_attributes></additional_attributes></element></diagram>

@@ -1,0 +1,40 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>150</x><y>380</y><w>480</w><h>100</h></coordinates><panel_attributes>TextRepresentationOfRepresentation
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>50</y><w>140</w><h>110</h></coordinates><panel_attributes>Enum MoveDirection
+--
+UP
+DOWN
+NEXT
+PREVIOUS
+EOL</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>850</x><y>50</y><w>190</w><h>100</h></coordinates><panel_attributes>enum FieldType
+--
+HEADER
+BODY
+FOOTER
+--
+isSame(otherType: FieldType)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>510</y><w>280</w><h>60</h></coordinates><panel_attributes>TextRow, TextColumn, TextSite, ...
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>470</y><w>130</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>110;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>310</y><w>240</w><h>100</h></coordinates><panel_attributes>TextPaneElementRow
+--
+
+--
+By moving up/down jump out.
+By moving left/right go to next element.
+Set x-offset that is used when moving.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>150</x><y>140</y><w>480</w><h>210</h></coordinates><panel_attributes>TextRepresentation
+--
+-type: FieldType
+--
+#getUp(position: TextPosition, type: FieldType): TextPosition
+#getDown(position: TextPosition, type: FieldType): TextPosition
+#getNext(position: TextPosition, type: FieldType): TextPosition
+#getPrevious(position: TextPosition, type: FieldType): TextPosition
+#getFirstText(type: FieldType): TextPosition
+#getLastText(type: FieldType): TextPosition
++getChildRepresentation(position: TextPosition):TextRepresentation 
++getNextRepresentation( representation: TextRepresentation):TextRepresentation </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>340</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>Relation</id><coordinates><x>620</x><y>240</y><w>200</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;180;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>150</x><y>50</y><w>480</w><h>70</h></coordinates><panel_attributes>CursorControl
+--
++move(position TextPosition, moving: MoveDirection): TextPosition </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element></diagram>
