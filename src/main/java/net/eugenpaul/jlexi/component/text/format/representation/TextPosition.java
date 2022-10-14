@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 import java.util.List;
 
 import lombok.Getter;
+import net.eugenpaul.jlexi.component.text.format.CursorControl;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
@@ -44,8 +45,8 @@ public class TextPosition {
     public TextPosition afterMove(MovePosition moving) {
         var parent = this.textElement.getParent();
         while (parent != null) {
-            if (parent instanceof TextRepresentation) {
-                TextRepresentation representation = (TextRepresentation) parent;
+            if (parent instanceof CursorControl) {
+                CursorControl representation = (CursorControl) parent;
                 return representation.move(this, moving);
             }
             parent = parent.getParent();

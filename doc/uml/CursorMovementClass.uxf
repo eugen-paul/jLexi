@@ -1,40 +1,46 @@
-<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>150</x><y>380</y><w>480</w><h>100</h></coordinates><panel_attributes>TextRepresentationOfRepresentation
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>70</x><y>510</y><w>480</w><h>100</h></coordinates><panel_attributes>TextRepresentationOfRepresentation
 --
 
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>50</y><w>140</w><h>110</h></coordinates><panel_attributes>Enum MoveDirection
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>100</y><w>140</w><h>110</h></coordinates><panel_attributes>Enum MoveDirection
 --
 UP
 DOWN
 NEXT
 PREVIOUS
-EOL</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>850</x><y>50</y><w>190</w><h>100</h></coordinates><panel_attributes>enum FieldType
+EOL</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>100</y><w>190</w><h>100</h></coordinates><panel_attributes>enum FieldType
 --
 HEADER
 BODY
 FOOTER
 --
-isSame(otherType: FieldType)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>510</y><w>280</w><h>60</h></coordinates><panel_attributes>TextRow, TextColumn, TextSite, ...
+isSame(otherType: FieldType)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>620</x><y>510</y><w>360</w><h>100</h></coordinates><panel_attributes>TextRow, TextColumn, TextSite, ...
 --
 
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>470</y><w>130</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>110;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>310</y><w>240</w><h>100</h></coordinates><panel_attributes>TextPaneElementRow
+By moving up/down/left/right go to next/previous element.
+Work with given x-offset.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>540</y><w>100</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;80;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>370</y><w>240</w><h>100</h></coordinates><panel_attributes>TextPaneElementRow
 --
 
 --
 By moving up/down jump out.
 By moving left/right go to next element.
-Set x-offset that is used when moving.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>150</x><y>140</y><w>480</w><h>210</h></coordinates><panel_attributes>TextRepresentation
+Set x-offset that is used when moving.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>260</y><w>480</w><h>210</h></coordinates><panel_attributes>TextRepresentation
 --
 -type: FieldType
 --
-#getUp(position: TextPosition, type: FieldType): TextPosition
-#getDown(position: TextPosition, type: FieldType): TextPosition
-#getNext(position: TextPosition, type: FieldType): TextPosition
-#getPrevious(position: TextPosition, type: FieldType): TextPosition
-#getFirstText(type: FieldType): TextPosition
-#getLastText(type: FieldType): TextPosition
-+getChildRepresentation(position: TextPosition):TextRepresentation 
-+getNextRepresentation( representation: TextRepresentation):TextRepresentation </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>340</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>Relation</id><coordinates><x>620</x><y>240</y><w>200</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;180;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>150</x><y>50</y><w>480</w><h>70</h></coordinates><panel_attributes>CursorControl
+#move(representation, moving, type, xOffset): TextPosition
+#getUp(representation,  type, xOffset): TextPosition
+#getDown(representation,  type, xOffset): TextPosition
+#getNext(representation,  type, xOffset): TextPosition
+#getPrevious(representation,  type, xOffset): TextPosition
+#getFirstText(type): TextPosition
+#getLastText(type): TextPosition
++getType(): FieldType
++setType(type)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>300</x><y>460</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>400</y><w>160</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;140;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>260</x><y>100</y><w>290</w><h>60</h></coordinates><panel_attributes>TextPosition
 --
-+move(position TextPosition, moving: MoveDirection): TextPosition </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element></diagram>
++afterMove(moving: MoveDirection): TextPosition </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>260</y><w>400</w><h>70</h></coordinates><panel_attributes>CursorMoving
+--
++move(position: TextPosition, moving: MoveDirection): TextPosition
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>790</x><y>320</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>390</x><y>150</y><w>250</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;.
+calls</panel_attributes><additional_attributes>230;110;10;10</additional_attributes></element></diagram>
