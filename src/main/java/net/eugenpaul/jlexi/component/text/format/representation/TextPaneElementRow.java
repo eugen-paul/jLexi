@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.Glyph;
+import net.eugenpaul.jlexi.component.text.format.CursorMoving;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextWordBreak;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -18,7 +19,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 @Slf4j
-public class TextPaneElementRow extends TextRepresentation {
+public class TextPaneElementRow extends TextRepresentation implements CursorMoving {
 
     private LinkedList<TextElement> children;
     private TreeMap<Integer, TextElement> xPositionToElement;
@@ -89,16 +90,78 @@ public class TextPaneElementRow extends TextRepresentation {
         case PREVIOUS:
             responsePosition = getPrevious(position);
             break;
+        case BENIG_OF_LINE:
+            responsePosition = getFirstChild();
+            break;
+        case END_OF_LINE:
+            responsePosition = getLastChild();
+            break;
         default:
             responsePosition = null;
             break;
         }
 
         if (responsePosition == null && getParent() instanceof TextRepresentation) {
-            return ((TextRepresentation) getParent()).move(position, moving);
+            return ((TextRepresentation) getParent()).move(//
+                    this, //
+                    moving, //
+                    this.fieldType, //
+                    position.getTextElement().getRelativPositionTo(this).getX() //
+            );
         }
 
         return responsePosition;
+    }
+
+    @Override
+    protected TextPosition moveIn(MovePosition moving, TextFieldType fieldType, int xOffset) {
+        switch (moving) {
+        case UP, DOWN:
+            return getCursorElementAt(new Vector2d(xOffset, 0));
+        case PREVIOUS:
+            return children.getLast().getTextPosition();
+        case NEXT:
+            return children.getFirst().getTextPosition();
+        default:
+            break;
+        }
+
+        return null;
+    }
+
+    @Override
+    protected TextPosition moveUp(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        return getCursorElementAt(new Vector2d(xOffset, 0));
+    }
+
+    @Override
+    protected TextPosition moveDown(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        return getCursorElementAt(new Vector2d(xOffset, 0));
+    }
+
+    @Override
+    protected TextPosition moveNext(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        return getFirstChild();
+    }
+
+    @Override
+    protected TextPosition movePrevious(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        return getLastChild();
+    }
+
+    @Override
+    protected TextPosition moveFirst(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        return getFirstChild();
+    }
+
+    @Override
+    protected TextPosition moveLast(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        return getLastChild();
+    }
+
+    @Override
+    public boolean isChild(TextRepresentation representation) {
+        return false;
     }
 
     private TextPosition getNext(TextPosition position) {
@@ -195,5 +258,4 @@ public class TextPaneElementRow extends TextRepresentation {
     protected TextPosition getLastText(int x) {
         return getCursorElementAt(new Vector2d(x, 0));
     }
-
 }

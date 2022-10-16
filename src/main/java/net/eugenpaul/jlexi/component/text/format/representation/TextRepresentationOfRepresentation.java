@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.eugenpaul.jlexi.component.Glyph;
-import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
 public abstract class TextRepresentationOfRepresentation extends TextRepresentation {
@@ -80,33 +79,65 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
     }
 
     @Override
-    public TextPosition move(TextPosition position, MovePosition moving) {
+    protected TextPosition moveIn(MovePosition moving, TextFieldType fieldType, int xOffset) {
+        TextRepresentation target;
         switch (moving) {
-        case UP:
-            return getUp(position);
-        case DOWN:
-            return getDown(position);
-        case PREVIOUS:
-            return getPrevious(position);
-        case NEXT:
-            return getNext(position);
+        case UP, PREVIOUS:
+            target = this.children.getLast();
+            break;
+        case DOWN, NEXT:
+            target = this.children.getFirst();
+            break;
         default:
-            throw new NotYetImplementedException("Moving " + moving + " is not implemented.");
+            target = null;
+            break;
         }
-    }
 
-    private TextPosition getNext(TextPosition position) {
-        var childRepresentation = getChildRepresentation(position);
-        if (childRepresentation == null) {
+        if (target == null) {
             return null;
         }
 
-        var next = getNextRepresentation(childRepresentation);
+        return target.moveIn(moving, fieldType, xOffset);
+    }
+
+    @Override
+    protected TextPosition moveUp(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        var next = getPreviousRepresentation(fromChild);
 
         if (next == null) {
             if (getParent() instanceof TextRepresentation) {
                 var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.move(position, MovePosition.NEXT);
+                return parentRepresentation.moveUp(this, fieldType, xOffset);
+            }
+            return null;
+        }
+
+        return next.moveIn(MovePosition.UP, fieldType, xOffset);
+    }
+
+    @Override
+    protected TextPosition moveDown(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        var next = getNextRepresentation(fromChild);
+
+        if (next == null) {
+            if (getParent() instanceof TextRepresentation) {
+                var parentRepresentation = (TextRepresentation) getParent();
+                return parentRepresentation.moveDown(this, fieldType, xOffset);
+            }
+            return null;
+        }
+
+        return next.moveIn(MovePosition.DOWN, fieldType, xOffset);
+    }
+
+    @Override
+    protected TextPosition moveNext(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        var next = getNextRepresentation(fromChild);
+
+        if (next == null) {
+            if (getParent() instanceof TextRepresentation) {
+                var parentRepresentation = (TextRepresentation) getParent();
+                return parentRepresentation.moveNext(this, fieldType, xOffset);
             }
             return null;
         }
@@ -118,67 +149,40 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
         return null;
     }
 
-    private TextPosition getPrevious(TextPosition position) {
-        var childGlyph = position.getTextElement().getChild(this);
-        if (!(childGlyph instanceof TextRepresentation)) {
-            return null;
-        }
+    @Override
+    protected TextPosition movePrevious(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        var next = getPreviousRepresentation(fromChild);
 
-        var childRepresentation = (TextRepresentation) childGlyph;
-        var previous = getPreviousRepresentation(childRepresentation);
-
-        if (previous == null) {
+        if (next == null) {
             if (getParent() instanceof TextRepresentation) {
                 var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.move(position, MovePosition.PREVIOUS);
+                return parentRepresentation.movePrevious(this, fieldType, xOffset);
             }
             return null;
         }
 
-        var pos = previous.getLastChild();
+        var pos = next.getLastChild();
         if (pos != null) {
             return pos.getTextElement().getTextPosition();
         }
         return null;
     }
 
-    private TextPosition getUp(TextPosition position) {
-        var childRepresentation = getChildRepresentation(position);
-        if (childRepresentation == null) {
-            return null;
-        }
-
-        var next = getPreviousRepresentation(childRepresentation);
-
-        if (next == null) {
-            if (getParent() instanceof TextRepresentation) {
-                var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.move(position, MovePosition.UP);
-            }
-            return null;
-        }
-
-        var pos = position.getTextElement().getRelativPositionTo(this);
-        return next.getLastText(pos.getX());
+    @Override
+    protected TextPosition moveFirst(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        // TODO
+        return getFirstChild();
     }
 
-    private TextPosition getDown(TextPosition position) {
-        var childRepresentation = getChildRepresentation(position);
-        if (childRepresentation == null) {
-            return null;
-        }
-
-        var next = getNextRepresentation(childRepresentation);
-
-        if (next == null) {
-            if (getParent() instanceof TextRepresentation) {
-                var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.move(position, MovePosition.DOWN);
-            }
-            return null;
-        }
-
-        var pos = position.getTextElement().getRelativPositionTo(this);
-        return next.getFirstText(pos.getX());
+    @Override
+    protected TextPosition moveLast(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        // TODO
+        return getLastChild();
     }
+
+    @Override
+    public boolean isChild(TextRepresentation representation) {
+        return children.contains(representation);
+    }
+
 }
