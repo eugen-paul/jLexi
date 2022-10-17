@@ -34,6 +34,7 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
     public void add(TextRepresentation child) {
         this.children.add(child);
         child.setParent(this);
+        child.setFieldType(TextFieldType.BODY);
 
         this.cachedDrawable = null;
     }

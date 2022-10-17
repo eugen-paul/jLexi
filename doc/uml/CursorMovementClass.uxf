@@ -30,6 +30,7 @@ Set x-offset that is used when moving.</panel_attributes><additional_attributes>
 -type: FieldType
 --
 #move(representation, moving, type, xOffset): TextPosition
++moveIn(moving, type, xOffset)
 #getUp(representation,  type, xOffset): TextPosition
 #getDown(representation,  type, xOffset): TextPosition
 #getNext(representation,  type, xOffset): TextPosition

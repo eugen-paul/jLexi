@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.Glyph;
@@ -22,7 +23,9 @@ public abstract class TextRepresentation extends Glyph implements GlyphIterable<
     @Setter
     private int marginBottom;
 
-    protected TextFieldType fieldType;
+    @Getter
+    @Setter(value = AccessLevel.PROTECTED)
+    private TextFieldType fieldType;
 
     protected TextRepresentation(Glyph parent) {
         super(parent);

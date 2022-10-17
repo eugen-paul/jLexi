@@ -105,7 +105,7 @@ public class TextPaneElementRow extends TextRepresentation implements CursorMovi
             return ((TextRepresentation) getParent()).move(//
                     this, //
                     moving, //
-                    this.fieldType, //
+                    getFieldType(), //
                     position.getTextElement().getRelativPositionTo(this).getX() //
             );
         }

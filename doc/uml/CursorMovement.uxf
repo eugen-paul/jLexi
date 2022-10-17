@@ -46,9 +46,12 @@ HowTo
 -As offset for the X-position, the X-position of the cursor is to be passed on without change from the lowest column (from Column 1 or from Column 2.1 ...).
 -Exceptions: when moving down or up in the TextPaneElementRow, jumps out of the element.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>710</x><y>10</y><w>390</w><h>570</h></coordinates><panel_attributes>Page 1
 group=group-2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>70</y><w>350</w><h>100</h></coordinates><panel_attributes>Header 2
-group=group-2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>460</y><w>350</w><h>100</h></coordinates><panel_attributes>Footer 2
-group=group-2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>180</y><w>350</w><h>270</h></coordinates><panel_attributes>Row 2
-group=group-2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>740</x><y>200</y><w>160</w><h>240</h></coordinates><panel_attributes>Column
+group=group-2
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>460</y><w>350</w><h>100</h></coordinates><panel_attributes>Footer 2
+group=group-2
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>180</y><w>350</w><h>270</h></coordinates><panel_attributes>Row 2 / Body
+group=group-2
+bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>740</x><y>200</y><w>160</w><h>240</h></coordinates><panel_attributes>Column
 2.1
 group=group-2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>910</x><y>200</y><w>160</w><h>240</h></coordinates><panel_attributes>Column
 2.2
