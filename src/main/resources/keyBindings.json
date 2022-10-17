@@ -41,6 +41,36 @@
                 "name": "addNewLine",
                 "keys": "pressed ENTER",
                 "description": "Add new line to text."
+            },
+            {
+                "name": "cursorNext",
+                "keys": "pressed RIGHT",
+                "description": "Move cursor to next element."
+            },
+            {
+                "name": "cursorPrevious",
+                "keys": "pressed LEFT",
+                "description": "Move cursor to previous element."
+            },
+            {
+                "name": "cursorUp",
+                "keys": "pressed UP",
+                "description": "Move cursor to upper element."
+            },
+            {
+                "name": "cursorDown",
+                "keys": "pressed DOWN",
+                "description": "Move cursor to bottom element."
+            },
+            {
+                "name": "cursorBol",
+                "keys": "pressed HOME",
+                "description": "Move cursor to begin of the line."
+            },
+            {
+                "name": "cursorEol",
+                "keys": "pressed END",
+                "description": "Move cursor to end of the line."
             }
         ]
     }

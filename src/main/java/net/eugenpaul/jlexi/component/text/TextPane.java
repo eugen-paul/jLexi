@@ -18,6 +18,7 @@ import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
 import net.eugenpaul.jlexi.component.text.action.TextPaneAddSpecialCharracter;
 import net.eugenpaul.jlexi.component.text.action.TextPaneBoldAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
+import net.eugenpaul.jlexi.component.text.action.TextPaneCursorAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneItalicAction;
 import net.eugenpaul.jlexi.component.text.action.TextPanePasteAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneRedoAction;
@@ -27,6 +28,7 @@ import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToRowCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSite;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
@@ -124,6 +126,13 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
         addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
         addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
+
+        addDefaultKeyBindings("cursorNext", new TextPaneCursorAction(this.keyHandler, MovePosition.NEXT));
+        addDefaultKeyBindings("cursorPrevious", new TextPaneCursorAction(this.keyHandler, MovePosition.PREVIOUS));
+        addDefaultKeyBindings("cursorUp", new TextPaneCursorAction(this.keyHandler, MovePosition.UP));
+        addDefaultKeyBindings("cursorDown", new TextPaneCursorAction(this.keyHandler, MovePosition.DOWN));
+        addDefaultKeyBindings("cursorBol", new TextPaneCursorAction(this.keyHandler, MovePosition.BENIG_OF_LINE));
+        addDefaultKeyBindings("cursorEol", new TextPaneCursorAction(this.keyHandler, MovePosition.END_OF_LINE));
 
         addDefaultKeyBindings("addNewLine",
                 new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
