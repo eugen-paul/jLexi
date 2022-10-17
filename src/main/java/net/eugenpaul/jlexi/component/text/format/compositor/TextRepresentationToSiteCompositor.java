@@ -37,14 +37,14 @@ public class TextRepresentationToSiteCompositor implements TextCompositor<TextRe
     }
 
     @Override
-    public List<TextRepresentation> compose(Iterator<TextRepresentation> iterator, Size maxSize) {
+    public List<TextRepresentation> compose(Iterator<TextRepresentation> textIterator, Size maxSize) {
         List<TextRepresentation> responseSites = new LinkedList<>();
 
         TextPaneSite site = new TextPaneSite(null, this.siteSize);
 
         int currentColumn = 0;
-        while (iterator.hasNext()) {
-            var column = iterator.next();
+        while (textIterator.hasNext()) {
+            var column = textIterator.next();
 
             site.add(column);
 

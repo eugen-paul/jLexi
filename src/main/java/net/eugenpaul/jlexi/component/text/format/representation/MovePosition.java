@@ -5,6 +5,7 @@ public enum MovePosition {
     DOWN, //
     PREVIOUS, //
     NEXT, //
+    BENIG_OF_LINE, //
     END_OF_LINE, //
     ;
 }

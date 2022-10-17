@@ -56,10 +56,6 @@ public class AbstractKeyHandler {
 
     public void onKeyPressed(KeyCode keyCode) {
         switch (keyCode) {
-        case RIGHT, LEFT, UP, DOWN:
-            this.component.getMouseCursor().removeSelection();
-            keyPressedCursorMove(keyCode);
-            break;
         case DELETE:
             keyPressedDelete();
             break;
@@ -93,6 +89,22 @@ public class AbstractKeyHandler {
             break;
         default:
             break;
+        }
+    }
+
+    public void moveCursor(MovePosition moving) {
+        var cursor = this.component.getMouseCursor();
+        var representation = this.component.getTextRepresentation();
+
+        if (null == representation) {
+            return;
+        }
+
+        TextPosition cursorNewPosition = cursor.getPosition().afterMove(moving);
+
+        if (cursorNewPosition != null) {
+            this.component.getMouseCursor().removeSelection();
+            cursor.moveCursorTo(cursorNewPosition);
         }
     }
 
@@ -208,40 +220,6 @@ public class AbstractKeyHandler {
 
         cursor.moveCursorTo(deleteCommand.getData());
 
-    }
-
-    private boolean keyPressedCursorMove(KeyCode keyCode) {
-        var cursor = this.component.getMouseCursor();
-        var representation = this.component.getTextRepresentation();
-
-        if (null == representation) {
-            return false;
-        }
-
-        TextPosition cursorPosition = null;
-        switch (keyCode) {
-        case RIGHT:
-            cursorPosition = cursor.getPosition().afterMove(MovePosition.NEXT);
-            break;
-        case LEFT:
-            cursorPosition = cursor.getPosition().afterMove(MovePosition.PREVIOUS);
-            break;
-        case UP:
-            cursorPosition = cursor.getPosition().afterMove(MovePosition.UP);
-            break;
-        case DOWN:
-            cursorPosition = cursor.getPosition().afterMove(MovePosition.DOWN);
-            break;
-        default:
-            break;
-        }
-
-        if (cursorPosition == null) {
-            return false;
-        }
-
-        cursor.moveCursorTo(cursorPosition);
-        return true;
     }
 
 }
