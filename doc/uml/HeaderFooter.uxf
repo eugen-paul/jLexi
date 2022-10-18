@@ -1,0 +1,58 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>330</x><y>90</y><w>210</w><h>80</h></coordinates><panel_attributes>Header
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>330</x><y>0</y><w>210</w><h>60</h></coordinates><panel_attributes>TextStructureOfStructure
+--
+LinkedList&lt;TextStructure&gt; children
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>50</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>740</x><y>520</y><w>260</w><h>120</h></coordinates><panel_attributes>TextPaneSite
+--
+header
+footer
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>70</y><w>260</w><h>90</h></coordinates><panel_attributes>TextCompositor
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>150</y><w>140</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>120;10;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>200</y><w>260</w><h>120</h></coordinates><panel_attributes>TextRepresentationToHeaderCompositor
+--
+
+--
+TODO:
+set FieldType of all childs to HEADER</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>150</y><w>130</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;110;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>370</y><w>280</w><h>90</h></coordinates><panel_attributes>TextRepresentationOfRepresentation
+--
+LinkedList&lt;TextRepresentation&gt; children &lt;- body
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>730</x><y>200</y><w>260</w><h>120</h></coordinates><panel_attributes>TextRepresentationToSiteCompositor
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>520</y><w>260</w><h>120</h></coordinates><panel_attributes>TextPaneHeader
+--
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>450</y><w>160</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>140;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>450</y><w>150</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;130;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>20</x><y>550</y><w>60</w><h>100</h></coordinates><panel_attributes>Page 1
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>550</y><w>60</w><h>100</h></coordinates><panel_attributes>Page 2
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>550</y><w>60</w><h>100</h></coordinates><panel_attributes>Page 3
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>230</x><y>550</y><w>60</w><h>100</h></coordinates><panel_attributes>Page 4
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>390</y><w>230</w><h>90</h></coordinates><panel_attributes>Header
+--
+getRepresentation - the function should deliver a separate representation for each page.
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>40</x><y>470</y><w>140</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;.
+reference</panel_attributes><additional_attributes>10;80;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>100</x><y>470</y><w>110</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;.
+reference</panel_attributes><additional_attributes>10;80;60;10</additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>470</y><w>90</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;.
+
+reference</panel_attributes><additional_attributes>30;80;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>470</y><w>130</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;.
+reference</panel_attributes><additional_attributes>110;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>210</y><w>230</w><h>90</h></coordinates><panel_attributes>Multi-Parent-Structure
+--
+list&lt;parents&gt;
+text</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>90</y><w>230</w><h>70</h></coordinates><panel_attributes>TextStructure
+--
+LinkedList&lt;TextStructure&gt; children
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>150</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>720</y><w>210</w><h>80</h></coordinates><panel_attributes>Header
+--
+TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>
