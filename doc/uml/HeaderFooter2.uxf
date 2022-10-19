@@ -1,0 +1,49 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>30</x><y>30</y><w>460</w><h>480</h></coordinates><panel_attributes>Header / Footer
+--
+Requests:
+- The content of the header should consist of existing elements. So you will be able to add any component (like tables, images, listings, ...) to the header.
+- When changing a header, the changes must be applied to all headers.
+- Undo/redo must be supported.
+- First of all, the size of the header should be defined, then the columns of the text can be defined.
+--
+Problems:
+- In the current implementation, each element has exactly one parent element. But you need an element that can have multiple parent elements.
+- The header must be drawn separately on each page. I.e. if a page calls the drawing function from the header, then the header must be redrawn. Reason: there may be dynamic data in the header (e.g. page number).
+--
+possible Solutions ?:
+1. a new superclass MultiParent is necessary. NO
+2. Each page class generates a header class.
+    Header class inherits from TextStructure.
+    All create header classes contain a reference to the same TextStructureOfStructure object (Contents of header / HeaderData.).
+    All create header classes know each other.
+    The first header class will register as a parent class in the HeaderData.
+    If HeaderData reports a change to the parent class (content was changed), then this parent class reports this change to all header classes.
+    The header class must stop the movement of the cursor from inside to outside and vice versa.
+    Selection between text and header must not be possible.
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>130</y><w>230</w><h>70</h></coordinates><panel_attributes>Multi-Parent-Structure
+--
+list&lt;parents&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>30</y><w>230</w><h>70</h></coordinates><panel_attributes>TextStructure
+--
+LinkedList&lt;TextStructure&gt; children
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>620</x><y>90</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>360</y><w>210</w><h>80</h></coordinates><panel_attributes>Header
+--
+
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>820</x><y>360</y><w>230</w><h>80</h></coordinates><panel_attributes>TextStructureOfStructure
+--
+LinkedList&lt;TextStructure&gt; children
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>720</x><y>390</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1
+HeaderData &gt;</panel_attributes><additional_attributes>10;20;100;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>260</y><w>210</w><h>70</h></coordinates><panel_attributes>TextStructure
+--
+LinkedList&lt;TextStructure&gt; children
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>620</x><y>320</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>820</x><y>490</y><w>210</w><h>80</h></coordinates><panel_attributes>MegaHeader/Container
+--
+
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>620</x><y>430</y><w>220</w><h>140</h></coordinates><panel_attributes>lt=-
+m1=0..n
+m2=1
+HeaderData &gt;</panel_attributes><additional_attributes>10;10;10;110;200;110</additional_attributes></element></diagram>
