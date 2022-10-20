@@ -23,8 +23,11 @@ public abstract class TextStructure implements TextDocumentElement, Empty {
 
     @Getter
     @Setter
-    protected TextStructure parentStructure;
-    protected List<TextRepresentation> representation;
+    private TextStructure parentStructure;
+
+    @Getter
+    @Setter
+    private List<TextRepresentation> representation;
 
     protected TextStructure(TextStructure parentStructure) {
         this.parentStructure = parentStructure;

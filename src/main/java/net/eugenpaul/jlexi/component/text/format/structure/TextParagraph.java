@@ -38,19 +38,19 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
 
     @Override
     public Iterator<TextRepresentation> drawableChildIterator() {
-        if (null == this.representation) {
+        if (null == getRepresentation()) {
             return Collections.emptyIterator();
         }
-        return new ListOfListIterator<>(this.representation);
+        return new ListOfListIterator<>(getRepresentation());
     }
 
     @Override
     public List<TextRepresentation> getRepresentation(Size size) {
-        if (null == this.representation) {
+        if (null == getRepresentation()) {
             var words = this.config.getTextToWordCompositor().compose(this.children.iterator(), this.storage);
-            this.representation = this.config.getTextToRowsCompositor().compose(words, size);
+            setRepresentation(this.config.getTextToRowsCompositor().compose(words, size));
         }
-        return this.representation;
+        return getRepresentation();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         var nextParagraph = (TextParagraph) element;
         TextElement removedSeparator = null;
 
-        var responseParagraph = new TextParagraph(parentStructure, config, storage);
+        var responseParagraph = new TextParagraph(getParentStructure(), config, storage);
 
         responseParagraph.children.addAll(this.children);
         if (responseParagraph.children.getLast().isEndOfLine()) {
@@ -115,8 +115,8 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
 
         if (nextElement.isEmpty()) {
             // There is no following element. Try to merge the paragraph with the following paragraph.
-            if (this.parentStructure != null) {
-                return this.parentStructure.mergeChildsWithNext(this);
+            if (getParentStructure() != null) {
+                return getParentStructure().mergeChildsWithNext(this);
             }
             return TextRemoveResponse.EMPTY;
         }
@@ -146,8 +146,8 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
         TextAddResponse response = TextAddResponse.EMPTY;
         if (isSplitNeeded(element)) {
             var newParagraphs = split(position, element);
-            if (this.parentStructure != null) {
-                return this.parentStructure.splitChild(this, newParagraphs);
+            if (getParentStructure() != null) {
+                return getParentStructure().splitChild(this, newParagraphs);
             }
         } else {
             response = addElementBefore(position, element);
@@ -159,8 +159,8 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
     }
 
     private List<TextStructure> split(TextElement position, TextElement separator) {
-        TextParagraph first = new TextParagraph(parentStructure, config, storage);
-        TextParagraph second = new TextParagraph(parentStructure, config, storage);
+        TextParagraph first = new TextParagraph(getParentStructure(), config, storage);
+        TextParagraph second = new TextParagraph(getParentStructure(), config, storage);
         TextParagraph current = first;
 
         var chiltIterator = this.children.listIterator();
@@ -196,7 +196,7 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
 
     @Override
     public void notifyChangeDown() {
-        this.representation = null;
+        setRepresentation(null);
     }
 
     private boolean isSplitNeeded(TextElement addedElement) {
@@ -206,7 +206,7 @@ public class TextParagraph extends TextStructureOfElements implements GlyphItera
     @Override
     public void clear() {
         this.children.clear();
-        this.representation = null;
+        setRepresentation(null);
     }
 
     public void setToEol(ResourceManager storage) {

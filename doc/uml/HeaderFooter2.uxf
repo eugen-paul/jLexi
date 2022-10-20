@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>30</x><y>30</y><w>460</w><h>480</h></coordinates><panel_attributes>Header / Footer
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>30</x><y>30</y><w>450</w><h>480</h></coordinates><panel_attributes>Header / Footer
 --
 Requests:
 - The content of the header should consist of existing elements. So you will be able to add any component (like tables, images, listings, ...) to the header.

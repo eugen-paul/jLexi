@@ -56,15 +56,15 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     @Override
     public Iterator<TextRepresentation> drawableChildIterator() {
-        if (null == representation) {
+        if (null == getRepresentation()) {
             return Collections.emptyIterator();
         }
-        return new ListOfListIterator<>(representation);
+        return new ListOfListIterator<>(getRepresentation());
     }
 
     @Override
     public List<TextRepresentation> getRepresentation(Size size) {
-        if (null == representation) {
+        if (null == getRepresentation()) {
             var columnCompositor = new TextRepresentationToColumnCompositor(Color.WHITE, 0, 0);
 
             var allRows = new LinkedList<TextRepresentation>();
@@ -74,9 +74,9 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
             var columns = columnCompositor.compose(allRows.iterator(), siteDrawSize);
 
-            representation = compositor.compose(columns.iterator(), size);
+            setRepresentation(compositor.compose(columns.iterator(), size));
         }
-        return representation;
+        return getRepresentation();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
             return TextRemoveResponse.EMPTY;
         }
 
-        var responseSection = new TextSection(parentStructure, configuration);
+        var responseSection = new TextSection(getParentStructure(), configuration);
 
         // take over own child elements except the last
         var iteratorFirst = childListIterator();
@@ -169,19 +169,19 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                     removedData.getRemovedStructures(), //
                     removedData.getNewStructures() //
             );
-        } else if (this.parentStructure != null) {
-            return this.parentStructure.mergeChildsWithNext(this);
+        } else if (getParentStructure() != null) {
+            return getParentStructure().mergeChildsWithNext(this);
         }
         return TextRemoveResponse.EMPTY;
     }
 
     @Override
-    //TODO replace this Function with replaceAndSplit
+    // TODO replace this Function with replaceAndSplit
     public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
 
-        if (to.get(0).getLastElement().isEndOfSection() && this.parentStructure != null) {
+        if (to.get(0).getLastElement().isEndOfSection() && getParentStructure() != null) {
             var splitResult = replaceAndSplit(child, to);
-            return this.parentStructure.splitChild(this, splitResult);
+            return getParentStructure().splitChild(this, splitResult);
         }
 
         var chiltIterator = this.children.listIterator();
@@ -206,8 +206,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     private List<TextStructure> replaceAndSplit(TextStructure position, List<TextStructure> to) {
-        var first = new TextSection(this.parentStructure, this.configuration);
-        var second = new TextSection(this.parentStructure, this.configuration);
+        var first = new TextSection(getParentStructure(), this.configuration);
+        var second = new TextSection(getParentStructure(), this.configuration);
         var current = first;
 
         var chiltIterator = this.children.listIterator();
@@ -236,7 +236,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     @Override
     public void clear() {
         this.children.clear();
-        this.representation = null;
+        setRepresentation(null);
     }
 
     @Override

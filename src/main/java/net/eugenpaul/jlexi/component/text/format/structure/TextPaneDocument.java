@@ -34,7 +34,7 @@ public class TextPaneDocument extends TextStructureOfStructure {
         this.children.clear();
         this.children.addAll(data);
         this.children.forEach(v -> v.setParentStructure(this));
-        this.representation = null;
+        setRepresentation(null);
     }
 
     private void initEmptyDocument() {
@@ -50,7 +50,7 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     @Override
     public void notifyChangeUp() {
-        this.representation = null;
+        setRepresentation(null);
         if (this.parent != null) {
             this.parent.notifyChange();
         }
