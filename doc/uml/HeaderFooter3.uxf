@@ -1,20 +1,24 @@
-<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>360</x><y>50</y><w>210</w><h>80</h></coordinates><panel_attributes>TextReference
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>300</x><y>150</y><w>210</w><h>80</h></coordinates><panel_attributes>TextSharedElement
 --
 
---</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>670</x><y>50</y><w>230</w><h>80</h></coordinates><panel_attributes>TextStructureOfStructure
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>630</x><y>150</y><w>230</w><h>80</h></coordinates><panel_attributes>TextStructureOfStructure
 --
 LinkedList&lt;TextStructure&gt; children
---</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>80</y><w>130</w><h>50</h></coordinates><panel_attributes>lt=-
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>500</x><y>180</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-
 m1=1
 m2=1
-HeaderData &gt;</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>110</x><y>50</y><w>210</w><h>70</h></coordinates><panel_attributes>TextStructure
+sharedElement &gt;</panel_attributes><additional_attributes>10;20;130;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>150</y><w>210</w><h>80</h></coordinates><panel_attributes>TextStructure
 --
 LinkedList&lt;TextStructure&gt; children
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>70</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>670</x><y>150</y><w>210</w><h>80</h></coordinates><panel_attributes>MegaHeader/Container
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>250</x><y>170</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>630</x><y>250</y><w>230</w><h>80</h></coordinates><panel_attributes>EventManager
 --
 
---</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>120</y><w>230</w><h>110</h></coordinates><panel_attributes>lt=-
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>220</y><w>250</w><h>110</h></coordinates><panel_attributes>lt=-
 m1=0..n
 m2=1
-HeaderData &gt;</panel_attributes><additional_attributes>10;10;10;80;210;80</additional_attributes></element></diagram>
+changeManager &gt;</panel_attributes><additional_attributes>10;10;10;80;230;80</additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>30</y><w>200</w><h>80</h></coordinates><panel_attributes>EventSubscriber
+--
+
+--
++void update(source, type, data);</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>100</y><w>110</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;90;50</additional_attributes></element></diagram>

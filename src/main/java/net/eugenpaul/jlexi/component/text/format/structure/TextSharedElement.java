@@ -5,23 +5,25 @@ import java.util.ListIterator;
 import java.util.Optional;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.pubsub.EventManager;
 import net.eugenpaul.jlexi.pubsub.EventSubscriber;
+import net.eugenpaul.jlexi.utils.Size;
 
-public class TextReference extends TextStructure implements EventSubscriber {
+public class TextSharedElement extends TextStructure implements EventSubscriber {
 
-    private TextStructure reference;
+    private TextStructure sharedElement;
     private EventManager changeManager;
 
-    protected TextReference(TextStructure reference, EventManager changeManager) {
+    protected TextSharedElement(TextStructure sharedElement, EventManager changeManager) {
         super(null);
-        this.reference = reference;
+        this.sharedElement = sharedElement;
         this.changeManager = changeManager;
     }
 
     @Override
     public boolean isEmpty() {
-        return reference.isEmpty();
+        return this.sharedElement.isEmpty();
     }
 
     @Override
@@ -76,51 +78,95 @@ public class TextReference extends TextStructure implements EventSubscriber {
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
+        this.changeManager.fireEvent(this, SharedEvents.CLEAR, null);
+        this.sharedElement.clear();
+    }
 
+    public void clearInside() {
+        setRepresentation(null);
     }
 
     @Override
     protected ListIterator<TextStructure> childListIterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of(sharedElement).listIterator();
     }
 
     @Override
     protected ListIterator<TextStructure> childListIterator(int index) {
-        // TODO Auto-generated method stub
-        return null;
+        return childListIterator();
     }
 
     @Override
     protected TextStructure getFirstChild() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.sharedElement;
     }
 
     @Override
     protected TextStructure getLastChild() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.sharedElement;
     }
 
     @Override
     protected TextElement getFirstElement() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.sharedElement.getFirstElement();
     }
 
     @Override
     protected TextElement getLastElement() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.sharedElement.getLastElement();
+    }
+
+    @Override
+    protected Optional<TextStructure> getPreviousChild(TextStructure position) {
+        return Optional.empty();
+    }
+
+    @Override
+    protected Optional<TextStructure> getNextChild(TextStructure position) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void notifyChangeUp() {
+        this.changeManager.fireEvent(this, SharedEvents.NOTIFY_CHANGE_UP, null);
+        super.notifyChangeUp();
+    }
+
+    @Override
+    public void notifyChangeDown() {
+        this.changeManager.fireEvent(this, SharedEvents.NOTIFY_CHANGE_DOWN, null);
+        super.notifyChangeDown();
+    }
+
+    @Override
+    protected void updateParentOfChildRecursiv() {
+        // noothing to do
     }
 
     @Override
     public void update(Object source, Object type, Object data) {
-        if (source != this) {
-            // TODO Auto-generated method stub
+        if (source != this && type instanceof SharedEvents) {
+            SharedEvents event = (SharedEvents) type;
+            switch (event) {
+            case NOTIFY_CHANGE_UP:
+                super.notifyChangeUp();
+                break;
+            case NOTIFY_CHANGE_DOWN:
+                super.notifyChangeDown();
+                break;
+            case CLEAR:
+                clearInside();
+                break;
+            default:
+                break;
+            }
         }
+    }
+
+    @Override
+    public List<TextRepresentation> getRepresentation(Size size) {
+        this.sharedElement.setRepresentation(null);
+        return this.sharedElement.getRepresentation(size);
     }
 
 }
