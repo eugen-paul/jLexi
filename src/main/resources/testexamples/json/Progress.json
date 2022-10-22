@@ -1,4 +1,44 @@
 {
+    "header": {
+        "paragraphs": [
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "First line of header from file!"
+                    }
+                ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "Second line of header from file!"
+                    }
+                ]
+            }
+        ]
+    },
+    "footer": {
+        "paragraphs": [
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true
+                        },
+                        "text": "Footer from file!"
+                    }
+                ]
+            }
+        ]
+    },
     "sections": [
         {
             "paragraphs": [
