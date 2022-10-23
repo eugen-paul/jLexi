@@ -68,13 +68,13 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
             var columnCompositor = new TextRepresentationToColumnCompositor(Color.WHITE, 0, 0);
 
             var allRows = new LinkedList<TextRepresentation>();
-            for (var paragraph : children) {
+            for (var paragraph : this.children) {
                 allRows.addAll(paragraph.getRepresentation(siteDrawSize));
             }
 
             var columns = columnCompositor.compose(allRows.iterator(), siteDrawSize);
 
-            setRepresentation(compositor.compose(columns.iterator(), size));
+            setRepresentation(this.compositor.compose(columns.iterator(), size));
         }
         return getRepresentation();
     }

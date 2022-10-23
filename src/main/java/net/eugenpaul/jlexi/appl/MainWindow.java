@@ -146,7 +146,7 @@ public class MainWindow extends ApplicationWindow {
         try {
             var fileData = Files.readString(path);
             var documentData = converter.read(fileData);
-            this.textPane.setText(documentData.getSections());
+            this.textPane.setText(documentData);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

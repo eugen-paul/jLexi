@@ -23,6 +23,7 @@ import net.eugenpaul.jlexi.component.text.action.TextPaneItalicAction;
 import net.eugenpaul.jlexi.component.text.action.TextPanePasteAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneRedoAction;
 import net.eugenpaul.jlexi.component.text.action.TextPaneUndoAction;
+import net.eugenpaul.jlexi.component.text.converter.TextData;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
@@ -33,7 +34,6 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSite;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
-import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
@@ -182,7 +182,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     }
 
     @Override
-    public void setText(List<TextSection> text) {
+    public void setText(TextData text) {
         LOGGER.trace("Set Document.text from List<TextSection>");
         this.document.setText(text);
         notifyChange();
