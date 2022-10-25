@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
@@ -29,6 +30,10 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private final Size siteDrawSize;
 
+    // TODO create and add footerCreater
+    @Setter
+    private TextHeaderCreater header;
+
     public TextSection(TextStructure parentStructure, TextSectionConfiguration configuration) {
         super(parentStructure);
 
@@ -52,6 +57,8 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                 sitePaddingTop, //
                 Color.GREEN //
         );
+
+        this.header = null;
     }
 
     @Override

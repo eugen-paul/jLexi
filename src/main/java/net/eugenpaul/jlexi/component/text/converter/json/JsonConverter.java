@@ -17,8 +17,8 @@ import net.eugenpaul.jlexi.component.text.converter.json.format.JsonParagraph;
 import net.eugenpaul.jlexi.component.text.converter.json.format.JsonSection;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
-import net.eugenpaul.jlexi.component.text.format.structure.TextFooterTemplate;
-import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderTemplate;
+import net.eugenpaul.jlexi.component.text.format.structure.TextFooterData;
+import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderData;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraph;
 import net.eugenpaul.jlexi.component.text.format.structure.TextParagraphConfiguration;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
@@ -80,9 +80,9 @@ public class JsonConverter implements TextConverter {
         return response;
     }
 
-    private TextHeaderTemplate toHeader(JsonHeader input) {
+    private TextHeaderData toHeader(JsonHeader input) {
         var headerSection = new TextSection(null, TextSectionConfiguration.builder().build());
-        var responseHeader = new TextHeaderTemplate(headerSection, input.getConfiguration());
+        var responseHeader = new TextHeaderData(headerSection, input.getConfiguration());
 
         TextParagraph lastParagraph = null;
 
@@ -107,9 +107,9 @@ public class JsonConverter implements TextConverter {
         return responseHeader;
     }
 
-    private TextFooterTemplate toFooter(JsonFooter input) {
+    private TextFooterData toFooter(JsonFooter input) {
         var headerSection = new TextSection(null, TextSectionConfiguration.builder().build());
-        var responseHeader = new TextFooterTemplate(headerSection, input.getConfiguration());
+        var responseHeader = new TextFooterData(headerSection, input.getConfiguration());
 
         TextParagraph lastParagraph = null;
 

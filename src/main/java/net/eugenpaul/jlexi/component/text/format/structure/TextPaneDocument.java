@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 
 import java.util.List;
 
+import lombok.var;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.text.converter.TextData;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
@@ -23,8 +24,25 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
     public void setText(TextData data) {
         this.children.clear();
-        this.children.addAll(data.getSections());
-        this.children.forEach(v -> v.setParentStructure(this));
+
+        // TODO create and add footerCreater
+
+        TextHeaderCreater headerCreater = null;
+        if (data.getHeader() != null) {
+            headerCreater = new TextHeaderCreater(data.getHeader().getHeaderText(),
+                    data.getHeader().getConfiguration());
+        }
+
+        for (var child : data.getSections()) {
+            this.children.add(child);
+
+            child.setParentStructure(this);
+
+            if (data.getHeader() != null) {
+                child.setHeader(headerCreater);
+            }
+        }
+
         setRepresentation(null);
     }
 

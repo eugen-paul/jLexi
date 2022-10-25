@@ -4,14 +4,14 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.eugenpaul.jlexi.component.text.format.structure.TextFooterTemplate;
-import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderTemplate;
+import net.eugenpaul.jlexi.component.text.format.structure.TextFooterData;
+import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderData;
 import net.eugenpaul.jlexi.component.text.format.structure.TextSection;
 
 @AllArgsConstructor
 @Getter
 public class TextData {
-    private TextHeaderTemplate header;
+    private TextHeaderData header;
     private List<TextSection> sections;
-    private TextFooterTemplate footer;
+    private TextFooterData footer;
 }

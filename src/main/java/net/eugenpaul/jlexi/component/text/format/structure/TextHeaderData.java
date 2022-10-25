@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class TextFooterTemplate {
+public class TextHeaderData {
     private TextSection headerText;
-    private TextFooterConfiguration configuration;
+    private TextHeaderConfiguration configuration;
 }

@@ -21,6 +21,12 @@ public class TextSharedElement extends TextStructure implements EventSubscriber 
         this.changeManager = changeManager;
     }
 
+    protected TextSharedElement(TextSharedElement other) {
+        super(null);
+        this.sharedElement = other.sharedElement;
+        this.changeManager = other.changeManager;
+    }
+
     @Override
     public boolean isEmpty() {
         return this.sharedElement.isEmpty();
