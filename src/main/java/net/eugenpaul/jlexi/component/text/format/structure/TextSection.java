@@ -9,8 +9,7 @@ import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToSiteCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToSiteWithHeaderFooterCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.utils.Color;
@@ -31,8 +30,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     private final Size siteDrawSize;
 
     // TODO create and add footerCreater
-    @Setter
-    private TextHeaderCreater header;
+    private TextHeaderCreater headerCreater;
 
     public TextSection(TextStructure parentStructure, TextSectionConfiguration configuration) {
         super(parentStructure);
@@ -48,17 +46,37 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
                 - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
 
-        this.compositor = new TextRepresentationToSiteCompositor(//
+        this.compositor = new TextRepresentationToSiteWithHeaderFooterCompositor(//
                 new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
                 configuration.getNumberOfColumns(), //
                 columnWidth, //
                 columnSpacing, //
                 sitePaddingLeft, //
                 sitePaddingTop, //
-                Color.GREEN //
+                sitePaddingBottom, //
+                Color.GREEN, //
+                headerCreater //
         );
 
-        this.header = null;
+        this.headerCreater = null;
+    }
+
+    public void setHeaderCreater(TextHeaderCreater headerCreater) {
+        this.headerCreater = headerCreater;
+        int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
+                - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
+
+        this.compositor = new TextRepresentationToSiteWithHeaderFooterCompositor(//
+                new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
+                configuration.getNumberOfColumns(), //
+                columnWidth, //
+                columnSpacing, //
+                sitePaddingLeft, //
+                sitePaddingTop, //
+                sitePaddingBottom, //
+                Color.GREEN, //
+                headerCreater //
+        );
     }
 
     @Override
@@ -71,18 +89,15 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     @Override
     public List<TextRepresentation> getRepresentation(Size size) {
-        if (null == getRepresentation()) {
-            var columnCompositor = new TextRepresentationToColumnCompositor(Color.WHITE, 0, 0);
+        setRepresentation(null);
 
-            var allRows = new LinkedList<TextRepresentation>();
-            for (var paragraph : this.children) {
-                allRows.addAll(paragraph.getRepresentation(siteDrawSize));
-            }
-
-            var columns = columnCompositor.compose(allRows.iterator(), siteDrawSize);
-
-            setRepresentation(this.compositor.compose(columns.iterator(), size));
+        var allRows = new LinkedList<TextRepresentation>();
+        for (var paragraph : this.children) {
+            allRows.addAll(paragraph.getRepresentation(siteDrawSize));
         }
+
+        setRepresentation(this.compositor.compose(allRows.iterator(), size));
+
         return getRepresentation();
     }
 

@@ -105,6 +105,15 @@ public class TextPaneSiteV2 extends TextRepresentationOfRepresentation {
         this.cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
         this.yPositionToElement.clear();
 
+        if (this.header != null) {
+            this.cachedDrawable.addDrawable(//
+                    header.getDrawable(), //
+                    header.getRelativPosition().getX(), //
+                    header.getRelativPosition().getY() //
+            );
+            this.yPositionToElement.put(header.getRelativPosition().getX(), header);
+        }
+
         for (var el : children) {
             this.cachedDrawable.addDrawable(//
                     el.getDrawable(), //

@@ -8,17 +8,21 @@ import net.eugenpaul.jlexi.component.text.converter.TextData;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.Size;
 
 public class TextPaneDocument extends TextStructureOfStructure {
 
     private ChangeListener parent;
     private ResourceManager storage;
+    private TextHeaderCreater headerCreater;
 
     public TextPaneDocument(ResourceManager storage, ChangeListener parent) {
         super(null);
         this.parent = parent;
         this.storage = storage;
+        this.headerCreater = null;
         initEmptyDocument();
     }
 
@@ -27,9 +31,9 @@ public class TextPaneDocument extends TextStructureOfStructure {
 
         // TODO create and add footerCreater
 
-        TextHeaderCreater headerCreater = null;
+        this.headerCreater = null;
         if (data.getHeader() != null) {
-            headerCreater = new TextHeaderCreater(data.getHeader().getHeaderText(),
+            this.headerCreater = new TextHeaderCreater(data.getHeader().getHeaderText(),
                     data.getHeader().getConfiguration());
         }
 
@@ -39,11 +43,20 @@ public class TextPaneDocument extends TextStructureOfStructure {
             child.setParentStructure(this);
 
             if (data.getHeader() != null) {
-                child.setHeader(headerCreater);
+                child.setHeaderCreater(this.headerCreater);
             }
         }
 
         setRepresentation(null);
+    }
+
+    @Override
+    public List<TextRepresentation> getRepresentation(Size size) {
+        if (this.headerCreater != null) {
+            this.headerCreater.reset();
+        }
+        setRepresentation(null);
+        return super.getRepresentation(size);
     }
 
     private void initEmptyDocument() {

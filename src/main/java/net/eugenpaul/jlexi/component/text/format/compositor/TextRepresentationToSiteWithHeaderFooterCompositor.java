@@ -6,7 +6,8 @@ import java.util.List;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneColumn;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSite;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPaneRow;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSiteV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextHeader;
 import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderCreater;
@@ -57,22 +58,27 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
             TextHeader currentHeader = null;
             if (this.header != null) {
                 currentHeader = this.header.createNext();
-                headerH = currentHeader.getRepresentation().stream().mapToInt(v -> v.getSize().getHeight()).sum();
+                headerH = currentHeader.getRepresentation(maxSize).stream()//
+                        .mapToInt(v -> v.getSize().getHeight())//
+                        .sum();
+            }
+
+            TextPaneSiteV2 site = new TextPaneSiteV2(null, this.fullPageSize);
+
+            if (currentHeader != null) {
+                var headerRepresentation = currentHeader.getRepresentation(maxSize).get(0);
+                headerRepresentation.setRelativPosition(new Vector2d(0, 0));
+                site.setHeader(headerRepresentation);
             }
 
             int maxColumnH = this.fullPageSize.getHeight() - paddingTop - paddingBottom - headerH;
-
-            TextPaneSite site = new TextPaneSite(null, this.fullPageSize);
-
-            if (currentHeader != null) {
-                currentHeader.getRepresentation().forEach(site::add);
-            }
-
+            TextPaneRow body = new TextPaneRow(site);
             for (int column = 0; column < columnPerSite; column++) {
                 var currentTextColumn = computeColumn(textRowsIterator, maxColumnH);
-                site.add(currentTextColumn);
                 currentTextColumn.setRelativPosition(computePosition(column));
+                body.add(currentTextColumn);
             }
+            site.setBody(body);
 
             responseSites.add(site);
         }
