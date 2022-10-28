@@ -1,8 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.compositor;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneColumn;
@@ -48,7 +48,7 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
     }
 
     @Override
-    public List<TextRepresentation> compose(Iterator<TextRepresentation> textRowsIterator, Size maxSize) {
+    public List<TextRepresentation> compose(ListIterator<TextRepresentation> textRowsIterator, Size maxSize) {
         // get header and footer size to copmute body size
         int headerH = 0;
 
@@ -87,7 +87,7 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
         return responseSites;
     }
 
-    private TextPaneColumn computeColumn(Iterator<TextRepresentation> textRowsIterator, int maxColumnH) {
+    private TextPaneColumn computeColumn(ListIterator<TextRepresentation> textRowsIterator, int maxColumnH) {
         TextPaneColumn currentTextColumn = createColumn();
         int currentHeight = 0;
         while (textRowsIterator.hasNext()) {
@@ -97,6 +97,9 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
             if (currentTextColumn.isEmpty() || currentHeight + row.getSize().getHeight() <= maxColumnH) {
                 currentHeight = addToColumn(currentTextColumn, currentHeight, row);
             } else {
+                if (textRowsIterator.hasPrevious()) {
+                    textRowsIterator.previous();
+                }
                 break;
             }
         }

@@ -1,8 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.compositor;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSite;
@@ -37,7 +37,7 @@ public class TextRepresentationToSiteCompositor implements TextCompositor<TextRe
     }
 
     @Override
-    public List<TextRepresentation> compose(Iterator<TextRepresentation> textIterator, Size maxSize) {
+    public List<TextRepresentation> compose(ListIterator<TextRepresentation> textIterator, Size maxSize) {
         List<TextRepresentation> responseSites = new LinkedList<>();
 
         TextPaneSite site = new TextPaneSite(null, this.siteSize);

@@ -150,12 +150,12 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
             return this.cachedDrawable.draw();
         }
 
-        var currentIterator = this.document.getRepresentation(this.maxSize).iterator();
+        var currentIterator = this.document.getRepresentation(this.maxSize).listIterator();
         List<TextRepresentation> finalRepresentation = Collections.emptyList();
 
         for (var compositor : compositors) {
             finalRepresentation = compositor.compose(currentIterator, this.maxSize);
-            currentIterator = finalRepresentation.iterator();
+            currentIterator = finalRepresentation.listIterator();
         }
 
         if (finalRepresentation.isEmpty()) {

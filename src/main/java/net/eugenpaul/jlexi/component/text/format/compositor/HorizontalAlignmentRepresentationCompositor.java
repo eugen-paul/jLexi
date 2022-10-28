@@ -1,8 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.compositor;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class HorizontalAlignmentRepresentationCompositor implements TextComposit
     private AligmentH aligment;
 
     @Override
-    public List<TextRepresentation> compose(Iterator<TextRepresentation> iterator, Size maxSize) {
+    public List<TextRepresentation> compose(ListIterator<TextRepresentation> iterator, Size maxSize) {
         TextPaneColumn responseColumn = new TextPaneColumn(null);
         responseColumn.setBackground(this.backgroundColor);
 

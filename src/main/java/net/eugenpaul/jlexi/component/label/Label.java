@@ -78,7 +78,7 @@ public class Label extends GuiGlyph {
 
         List<TextRepresentation> rows = textElement.getRepresentation(getSize());
 
-        List<TextRepresentation> column = compositor.compose(rows.iterator(), getSize());
+        List<TextRepresentation> column = compositor.compose(rows.listIterator(), getSize());
 
         if (column.isEmpty()) {
             return DrawablePixelsImpl.EMPTY;

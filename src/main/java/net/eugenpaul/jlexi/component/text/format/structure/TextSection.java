@@ -108,7 +108,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
             allRows.addAll(paragraph.getRepresentation(this.drawareaSize));
         }
 
-        setRepresentation(this.compositor.compose(allRows.iterator(), size));
+        setRepresentation(this.compositor.compose(allRows.listIterator(), size));
 
         return getRepresentation();
     }
