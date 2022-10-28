@@ -81,7 +81,7 @@ public class JsonConverter implements TextConverter {
     }
 
     private TextHeaderData toHeader(JsonHeader input) {
-        var headerSection = new TextSection(null, TextSectionConfiguration.builder().build());
+        var headerSection = new TextSection(null, TextSectionConfiguration.builder().block(true).build());
         var responseHeader = new TextHeaderData(headerSection, input.getConfiguration());
 
         TextParagraph lastParagraph = null;
@@ -108,7 +108,7 @@ public class JsonConverter implements TextConverter {
     }
 
     private TextFooterData toFooter(JsonFooter input) {
-        var headerSection = new TextSection(null, TextSectionConfiguration.builder().build());
+        var headerSection = new TextSection(null, TextSectionConfiguration.builder().block(true).build());
         var responseHeader = new TextFooterData(headerSection, input.getConfiguration());
 
         TextParagraph lastParagraph = null;

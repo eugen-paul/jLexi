@@ -111,7 +111,7 @@ public class TextPaneSiteV2 extends TextRepresentationOfRepresentation {
                     header.getRelativPosition().getX(), //
                     header.getRelativPosition().getY() //
             );
-            this.yPositionToElement.put(header.getRelativPosition().getX(), header);
+            this.yPositionToElement.put(header.getRelativPosition().getY(), header);
         }
 
         for (var el : children) {
@@ -121,7 +121,7 @@ public class TextPaneSiteV2 extends TextRepresentationOfRepresentation {
                     el.getRelativPosition().getY() //
             );
 
-            this.yPositionToElement.put(el.getRelativPosition().getX(), el);
+            this.yPositionToElement.put(el.getRelativPosition().getY(), el);
         }
 
         return this.cachedDrawable.draw();
@@ -129,7 +129,7 @@ public class TextPaneSiteV2 extends TextRepresentationOfRepresentation {
 
     @Override
     protected TextPosition getLastText(int x) {
-        var col = this.yPositionToElement.floorEntry(x);
+        var col = this.yPositionToElement.lastEntry();
         if (col == null) {
             return null;
         }
@@ -141,7 +141,7 @@ public class TextPaneSiteV2 extends TextRepresentationOfRepresentation {
 
     @Override
     protected TextPosition getFirstText(int x) {
-        var col = this.yPositionToElement.floorEntry(x);
+        var col = this.yPositionToElement.firstEntry();
         if (col == null) {
             return null;
         }

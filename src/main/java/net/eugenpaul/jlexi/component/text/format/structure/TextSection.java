@@ -5,10 +5,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToSiteWithHeaderFooterCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
@@ -27,7 +27,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     private int sitePaddingBottom = 40;
     private int columnSpacing = 10;
 
-    private final Size siteDrawSize;
+    private final Size drawareaSize;
 
     // TODO create and add footerCreater
     private TextHeaderCreater headerCreater;
@@ -37,7 +37,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
         this.configuration = configuration;
 
-        siteDrawSize = new Size(//
+        this.drawareaSize = new Size(//
                 (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight)
                         / configuration.getNumberOfColumns(), //
                 configuration.getSiteHeightPx() - sitePaddingTop - sitePaddingBottom //
@@ -46,22 +46,34 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
                 - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
 
-        this.compositor = new TextRepresentationToSiteWithHeaderFooterCompositor(//
-                new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
-                configuration.getNumberOfColumns(), //
-                columnWidth, //
-                columnSpacing, //
-                sitePaddingLeft, //
-                sitePaddingTop, //
-                sitePaddingBottom, //
-                Color.GREEN, //
-                headerCreater //
-        );
+        if (!this.configuration.isBlock()) {
+            this.compositor = new TextRepresentationToSiteWithHeaderFooterCompositor(//
+                    new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
+                    configuration.getNumberOfColumns(), //
+                    columnWidth, //
+                    columnSpacing, //
+                    sitePaddingLeft, //
+                    sitePaddingTop, //
+                    sitePaddingBottom, //
+                    Color.INVISIBLE, //
+                    headerCreater //
+            );
+        } else {
+            this.compositor = new TextRepresentationToColumnCompositor(//
+                    Color.INVISIBLE, //
+                    0, //
+                    0 //
+            );
+        }
 
         this.headerCreater = null;
     }
 
     public void setHeaderCreater(TextHeaderCreater headerCreater) {
+        if (this.configuration.isBlock()) {
+            return;
+        }
+
         this.headerCreater = headerCreater;
         int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
                 - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
@@ -74,7 +86,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                 sitePaddingLeft, //
                 sitePaddingTop, //
                 sitePaddingBottom, //
-                Color.GREEN, //
+                Color.INVISIBLE, //
                 headerCreater //
         );
     }
@@ -93,7 +105,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
         var allRows = new LinkedList<TextRepresentation>();
         for (var paragraph : this.children) {
-            allRows.addAll(paragraph.getRepresentation(siteDrawSize));
+            allRows.addAll(paragraph.getRepresentation(this.drawareaSize));
         }
 
         setRepresentation(this.compositor.compose(allRows.iterator(), size));

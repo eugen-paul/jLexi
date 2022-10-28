@@ -22,6 +22,61 @@
                         "text": "Second line of header from file!"
                     }
                 ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "Next line of header."
+                    }
+                ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "Line 4."
+                    }
+                ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "A long, long, long, very very long line. We want to make sure that even very long lines in the header are displayed correctly."
+                    }
+                ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "5++"
+                    }
+                ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "Last header line."
+                    }
+                ]
             }
         ]
     },

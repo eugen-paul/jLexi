@@ -67,15 +67,16 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
 
             if (currentHeader != null) {
                 var headerRepresentation = currentHeader.getRepresentation(maxSize).get(0);
-                headerRepresentation.setRelativPosition(new Vector2d(0, 0));
+                headerRepresentation.setRelativPosition(new Vector2d(this.paddingLeft, 0));
                 site.setHeader(headerRepresentation);
             }
 
             int maxColumnH = this.fullPageSize.getHeight() - paddingTop - paddingBottom - headerH;
             TextPaneRow body = new TextPaneRow(site);
+            body.setRelativPosition(computeBodyPosition(headerH));
             for (int column = 0; column < columnPerSite; column++) {
                 var currentTextColumn = computeColumn(textRowsIterator, maxColumnH);
-                currentTextColumn.setRelativPosition(computePosition(column));
+                currentTextColumn.setRelativPosition(computeColumnPosition(column));
                 body.add(currentTextColumn);
             }
             site.setBody(body);
@@ -102,10 +103,17 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
         return currentTextColumn;
     }
 
-    private Vector2d computePosition(int column) {
+    private Vector2d computeColumnPosition(int column) {
         return new Vector2d( //
-                this.paddingLeft + (column + this.columnWidth + this.columnSpacing) * column, //
-                this.paddingTop //
+                (column + this.columnWidth + this.columnSpacing) * column, //
+                0 //
+        );
+    }
+
+    private Vector2d computeBodyPosition(int headerH) {
+        return new Vector2d( //
+                this.paddingLeft, //
+                this.paddingTop + headerH//
         );
     }
 

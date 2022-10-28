@@ -20,12 +20,15 @@ public class TextSectionConfiguration {
     private int siteWidthPx = 595;
     @Default
     private int siteHeightPx = 842;
+    @Default
+    private boolean block = false;
 
     public TextSectionConfiguration copy() {
         return new TextSectionConfiguration(//
-                numberOfColumns, //
-                siteWidthPx, //
-                siteHeightPx //
+                this.numberOfColumns, //
+                this.siteWidthPx, //
+                this.siteHeightPx, //
+                this.block //
         );
     }
 }
