@@ -61,6 +61,14 @@ public abstract class TextRepresentation extends Glyph implements GlyphIterable<
         }
     }
 
+    protected static final boolean checkMove(TextFieldType fromType, TextFieldType toType) {
+        if (fromType == TextFieldType.UNKNOWN || toType == TextFieldType.UNKNOWN) {
+            return true;
+        }
+
+        return fromType.isSame(toType);
+    }
+
     protected abstract TextPosition moveIn(MovePosition moving, TextFieldType fieldType, int xOffset);
 
     protected abstract TextPosition moveUp(TextRepresentation fromChild, TextFieldType fieldType, int xOffset);
