@@ -124,7 +124,7 @@ public abstract class TextStructure implements TextDocumentElement, Empty {
 
     /**
      * Returns the list of {@code TextRepresentation} that represent the object. Depending on the type, the
-     * {@code TextRepresentation} object can be a row, a column, a site or other.
+     * {@code TextRepresentation} object can be a row, a column, a page or other.
      * 
      * @param size - max size of the returned object
      * @return response

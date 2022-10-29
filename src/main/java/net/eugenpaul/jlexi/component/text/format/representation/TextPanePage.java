@@ -11,16 +11,20 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
 @Slf4j
-public class TextPaneSite extends TextRepresentationOfRepresentation {
+public class TextPanePage extends TextRepresentationOfRepresentation {
 
     private static final int DEFAULT_MARGIN_TOP = 5;
     private static final int DEFAULT_MARGIN_BOTTOM = 5;
     private static final int DEFAULT_MARGIN_LEFT = 5;
     private static final int DEFAULT_MARGIN_RIGHT = 5;
 
-    private TreeMap<Integer, TextRepresentation> xPositionToColumn;
+    private TextRepresentation header;
+    private TextRepresentation body;
+    private TextRepresentation footer;
 
-    public TextPaneSite(Glyph parent, Size size) {
+    private TreeMap<Integer, TextRepresentation> yPositionToElement;
+
+    public TextPanePage(Glyph parent, Size size) {
         super(parent);
         setSize(size);
         setMarginTop(DEFAULT_MARGIN_TOP);
@@ -28,20 +32,53 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
         setMarginLeft(DEFAULT_MARGIN_LEFT);
         setMarginRight(DEFAULT_MARGIN_RIGHT);
 
-        this.xPositionToColumn = new TreeMap<>();
+        this.header = null;
+        this.body = null;
+        this.footer = null;
+
+        this.yPositionToElement = new TreeMap<>();
     }
 
-    public void add(TextRepresentation child) {
-        this.children.add(child);
-        child.setParent(this);
-        child.setFieldType(TextFieldType.BODY);
-
+    public void setHeader(TextRepresentation header) {
+        this.header = header;
+        this.header.setParent(this);
+        this.header.setFieldType(TextFieldType.HEADER);
         this.cachedDrawable = null;
+        initChildren();
+    }
+
+    public void setBody(TextRepresentation body) {
+        this.body = body;
+        this.body.setParent(this);
+        this.body.setFieldType(TextFieldType.BODY);
+        this.cachedDrawable = null;
+        initChildren();
+    }
+
+    public void setFooter(TextRepresentation footer) {
+        this.footer = footer;
+        this.footer.setParent(this);
+        this.footer.setFieldType(TextFieldType.FOOTER);
+        this.cachedDrawable = null;
+        initChildren();
+    }
+
+    private void initChildren() {
+        this.children.clear();
+        if (this.header != null) {
+            this.children.add(this.header);
+        }
+        if (this.body != null) {
+            this.children.add(this.body);
+        }
+        if (this.footer != null) {
+            this.children.add(this.footer);
+        }
     }
 
     @Override
     public TextPosition getCursorElementAt(Vector2d pos) {
-        var row = this.xPositionToColumn.floorEntry(pos.getX());
+        var row = this.yPositionToElement.floorEntry(pos.getY());
         if (null == row) {
             return null;
         }
@@ -52,9 +89,9 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
                 )//
         );
         if (clickedElement != null) {
-            LOGGER.trace("Site Click on Element: {}.", clickedElement);
+            LOGGER.trace("Page Click on {}: {}.", clickedElement);
         } else {
-            LOGGER.trace("Site Click on Element: NONE.");
+            LOGGER.trace("Page Click on Element: NONE.");
         }
         return clickedElement;
     }
@@ -66,7 +103,16 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
         }
 
         this.cachedDrawable = new DrawableSketchImpl(Color.WHITE, getSize());
-        this.xPositionToColumn.clear();
+        this.yPositionToElement.clear();
+
+        if (this.header != null) {
+            this.cachedDrawable.addDrawable(//
+                    header.getDrawable(), //
+                    header.getRelativPosition().getX(), //
+                    header.getRelativPosition().getY() //
+            );
+            this.yPositionToElement.put(header.getRelativPosition().getY(), header);
+        }
 
         for (var el : children) {
             this.cachedDrawable.addDrawable(//
@@ -75,7 +121,7 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
                     el.getRelativPosition().getY() //
             );
 
-            this.xPositionToColumn.put(el.getRelativPosition().getX(), el);
+            this.yPositionToElement.put(el.getRelativPosition().getY(), el);
         }
 
         return this.cachedDrawable.draw();
@@ -83,7 +129,7 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
 
     @Override
     protected TextPosition getLastText(int x) {
-        var col = this.xPositionToColumn.floorEntry(x);
+        var col = this.yPositionToElement.lastEntry();
         if (col == null) {
             return null;
         }
@@ -95,7 +141,7 @@ public class TextPaneSite extends TextRepresentationOfRepresentation {
 
     @Override
     protected TextPosition getFirstText(int x) {
-        var col = this.xPositionToColumn.floorEntry(x);
+        var col = this.yPositionToElement.firstEntry();
         if (col == null) {
             return null;
         }

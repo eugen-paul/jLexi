@@ -7,7 +7,7 @@ import java.util.ListIterator;
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneColumn;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneRow;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSiteV2;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPanePage;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextHeader;
 import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderCreater;
@@ -15,13 +15,13 @@ import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextCompositor<TextRepresentation> {
+public class TextRepresentationToPageCompositor implements TextCompositor<TextRepresentation> {
 
     @Getter
     private final Color background;
 
     private final Size fullPageSize;
-    private final int columnPerSite;
+    private final int columnPerPage;
 
     private final int columnSpacing;
     private final int paddingLeft;
@@ -33,11 +33,11 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
     // TODO create and add footerCreater
     private final TextHeaderCreater header;
 
-    public TextRepresentationToSiteWithHeaderFooterCompositor(Size fullPageSize, int columnPerSite, int columnWidth,
+    public TextRepresentationToPageCompositor(Size fullPageSize, int columnPerPage, int columnWidth,
             int columnSpacing, int paddingLeft, int paddingTop, int paddingBottom, Color background,
             TextHeaderCreater header) {
         this.fullPageSize = fullPageSize;
-        this.columnPerSite = columnPerSite;
+        this.columnPerPage = columnPerPage;
         this.columnSpacing = columnSpacing;
         this.columnWidth = columnWidth;
         this.paddingLeft = paddingLeft;
@@ -52,7 +52,7 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
         // get header and footer size to copmute body size
         int headerH = 0;
 
-        List<TextRepresentation> responseSites = new LinkedList<>();
+        List<TextRepresentation> responsePages = new LinkedList<>();
 
         while (textRowsIterator.hasNext()) {
             TextHeader currentHeader = null;
@@ -63,28 +63,28 @@ public class TextRepresentationToSiteWithHeaderFooterCompositor implements TextC
                         .sum();
             }
 
-            TextPaneSiteV2 site = new TextPaneSiteV2(null, this.fullPageSize);
+            TextPanePage page = new TextPanePage(null, this.fullPageSize);
 
             if (currentHeader != null) {
                 var headerRepresentation = currentHeader.getRepresentation(maxSize).get(0);
                 headerRepresentation.setRelativPosition(new Vector2d(this.paddingLeft, 0));
-                site.setHeader(headerRepresentation);
+                page.setHeader(headerRepresentation);
             }
 
             int maxColumnH = this.fullPageSize.getHeight() - paddingTop - paddingBottom - headerH;
-            TextPaneRow body = new TextPaneRow(site);
+            TextPaneRow body = new TextPaneRow(page);
             body.setRelativPosition(computeBodyPosition(headerH));
-            for (int column = 0; column < columnPerSite; column++) {
+            for (int column = 0; column < columnPerPage; column++) {
                 var currentTextColumn = computeColumn(textRowsIterator, maxColumnH);
                 currentTextColumn.setRelativPosition(computeColumnPosition(column));
                 body.add(currentTextColumn);
             }
-            site.setBody(body);
+            page.setBody(body);
 
-            responseSites.add(site);
+            responsePages.add(page);
         }
 
-        return responseSites;
+        return responsePages;
     }
 
     private TextPaneColumn computeColumn(ListIterator<TextRepresentation> textRowsIterator, int maxColumnH) {

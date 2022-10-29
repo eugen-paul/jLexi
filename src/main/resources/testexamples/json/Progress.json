@@ -246,7 +246,7 @@
                 {
                     "elements": [
                         {
-                            "text": "   - new site layout."
+                            "text": "   - new page layout."
                         }
                     ]
                 },
@@ -357,7 +357,7 @@
         },
         {
             "numberOfColumns": 2,
-            "siteHeightPx": 400,
+            "pageHeightPx": 400,
             "paragraphs": [
                 {
                     "elements": [

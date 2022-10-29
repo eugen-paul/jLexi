@@ -9,7 +9,7 @@ import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToSiteWithHeaderFooterCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToPageCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.utils.Color;
@@ -21,10 +21,10 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private final TextSectionConfiguration configuration;
 
-    private int sitePaddingLeft = 20;
-    private int sitePaddingRight = 20;
-    private int sitePaddingTop = 40;
-    private int sitePaddingBottom = 40;
+    private int pagePaddingLeft = 20;
+    private int pagePaddingRight = 20;
+    private int pagePaddingTop = 40;
+    private int pagePaddingBottom = 40;
     private int columnSpacing = 10;
 
     private final Size drawareaSize;
@@ -38,23 +38,23 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         this.configuration = configuration;
 
         this.drawareaSize = new Size(//
-                (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight)
+                (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight)
                         / configuration.getNumberOfColumns(), //
-                configuration.getSiteHeightPx() - sitePaddingTop - sitePaddingBottom //
+                configuration.getPageHeightPx() - pagePaddingTop - pagePaddingBottom //
         );
 
-        int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
+        int columnWidth = (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight
                 - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
 
         if (!this.configuration.isBlock()) {
-            this.compositor = new TextRepresentationToSiteWithHeaderFooterCompositor(//
-                    new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
+            this.compositor = new TextRepresentationToPageCompositor(//
+                    new Size(configuration.getPageWidthPx(), configuration.getPageHeightPx()), //
                     configuration.getNumberOfColumns(), //
                     columnWidth, //
                     columnSpacing, //
-                    sitePaddingLeft, //
-                    sitePaddingTop, //
-                    sitePaddingBottom, //
+                    pagePaddingLeft, //
+                    pagePaddingTop, //
+                    pagePaddingBottom, //
                     Color.INVISIBLE, //
                     headerCreater //
             );
@@ -75,17 +75,17 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         }
 
         this.headerCreater = headerCreater;
-        int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
+        int columnWidth = (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight
                 - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
 
-        this.compositor = new TextRepresentationToSiteWithHeaderFooterCompositor(//
-                new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
+        this.compositor = new TextRepresentationToPageCompositor(//
+                new Size(configuration.getPageWidthPx(), configuration.getPageHeightPx()), //
                 configuration.getNumberOfColumns(), //
                 columnWidth, //
                 columnSpacing, //
-                sitePaddingLeft, //
-                sitePaddingTop, //
-                sitePaddingBottom, //
+                pagePaddingLeft, //
+                pagePaddingTop, //
+                pagePaddingBottom, //
                 Color.INVISIBLE, //
                 headerCreater //
         );

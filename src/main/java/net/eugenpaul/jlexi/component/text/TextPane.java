@@ -30,7 +30,7 @@ import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationTo
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToRowCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPaneSite;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPanePage;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
@@ -159,7 +159,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         }
 
         if (finalRepresentation.isEmpty()) {
-            this.textRepresentation = new TextPaneSite(this, new Size(320, 240));
+            this.textRepresentation = new TextPanePage(this, new Size(320, 240));
         } else {
             this.textRepresentation = finalRepresentation.get(0);
             this.textRepresentation.setParent(this);
