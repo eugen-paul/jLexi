@@ -111,6 +111,10 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     protected TextPosition moveUp(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        if (fieldType.isLocked()) {
+            return null;
+        }
+
         if (fieldType == TextFieldType.UNKNOWN) {
             fieldType = getFieldType();
         }
@@ -137,6 +141,10 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     protected TextPosition moveDown(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        if (fieldType.isLocked()) {
+            return null;
+        }
+
         if (fieldType == TextFieldType.UNKNOWN) {
             fieldType = getFieldType();
         }
@@ -163,6 +171,10 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     protected TextPosition moveNext(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        if (fieldType.isLocked()) {
+            return null;
+        }
+
         if (fieldType == TextFieldType.UNKNOWN) {
             fieldType = getFieldType();
         }
@@ -189,6 +201,10 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     protected TextPosition movePrevious(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
+        if (fieldType.isLocked()) {
+            return null;
+        }
+
         if (fieldType == TextFieldType.UNKNOWN) {
             fieldType = getFieldType();
         }

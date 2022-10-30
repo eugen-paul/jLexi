@@ -138,6 +138,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         }
 
         var responseSection = new TextSection(getParentStructure(), configuration);
+        responseSection.setHeaderCreater(headerCreater);
 
         // take over own child elements except the last
         var iteratorFirst = childListIterator();
@@ -241,7 +242,11 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private List<TextStructure> replaceAndSplit(TextStructure position, List<TextStructure> to) {
         var first = new TextSection(getParentStructure(), this.configuration);
+        first.setHeaderCreater(headerCreater);
+
         var second = new TextSection(getParentStructure(), this.configuration);
+        second.setHeaderCreater(headerCreater);
+
         var current = first;
 
         var chiltIterator = this.children.listIterator();
