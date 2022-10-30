@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class TextFooterData {
-    private TextSection headerText;
+    private TextSection footerText;
     private TextFooterConfiguration configuration;
 }

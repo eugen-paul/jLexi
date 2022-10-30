@@ -27,36 +27,26 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     private int pagePaddingBottom = 40;
     private int columnSpacing = 10;
 
-    private final Size drawareaSize;
-
-    // TODO create and add footerCreater
     private TextHeaderCreater headerCreater;
+    private TextFooterCreater footerCreater;
 
     public TextSection(TextStructure parentStructure, TextSectionConfiguration configuration) {
         super(parentStructure);
 
         this.configuration = configuration;
 
-        this.drawareaSize = new Size(//
-                (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight)
-                        / configuration.getNumberOfColumns(), //
-                configuration.getPageHeightPx() - pagePaddingTop - pagePaddingBottom //
-        );
-
-        int columnWidth = (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight
-                - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
-
         if (!this.configuration.isBlock()) {
             this.compositor = new TextRepresentationToPageCompositor(//
                     new Size(configuration.getPageWidthPx(), configuration.getPageHeightPx()), //
                     configuration.getNumberOfColumns(), //
-                    columnWidth, //
+                    computeColumnWidth(), //
                     columnSpacing, //
                     pagePaddingLeft, //
                     pagePaddingTop, //
                     pagePaddingBottom, //
                     Color.INVISIBLE, //
-                    headerCreater //
+                    headerCreater, //
+                    footerCreater //
             );
         } else {
             this.compositor = new TextRepresentationToColumnCompositor(//
@@ -70,25 +60,38 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     public void setHeaderCreater(TextHeaderCreater headerCreater) {
+        setHeaderFooterCreater(headerCreater, this.footerCreater);
+    }
+
+    public void setFooterCreater(TextFooterCreater footerCreater) {
+        setHeaderFooterCreater(this.headerCreater, footerCreater);
+    }
+
+    private void setHeaderFooterCreater(TextHeaderCreater headerCreater, TextFooterCreater footerCreater) {
         if (this.configuration.isBlock()) {
             return;
         }
 
         this.headerCreater = headerCreater;
-        int columnWidth = (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight
-                - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
+        this.footerCreater = footerCreater;
 
         this.compositor = new TextRepresentationToPageCompositor(//
                 new Size(configuration.getPageWidthPx(), configuration.getPageHeightPx()), //
                 configuration.getNumberOfColumns(), //
-                columnWidth, //
+                computeColumnWidth(), //
                 columnSpacing, //
                 pagePaddingLeft, //
                 pagePaddingTop, //
                 pagePaddingBottom, //
                 Color.INVISIBLE, //
-                headerCreater //
+                this.headerCreater, //
+                this.footerCreater //
         );
+    }
+
+    private int computeColumnWidth() {
+        return (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight
+                - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
     }
 
     @Override
@@ -104,11 +107,22 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
         setRepresentation(null);
 
         var allRows = new LinkedList<TextRepresentation>();
+        var pageSize = new Size(//
+                this.configuration.getPageWidthPx(), //
+                this.configuration.getPageHeightPx() //
+        );
+
+        var rowSize = new Size(//
+                (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight)
+                        / configuration.getNumberOfColumns(), //
+                this.configuration.getPageHeightPx() //
+        );
+
         for (var paragraph : this.children) {
-            allRows.addAll(paragraph.getRepresentation(this.drawareaSize));
+            allRows.addAll(paragraph.getRepresentation(rowSize));
         }
 
-        setRepresentation(this.compositor.compose(allRows.listIterator(), size));
+        setRepresentation(this.compositor.compose(allRows.listIterator(), pageSize));
 
         return getRepresentation();
     }
@@ -139,6 +153,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
         var responseSection = new TextSection(getParentStructure(), configuration);
         responseSection.setHeaderCreater(headerCreater);
+        responseSection.setFooterCreater(footerCreater);
 
         // take over own child elements except the last
         var iteratorFirst = childListIterator();
@@ -243,9 +258,11 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     private List<TextStructure> replaceAndSplit(TextStructure position, List<TextStructure> to) {
         var first = new TextSection(getParentStructure(), this.configuration);
         first.setHeaderCreater(headerCreater);
+        first.setFooterCreater(footerCreater);
 
         var second = new TextSection(getParentStructure(), this.configuration);
         second.setHeaderCreater(headerCreater);
+        second.setFooterCreater(footerCreater);
 
         var current = first;
 

@@ -124,6 +124,15 @@ public class TextPanePage extends TextRepresentationOfRepresentation {
             this.yPositionToElement.put(el.getRelativPosition().getY(), el);
         }
 
+        if (this.footer != null) {
+            this.cachedDrawable.addDrawable(//
+                    footer.getDrawable(), //
+                    footer.getRelativPosition().getX(), //
+                    footer.getRelativPosition().getY() //
+            );
+            this.yPositionToElement.put(footer.getRelativPosition().getY(), footer);
+        }
+
         return this.cachedDrawable.draw();
     }
 

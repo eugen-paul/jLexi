@@ -17,6 +17,7 @@ public class TextPaneDocument extends TextStructureOfStructure {
     private ChangeListener parent;
     private ResourceManager storage;
     private TextHeaderCreater headerCreater;
+    private TextFooterCreater footerCreater;
 
     public TextPaneDocument(ResourceManager storage, ChangeListener parent) {
         super(null);
@@ -29,22 +30,30 @@ public class TextPaneDocument extends TextStructureOfStructure {
     public void setText(TextData data) {
         this.children.clear();
 
-        // TODO create and add footerCreater
-
-        this.headerCreater = null;
         if (data.getHeader() != null) {
-            this.headerCreater = new TextHeaderCreater(data.getHeader().getHeaderText(),
-                    data.getHeader().getConfiguration());
+            this.headerCreater = new TextHeaderCreater(//
+                    data.getHeader().getHeaderText(), //
+                    data.getHeader().getConfiguration() //
+            );
+        } else {
+            this.headerCreater = null;
+        }
+
+        if (data.getFooter() != null) {
+            this.footerCreater = new TextFooterCreater( //
+                    data.getFooter().getFooterText(), //
+                    data.getFooter().getConfiguration() //
+            );
+        } else {
+            this.footerCreater = null;
+
         }
 
         for (var child : data.getSections()) {
             this.children.add(child);
-
             child.setParentStructure(this);
-
-            if (data.getHeader() != null) {
-                child.setHeaderCreater(this.headerCreater);
-            }
+            child.setHeaderCreater(this.headerCreater);
+            child.setFooterCreater(this.footerCreater);
         }
 
         setRepresentation(null);

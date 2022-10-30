@@ -4,11 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneColumn;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneRow;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePage;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
+import net.eugenpaul.jlexi.component.text.format.structure.TextFooter;
+import net.eugenpaul.jlexi.component.text.format.structure.TextFooterCreater;
 import net.eugenpaul.jlexi.component.text.format.structure.TextHeader;
 import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderCreater;
 import net.eugenpaul.jlexi.utils.Color;
@@ -17,7 +18,6 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextRepresentationToPageCompositor implements TextCompositor<TextRepresentation> {
 
-    @Getter
     private final Color background;
 
     private final Size fullPageSize;
@@ -30,12 +30,12 @@ public class TextRepresentationToPageCompositor implements TextCompositor<TextRe
 
     private final int columnWidth;
 
-    // TODO create and add footerCreater
-    private final TextHeaderCreater header;
+    private final TextHeaderCreater headerCreater;
+    private final TextFooterCreater footerCreater;
 
-    public TextRepresentationToPageCompositor(Size fullPageSize, int columnPerPage, int columnWidth,
-            int columnSpacing, int paddingLeft, int paddingTop, int paddingBottom, Color background,
-            TextHeaderCreater header) {
+    public TextRepresentationToPageCompositor(Size fullPageSize, int columnPerPage, int columnWidth, int columnSpacing,
+            int paddingLeft, int paddingTop, int paddingBottom, Color background, TextHeaderCreater headerCreater,
+            TextFooterCreater footerCreater) {
         this.fullPageSize = fullPageSize;
         this.columnPerPage = columnPerPage;
         this.columnSpacing = columnSpacing;
@@ -44,34 +44,39 @@ public class TextRepresentationToPageCompositor implements TextCompositor<TextRe
         this.paddingTop = paddingTop;
         this.paddingBottom = paddingBottom;
         this.background = background;
-        this.header = header;
+        this.headerCreater = headerCreater;
+        this.footerCreater = footerCreater;
     }
 
     @Override
-    public List<TextRepresentation> compose(ListIterator<TextRepresentation> textRowsIterator, Size maxSize) {
-        // get header and footer size to copmute body size
-        int headerH = 0;
+    public List<TextRepresentation> compose(ListIterator<TextRepresentation> textRowsIterator, Size pageSize) {
 
         List<TextRepresentation> responsePages = new LinkedList<>();
 
         while (textRowsIterator.hasNext()) {
+            int headerH = 0;
+            int footerH = 0;
             TextHeader currentHeader = null;
-            if (this.header != null) {
-                currentHeader = this.header.createNext();
-                headerH = currentHeader.getRepresentation(maxSize).stream()//
-                        .mapToInt(v -> v.getSize().getHeight())//
-                        .sum();
-            }
-
+            TextFooter currentFooter = null;
             TextPanePage page = new TextPanePage(null, this.fullPageSize);
 
-            if (currentHeader != null) {
-                var headerRepresentation = currentHeader.getRepresentation(maxSize).get(0);
+            if (this.headerCreater != null) {
+                currentHeader = this.headerCreater.createNext();
+                var headerRepresentation = currentHeader.getRepresentation(pageSize).get(0);
+                headerH = headerRepresentation.getSize().getHeight();
                 headerRepresentation.setRelativPosition(new Vector2d(this.paddingLeft, 0));
                 page.setHeader(headerRepresentation);
             }
 
-            int maxColumnH = this.fullPageSize.getHeight() - paddingTop - paddingBottom - headerH;
+            if (this.footerCreater != null) {
+                currentFooter = this.footerCreater.createNext();
+                var footerRepresentation = currentFooter.getRepresentation(pageSize).get(0);
+                footerH = footerRepresentation.getSize().getHeight();
+                footerRepresentation.setRelativPosition(new Vector2d(this.paddingLeft, pageSize.getHeight() - footerH));
+                page.setFooter(footerRepresentation);
+            }
+
+            int maxColumnH = this.fullPageSize.getHeight() - paddingTop - paddingBottom - headerH - footerH;
             TextPaneRow body = new TextPaneRow(page);
             body.setRelativPosition(computeBodyPosition(headerH));
             for (int column = 0; column < columnPerPage; column++) {

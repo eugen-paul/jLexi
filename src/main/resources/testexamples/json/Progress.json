@@ -91,6 +91,17 @@
                         "text": "Footer from file!"
                     }
                 ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "Last footer line."
+                    }
+                ]
             }
         ]
     },
