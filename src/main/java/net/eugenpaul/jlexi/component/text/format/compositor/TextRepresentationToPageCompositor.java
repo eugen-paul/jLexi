@@ -8,9 +8,7 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextPaneColumn;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneRow;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePage;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
-import net.eugenpaul.jlexi.component.text.format.structure.TextFooter;
 import net.eugenpaul.jlexi.component.text.format.structure.TextFooterCreater;
-import net.eugenpaul.jlexi.component.text.format.structure.TextHeader;
 import net.eugenpaul.jlexi.component.text.format.structure.TextHeaderCreater;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
@@ -56,24 +54,29 @@ public class TextRepresentationToPageCompositor implements TextCompositor<TextRe
         while (textRowsIterator.hasNext()) {
             int headerH = 0;
             int footerH = 0;
-            TextHeader currentHeader = null;
-            TextFooter currentFooter = null;
             TextPanePage page = new TextPanePage(null, this.fullPageSize);
 
             if (this.headerCreater != null) {
-                currentHeader = this.headerCreater.createNext();
-                var headerRepresentation = currentHeader.getRepresentation(pageSize).get(0);
-                headerH = headerRepresentation.getSize().getHeight();
-                headerRepresentation.setRelativPosition(new Vector2d(this.paddingLeft, 0));
-                page.setHeader(headerRepresentation);
+                var currentHeader = this.headerCreater.createNext();
+                var representations = currentHeader.getRepresentation(pageSize);
+                if (representations != null && !representations.isEmpty()) {
+                    var headerRepresentation = representations.get(0);
+                    headerH = headerRepresentation.getSize().getHeight();
+                    headerRepresentation.setRelativPosition(new Vector2d(this.paddingLeft, 0));
+                    page.setHeader(headerRepresentation);
+                }
             }
 
             if (this.footerCreater != null) {
-                currentFooter = this.footerCreater.createNext();
-                var footerRepresentation = currentFooter.getRepresentation(pageSize).get(0);
-                footerH = footerRepresentation.getSize().getHeight();
-                footerRepresentation.setRelativPosition(new Vector2d(this.paddingLeft, pageSize.getHeight() - footerH));
-                page.setFooter(footerRepresentation);
+                var currentFooter = this.footerCreater.createNext();
+                var representations = currentFooter.getRepresentation(pageSize);
+                if (representations != null && !representations.isEmpty()) {
+                    var footerRepresentation = representations.get(0);
+                    footerH = footerRepresentation.getSize().getHeight();
+                    footerRepresentation
+                            .setRelativPosition(new Vector2d(this.paddingLeft, pageSize.getHeight() - footerH));
+                    page.setFooter(footerRepresentation);
+                }
             }
 
             int maxColumnH = this.fullPageSize.getHeight() - paddingTop - paddingBottom - headerH - footerH;

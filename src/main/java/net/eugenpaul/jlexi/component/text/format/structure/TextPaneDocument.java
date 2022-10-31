@@ -64,6 +64,9 @@ public class TextPaneDocument extends TextStructureOfStructure {
         if (this.headerCreater != null) {
             this.headerCreater.reset();
         }
+        if (this.footerCreater != null) {
+            this.footerCreater.reset();
+        }
         setRepresentation(null);
         return super.getRepresentation(size);
     }
