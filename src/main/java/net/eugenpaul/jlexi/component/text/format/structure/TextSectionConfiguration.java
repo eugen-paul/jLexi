@@ -17,15 +17,18 @@ public class TextSectionConfiguration {
     @Default
     private int numberOfColumns = 1;
     @Default
-    private int siteWidthPx = 595;
+    private int pageWidthPx = 595;
     @Default
-    private int siteHeightPx = 842;
+    private int pageHeightPx = 842;
+    @Default
+    private boolean block = false;
 
     public TextSectionConfiguration copy() {
         return new TextSectionConfiguration(//
-                numberOfColumns, //
-                siteWidthPx, //
-                siteHeightPx //
+                this.numberOfColumns, //
+                this.pageWidthPx, //
+                this.pageHeightPx, //
+                this.block //
         );
     }
 }

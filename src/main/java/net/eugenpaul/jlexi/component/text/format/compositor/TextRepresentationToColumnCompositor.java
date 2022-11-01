@@ -1,8 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.compositor;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,8 +29,8 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
     private int marginBottom;
 
     @Override
-    public List<TextRepresentation> compose(Iterator<TextRepresentation> iterator, Size maxSize) {
-        List<TextRepresentation> responseRows = new LinkedList<>();
+    public List<TextRepresentation> compose(ListIterator<TextRepresentation> iterator, Size maxSize) {
+        List<TextRepresentation> responseColumns = new LinkedList<>();
 
         TextPaneColumn column = createColumn();
         int currentHeight = 0;
@@ -42,7 +42,7 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
             if (column.isEmpty() || currentHeight + element.getSize().getHeight() <= maxSize.getHeight()) {
                 currentHeight = addToColumn(column, currentHeight, element);
             } else {
-                responseRows.add(column);
+                responseColumns.add(column);
                 column = createColumn();
                 currentHeight = element.getMarginTop();
 
@@ -51,10 +51,10 @@ public class TextRepresentationToColumnCompositor implements TextCompositor<Text
         }
 
         if (!column.isEmpty()) {
-            responseRows.add(column);
+            responseColumns.add(column);
         }
 
-        return responseRows;
+        return responseColumns;
     }
 
     private int addToColumn(TextPaneColumn column, int currentHeight, TextRepresentation element) {

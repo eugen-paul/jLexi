@@ -145,8 +145,8 @@ public class MainWindow extends ApplicationWindow {
         JsonConverter converter = new JsonConverter(this.storage);
         try {
             var fileData = Files.readString(path);
-            var textSections = converter.read(fileData);
-            this.textPane.setText(textSections);
+            var documentData = converter.read(fileData);
+            this.textPane.setText(documentData);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

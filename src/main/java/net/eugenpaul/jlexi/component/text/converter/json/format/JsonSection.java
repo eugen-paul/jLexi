@@ -15,16 +15,16 @@ import net.eugenpaul.jlexi.component.text.format.structure.TextSectionConfigurat
 @Setter
 public class JsonSection {
     private int numberOfColumns = 1;
-    private int siteWidthPx = 595;
-    private int siteHeightPx = 842;
+    private int pageWidthPx = 595;
+    private int pageHeightPx = 842;
 
     private List<JsonParagraph> paragraphs = Collections.emptyList();
 
     public TextSectionConfiguration getTextSectionConfiguration() {
         return TextSectionConfiguration.builder()//
                 .numberOfColumns(numberOfColumns)//
-                .siteWidthPx(siteWidthPx)//
-                .siteHeightPx(siteHeightPx)//
+                .pageWidthPx(pageWidthPx)//
+                .pageHeightPx(pageHeightPx)//
                 .build();
     }
 }

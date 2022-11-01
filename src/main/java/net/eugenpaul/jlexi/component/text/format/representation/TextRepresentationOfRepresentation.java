@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -80,90 +81,150 @@ public abstract class TextRepresentationOfRepresentation extends TextRepresentat
 
     @Override
     protected TextPosition moveIn(MovePosition moving, TextFieldType fieldType, int xOffset) {
-        TextRepresentation target;
-        switch (moving) {
-        case UP, PREVIOUS:
-            target = this.children.getLast();
-            break;
-        case DOWN, NEXT:
-            target = this.children.getFirst();
-            break;
-        default:
-            target = null;
-            break;
-        }
-
-        if (target == null) {
+        if (!checkMove(fieldType, getFieldType())) {
             return null;
         }
 
-        return target.moveIn(moving, fieldType, xOffset);
+        Iterator<TextRepresentation> iterator = null;
+        switch (moving) {
+        case UP, PREVIOUS:
+            iterator = this.children.descendingIterator();
+            break;
+        case DOWN, NEXT:
+            iterator = this.children.iterator();
+            break;
+        default:
+            iterator = Collections.emptyIterator();
+            break;
+        }
+
+        while (iterator.hasNext()) {
+            var child = iterator.next();
+            var responsePosition = child.moveIn(moving, fieldType, xOffset);
+            if (responsePosition != null) {
+                return responsePosition;
+            }
+        }
+
+        return null;
     }
 
     @Override
     protected TextPosition moveUp(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        var next = getPreviousRepresentation(fromChild);
-
-        if (next == null) {
-            if (getParent() instanceof TextRepresentation) {
-                var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.moveUp(this, fieldType, xOffset);
-            }
+        if (fieldType.isLocked()) {
             return null;
         }
 
-        return next.moveIn(MovePosition.UP, fieldType, xOffset);
+        if (fieldType == TextFieldType.UNKNOWN) {
+            fieldType = getFieldType();
+        }
+
+        TextRepresentation next = fromChild;
+        while (next != null) {
+            next = getPreviousRepresentation(next);
+            if (next == null) {
+                break;
+            }
+
+            var responsePosition = next.moveIn(MovePosition.UP, fieldType, xOffset);
+            if (responsePosition != null) {
+                return responsePosition;
+            }
+        }
+
+        if (getParent() instanceof TextRepresentation) {
+            var parentRepresentation = (TextRepresentation) getParent();
+            return parentRepresentation.moveUp(this, fieldType, xOffset);
+        }
+        return null;
     }
 
     @Override
     protected TextPosition moveDown(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        var next = getNextRepresentation(fromChild);
-
-        if (next == null) {
-            if (getParent() instanceof TextRepresentation) {
-                var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.moveDown(this, fieldType, xOffset);
-            }
+        if (fieldType.isLocked()) {
             return null;
         }
 
-        return next.moveIn(MovePosition.DOWN, fieldType, xOffset);
+        if (fieldType == TextFieldType.UNKNOWN) {
+            fieldType = getFieldType();
+        }
+
+        TextRepresentation next = fromChild;
+        while (next != null) {
+            next = getNextRepresentation(next);
+            if (next == null) {
+                break;
+            }
+
+            var responsePosition = next.moveIn(MovePosition.DOWN, fieldType, xOffset);
+            if (responsePosition != null) {
+                return responsePosition;
+            }
+        }
+
+        if (getParent() instanceof TextRepresentation) {
+            var parentRepresentation = (TextRepresentation) getParent();
+            return parentRepresentation.moveDown(this, fieldType, xOffset);
+        }
+        return null;
     }
 
     @Override
     protected TextPosition moveNext(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        var next = getNextRepresentation(fromChild);
-
-        if (next == null) {
-            if (getParent() instanceof TextRepresentation) {
-                var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.moveNext(this, fieldType, xOffset);
-            }
+        if (fieldType.isLocked()) {
             return null;
         }
 
-        var pos = next.getFirstChild();
-        if (pos != null) {
-            return pos.getTextElement().getTextPosition();
+        if (fieldType == TextFieldType.UNKNOWN) {
+            fieldType = getFieldType();
+        }
+
+        TextRepresentation next = fromChild;
+        while (next != null) {
+            next = getNextRepresentation(next);
+            if (next == null) {
+                break;
+            }
+
+            var responsePosition = next.moveIn(MovePosition.NEXT, fieldType, xOffset);
+            if (responsePosition != null) {
+                return responsePosition;
+            }
+        }
+
+        if (getParent() instanceof TextRepresentation) {
+            var parentRepresentation = (TextRepresentation) getParent();
+            return parentRepresentation.moveNext(this, fieldType, xOffset);
         }
         return null;
     }
 
     @Override
     protected TextPosition movePrevious(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        var next = getPreviousRepresentation(fromChild);
-
-        if (next == null) {
-            if (getParent() instanceof TextRepresentation) {
-                var parentRepresentation = (TextRepresentation) getParent();
-                return parentRepresentation.movePrevious(this, fieldType, xOffset);
-            }
+        if (fieldType.isLocked()) {
             return null;
         }
 
-        var pos = next.getLastChild();
-        if (pos != null) {
-            return pos.getTextElement().getTextPosition();
+        if (fieldType == TextFieldType.UNKNOWN) {
+            fieldType = getFieldType();
+        }
+
+        TextRepresentation next = fromChild;
+        while (next != null) {
+            next = getPreviousRepresentation(next);
+            if (next == null) {
+                break;
+            }
+
+            var responsePosition = next.moveIn(MovePosition.PREVIOUS, fieldType, xOffset);
+            if (responsePosition != null) {
+                return responsePosition;
+            }
+        }
+
+        if (getParent() instanceof TextRepresentation) {
+            var parentRepresentation = (TextRepresentation) getParent();
+            return parentRepresentation.movePrevious(this, fieldType, xOffset);
         }
         return null;
     }

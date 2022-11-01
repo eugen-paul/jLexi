@@ -1,4 +1,55 @@
 {
+    "header": {
+        "onFirstPage": false,
+        "paragraphs": [
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true
+                        },
+                        "text": "Header"
+                    },
+                    {
+                        "text": " can be loaded from the file!"
+                    }
+                ]
+            },
+            {
+                "elements": [
+                    {
+                        "text": "The header can be hidden on the first page."
+                    }
+                ]
+            }
+        ]
+    },
+    "footer": {
+        "onFirstPage": false,
+        "paragraphs": [
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true
+                        },
+                        "text": "Footer from file!"
+                    }
+                ]
+            },
+            {
+                "elements": [
+                    {
+                        "format": {
+                            "bold": true,
+                            "italic": true
+                        },
+                        "text": "Last footer line."
+                    }
+                ]
+            }
+        ]
+    },
     "sections": [
         {
             "paragraphs": [
@@ -151,7 +202,7 @@
                 {
                     "elements": [
                         {
-                            "text": "   - new site layout."
+                            "text": "   - new page layout."
                         }
                     ]
                 },
@@ -212,6 +263,22 @@
                 {
                     "elements": [
                         {
+                            "text": "   - "
+                        },
+                        {
+                            "format": {
+                                "bold": true
+                            },
+                            "text": "Header and footer"
+                        },
+                        {
+                            "text": " can be loaded and displayed."
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
                             "format": {
                                 "bold": true,
                                 "italic": true,
@@ -262,7 +329,7 @@
         },
         {
             "numberOfColumns": 2,
-            "siteHeightPx": 400,
+            "pageHeightPx": 400,
             "paragraphs": [
                 {
                     "elements": [

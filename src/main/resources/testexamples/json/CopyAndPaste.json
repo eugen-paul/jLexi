@@ -55,7 +55,7 @@
         },
         {
             "numberOfColumns": 2,
-            "siteHeightPx": 400,
+            "pageHeightPx": 400,
             "paragraphs": [
                 {
                     "elements": [

@@ -9,7 +9,7 @@ import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.component.iterator.ListOfListIterator;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToSiteCompositor;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToPageCompositor;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.utils.Color;
@@ -21,62 +21,110 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
 
     private final TextSectionConfiguration configuration;
 
-    private int sitePaddingLeft = 20;
-    private int sitePaddingRight = 20;
-    private int sitePaddingTop = 40;
-    private int sitePaddingBottom = 40;
+    private int pagePaddingLeft = 20;
+    private int pagePaddingRight = 20;
+    private int pagePaddingTop = 40;
+    private int pagePaddingBottom = 40;
     private int columnSpacing = 10;
 
-    private final Size siteDrawSize;
+    private TextHeaderCreater headerCreater;
+    private TextFooterCreater footerCreater;
 
     public TextSection(TextStructure parentStructure, TextSectionConfiguration configuration) {
         super(parentStructure);
 
         this.configuration = configuration;
 
-        siteDrawSize = new Size(//
-                (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight)
-                        / configuration.getNumberOfColumns(), //
-                configuration.getSiteHeightPx() - sitePaddingTop - sitePaddingBottom //
-        );
+        if (!this.configuration.isBlock()) {
+            this.compositor = new TextRepresentationToPageCompositor(//
+                    new Size(configuration.getPageWidthPx(), configuration.getPageHeightPx()), //
+                    configuration.getNumberOfColumns(), //
+                    computeColumnWidth(), //
+                    columnSpacing, //
+                    pagePaddingLeft, //
+                    pagePaddingTop, //
+                    pagePaddingBottom, //
+                    Color.INVISIBLE, //
+                    headerCreater, //
+                    footerCreater //
+            );
+        } else {
+            this.compositor = new TextRepresentationToColumnCompositor(//
+                    Color.INVISIBLE, //
+                    0, //
+                    0 //
+            );
+        }
 
-        int columnWidth = (configuration.getSiteWidthPx() - sitePaddingLeft - sitePaddingRight
-                - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
+        this.headerCreater = null;
+    }
 
-        this.compositor = new TextRepresentationToSiteCompositor(//
-                new Size(configuration.getSiteWidthPx(), configuration.getSiteHeightPx()), //
+    public void setHeaderCreater(TextHeaderCreater headerCreater) {
+        setHeaderFooterCreater(headerCreater, this.footerCreater);
+    }
+
+    public void setFooterCreater(TextFooterCreater footerCreater) {
+        setHeaderFooterCreater(this.headerCreater, footerCreater);
+    }
+
+    private void setHeaderFooterCreater(TextHeaderCreater headerCreater, TextFooterCreater footerCreater) {
+        if (this.configuration.isBlock()) {
+            return;
+        }
+
+        this.headerCreater = headerCreater;
+        this.footerCreater = footerCreater;
+
+        this.compositor = new TextRepresentationToPageCompositor(//
+                new Size(configuration.getPageWidthPx(), configuration.getPageHeightPx()), //
                 configuration.getNumberOfColumns(), //
-                columnWidth, //
+                computeColumnWidth(), //
                 columnSpacing, //
-                sitePaddingLeft, //
-                sitePaddingTop, //
-                Color.GREEN //
+                pagePaddingLeft, //
+                pagePaddingTop, //
+                pagePaddingBottom, //
+                Color.INVISIBLE, //
+                this.headerCreater, //
+                this.footerCreater //
         );
+    }
+
+    private int computeColumnWidth() {
+        return (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight
+                - (configuration.getNumberOfColumns() - 1) * columnSpacing) / configuration.getNumberOfColumns();
     }
 
     @Override
     public Iterator<TextRepresentation> drawableChildIterator() {
-        if (null == representation) {
+        if (null == getRepresentation()) {
             return Collections.emptyIterator();
         }
-        return new ListOfListIterator<>(representation);
+        return new ListOfListIterator<>(getRepresentation());
     }
 
     @Override
     public List<TextRepresentation> getRepresentation(Size size) {
-        if (null == representation) {
-            var columnCompositor = new TextRepresentationToColumnCompositor(Color.WHITE, 0, 0);
+        setRepresentation(null);
 
-            var allRows = new LinkedList<TextRepresentation>();
-            for (var paragraph : children) {
-                allRows.addAll(paragraph.getRepresentation(siteDrawSize));
-            }
+        var allRows = new LinkedList<TextRepresentation>();
+        var pageSize = new Size(//
+                this.configuration.getPageWidthPx(), //
+                this.configuration.getPageHeightPx() //
+        );
 
-            var columns = columnCompositor.compose(allRows.iterator(), siteDrawSize);
+        var rowSize = new Size(//
+                (configuration.getPageWidthPx() - pagePaddingLeft - pagePaddingRight)
+                        / configuration.getNumberOfColumns(), //
+                this.configuration.getPageHeightPx() //
+        );
 
-            representation = compositor.compose(columns.iterator(), size);
+        for (var paragraph : this.children) {
+            allRows.addAll(paragraph.getRepresentation(rowSize));
         }
-        return representation;
+
+        setRepresentation(this.compositor.compose(allRows.listIterator(), pageSize));
+
+        return getRepresentation();
     }
 
     @Override
@@ -103,7 +151,9 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
             return TextRemoveResponse.EMPTY;
         }
 
-        var responseSection = new TextSection(parentStructure, configuration);
+        var responseSection = new TextSection(getParentStructure(), configuration);
+        responseSection.setHeaderCreater(headerCreater);
+        responseSection.setFooterCreater(footerCreater);
 
         // take over own child elements except the last
         var iteratorFirst = childListIterator();
@@ -169,19 +219,19 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
                     removedData.getRemovedStructures(), //
                     removedData.getNewStructures() //
             );
-        } else if (this.parentStructure != null) {
-            return this.parentStructure.mergeChildsWithNext(this);
+        } else if (getParentStructure() != null) {
+            return getParentStructure().mergeChildsWithNext(this);
         }
         return TextRemoveResponse.EMPTY;
     }
 
     @Override
-    //TODO replace this Function with replaceAndSplit
+    // TODO replace this Function with replaceAndSplit
     public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
 
-        if (to.get(0).getLastElement().isEndOfSection() && this.parentStructure != null) {
+        if (to.get(0).getLastElement().isEndOfSection() && getParentStructure() != null) {
             var splitResult = replaceAndSplit(child, to);
-            return this.parentStructure.splitChild(this, splitResult);
+            return getParentStructure().splitChild(this, splitResult);
         }
 
         var chiltIterator = this.children.listIterator();
@@ -206,8 +256,14 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     }
 
     private List<TextStructure> replaceAndSplit(TextStructure position, List<TextStructure> to) {
-        var first = new TextSection(this.parentStructure, this.configuration);
-        var second = new TextSection(this.parentStructure, this.configuration);
+        var first = new TextSection(getParentStructure(), this.configuration);
+        first.setHeaderCreater(headerCreater);
+        first.setFooterCreater(footerCreater);
+
+        var second = new TextSection(getParentStructure(), this.configuration);
+        second.setHeaderCreater(headerCreater);
+        second.setFooterCreater(footerCreater);
+
         var current = first;
 
         var chiltIterator = this.children.listIterator();
@@ -236,7 +292,7 @@ public class TextSection extends TextStructureOfStructure implements GlyphIterab
     @Override
     public void clear() {
         this.children.clear();
-        this.representation = null;
+        setRepresentation(null);
     }
 
     @Override

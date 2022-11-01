@@ -82,7 +82,8 @@ public class FontStorageImpl extends FontStorage {
     }
 
     @Override
-    public int getDescent(String fontName, int fontSize) {
+    //TODO remove synchronized and find java.util.ConcurrentModificationException
+    public synchronized int getDescent(String fontName, int fontSize) {
         return descentStorage//
                 .computeIfAbsent(fontName, key -> new HashMap<>())//
                 .computeIfAbsent(fontSize, key -> fontGenerator.getDescent(fontName, fontSize));

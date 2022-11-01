@@ -82,6 +82,7 @@ public class TextPaneElementRow extends TextRepresentation implements CursorMovi
     @Override
     public TextPosition move(TextPosition position, MovePosition moving) {
         // TODO Add support for composite elements.
+        // TODO Check fieldType of current and response element
         TextPosition responsePosition;
         switch (moving) {
         case NEXT:
@@ -97,6 +98,7 @@ public class TextPaneElementRow extends TextRepresentation implements CursorMovi
             responsePosition = getLastChild();
             break;
         default:
+            // Set responsePosition to null by other movings (UP, DOWN, ...) to move curser outside.
             responsePosition = null;
             break;
         }
@@ -115,6 +117,10 @@ public class TextPaneElementRow extends TextRepresentation implements CursorMovi
 
     @Override
     protected TextPosition moveIn(MovePosition moving, TextFieldType fieldType, int xOffset) {
+        if (!checkMove(fieldType, getFieldType())) {
+            return null;
+        }
+
         switch (moving) {
         case UP, DOWN:
             return getCursorElementAt(new Vector2d(xOffset, 0));
@@ -131,22 +137,22 @@ public class TextPaneElementRow extends TextRepresentation implements CursorMovi
 
     @Override
     protected TextPosition moveUp(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        return getCursorElementAt(new Vector2d(xOffset, 0));
+        return moveIn(MovePosition.UP, fieldType, xOffset);
     }
 
     @Override
     protected TextPosition moveDown(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        return getCursorElementAt(new Vector2d(xOffset, 0));
+        return moveIn(MovePosition.DOWN, fieldType, xOffset);
     }
 
     @Override
     protected TextPosition moveNext(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        return getFirstChild();
+        return moveIn(MovePosition.NEXT, fieldType, xOffset);
     }
 
     @Override
     protected TextPosition movePrevious(TextRepresentation fromChild, TextFieldType fieldType, int xOffset) {
-        return getLastChild();
+        return moveIn(MovePosition.PREVIOUS, fieldType, xOffset);
     }
 
     @Override

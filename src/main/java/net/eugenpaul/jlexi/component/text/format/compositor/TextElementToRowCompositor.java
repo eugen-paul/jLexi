@@ -1,8 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.compositor;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import lombok.Builder;
 import net.eugenpaul.jlexi.component.text.format.element.TextChar;
@@ -16,7 +16,7 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 public class TextElementToRowCompositor<T extends TextElement> implements TextCompositor<T> {
 
     @Override
-    public List<TextRepresentation> compose(Iterator<T> iterator, Size maxSize) {
+    public List<TextRepresentation> compose(ListIterator<T> iterator, Size maxSize) {
         List<TextRepresentation> responseRows = new LinkedList<>();
         List<TextElement> elementsToRow = new LinkedList<>();
 

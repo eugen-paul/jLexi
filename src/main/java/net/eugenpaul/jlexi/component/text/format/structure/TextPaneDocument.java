@@ -2,39 +2,73 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 
 import java.util.List;
 
+import lombok.var;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
+import net.eugenpaul.jlexi.component.text.converter.TextData;
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactory;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.Size;
 
-// TODO: If the document is empty, then an empty page must be created and returned by the representation when it is
-// called. Otherwise the function returns an empty list.
 public class TextPaneDocument extends TextStructureOfStructure {
 
     private ChangeListener parent;
     private ResourceManager storage;
-
-    public TextPaneDocument(List<TextSection> data, ChangeListener parent, ResourceManager storage) {
-        super(null);
-        this.parent = parent;
-        this.children.addAll(data);
-        this.children.forEach(v -> v.setParentStructure(this));
-        this.storage = storage;
-    }
+    private TextHeaderCreater headerCreater;
+    private TextFooterCreater footerCreater;
 
     public TextPaneDocument(ResourceManager storage, ChangeListener parent) {
         super(null);
         this.parent = parent;
         this.storage = storage;
+        this.headerCreater = null;
         initEmptyDocument();
     }
 
-    public void setText(List<TextSection> data) {
+    public void setText(TextData data) {
         this.children.clear();
-        this.children.addAll(data);
-        this.children.forEach(v -> v.setParentStructure(this));
-        this.representation = null;
+
+        if (data.getHeader() != null) {
+            this.headerCreater = new TextHeaderCreater(//
+                    data.getHeader().getHeaderText(), //
+                    data.getHeader().getConfiguration() //
+            );
+        } else {
+            this.headerCreater = null;
+        }
+
+        if (data.getFooter() != null) {
+            this.footerCreater = new TextFooterCreater( //
+                    data.getFooter().getFooterText(), //
+                    data.getFooter().getConfiguration() //
+            );
+        } else {
+            this.footerCreater = null;
+
+        }
+
+        for (var child : data.getSections()) {
+            this.children.add(child);
+            child.setParentStructure(this);
+            child.setHeaderCreater(this.headerCreater);
+            child.setFooterCreater(this.footerCreater);
+        }
+
+        setRepresentation(null);
+    }
+
+    @Override
+    public List<TextRepresentation> getRepresentation(Size size) {
+        if (this.headerCreater != null) {
+            this.headerCreater.reset();
+        }
+        if (this.footerCreater != null) {
+            this.footerCreater.reset();
+        }
+        setRepresentation(null);
+        return super.getRepresentation(size);
     }
 
     private void initEmptyDocument() {
@@ -45,12 +79,12 @@ public class TextPaneDocument extends TextStructureOfStructure {
                 TextFormat.DEFAULT, //
                 TextFormatEffect.DEFAULT_FORMAT_EFFECT//
         ));
-        children.add(section);
+        this.children.add(section);
     }
 
     @Override
     public void notifyChangeUp() {
-        this.representation = null;
+        setRepresentation(null);
         if (this.parent != null) {
             this.parent.notifyChange();
         }

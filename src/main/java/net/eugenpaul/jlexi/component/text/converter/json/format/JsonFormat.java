@@ -12,5 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JsonFormat {
+    private JsonHeader header;
     private List<JsonSection> sections;
+    private JsonFooter footer;
 }
