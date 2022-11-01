@@ -314,6 +314,20 @@
                 {
                     "elements": [
                         {
+                            "text": "   - text alignment"
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - new text elements: tables, images, lists, ..."
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
                             "text": "   - GUI (menu, buttons, ...)"
                         }
                     ]
