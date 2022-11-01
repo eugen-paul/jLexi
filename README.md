@@ -8,6 +8,11 @@ In the implementation I only use two Java Swing classes: JFrame and JPanel to cr
 
 ## Progress
 
+### Step 11
+Header and footer can be added to the document. Both can be hidden on the first page.
+
+![Progress_11](doc/img/Progress_11.png).
+
 ### Step 10
 New keysboard shortcuts.
 

@@ -6,76 +6,19 @@
                 "elements": [
                     {
                         "format": {
-                            "bold": true,
-                            "italic": true
+                            "bold": true
                         },
-                        "text": "First line of header from file!"
+                        "text": "Header"
+                    },
+                    {
+                        "text": " can be loaded from the file!"
                     }
                 ]
             },
             {
                 "elements": [
                     {
-                        "format": {
-                            "bold": true,
-                            "italic": true
-                        },
-                        "text": "Second line of header from file!"
-                    }
-                ]
-            },
-            {
-                "elements": [
-                    {
-                        "format": {
-                            "bold": true,
-                            "italic": true
-                        },
-                        "text": "Next line of header."
-                    }
-                ]
-            },
-            {
-                "elements": [
-                    {
-                        "format": {
-                            "bold": true,
-                            "italic": true
-                        },
-                        "text": "Line 4."
-                    }
-                ]
-            },
-            {
-                "elements": [
-                    {
-                        "format": {
-                            "bold": true,
-                            "italic": true
-                        },
-                        "text": "A long, long, long, very very long line. We want to make sure that even very long lines in the header are displayed correctly."
-                    }
-                ]
-            },
-            {
-                "elements": [
-                    {
-                        "format": {
-                            "bold": true,
-                            "italic": true
-                        },
-                        "text": "5++"
-                    }
-                ]
-            },
-            {
-                "elements": [
-                    {
-                        "format": {
-                            "bold": true,
-                            "italic": true
-                        },
-                        "text": "Last header line."
+                        "text": "The header can be hidden on the first page."
                     }
                 ]
             }
@@ -314,6 +257,22 @@
                                 "underline": "SINGLE"
                             },
                             "text": "jLexi."
+                        }
+                    ]
+                },
+                {
+                    "elements": [
+                        {
+                            "text": "   - "
+                        },
+                        {
+                            "format": {
+                                "bold": true
+                            },
+                            "text": "Header and footer"
+                        },
+                        {
+                            "text": " can be loaded and displayed."
                         }
                     ]
                 },
