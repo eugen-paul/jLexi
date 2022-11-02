@@ -58,6 +58,14 @@ public abstract class TextStructure implements TextDocumentElement, Empty {
 
     public abstract List<TextElement> getAllTextElementsTo(TextElement to);
 
+    public boolean isEndOfLine() {
+        return false;
+    }
+
+    public boolean isEndOfSection() {
+        return false;
+    }
+
     protected List<TextStructure> getElementPath(TextElement element) {
         List<TextStructure> path = new LinkedList<>();
         TextStructure currentStructure = element.getStructureParent();

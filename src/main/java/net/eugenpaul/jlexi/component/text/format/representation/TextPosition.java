@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.CursorMoving;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponse;
+import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 
@@ -14,8 +15,15 @@ public class TextPosition {
     @Getter
     private TextElement textElement;
 
+    @Getter
+    private TextElementV2 textElementV2;
+
     public TextPosition(TextElement element) {
         this.textElement = element;
+    }
+
+    public TextPosition(TextElementV2 element) {
+        this.textElementV2 = element;
     }
 
     public TextPosition getPreviousPosition() {
