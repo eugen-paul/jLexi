@@ -1,0 +1,59 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>280</x><y>20</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>280</x><y>140</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>50</y><w>100</w><h>110</h></coordinates><panel_attributes>lt=-
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>140</x><y>160</y><w>160</w><h>380</h></coordinates><panel_attributes>lt=-
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>140;10;10;10;10;350;130;350</additional_attributes></element><element><id>UMLClass</id><coordinates><x>260</x><y>250</y><w>190</w><h>40</h></coordinates><panel_attributes>TextList
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>170</y><w>100</w><h>100</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>UMLClass</id><coordinates><x>490</x><y>250</y><w>190</w><h>40</h></coordinates><panel_attributes>TextTable
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>150</y><w>200</w><h>120</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;20;160;20;160;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>260</x><y>370</y><w>190</w><h>40</h></coordinates><panel_attributes>TextListElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>280</y><w>100</w><h>110</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>490</y><w>190</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>130</x><y>630</y><w>140</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>520</y><w>120</w><h>130</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>60;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>280</x><y>630</y><w>140</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>520</y><w>100</w><h>130</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>400</y><w>100</w><h>110</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>490</x><y>370</y><w>190</w><h>40</h></coordinates><panel_attributes>TextTableRow
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>280</y><w>100</w><h>110</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>490</x><y>490</y><w>190</w><h>40</h></coordinates><panel_attributes>TextTableRowElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>400</y><w>100</w><h>110</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>140</y><w>410</w><h>400</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>260;370;320;370;320;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>630</y><w>140</w><h>40</h></coordinates><panel_attributes>TextDynamicElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>520</y><w>110</w><h>130</h></coordinates><panel_attributes>lt=-&gt;
+m1=0..1
+m2=0..n
+parent of &gt;</panel_attributes><additional_attributes>10;10;30;110</additional_attributes></element></diagram>

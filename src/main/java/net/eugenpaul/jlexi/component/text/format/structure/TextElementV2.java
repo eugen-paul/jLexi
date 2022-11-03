@@ -8,14 +8,13 @@ import java.util.Optional;
 
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
-import net.eugenpaul.jlexi.component.iterator.TextStructureToListIterator;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.iterator.TextStructureV2ToListIterator;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
 
-public class TextElementV2 extends TextStructure implements EffectHolder {
+public class TextElementV2 extends TextStructureV2 implements EffectHolder {
 
     private List<GlyphEffect> effects;
 
@@ -28,7 +27,7 @@ public class TextElementV2 extends TextStructure implements EffectHolder {
     @Getter
     private TextPosition textPosition;
 
-    protected TextElementV2(TextStructure parentStructure, TextFormat format, TextFormatEffect formatEffect) {
+    protected TextElementV2(TextStructureV2 parentStructure, TextFormat format, TextFormatEffect formatEffect) {
         super(parentStructure);
         this.format = format;
         this.formatEffect = formatEffect;
@@ -57,51 +56,51 @@ public class TextElementV2 extends TextStructure implements EffectHolder {
     }
 
     @Override
-    protected boolean checkMergeWith(TextStructure element) {
+    protected boolean checkMergeWith(TextStructureV2 element) {
         return false;
     }
 
     @Override
-    public TextAddResponse splitChild(TextStructure child, List<TextStructure> to) {
+    public TextAddResponse splitChild(TextStructureV2 child, List<TextStructureV2> to) {
         return TextAddResponse.EMPTY;
     }
 
     @Override
-    protected TextRemoveResponse mergeWith(TextStructure element) {
+    protected TextRemoveResponse mergeWith(TextStructureV2 element) {
         return TextRemoveResponse.EMPTY;
     }
 
     @Override
-    protected TextRemoveResponse mergeChildsWithNext(TextStructure child) {
+    protected TextRemoveResponse mergeChildsWithNext(TextStructureV2 child) {
         return TextRemoveResponse.EMPTY;
     }
 
     @Override
-    public Optional<Boolean> isABeforB(TextElement elemA, TextElement elemB) {
+    public Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB) {
         // TODO Auto-generated method stub
         return Optional.empty();
     }
 
     @Override
-    public List<TextElement> getAllTextElements() {
+    public List<TextElementV2> getAllTextElements() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<TextElement> getAllTextElementsBetween(TextElement from, TextElement to) {
+    public List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<TextElement> getAllTextElementsFrom(TextElement from) {
+    public List<TextElementV2> getAllTextElementsFrom(TextElementV2 from) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<TextElement> getAllTextElementsTo(TextElement to) {
+    public List<TextElementV2> getAllTextElementsTo(TextElementV2 to) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -112,12 +111,12 @@ public class TextElementV2 extends TextStructure implements EffectHolder {
     }
 
     @Override
-    protected ListIterator<TextStructure> childListIterator() {
-        return new TextStructureToListIterator<>(List.of(this));
+    protected ListIterator<TextStructureV2> childListIterator() {
+        return new TextStructureV2ToListIterator<>(List.of(this));
     }
 
     @Override
-    protected ListIterator<TextStructure> childListIterator(int index) {
+    protected ListIterator<TextStructureV2> childListIterator(int index) {
         if (index == 0) {
             return childListIterator();
         }
@@ -125,25 +124,24 @@ public class TextElementV2 extends TextStructure implements EffectHolder {
     }
 
     @Override
-    protected TextStructure getFirstChild() {
+    protected TextStructureV2 getFirstChild() {
         return this;
     }
 
     @Override
-    protected TextStructure getLastChild() {
+    protected TextStructureV2 getLastChild() {
         return this;
     }
 
-    @Override
-    protected TextElement getFirstElement() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected TextElement getLastElement() {
-        // TODO Auto-generated method stub
-        return null;
+    public boolean isChildOf(TextStructureV2 parentToCheck) {
+        var currentParent = getParentStructure();
+        while (currentParent != null) {
+            if (currentParent == parentToCheck) {
+                return true;
+            }
+            currentParent = currentParent.getParentStructure();
+        }
+        return false;
     }
 
 }
