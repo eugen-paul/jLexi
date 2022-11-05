@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.eugenpaul.jlexi.component.interfaces.Empty;
 import net.eugenpaul.jlexi.component.text.format.TextDocumentElement;
-import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
 import net.eugenpaul.jlexi.utils.Size;
 
 /**
@@ -26,7 +26,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
 
     @Getter
     @Setter
-    private List<TextRepresentation> representation;
+    private List<TextRepresentationV2> representation;
 
     protected TextStructureV2(TextStructureV2 parentStructure) {
         this.parentStructure = parentStructure;
@@ -136,7 +136,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
      * @param size - max size of the returned object
      * @return response
      */
-    public List<TextRepresentation> getRepresentation(Size size) {
+    public List<TextRepresentationV2> getRepresentation(Size size) {
         if (this.representation != null) {
             return this.representation;
         }

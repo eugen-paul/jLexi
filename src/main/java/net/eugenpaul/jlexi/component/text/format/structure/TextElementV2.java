@@ -11,12 +11,20 @@ import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.iterator.TextStructureV2ToListIterator;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPaneElement;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
+import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawableSketch;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
+import net.eugenpaul.jlexi.utils.Size;
 
-public class TextElementV2 extends TextStructureV2 implements EffectHolder {
+public abstract class TextElementV2 extends TextStructureV2 implements EffectHolder {
 
     private List<GlyphEffect> effects;
+
+    protected ResourceManager storage;
 
     @Getter
     private TextFormat format;
@@ -25,14 +33,18 @@ public class TextElementV2 extends TextStructureV2 implements EffectHolder {
     private TextFormatEffect formatEffect;
 
     @Getter
-    private TextPosition textPosition;
+    private TextPositionV2 textPosition;
 
-    protected TextElementV2(TextStructureV2 parentStructure, TextFormat format, TextFormatEffect formatEffect) {
+    protected DrawableSketch cachedDrawable;
+
+    protected TextElementV2(ResourceManager storage, TextStructureV2 parentStructure, TextFormat format, TextFormatEffect formatEffect) {
         super(parentStructure);
+        this.storage = storage;
         this.format = format;
         this.formatEffect = formatEffect;
         this.effects = new LinkedList<>();
-        this.textPosition = new TextPosition(this);
+        this.textPosition = new TextPositionV2(this);
+        this.cachedDrawable = null;
     }
 
     @Override
@@ -48,6 +60,28 @@ public class TextElementV2 extends TextStructureV2 implements EffectHolder {
     @Override
     public void updateEffect(GlyphEffect effect) {
         notifyChangeUp();
+    }
+
+    protected void doEffects(DrawableSketch element) {
+        this.effects.stream()//
+                .forEach(v -> v.addToDrawable(element));
+    }
+
+    public abstract Drawable getDrawable();
+
+    public Size getSize(){
+        return getDrawable().getSize();
+    }
+
+    @Override
+    public List<TextRepresentationV2> getRepresentation(Size size) {
+        if(getRepresentation() != null){
+            return getRepresentation();
+        }
+
+        var response = new TextPaneElement(null, this);
+
+        return List.of(response);
     }
 
     @Override
@@ -83,26 +117,22 @@ public class TextElementV2 extends TextStructureV2 implements EffectHolder {
 
     @Override
     public List<TextElementV2> getAllTextElements() {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of(this);
     }
 
     @Override
     public List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to) {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of(this);
     }
-
+    
     @Override
     public List<TextElementV2> getAllTextElementsFrom(TextElementV2 from) {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of(this);
     }
-
+    
     @Override
     public List<TextElementV2> getAllTextElementsTo(TextElementV2 to) {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of(this);
     }
 
     @Override
@@ -143,5 +173,7 @@ public class TextElementV2 extends TextStructureV2 implements EffectHolder {
         }
         return false;
     }
+
+    public abstract int getDescent();
 
 }

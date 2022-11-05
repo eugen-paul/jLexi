@@ -8,7 +8,7 @@ import net.eugenpaul.jlexi.component.interfaces.GlyphIterable;
 import net.eugenpaul.jlexi.exception.NotYetImplementedException;
 import net.eugenpaul.jlexi.utils.Vector2d;
 
-public abstract class TextRepresentation extends Glyph implements GlyphIterable<TextRepresentation> {
+public abstract class TextRepresentationV2 extends Glyph implements GlyphIterable<TextRepresentationV2> {
 
     @Getter
     @Setter
@@ -27,7 +27,7 @@ public abstract class TextRepresentation extends Glyph implements GlyphIterable<
     @Setter(value = AccessLevel.PROTECTED)
     private TextFieldType fieldType;
 
-    protected TextRepresentation(Glyph parent) {
+    protected TextRepresentationV2(Glyph parent) {
         super(parent);
 
         this.fieldType = TextFieldType.UNKNOWN;
@@ -40,9 +40,9 @@ public abstract class TextRepresentation extends Glyph implements GlyphIterable<
 
     public abstract boolean isEmpty();
 
-    public abstract TextPosition getCursorElementAt(Vector2d pos);
+    public abstract TextPositionV2 getCursorElementAt(Vector2d pos);
 
-    public TextPosition move(TextRepresentation fromChild, MovePosition moving, TextFieldType fieldType, int xOffset) {
+    public TextPositionV2 move(TextRepresentationV2 fromChild, MovePosition moving, TextFieldType fieldType, int xOffset) {
         switch (moving) {
         case UP:
             return moveUp(fromChild, fieldType, xOffset);
@@ -69,40 +69,40 @@ public abstract class TextRepresentation extends Glyph implements GlyphIterable<
         return fromType.isSame(toType);
     }
 
-    protected abstract TextPosition moveIn(MovePosition moving, TextFieldType fieldType, int xOffset);
+    protected abstract TextPositionV2 moveIn(MovePosition moving, TextFieldType fieldType, int xOffset);
 
-    protected abstract TextPosition moveUp(TextRepresentation fromChild, TextFieldType fieldType, int xOffset);
+    protected abstract TextPositionV2 moveUp(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset);
 
-    protected abstract TextPosition moveDown(TextRepresentation fromChild, TextFieldType fieldType, int xOffset);
+    protected abstract TextPositionV2 moveDown(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset);
 
-    protected abstract TextPosition moveNext(TextRepresentation fromChild, TextFieldType fieldType, int xOffset);
+    protected abstract TextPositionV2 moveNext(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset);
 
-    protected abstract TextPosition movePrevious(TextRepresentation fromChild, TextFieldType fieldType, int xOffset);
+    protected abstract TextPositionV2 movePrevious(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset);
 
-    protected abstract TextPosition moveFirst(TextRepresentation fromChild, TextFieldType fieldType, int xOffset);
+    protected abstract TextPositionV2 moveFirst(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset);
 
-    protected abstract TextPosition moveLast(TextRepresentation fromChild, TextFieldType fieldType, int xOffset);
+    protected abstract TextPositionV2 moveLast(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset);
 
-    public abstract TextPosition getFirstChild();
+    public abstract TextPositionV2 getFirstChild();
 
-    public abstract TextPosition getLastChild();
+    public abstract TextPositionV2 getLastChild();
 
-    public abstract boolean isChild(TextRepresentation representation);
+    public abstract boolean isChild(TextRepresentationV2 representation);
 
-    public abstract TextRepresentation getNextRepresentation(TextRepresentation representation);
+    public abstract TextRepresentationV2 getNextRepresentation(TextRepresentationV2 representation);
 
-    public abstract TextRepresentation getPreviousRepresentation(TextRepresentation structure);
+    public abstract TextRepresentationV2 getPreviousRepresentation(TextRepresentationV2 structure);
 
-    protected abstract TextPosition getLastText(int x);
+    protected abstract TextPositionV2 getLastText(int x);
 
-    protected abstract TextPosition getFirstText(int x);
+    protected abstract TextPositionV2 getFirstText(int x);
 
-    // protected TextRepresentation getChildRepresentation(TextPosition position) {
+    // protected TextRepresentationV2 getChildRepresentation(TextPositionV2 position) {
     //     var childGlyph = position.getTextElement().getChild(this);
-    //     if (!(childGlyph instanceof TextRepresentation)) {
+    //     if (!(childGlyph instanceof TextRepresentationV2)) {
     //         return null;
     //     }
 
-    //     return (TextRepresentation) childGlyph;
+    //     return (TextRepresentationV2) childGlyph;
     // }
 }

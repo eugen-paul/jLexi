@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -28,7 +29,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    public List<TextRepresentation> getRepresentation(Size size) {
+    public List<TextRepresentationV2> getRepresentation(Size size) {
         //TODO
         // if (null == getRepresentation()) {
         //     var words = this.config.getTextToWordCompositor().compose(this.children.iterator(), this.storage);
@@ -176,7 +177,9 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
                 break;
             }
         }
-        return new TextAddResponse(position.getTextPosition());
+        return null;
+        //TODO
+        // return new TextAddResponse(position.getTextPosition());
     }
 
     @Override
