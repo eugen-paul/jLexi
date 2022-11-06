@@ -25,6 +25,13 @@ public class TextWordBreakV2 extends TextElementV2 {
         getDrawable();
     }
 
+    public TextWordBreakV2(ResourceManager storage, TextStructureV2 parentStructure) {
+        super(storage, parentStructure, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
+        this.c = WORD_BREAK;
+
+        getDrawable();
+    }
+
     @Override
     public Drawable getDrawable() {
         if (null != this.cachedDrawable) {

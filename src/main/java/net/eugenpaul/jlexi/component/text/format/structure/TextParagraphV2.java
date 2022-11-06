@@ -2,26 +2,25 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 
 import java.util.List;
 
-import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
 public class TextParagraphV2 extends TextStructureOfStructureV2 {
 
-    private TextParagraphConfiguration config;
+    private TextParagraphConfigurationV2 config;
 
     private ResourceManager storage;
 
     public TextParagraphV2(TextStructureV2 parentStructure, ResourceManager storage) {
         this(//
                 parentStructure, //
-                TextParagraphConfiguration.builder().build(), //
+                TextParagraphConfigurationV2.builder().build(), //
                 storage //
         );
     }
 
-    public TextParagraphV2(TextStructureV2 parentStructure, TextParagraphConfiguration config, ResourceManager storage) {
+    public TextParagraphV2(TextStructureV2 parentStructure, TextParagraphConfigurationV2 config, ResourceManager storage) {
         super(parentStructure);
 
         this.config = config;
@@ -30,11 +29,10 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
 
     @Override
     public List<TextRepresentationV2> getRepresentation(Size size) {
-        //TODO
-        // if (null == getRepresentation()) {
-        //     var words = this.config.getTextToWordCompositor().compose(this.children.iterator(), this.storage);
-        //     setRepresentation(this.config.getTextToRowsCompositor().compose(words, size));
-        // }
+        if (null == getRepresentation()) {
+            var words = this.config.getTextToWordCompositor().compose(this.children.iterator(), this.storage);
+            setRepresentation(this.config.getTextToRowsCompositor().compose(words, size));
+        }
         return getRepresentation();
     }
 

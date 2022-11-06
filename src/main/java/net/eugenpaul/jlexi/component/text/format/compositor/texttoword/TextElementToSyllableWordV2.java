@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lombok.Builder;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
-import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 import net.eugenpaul.jlexi.component.text.format.structure.textelements.TextCharV2;
 import net.eugenpaul.jlexi.component.text.format.structure.textelements.TextSyllableV2;
@@ -51,9 +49,7 @@ public class TextElementToSyllableWordV2 implements TextToWordsCompositorV2 {
                 // add word break
                 TextWordBreakV2 wb = new TextWordBreakV2(//
                         storage, //
-                        null, //
-                        TextFormat.DEFAULT, //
-                        TextFormatEffect.DEFAULT_FORMAT_EFFECT //
+                        null //
                 );
                 currentSyllable.setWordBreak(wb);
             }
