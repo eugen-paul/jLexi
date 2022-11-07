@@ -42,43 +42,14 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    protected TextRemoveResponse mergeWith(TextStructureV2 element) {
-        if (!checkMergeWith(element)) {
-            return TextRemoveResponse.EMPTY;
-        }
-
-        //TODO
-
-        // var nextParagraph = (TextParagraphV2) element;
-        // TextElementV2 removedSeparator = null;
-
-        // var responseParagraph = new TextParagraphV2(getParentStructure(), config, storage);
-
-        // responseParagraph.children.addAll(this.children);
-        // if (responseParagraph.children.getLast().isEndOfLine()) {
-        //     removedSeparator = responseParagraph.children.removeLast();
-        // }
-
-        // TextPosition newCursorPosition = nextParagraph.children.getFirst().getTextPosition();
-
-        // responseParagraph.children.addAll(nextParagraph.children);
-        // responseParagraph.children.stream().forEach(v -> v.setStructureParent(responseParagraph));
-
-        // return new TextRemoveResponse(//
-        //         removedSeparator, //
-        //         newCursorPosition, //
-        //         this, //
-        //         List.of(this, nextParagraph), //
-        //         List.of(responseParagraph) //
-        // );
-
-        return null;
+    protected TextStructureOfStructureV2 createMergedStructute() {
+        return new TextParagraphV2(getParentStructure(), this.config, this.storage);
     }
 
     @Override
-    protected TextRemoveResponse mergeChildsWithNext(TextStructureV2 child) {
+    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
         // TODO ??? It may not be necessary to overwrite this function.
-        return TextRemoveResponse.EMPTY;
+        return TextRemoveResponseV2.EMPTY;
     }
 
     public void add(TextElementV2 element) {
@@ -88,9 +59,9 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    public TextRemoveResponse removeElement(TextElementV2 elementToRemove) {
+    public TextRemoveResponseV2 removeElement(TextElementV2 elementToRemove) {
         // TODO  It may not be necessary to overwrite this function.
-        return TextRemoveResponse.EMPTY;
+        return TextRemoveResponseV2.EMPTY;
 
         // var nextElement = getNext(elementToRemove);
 
@@ -112,10 +83,10 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    public TextAddResponse splitChild(TextStructureV2 child, List<TextStructureV2> to) {
+    public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
         // Paragraph cann't be splited by this method -> no. new Paragraph can be splited by this method
         // TODO  It may not be necessary to overwrite this function.
-        return TextAddResponse.EMPTY;
+        return TextAddResponseV2.EMPTY;
     }
 
     @Override
@@ -247,10 +218,6 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         //             TextFormatEffect.DEFAULT_FORMAT_EFFECT //
         //     ));
         // }
-    }
-
-    public boolean isEndOfSection() {
-        return !this.children.isEmpty() && this.children.getLast().isEndOfSection();
     }
 
     public TextElementV2 removeEndOfSection() {

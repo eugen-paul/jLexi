@@ -41,11 +41,11 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
      */
     protected abstract boolean checkMergeWith(TextStructureV2 element);
 
-    public abstract TextAddResponse splitChild(TextStructureV2 child, List<TextStructureV2> to);
+    public abstract TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to);
 
-    protected abstract TextRemoveResponse mergeWith(TextStructureV2 element);
+    protected abstract TextRemoveResponseV2 mergeWith(TextStructureV2 element);
 
-    protected abstract TextRemoveResponse mergeChildsWithNext(TextStructureV2 child);
+    protected abstract TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child);
 
     public abstract Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB);
 
@@ -152,10 +152,10 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
 
     public abstract void clear();
 
-    public TextRemoveResponse removeElement(TextElementV2 elementToRemove) {
+    public TextRemoveResponseV2 removeElement(TextElementV2 elementToRemove) {
         TextStructureV2 child = getChildWithElement(elementToRemove);
         if (null == child) {
-            return TextRemoveResponse.EMPTY;
+            return TextRemoveResponseV2.EMPTY;
         }
         return child.removeElement(elementToRemove);
     }

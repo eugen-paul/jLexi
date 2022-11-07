@@ -95,18 +95,18 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     }
 
     @Override
-    public TextAddResponse splitChild(TextStructureV2 child, List<TextStructureV2> to) {
-        return TextAddResponse.EMPTY;
+    public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
+        return TextAddResponseV2.EMPTY;
     }
 
     @Override
-    protected TextRemoveResponse mergeWith(TextStructureV2 element) {
-        return TextRemoveResponse.EMPTY;
+    protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
+        return TextRemoveResponseV2.EMPTY;
     }
 
     @Override
-    protected TextRemoveResponse mergeChildsWithNext(TextStructureV2 child) {
-        return TextRemoveResponse.EMPTY;
+    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
+        return TextRemoveResponseV2.EMPTY;
     }
 
     @Override

@@ -14,6 +14,57 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         this.children = new LinkedList<>();
     }
 
+    protected abstract TextStructureOfStructureV2 createMergedStructute();
+
+    @Override
+    protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
+        if (!checkMergeWith(element)) {
+            return TextRemoveResponseV2.EMPTY;
+        }
+
+        var nextSection = (TextSectionV2) element;
+
+        // By merging of two Section we must remove the endOfSection-Element at the end of first section. To do this, we
+        // must merge the last child with the first child of incomming element.
+        var firstStructure = getLastChild();
+        var secondStructure = nextSection.getFirstChild();
+
+        var removedData = firstStructure.mergeWith(secondStructure);
+        if (removedData == TextRemoveResponseV2.EMPTY) {
+            // Structures cann't be merged
+            return TextRemoveResponseV2.EMPTY;
+        }
+
+        var responseSection = createMergedStructute();
+
+        // take over own child elements except the last
+        var iteratorFirst = childListIterator();
+        while (iteratorFirst.hasNext()) {
+            responseSection.children.add(iteratorFirst.next());
+        }
+
+        responseSection.children.removeLast();
+
+        // add new element created by mergeWith
+        responseSection.children.addAll(removedData.getNewStructures());
+
+        // take over child elements from following structure except the first
+        var iteratorSecond = nextSection.childListIterator(1);
+        while (iteratorSecond.hasNext()) {
+            responseSection.children.add(iteratorSecond.next());
+        }
+
+        responseSection.children.stream().forEach(v -> v.setParentStructure(responseSection));
+
+        return new TextRemoveResponseV2(//
+                removedData.getRemovedElement(), //
+                removedData.getNewCursorPosition(), //
+                this, //
+                List.of(this, nextSection), //
+                List.of(responseSection) //
+        );
+    }
+
     @Override
     public void clear() {
         this.children.clear();
@@ -22,12 +73,22 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     @Override
     public boolean isEmpty() {
-        return children.isEmpty();
+        return this.children.isEmpty();
+    }
+
+    @Override
+    public boolean isEndOfLine() {
+        return !isEmpty() && this.children.getLast().isEndOfLine();
+    }
+
+    @Override
+    public boolean isEndOfSection() {
+        return !isEmpty() && this.children.getLast().isEndOfSection();
     }
 
     @Override
     protected ListIterator<TextStructureV2> childListIterator() {
-        return children.listIterator();
+        return this.children.listIterator();
     }
 
     @Override
@@ -160,7 +221,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
                 response.addAll(child.getAllTextElements());
             }
 
-            if(childStructureTo == child){
+            if (childStructureTo == child) {
                 break;
             }
         }
