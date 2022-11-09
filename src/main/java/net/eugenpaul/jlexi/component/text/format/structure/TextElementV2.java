@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.iterator.TextStructureV2ToListIterator;
@@ -22,6 +23,7 @@ import net.eugenpaul.jlexi.utils.Size;
 
 public abstract class TextElementV2 extends TextStructureV2 implements EffectHolder {
 
+    @Getter(value = AccessLevel.PROTECTED)
     private List<GlyphEffect> effects;
 
     protected ResourceManager storage;
@@ -37,7 +39,8 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     protected DrawableSketch cachedDrawable;
 
-    protected TextElementV2(ResourceManager storage, TextStructureV2 parentStructure, TextFormat format, TextFormatEffect formatEffect) {
+    protected TextElementV2(ResourceManager storage, TextStructureV2 parentStructure, TextFormat format,
+            TextFormatEffect formatEffect) {
         super(parentStructure);
         this.storage = storage;
         this.format = format;
@@ -69,13 +72,13 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     public abstract Drawable getDrawable();
 
-    public Size getSize(){
+    public Size getSize() {
         return getDrawable().getSize();
     }
 
     @Override
     public List<TextRepresentationV2> getRepresentation(Size size) {
-        if(getRepresentation() != null){
+        if (getRepresentation() != null) {
             return getRepresentation();
         }
 
@@ -106,7 +109,15 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     @Override
     protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
-        return TextRemoveResponseV2.EMPTY;
+        var selfCopy = copy();
+
+        return new TextRemoveResponseV2(//
+                this, //
+                selfCopy.getTextPosition(), //
+                getParentStructure(), //
+                List.of(this, child), //
+                List.of(selfCopy) //
+        );
     }
 
     @Override
@@ -124,12 +135,12 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     public List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to) {
         return List.of(this);
     }
-    
+
     @Override
     public List<TextElementV2> getAllTextElementsFrom(TextElementV2 from) {
         return List.of(this);
     }
-    
+
     @Override
     public List<TextElementV2> getAllTextElementsTo(TextElementV2 to) {
         return List.of(this);
@@ -175,5 +186,7 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     }
 
     public abstract int getDescent();
+
+    public abstract TextElementV2 copy();
 
 }

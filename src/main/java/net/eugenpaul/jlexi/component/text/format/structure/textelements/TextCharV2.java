@@ -50,4 +50,11 @@ public class TextCharV2 extends TextElementV2 {
     public int getDescent() {
         return storage.getFonts().getDescent(getFormat().getFontName(), getFormat().getFontsize());
     }
+
+    @Override
+    public TextElementV2 copy() {
+        var response = new TextCharV2(storage, getParentStructure(), c, getFormat(), getFormatEffect());
+        getEffects().forEach(response::addEffect);
+        return response;
+    }
 }

@@ -66,6 +66,48 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     }
 
     @Override
+    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
+        var nextChild = getNextChild(child);
+
+        if (nextChild.isPresent()) {
+            var removedData = child.mergeWith(nextChild.get());
+            if (removedData != TextRemoveResponseV2.EMPTY) {
+                var iterator = childListIterator();
+                while (iterator.hasNext()) {
+                    // TODO do it better
+                    var currentChild = iterator.next();
+                    if (currentChild == child) {
+                        iterator.remove();
+                        iterator.next();
+                        iterator.remove();
+
+                        removedData.getNewStructures().forEach(v -> {
+                            iterator.add(v);
+                            v.setParentStructure(this);
+                        });
+
+                        break;
+                    }
+                }
+            }
+
+            notifyChangeDown();
+            notifyChangeUp();
+
+            return new TextRemoveResponseV2(//
+                    removedData.getRemovedElement(), //
+                    removedData.getNewCursorPosition(), //
+                    this, //
+                    removedData.getRemovedStructures(), //
+                    removedData.getNewStructures() //
+            );
+        } else if (getParentStructure() != null) {
+            return getParentStructure().mergeChildsWithNext(this);
+        }
+        return TextRemoveResponseV2.EMPTY;
+    }
+
+    @Override
     public void clear() {
         this.children.clear();
         setRepresentation(null);

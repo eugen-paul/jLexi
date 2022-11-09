@@ -122,49 +122,6 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
-        var nextChild = getNextChild(child);
-
-        if (nextChild.isPresent()) {
-            var removedData = child.mergeWith(nextChild.get());
-            if (removedData != TextRemoveResponseV2.EMPTY) {
-                var iterator = this.children.listIterator();
-                while (iterator.hasNext()) {
-                    // TODO do it better
-                    var currentChild = iterator.next();
-                    if (currentChild == child) {
-                        iterator.remove();
-                        iterator.next();
-                        iterator.remove();
-                        var newStructureList = removedData.getNewStructures();
-
-                        newStructureList.forEach(v -> {
-                            iterator.add(v);
-                            v.setParentStructure(this);
-                        });
-
-                        break;
-                    }
-                }
-            }
-
-            notifyChangeDown();
-            notifyChangeUp();
-
-            return new TextRemoveResponseV2(//
-                    removedData.getRemovedElement(), //
-                    removedData.getNewCursorPosition(), //
-                    this, //
-                    removedData.getRemovedStructures(), //
-                    removedData.getNewStructures() //
-            );
-        }
-        // Document ist the root class. No need to check if parentStructure is present.
-
-        return TextRemoveResponseV2.EMPTY;
-    }
-
-    @Override
     protected TextStructureOfStructureV2 createMergedStructute() {
         // TODO Auto-generated method stub
         return null;

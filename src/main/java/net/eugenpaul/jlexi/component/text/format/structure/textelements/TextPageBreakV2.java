@@ -1,33 +1,29 @@
 package net.eugenpaul.jlexi.component.text.format.structure.textelements;
 
-import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketchImpl;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
+import net.eugenpaul.jlexi.utils.Size;
 
-public class TextWordBreakV2 extends TextElementV2 {
+public class TextPageBreakV2 extends TextElementV2 {
 
-    private static final Character WORD_BREAK = '-';
+    private static final String PAGE_BREAK_SEPARATOR = "\n";
 
-    @Getter
-    private final Character c;
-
-    public TextWordBreakV2(ResourceManager storage, TextStructureV2 parentStructure, TextFormat format,
+    public TextPageBreakV2(ResourceManager storage, TextStructureV2 parentStructure, TextFormat format,
             TextFormatEffect formatEffect) {
         super(storage, parentStructure, format, formatEffect);
-        this.c = WORD_BREAK;
 
         getDrawable();
     }
 
-    public TextWordBreakV2(ResourceManager storage, TextStructureV2 parentStructure) {
+    public TextPageBreakV2(ResourceManager storage, TextStructureV2 parentStructure) {
         super(storage, parentStructure, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
-        this.c = WORD_BREAK;
 
         getDrawable();
     }
@@ -38,9 +34,19 @@ public class TextWordBreakV2 extends TextElementV2 {
             return this.cachedDrawable.draw();
         }
 
+        int[] pixels = new int[this.storage.getFonts().getMaxAscent(//
+                getFormat().getFontName(), //
+                getFormat().getFontsize() //
+        )];
+
         this.cachedDrawable = new DrawableSketchImpl(Color.WHITE);
-        Drawable charDrawable = this.storage.getFonts().ofChar2(this.c, getFormat());
-        this.cachedDrawable.addDrawable(charDrawable, 0, 0, 0);
+
+        Drawable newLineDrawable = DrawablePixelsImpl.builderArgb()//
+                .argbPixels(pixels)//
+                .size(new Size(1, pixels.length))//
+                .build();
+
+        this.cachedDrawable.addDrawable(newLineDrawable, 0, 0, 0);
 
         doEffects(this.cachedDrawable);
 
@@ -52,7 +58,7 @@ public class TextWordBreakV2 extends TextElementV2 {
 
     @Override
     public String toString() {
-        return Character.toString(this.c);
+        return PAGE_BREAK_SEPARATOR;
     }
 
     @Override
@@ -62,9 +68,19 @@ public class TextWordBreakV2 extends TextElementV2 {
 
     @Override
     public TextElementV2 copy() {
-        var response = new TextWordBreakV2(storage, getParentStructure(), getFormat(), getFormatEffect());
+        var response = new TextPageBreakV2(storage, getParentStructure(), getFormat(), getFormatEffect());
         getEffects().forEach(response::addEffect);
         return response;
+    }
+
+    @Override
+    public boolean isEndOfLine() {
+        return true;
+    }
+
+    @Override
+    public boolean isEndOfSection() {
+        return true;
     }
 
 }

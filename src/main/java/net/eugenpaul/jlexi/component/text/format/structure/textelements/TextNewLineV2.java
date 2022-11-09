@@ -65,4 +65,17 @@ public class TextNewLineV2 extends TextElementV2 {
     public int getDescent() {
         return storage.getFonts().getDescent(getFormat().getFontName(), getFormat().getFontsize());
     }
+
+    @Override
+    public TextElementV2 copy() {
+        var response = new TextNewLineV2(storage, getParentStructure(), getFormat(), getFormatEffect());
+        getEffects().forEach(response::addEffect);
+        return response;
+    }
+
+    @Override
+    public boolean isEndOfLine() {
+        return true;
+    }
+
 }

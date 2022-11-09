@@ -140,48 +140,6 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     }
 
     @Override
-    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
-        var nextChild = getNextChild(child);
-
-        if (nextChild.isPresent()) {
-            var removedData = child.mergeWith(nextChild.get());
-            if (removedData != TextRemoveResponseV2.EMPTY) {
-                var iterator = this.children.listIterator();
-                while (iterator.hasNext()) {
-                    // TODO do it better
-                    var currentChild = iterator.next();
-                    if (currentChild == child) {
-                        iterator.remove();
-                        iterator.next();
-                        iterator.remove();
-
-                        removedData.getNewStructures().forEach(v -> {
-                            iterator.add(v);
-                            v.setParentStructure(this);
-                        });
-
-                        break;
-                    }
-                }
-            }
-
-            notifyChangeDown();
-            notifyChangeUp();
-
-            return new TextRemoveResponseV2(//
-                    removedData.getRemovedElement(), //
-                    removedData.getNewCursorPosition(), //
-                    this, //
-                    removedData.getRemovedStructures(), //
-                    removedData.getNewStructures() //
-            );
-        } else if (getParentStructure() != null) {
-            return getParentStructure().mergeChildsWithNext(this);
-        }
-        return TextRemoveResponseV2.EMPTY;
-    }
-
-    @Override
     // TODO replace this Function with replaceAndSplit
     public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
 
