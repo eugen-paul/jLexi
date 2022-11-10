@@ -57,7 +57,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         responseSection.children.stream().forEach(v -> v.setParentStructure(responseSection));
 
         return new TextRemoveResponseV2(//
-                removedData.getRemovedElement(), //
+                // removedData.getRemovedElement(), //
                 removedData.getNewCursorPosition(), //
                 this, //
                 List.of(this, nextSection), //
@@ -95,7 +95,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             notifyChangeUp();
 
             return new TextRemoveResponseV2(//
-                    removedData.getRemovedElement(), //
+                    // removedData.getRemovedElement(), //
                     removedData.getNewCursorPosition(), //
                     this, //
                     removedData.getRemovedStructures(), //

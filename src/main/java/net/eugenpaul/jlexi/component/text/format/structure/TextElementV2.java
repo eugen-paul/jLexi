@@ -109,10 +109,13 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     @Override
     protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
+        if (getParentStructure() == null) {
+            return TextRemoveResponseV2.EMPTY;
+        }
+
         var selfCopy = copy();
 
         return new TextRemoveResponseV2(//
-                this, //
                 selfCopy.getTextPosition(), //
                 getParentStructure(), //
                 List.of(this, child), //

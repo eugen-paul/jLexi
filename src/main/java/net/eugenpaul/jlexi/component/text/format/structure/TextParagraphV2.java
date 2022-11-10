@@ -46,12 +46,6 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         return new TextParagraphV2(getParentStructure(), this.config, this.storage);
     }
 
-    @Override
-    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
-        // TODO ??? It may not be necessary to overwrite this function.
-        return TextRemoveResponseV2.EMPTY;
-    }
-
     public void add(TextElementV2 element) {
         //TODO Is it better to work with the abstract class here?
         this.children.add(element);
