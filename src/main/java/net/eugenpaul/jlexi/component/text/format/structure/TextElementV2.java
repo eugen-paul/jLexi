@@ -103,12 +103,7 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     }
 
     @Override
-    protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
-        return TextRemoveResponseV2.EMPTY;
-    }
-
-    @Override
-    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
+    protected TextRemoveResponseV2 mergeWith(TextStructureV2 nextElement) {
         if (getParentStructure() == null) {
             return TextRemoveResponseV2.EMPTY;
         }
@@ -118,9 +113,14 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
         return new TextRemoveResponseV2(//
                 selfCopy.getTextPosition(), //
                 getParentStructure(), //
-                List.of(this, child), //
+                List.of(this, nextElement), //
                 List.of(selfCopy) //
         );
+    }
+
+    @Override
+    protected TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child) {
+        return TextRemoveResponseV2.EMPTY;
     }
 
     @Override
@@ -175,17 +175,6 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     @Override
     protected TextStructureV2 getLastChild() {
         return this;
-    }
-
-    public boolean isChildOf(TextStructureV2 parentToCheck) {
-        var currentParent = getParentStructure();
-        while (currentParent != null) {
-            if (currentParent == parentToCheck) {
-                return true;
-            }
-            currentParent = currentParent.getParentStructure();
-        }
-        return false;
     }
 
     public abstract int getDescent();

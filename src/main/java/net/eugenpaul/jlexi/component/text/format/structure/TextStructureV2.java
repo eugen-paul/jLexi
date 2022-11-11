@@ -43,7 +43,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
 
     public abstract TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to);
 
-    protected abstract TextRemoveResponseV2 mergeWith(TextStructureV2 element);
+    protected abstract TextRemoveResponseV2 mergeWith(TextStructureV2 nextElement);
 
     protected abstract TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child);
 
@@ -152,7 +152,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
 
     public abstract void clear();
 
-    public TextRemoveResponseV2 removeElement(TextElementV2 elementToRemove) {
+    public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
         TextStructureV2 child = getChildWithElement(elementToRemove);
         if (null == child) {
             return TextRemoveResponseV2.EMPTY;
@@ -202,7 +202,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
         throw new IllegalArgumentException("Cann't restore child structure. Owner or child not found.");
     }
 
-    protected TextStructureV2 getChildWithElement(TextElementV2 element) {
+    protected TextStructureV2 getChildWithElement(TextStructureV2 element) {
         var childIterator = childListIterator();
         while (childIterator.hasNext()) {
             var child = childIterator.next();
@@ -211,6 +211,17 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
             }
         }
         return null;
+    }
+
+    public boolean isChildOf(TextStructureV2 parentToCheck) {
+        var currentParent = getParentStructure();
+        while (currentParent != null) {
+            if (currentParent == parentToCheck) {
+                return true;
+            }
+            currentParent = currentParent.getParentStructure();
+        }
+        return false;
     }
 
     protected abstract ListIterator<TextStructureV2> childListIterator();

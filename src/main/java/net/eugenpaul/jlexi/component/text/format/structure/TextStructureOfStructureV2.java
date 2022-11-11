@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -105,6 +106,40 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             return getParentStructure().mergeChildsWithNext(this);
         }
         return TextRemoveResponseV2.EMPTY;
+    }
+
+    @Override
+    public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
+        var childToRemove = getChildWithElement(elementToRemove);
+        if (childToRemove == null) {
+            return TextRemoveResponseV2.EMPTY;
+        }
+
+        if (childToRemove == elementToRemove) {
+            // delete own child node
+            var nextElement = getNextChild(elementToRemove);
+
+            if (nextElement.isEmpty()) {
+                // There is no following element. Try to merge the paragraph with the following paragraph.
+                if (getParentStructure() != null) {
+                    return getParentStructure().mergeChildsWithNext(this);
+                }
+                return TextRemoveResponseV2.EMPTY;
+            }
+
+            removeChild(elementToRemove);
+
+            notifyChangeUp();
+
+            return new TextRemoveResponseV2(//
+                    null, // TODO each TextStructureV2 should have a position
+                    this, //
+                    List.of(elementToRemove), //
+                    Collections.emptyList() //
+            );
+        }
+
+        return childToRemove.removeElement(elementToRemove);
     }
 
     @Override
@@ -269,6 +304,16 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         }
 
         return response;
+    }
+
+    protected void removeChild(TextStructureV2 elementToRemove) {
+        var iterator = this.children.listIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next() == elementToRemove) {
+                iterator.remove();
+                break;
+            }
+        }
     }
 
 }

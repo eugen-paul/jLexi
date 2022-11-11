@@ -53,7 +53,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    public TextRemoveResponseV2 removeElement(TextElementV2 elementToRemove) {
+    public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
         // TODO  It may not be necessary to overwrite this function.
         return TextRemoveResponseV2.EMPTY;
 
