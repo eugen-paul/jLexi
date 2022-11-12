@@ -142,6 +142,67 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         return childToRemove.removeElement(elementToRemove);
     }
 
+    protected abstract boolean isNeedToSplit(TextStructureV2 newChild);
+
+    @Override
+    public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
+
+        boolean splitNeed = to.stream().anyMatch(this::isNeedToSplit);
+
+        if (splitNeed && getParentStructure() != null) {
+            var splitResult = replaceAndSplit(child, to);
+            return getParentStructure().splitChild(this, splitResult);
+        }
+
+        var chiltIterator = this.children.listIterator();
+        while (chiltIterator.hasNext()) {
+            var elem = chiltIterator.next();
+            if (elem == child) {
+                chiltIterator.remove();
+                to.forEach(chiltIterator::add);
+                to.forEach(v -> v.setParentStructure(this));
+
+                notifyChangeUp();
+
+                return new TextAddResponseV2(//
+                        this, //
+                        child, //
+                        to //
+                );
+            }
+        }
+
+        throw new IllegalArgumentException("Cann't split section. Child to replace not found.");
+    }
+
+    private List<TextStructureV2> replaceAndSplit(TextStructureV2 position, List<TextStructureV2> to) {
+        var first = createMergedStructute();
+        var second = createMergedStructute();
+
+        var current = first;
+
+        var chiltIterator = this.children.listIterator();
+        while (chiltIterator.hasNext()) {
+            var currentChild = chiltIterator.next();
+            if (currentChild == position) {
+                var toIterator = to.listIterator();
+                while (toIterator.hasNext()) {
+                    var toElement = toIterator.next();
+                    current.children.add(toElement);
+                    toElement.setParentStructure(current);
+                    if (isNeedToSplit(toElement)) {
+                        current = second;
+                    }
+                }
+            } else {
+                current.children.add(currentChild);
+                currentChild.setParentStructure(current);
+            }
+        }
+
+        return List.of(first, second);
+    }
+
     @Override
     public void clear() {
         this.children.clear();

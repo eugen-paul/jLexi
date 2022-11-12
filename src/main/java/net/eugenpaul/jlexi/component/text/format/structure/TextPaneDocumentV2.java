@@ -127,4 +127,9 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
         return null;
     }
 
+    @Override
+    protected boolean isNeedToSplit(TextStructureV2 newChild) {
+        return false;
+    }
+
 }

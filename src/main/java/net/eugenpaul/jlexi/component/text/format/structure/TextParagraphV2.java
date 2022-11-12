@@ -46,41 +46,14 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         return new TextParagraphV2(getParentStructure(), this.config, this.storage);
     }
 
-    public void add(TextElementV2 element) {
-        //TODO Is it better to work with the abstract class here?
+    public void add(TextStructureV2 element) {
         this.children.add(element);
         element.setParentStructure(this);
     }
 
     @Override
-    public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
-        // TODO  It may not be necessary to overwrite this function.
-        return TextRemoveResponseV2.EMPTY;
-
-        // var nextElement = getNext(elementToRemove);
-
-        // if (nextElement.isEmpty()) {
-        //     // There is no following element. Try to merge the paragraph with the following paragraph.
-        //     if (getParentStructure() != null) {
-        //         return getParentStructure().mergeChildsWithNext(this);
-        //     }
-        //     return TextRemoveResponse.EMPTY;
-        // }
-
-        // removeChild(elementToRemove);
-
-        // notifyChangeUp();
-        // return new TextRemoveResponse(//
-        //         elementToRemove, //
-        //         nextElement.get().getTextPosition() //
-        // );
-    }
-
-    @Override
-    public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
-        // Paragraph cann't be splited by this method -> no. new Paragraph can be splited by this method
-        // TODO  It may not be necessary to overwrite this function.
-        return TextAddResponseV2.EMPTY;
+    protected boolean isNeedToSplit(TextStructureV2 newChild) {
+        return newChild.isEndOfLine();
     }
 
     @Override
