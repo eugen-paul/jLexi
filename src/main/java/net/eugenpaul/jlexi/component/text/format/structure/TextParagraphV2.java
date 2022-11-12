@@ -52,79 +52,13 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    protected boolean isNeedToSplit(TextStructureV2 newChild) {
+    protected boolean hasToBeSplited(TextStructureV2 newChild) {
         return newChild.isEndOfLine();
-    }
-
-    @Override
-    public TextAddResponse addBefore(TextElementV2 position, TextElementV2 element) {
-
-        if (position.getParentStructure() != this) {
-            return TextAddResponse.EMPTY;
-        }
-
-        TextAddResponse response = TextAddResponse.EMPTY;
-        //TODO
-        // if (isSplitNeeded(element)) {
-        //     var newParagraphs = split(position, element);
-        //     if (getParentStructure() != null) {
-        //         return getParentStructure().splitChild(this, newParagraphs);
-        //     }
-        // } else {
-        //     response = addElementBefore(position, element);
-        // }
-
-        // notifyChangeUp();
-
-        return response;
-    }
-
-    private List<TextStructureV2> split(TextElementV2 position, TextElementV2 separator) {
-        //TODO Here you need a generic function.
-        TextParagraphV2 first = new TextParagraphV2(getParentStructure(), config, storage);
-        TextParagraphV2 second = new TextParagraphV2(getParentStructure(), config, storage);
-        TextParagraphV2 current = first;
-
-        var chiltIterator = this.children.listIterator();
-        while (chiltIterator.hasNext()) {
-            var currentElement = chiltIterator.next();
-            if (currentElement == position) {
-                if (separator != null) {
-                    current.children.add(separator);
-                    separator.setParentStructure(current);
-                }
-                current = second;
-            }
-            current.children.add(currentElement);
-            currentElement.setParentStructure(current);
-        }
-
-        return List.of(first, second);
-    }
-
-    private TextAddResponse addElementBefore(TextElementV2 position, TextElementV2 element) {
-        var iterator = this.children.listIterator();
-        while (iterator.hasNext()) {
-            var currentElement = iterator.next();
-            if (currentElement == position) {
-                iterator.previous();
-                iterator.add(element);
-                element.setParentStructure(this);
-                break;
-            }
-        }
-        return null;
-        //TODO
-        // return new TextAddResponse(position.getTextPosition());
     }
 
     @Override
     public void notifyChangeDown() {
         setRepresentation(null);
-    }
-
-    private boolean isSplitNeeded(TextElementV2 addedElement) {
-        return addedElement.isEndOfLine();
     }
 
     @Override

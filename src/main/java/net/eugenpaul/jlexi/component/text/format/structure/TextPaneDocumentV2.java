@@ -98,38 +98,22 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
-        var iterator = this.children.listIterator();
-
-        while (iterator.hasNext()) {
-            var elem = iterator.next();
-            if (elem == child) {
-                iterator.remove();
-                to.forEach(iterator::add);
-                to.forEach(v -> v.setParentStructure(this));
-
-                notifyChangeUp();
-
-                return new TextAddResponseV2(//
-                        this, //
-                        child, //
-                        to //
-                );
-            }
-        }
-
-        return TextAddResponseV2.EMPTY;
-    }
-
-    @Override
     protected TextStructureOfStructureV2 createMergedStructute() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    protected boolean isNeedToSplit(TextStructureV2 newChild) {
+    protected boolean hasToBeSplited(TextStructureV2 newChild) {
         return false;
+    }
+
+    public TextAddResponseV2 addBefore(TextStructureV2 position, TextStructureV2 element) {
+        return replaceChild(//
+                position, //
+                List.of(element, position) // TODO: Can I use the "position" here or do I need to create a copy of the
+                                           // position?
+        );
     }
 
 }

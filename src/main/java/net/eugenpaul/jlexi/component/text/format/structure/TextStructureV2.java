@@ -41,7 +41,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
      */
     protected abstract boolean checkMergeWith(TextStructureV2 element);
 
-    public abstract TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to);
+    public abstract TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to);
 
     protected abstract TextRemoveResponseV2 mergeWith(TextStructureV2 nextElement);
 
@@ -158,14 +158,6 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
             return TextRemoveResponseV2.EMPTY;
         }
         return child.removeElement(elementToRemove);
-    }
-
-    public TextAddResponse addBefore(TextElementV2 position, TextElementV2 element) {
-        TextStructureV2 child = getChildWithElement(element);
-        if (null == child) {
-            return TextAddResponse.EMPTY;
-        }
-        return child.addBefore(position, element);
     }
 
     public boolean replaceStructure(//

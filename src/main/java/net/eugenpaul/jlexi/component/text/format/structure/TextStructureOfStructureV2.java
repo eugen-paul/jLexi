@@ -142,16 +142,16 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         return childToRemove.removeElement(elementToRemove);
     }
 
-    protected abstract boolean isNeedToSplit(TextStructureV2 newChild);
+    protected abstract boolean hasToBeSplited(TextStructureV2 newChild);
 
     @Override
-    public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
+    public TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to) {
 
-        boolean splitNeed = to.stream().anyMatch(this::isNeedToSplit);
+        boolean splitNeed = to.stream().anyMatch(this::hasToBeSplited);
 
         if (splitNeed && getParentStructure() != null) {
             var splitResult = replaceAndSplit(child, to);
-            return getParentStructure().splitChild(this, splitResult);
+            return getParentStructure().replaceChild(this, splitResult);
         }
 
         var chiltIterator = this.children.listIterator();
@@ -190,7 +190,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
                     var toElement = toIterator.next();
                     current.children.add(toElement);
                     toElement.setParentStructure(current);
-                    if (isNeedToSplit(toElement)) {
+                    if (hasToBeSplited(toElement)) {
                         current = second;
                     }
                 }

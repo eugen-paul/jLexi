@@ -140,7 +140,7 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     }
 
     @Override
-    protected boolean isNeedToSplit(TextStructureV2 newChild) {
+    protected boolean hasToBeSplited(TextStructureV2 newChild) {
         return newChild.isEndOfSection();
     }
 

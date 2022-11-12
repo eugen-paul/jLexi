@@ -37,7 +37,7 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
     }
 
     @Override
-    public TextAddResponseV2 splitChild(TextStructureV2 child, List<TextStructureV2> to) {
+    public TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to) {
         return TextAddResponseV2.EMPTY;
     }
     
