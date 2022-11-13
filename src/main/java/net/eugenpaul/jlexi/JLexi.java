@@ -66,7 +66,7 @@ public class JLexi {
         windowController.addModel(mainWindow);
         mainWindow.createWindow();
 
-        mainWindow.loadFile((new File("src/main/resources/testexamples/json/Progress.json")).toPath());
+        mainWindow.loadFile((new File("src/main/resources/testexamples/json/Simple.json")).toPath());
 
         mainWindow.setTitle("jLexi: Made by Eugen!");
     }

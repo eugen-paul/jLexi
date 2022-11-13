@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
+import net.eugenpaul.jlexi.utils.Size;
+
 public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     protected LinkedList<TextStructureV2> children;
@@ -140,6 +143,30 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         }
 
         return childToRemove.removeElement(elementToRemove);
+    }
+
+    /**
+     * Returns the list of {@code TextRepresentation} that represent the object. Depending on the type, the
+     * {@code TextRepresentation} object can be a row, a column, a page or other.
+     * 
+     * @param size - max size of the returned object
+     * @return response
+     */
+    @Override
+    public List<TextRepresentationV2> getRepresentation(Size size) {
+        if (getRepresentation() != null) {
+            return getRepresentation();
+        }
+
+        List<TextRepresentationV2> newRepresentation = new LinkedList<>();
+        var iterator = childListIterator();
+        while (iterator.hasNext()) {
+            newRepresentation.addAll(iterator.next().getRepresentation(size));
+        }
+
+        setRepresentation(newRepresentation);
+
+        return getRepresentation();
     }
 
     protected abstract boolean hasToBeSplited(TextStructureV2 newChild);

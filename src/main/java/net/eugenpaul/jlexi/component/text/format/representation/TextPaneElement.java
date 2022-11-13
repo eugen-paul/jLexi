@@ -6,6 +6,7 @@ import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.CursorMovingV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.draw.Drawable;
+import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
@@ -32,6 +33,11 @@ public class TextPaneElement extends TextRepresentationV2 implements CursorMovin
     @Override
     public TextPositionV2 getLastChild() {
         return getFirstChild();
+    }
+
+    @Override
+    public Size getSize() {
+        return getDrawable().getSize();
     }
 
     @Override

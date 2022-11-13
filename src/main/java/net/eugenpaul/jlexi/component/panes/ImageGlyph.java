@@ -34,7 +34,7 @@ public class ImageGlyph extends GuiGlyph {
             setSize(imageDrawable.getSize());
         } catch (IOException e) {
             this.imageDrawable = null;
-            setSize(Size.ZERO_SIZE);
+            setSize(Size.ZERO);
             LOGGER.error("Cann't load image.", e);
         }
     }

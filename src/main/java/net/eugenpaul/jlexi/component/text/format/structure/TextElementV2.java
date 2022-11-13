@@ -82,9 +82,9 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
             return getRepresentation();
         }
 
-        var response = new TextPaneElement(null, this);
+        var elementRep = new TextPaneElement(null, this);
 
-        return List.of(response);
+        return List.of(elementRep);
     }
 
     @Override

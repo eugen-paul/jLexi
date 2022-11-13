@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
+import net.eugenpaul.jlexi.utils.Size;
+
 public class TextEmptyV2 extends TextStructureV2 {
 
     protected TextEmptyV2(TextStructureV2 parentStructure) {
@@ -85,5 +88,10 @@ public class TextEmptyV2 extends TextStructureV2 {
     @Override
     protected TextStructureV2 getLastChild() {
         return null;
+    }
+
+    @Override
+    public List<TextRepresentationV2> getRepresentation(Size size) {
+        return Collections.emptyList();
     }
 }

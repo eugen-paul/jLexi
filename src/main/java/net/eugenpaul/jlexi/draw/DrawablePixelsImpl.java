@@ -14,7 +14,7 @@ import net.eugenpaul.jlexi.utils.helper.ImageArrayHelper;
 
 public class DrawablePixelsImpl implements Drawable {
 
-    public static final Drawable EMPTY = new DrawablePixelsImpl(Size.ZERO_SIZE);
+    public static final Drawable EMPTY = new DrawablePixelsImpl(Size.ZERO);
 
     private int[] argbPixels;
     private int[] rgbaPixels;

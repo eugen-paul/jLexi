@@ -59,7 +59,7 @@ public class Label extends GuiGlyph {
                     )//
             );
         }
-        setSize(Size.ZERO_MAX);
+        setSize(Size.MAX);
         cachedDrawable = null;
         getDrawable();
         setSize(cachedDrawable.getSize());

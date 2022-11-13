@@ -129,26 +129,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
         }
     }
 
-    /**
-     * Returns the list of {@code TextRepresentation} that represent the object. Depending on the type, the
-     * {@code TextRepresentation} object can be a row, a column, a page or other.
-     * 
-     * @param size - max size of the returned object
-     * @return response
-     */
-    public List<TextRepresentationV2> getRepresentation(Size size) {
-        if (this.representation != null) {
-            return this.representation;
-        }
-
-        this.representation = new LinkedList<>();
-        var iterator = childListIterator();
-        while (iterator.hasNext()) {
-            this.representation.addAll(iterator.next().getRepresentation(size));
-        }
-
-        return this.representation;
-    }
+    public abstract List<TextRepresentationV2> getRepresentation(Size size);
 
     public abstract void clear();
 

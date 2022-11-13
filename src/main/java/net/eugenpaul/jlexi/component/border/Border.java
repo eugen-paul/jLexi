@@ -122,7 +122,7 @@ public class Border extends GuiCompenentMonoGlyph {
         this.compositor = new CentralGlypthCompositor<>(this.backgroundColor);
         this.component.setRelativPosition(new Vector2d(this.borderSize, this.borderSize));
         addGuiChild(component);
-        resizeTo(Size.ZERO_SIZE);
+        resizeTo(Size.ZERO);
     }
 
     public static BorderBuilder builder() {

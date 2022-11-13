@@ -65,7 +65,7 @@ public abstract class Scrollpane extends GuiCompenentMonoGlyph {
 
         this.component.setRelativPosition(new Vector2d(0, 0));
         addGuiChild(component);
-        resizeTo(Size.ZERO_SIZE);
+        resizeTo(Size.ZERO);
     }
 
     private void resizeComponent() {

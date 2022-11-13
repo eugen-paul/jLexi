@@ -29,7 +29,7 @@ public class TextPaneElementRow extends TextRepresentation implements CursorMovi
         this.xPositionToElement = new TreeMap<>();
         this.children = new LinkedList<>(children);
 
-        Size currentSize = Size.ZERO_SIZE;
+        Size currentSize = Size.ZERO;
         for (var child : this.children) {
             child.setParent(this);
             setSize(new Size(//

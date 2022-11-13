@@ -52,7 +52,7 @@ public final class CollisionHelper {
         }
 
         if (xSize <= 0 || ySize <= 0) {
-            return new Area(Vector2d.zero(), Size.ZERO_SIZE);
+            return new Area(Vector2d.zero(), Size.ZERO);
         }
 
         return new Area(new Vector2d(xPos, yPos), new Size(xSize, ySize));

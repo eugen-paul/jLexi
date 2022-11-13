@@ -183,7 +183,7 @@ class ImageArraysHelperTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, //
         };
 
-        ImageArrayHelper.copyRectangle(new int[] {}, Size.ZERO_SIZE, new Vector2d(0, 0), destSize, destBlock, destSize,
+        ImageArrayHelper.copyRectangle(new int[] {}, Size.ZERO, new Vector2d(0, 0), destSize, destBlock, destSize,
                 new Vector2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);
@@ -194,7 +194,7 @@ class ImageArraysHelperTest {
         int[] expectedArray = new int[] {};
         int[] emtyDest = new int[] {};
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Vector2d(0, 0), destSize, emtyDest, Size.ZERO_SIZE,
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Vector2d(0, 0), destSize, emtyDest, Size.ZERO,
                 new Vector2d(0, 0));
 
         assertArrayEquals(expectedArray, emtyDest);
@@ -204,7 +204,7 @@ class ImageArraysHelperTest {
     void test_CopyRectangle_EmptyBlock() {
         int[] expectedArray = destBlock.clone();
 
-        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Vector2d(0, 0), Size.ZERO_SIZE, destBlock, destSize,
+        ImageArrayHelper.copyRectangle(srcBlock, srcSize, new Vector2d(0, 0), Size.ZERO, destBlock, destSize,
                 new Vector2d(0, 0));
 
         assertArrayEquals(expectedArray, destBlock);

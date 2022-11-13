@@ -11,8 +11,8 @@ import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.button.TextButton;
 import net.eugenpaul.jlexi.component.menubar.MenuBar;
-import net.eugenpaul.jlexi.component.text.TextPane;
-import net.eugenpaul.jlexi.component.text.converter.json.JsonConverter;
+import net.eugenpaul.jlexi.component.text.TextPaneV2;
+import net.eugenpaul.jlexi.component.text.converter.json.JsonConverterV2;
 import net.eugenpaul.jlexi.controller.ViewPropertyChangeType;
 import net.eugenpaul.jlexi.controller.WindowController;
 import net.eugenpaul.jlexi.design.GuiFactory;
@@ -31,7 +31,7 @@ public class MainWindow extends ApplicationWindow {
     private GuiFactory guiFactory;
     private EventManager eventManager;
 
-    private TextPane textPane;
+    private TextPaneV2 textPane;
 
     public MainWindow(String name, WindowController controller, ResourceManager storage, GuiFactory guiFactory,
             EventManager eventManager) {
@@ -48,7 +48,7 @@ public class MainWindow extends ApplicationWindow {
 
     @Override
     protected GuiGlyph setContent() {
-        textPane = new TextPane(name, "textEditor", null, storage, eventManager);
+        textPane = new TextPaneV2(name, "textEditor", null, storage, eventManager);
         eventManager.fireEvent(this, GlobalSubscribeTypes.REGISTER_GUI_ELEMENT, textPane);
 
         var scrollPane = guiFactory.createScrollpane(null, textPane);
@@ -142,7 +142,7 @@ public class MainWindow extends ApplicationWindow {
      * @return
      */
     public boolean loadFile(Path path) {
-        JsonConverter converter = new JsonConverter(this.storage);
+        var converter = new JsonConverterV2(this.storage);
         try {
             var fileData = Files.readString(path);
             var documentData = converter.read(fileData);

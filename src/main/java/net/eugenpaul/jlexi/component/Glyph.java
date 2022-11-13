@@ -37,7 +37,7 @@ public abstract class Glyph {
     protected Glyph(Glyph parent) {
         this.parent = parent;
         this.relativPosition = new Vector2d(0, 0);
-        this.size = Size.ZERO_SIZE;
+        this.size = Size.ZERO;
         this.cachedDrawable = null;
     }
 

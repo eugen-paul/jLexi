@@ -3,42 +3,31 @@ package net.eugenpaul.jlexi.component.text;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
-import net.eugenpaul.jlexi.command.TextCommand;
+import net.eugenpaul.jlexi.command.TextCommandV2;
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
-import net.eugenpaul.jlexi.component.interfaces.TextUpdateable;
-import net.eugenpaul.jlexi.component.text.action.TextPaneAddSpecialCharracter;
-import net.eugenpaul.jlexi.component.text.action.TextPaneBoldAction;
-import net.eugenpaul.jlexi.component.text.action.TextPaneCopyAction;
-import net.eugenpaul.jlexi.component.text.action.TextPaneCursorAction;
-import net.eugenpaul.jlexi.component.text.action.TextPaneItalicAction;
-import net.eugenpaul.jlexi.component.text.action.TextPanePasteAction;
-import net.eugenpaul.jlexi.component.text.action.TextPaneRedoAction;
-import net.eugenpaul.jlexi.component.text.action.TextPaneUndoAction;
-import net.eugenpaul.jlexi.component.text.converter.TextData;
-import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositor;
-import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToRowCompositor;
+import net.eugenpaul.jlexi.component.interfaces.TextUpdateableV2;
+import net.eugenpaul.jlexi.component.text.converter.TextDataV2;
+import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositorV2;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositorV2;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositorV2;
+import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToRowCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
-import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPanePage;
-import net.eugenpaul.jlexi.component.text.format.representation.TextPosition;
-import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentation;
-import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocument;
-import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandler;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPanePageV2;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
+import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentV2;
+import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandlerV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
-import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerable;
-import net.eugenpaul.jlexi.component.text.keyhandler.SpecialCharacter;
-import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandler;
+import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerableV2;
+import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandlerV2;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseDragAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseEventAdapter;
@@ -57,43 +46,43 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 @Slf4j
-public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener, KeyHandlerable, EventSubscriber {
+public class TextPaneV2 extends GuiGlyph implements TextUpdateableV2, ChangeListener, KeyHandlerableV2, EventSubscriber {
 
     @Getter
-    private TextRepresentation textRepresentation;
+    private TextRepresentationV2 textRepresentation;
 
-    private TextPaneDocument document;
-    private AbstractKeyHandler keyHandler;
+    private TextPaneDocumentV2 document;
+    private AbstractKeyHandlerV2 keyHandler;
 
-    private List<TextCompositor<TextRepresentation>> compositors;
+    private List<TextCompositorV2<TextRepresentationV2>> compositors;
 
     @Getter
-    private Cursor mouseCursor;
+    private CursorV2 mouseCursor;
 
     @Getter
     private final String cursorName;
 
     private Size maxSize = Size.ZERO;
 
-    private TextPosition textSelectionFrom;
+    private TextPositionV2 textSelectionFrom;
     private Color backgroundColor;
 
-    public TextPane(String cursorPrefix, String name, Glyph parent, ResourceManager storage,
+    public TextPaneV2(String cursorPrefix, String name, Glyph parent, ResourceManager storage,
             EventManager eventManager) {
         super(parent);
 
-        this.document = new TextPaneDocument(//
+        this.document = new TextPaneDocumentV2(//
                 storage, //
                 this//
         );
 
         this.cursorName = cursorPrefix + "textPaneCursor";
 
-        CommandsDeque<TextPosition, TextCommand> commandDeque = new CommandsDeque<>();
+        CommandsDeque<TextPositionV2, TextCommandV2> commandDeque = new CommandsDeque<>();
 
-        this.mouseCursor = new Cursor(null, eventManager, this.cursorName, commandDeque);
+        this.mouseCursor = new CursorV2(null, eventManager, this.cursorName, commandDeque);
 
-        this.keyHandler = new TextPaneExtendedKeyHandler(this, storage, commandDeque);
+        this.keyHandler = new TextPaneExtendedKeyHandlerV2(this, storage, commandDeque);
 
         this.textSelectionFrom = null;
         this.textRepresentation = null;
@@ -107,9 +96,9 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         this.backgroundColor = Color.INVISIBLE;
 
         this.compositors = List.of(//
-                TextRepresentationToRowCompositor.builder().build(), //
-                new HorizontalAlignmentRepresentationCompositor(backgroundColor, AligmentH.CENTER_POSITIV),
-                new TextRepresentationToColumnCompositor(Color.INVISIBLE, 0, 0) //
+                TextRepresentationToRowCompositorV2.builder().build(), //
+                new HorizontalAlignmentRepresentationCompositorV2(backgroundColor, AligmentH.CENTER_POSITIV),
+                new TextRepresentationToColumnCompositorV2(Color.INVISIBLE, 0, 0) //
         );
 
         resizeTo(Size.ZERO);
@@ -120,24 +109,25 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     }
 
     private void registerDefaultKeyBindings() {
-        addDefaultKeyBindings("bold", new TextPaneBoldAction(this.mouseCursor));
-        addDefaultKeyBindings("italic", new TextPaneItalicAction(this.mouseCursor));
-        addDefaultKeyBindings("copy", new TextPaneCopyAction(this.keyHandler));
-        addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
-        addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
-        addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
+        //TODO
+        // addDefaultKeyBindings("bold", new TextPaneBoldAction(this.mouseCursor));
+        // addDefaultKeyBindings("italic", new TextPaneItalicAction(this.mouseCursor));
+        // addDefaultKeyBindings("copy", new TextPaneCopyAction(this.keyHandler));
+        // addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
+        // addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
+        // addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
 
-        addDefaultKeyBindings("cursorNext", new TextPaneCursorAction(this.keyHandler, MovePosition.NEXT));
-        addDefaultKeyBindings("cursorPrevious", new TextPaneCursorAction(this.keyHandler, MovePosition.PREVIOUS));
-        addDefaultKeyBindings("cursorUp", new TextPaneCursorAction(this.keyHandler, MovePosition.UP));
-        addDefaultKeyBindings("cursorDown", new TextPaneCursorAction(this.keyHandler, MovePosition.DOWN));
-        addDefaultKeyBindings("cursorBol", new TextPaneCursorAction(this.keyHandler, MovePosition.BENIG_OF_LINE));
-        addDefaultKeyBindings("cursorEol", new TextPaneCursorAction(this.keyHandler, MovePosition.END_OF_LINE));
+        // addDefaultKeyBindings("cursorNext", new TextPaneCursorAction(this.keyHandler, MovePosition.NEXT));
+        // addDefaultKeyBindings("cursorPrevious", new TextPaneCursorAction(this.keyHandler, MovePosition.PREVIOUS));
+        // addDefaultKeyBindings("cursorUp", new TextPaneCursorAction(this.keyHandler, MovePosition.UP));
+        // addDefaultKeyBindings("cursorDown", new TextPaneCursorAction(this.keyHandler, MovePosition.DOWN));
+        // addDefaultKeyBindings("cursorBol", new TextPaneCursorAction(this.keyHandler, MovePosition.BENIG_OF_LINE));
+        // addDefaultKeyBindings("cursorEol", new TextPaneCursorAction(this.keyHandler, MovePosition.END_OF_LINE));
 
-        addDefaultKeyBindings("addNewLine",
-                new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
-        addDefaultKeyBindings("addSideBreak",
-                new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.SIDE_BREAK));
+        // addDefaultKeyBindings("addNewLine",
+        //         new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
+        // addDefaultKeyBindings("addSideBreak",
+        //         new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.SIDE_BREAK));
     }
 
     public boolean registerKeyAction(String keys, String actionName) {
@@ -151,7 +141,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         }
 
         var currentIterator = this.document.getRepresentation(this.maxSize).listIterator();
-        List<TextRepresentation> finalRepresentation = Collections.emptyList();
+        List<TextRepresentationV2> finalRepresentation = Collections.emptyList();
 
         for (var compositor : compositors) {
             finalRepresentation = compositor.compose(currentIterator, this.maxSize);
@@ -159,7 +149,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
         }
 
         if (finalRepresentation.isEmpty()) {
-            this.textRepresentation = new TextPanePage(this, new Size(320, 240));
+            this.textRepresentation = new TextPanePageV2(this, new Size(320, 240));
         } else {
             this.textRepresentation = finalRepresentation.get(0);
             this.textRepresentation.setParent(this);
@@ -182,7 +172,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     }
 
     @Override
-    public void setText(TextData text) {
+    public void setText(TextDataV2 text) {
         LOGGER.trace("Set Document.text from List<TextSection>");
         this.document.setText(text);
         notifyChange();
@@ -221,7 +211,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
     @AllArgsConstructor
     private class MouseEventAdapterIntern implements MouseEventAdapter {
-        private TextPane textpane;
+        private TextPaneV2 textpane;
 
         @Override
         public MouseDraggable mousePressed(Integer mouseX, Integer mouseY, MouseButton button) {
@@ -269,7 +259,7 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
     @AllArgsConstructor
     private class KeyEventAdapterIntern implements KeyEventAdapter {
 
-        private TextPane textpane;
+        private TextPaneV2 textpane;
 
         @Override
         public void keyTyped(Character key) {
@@ -292,55 +282,58 @@ public class TextPane extends GuiGlyph implements TextUpdateable, ChangeListener
 
     @AllArgsConstructor
     private class MouseDraggedIntern implements MouseDragAdapter {
-        private TextPane textpane;
+        private TextPaneV2 textpane;
 
         @Override
         public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-            Vector2d relPosToMain = this.textpane.getRelativPositionToMainParent();
+            //TODO
+            // Vector2d relPosToMain = this.textpane.getRelativPositionToMainParent();
 
-            int mouseRelX = mouseX - relPosToMain.getX();
-            int mouseRelY = mouseY - relPosToMain.getY();
+            // int mouseRelX = mouseX - relPosToMain.getX();
+            // int mouseRelY = mouseY - relPosToMain.getY();
 
-            LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
-            if (this.textpane.textSelectionFrom != null) {
-                TextPosition textSelectionTo = this.textpane.textRepresentation
-                        .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
+            // LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
+            // if (this.textpane.textSelectionFrom != null) {
+            //     TextPositionV2 textSelectionTo = this.textpane.textRepresentation
+            //             .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
 
-                if (textSelectionTo != null) {
-                    LOGGER.trace("Selection from: {} to: {}", //
-                            this.textpane.textSelectionFrom.getTextElement(), //
-                            textSelectionTo.getTextElement() //
-                    );
+            //     if (textSelectionTo != null) {
+            //         LOGGER.trace("Selection from: {} to: {}", //
+            //                 this.textpane.textSelectionFrom.getTextElement(), //
+            //                 textSelectionTo.getTextElement() //
+            //         );
 
-                    List<TextElement> selectedText = getSelectedText(//
-                            textSelectionFrom.getTextElement(), //
-                            textSelectionTo.getTextElement() //
-                    );
+            //         List<TextElementV2> selectedText = getSelectedText(//
+            //                 textSelectionFrom.getTextElement(), //
+            //                 textSelectionTo.getTextElement() //
+            //         );
 
-                    if (!selectedText.isEmpty()) {
-                        this.textpane.mouseCursor.setTextSelection(selectedText);
-                    }
+            //         if (!selectedText.isEmpty()) {
+            //             this.textpane.mouseCursor.setTextSelection(selectedText);
+            //         }
 
-                    this.textpane.mouseCursor.moveCursorTo(textSelectionTo);
-                }
-            }
+            //         this.textpane.mouseCursor.moveCursorTo(textSelectionTo);
+            //     }
+            // }
         }
 
         private List<TextElement> getSelectedText(TextElement posA, TextElement posB) {
-            Optional<Boolean> aIsFirst = this.textpane.document.isABeforB(posA, posB);
+            //TODO
+            return Collections.emptyList();
+            // Optional<Boolean> aIsFirst = this.textpane.document.isABeforB(posA, posB);
 
-            if (aIsFirst.isEmpty()) {
-                LOGGER.trace("Empty selection");
-                return Collections.emptyList();
-            }
+            // if (aIsFirst.isEmpty()) {
+            //     LOGGER.trace("Empty selection");
+            //     return Collections.emptyList();
+            // }
 
-            if (aIsFirst.get().booleanValue()) {
-                LOGGER.trace("{} is first", posA);
-                return this.textpane.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
-            }
+            // if (aIsFirst.get().booleanValue()) {
+            //     LOGGER.trace("{} is first", posA);
+            //     return this.textpane.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
+            // }
 
-            LOGGER.trace("{} is first", posB);
-            return this.textpane.document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
+            // LOGGER.trace("{} is first", posB);
+            // return this.textpane.document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
         }
     }
 }

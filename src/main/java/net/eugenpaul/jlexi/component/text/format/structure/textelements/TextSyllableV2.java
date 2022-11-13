@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
+import net.eugenpaul.jlexi.utils.Size;
 
 public class TextSyllableV2 {
 
@@ -31,7 +32,7 @@ public class TextSyllableV2 {
     public int getHeight() {
         int maxHeight = 0;
         for (var textElement : getElements()) {
-            for (var r : textElement.getRepresentation()) {
+            for (var r : textElement.getRepresentation(Size.MAX)) {
                 maxHeight = Math.max(maxHeight, r.getSize().getHeight());
             }
         }
@@ -41,7 +42,7 @@ public class TextSyllableV2 {
     private int getLengthWithoutWordBreak() {
         int length = 0;
         for (var textElement : getElements()) {
-            for (var r : textElement.getRepresentation()) {
+            for (var r : textElement.getRepresentation(Size.MAX)) {
                 length += r.getSize().getWidth();
             }
         }

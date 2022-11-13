@@ -11,8 +11,8 @@ import lombok.With;
 @EqualsAndHashCode
 public final class Size {
 
-    public static final Size ZERO_SIZE = new Size(0, 0);
-    public static final Size ZERO_MAX = new Size(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static final Size ZERO = new Size(0, 0);
+    public static final Size MAX = new Size(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     /** width of the element */
     @With

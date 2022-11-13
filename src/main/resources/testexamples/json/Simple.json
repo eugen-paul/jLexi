@@ -1,0 +1,35 @@
+{
+    "sections": [
+        {
+            "paragraphs": [
+                {
+                    "elements": [
+                        {
+                            "format": {
+                                "bold": true,
+                                "italic": true,
+                                "fontsize": 20,
+                                "fontName": "Serif Bold"
+                            },
+                            "text": "First presentation of the text, which has new structure."
+                        },
+                        {
+                            "format": {
+                                "fontsize": 16,
+                                "fontName": "Serif Bold"
+                            },
+                            "text": "Line 1."
+                        },
+                        {
+                            "format": {
+                                "fontsize": 16,
+                                "fontName": "Serif Bold"
+                            },
+                            "text": "Line 2."
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
