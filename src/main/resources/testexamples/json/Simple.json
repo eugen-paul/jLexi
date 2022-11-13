@@ -12,14 +12,11 @@
                                 "fontName": "Serif Bold"
                             },
                             "text": "First presentation of the text, which has new structure."
-                        },
-                        {
-                            "format": {
-                                "fontsize": 16,
-                                "fontName": "Serif Bold"
-                            },
-                            "text": "Line 1."
-                        },
+                        }
+                    ]
+                },
+                {
+                    "elements": [
                         {
                             "format": {
                                 "fontsize": 16,

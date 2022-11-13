@@ -23,6 +23,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextElement;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePageV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentRoot;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandlerV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
@@ -46,7 +47,8 @@ import net.eugenpaul.jlexi.visitor.Visitor;
 import net.eugenpaul.jlexi.window.action.KeyBindingRule;
 
 @Slf4j
-public class TextPaneV2 extends GuiGlyph implements TextUpdateableV2, ChangeListener, KeyHandlerableV2, EventSubscriber {
+public class TextPaneV2 extends GuiGlyph
+        implements TextUpdateableV2, ChangeListener, KeyHandlerableV2, EventSubscriber, TextPaneDocumentRoot {
 
     @Getter
     private TextRepresentationV2 textRepresentation;
@@ -80,7 +82,7 @@ public class TextPaneV2 extends GuiGlyph implements TextUpdateableV2, ChangeList
 
         CommandsDeque<TextPositionV2, TextCommandV2> commandDeque = new CommandsDeque<>();
 
-        this.mouseCursor = new CursorV2(null, eventManager, this.cursorName, commandDeque);
+        this.mouseCursor = new CursorV2(null, eventManager, this.cursorName, commandDeque, this);
 
         this.keyHandler = new TextPaneExtendedKeyHandlerV2(this, storage, commandDeque);
 
@@ -109,7 +111,7 @@ public class TextPaneV2 extends GuiGlyph implements TextUpdateableV2, ChangeList
     }
 
     private void registerDefaultKeyBindings() {
-        //TODO
+        // TODO
         // addDefaultKeyBindings("bold", new TextPaneBoldAction(this.mouseCursor));
         // addDefaultKeyBindings("italic", new TextPaneItalicAction(this.mouseCursor));
         // addDefaultKeyBindings("copy", new TextPaneCopyAction(this.keyHandler));
@@ -125,9 +127,9 @@ public class TextPaneV2 extends GuiGlyph implements TextUpdateableV2, ChangeList
         // addDefaultKeyBindings("cursorEol", new TextPaneCursorAction(this.keyHandler, MovePosition.END_OF_LINE));
 
         // addDefaultKeyBindings("addNewLine",
-        //         new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
+        // new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
         // addDefaultKeyBindings("addSideBreak",
-        //         new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.SIDE_BREAK));
+        // new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.SIDE_BREAK));
     }
 
     public boolean registerKeyAction(String keys, String actionName) {
@@ -286,7 +288,7 @@ public class TextPaneV2 extends GuiGlyph implements TextUpdateableV2, ChangeList
 
         @Override
         public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-            //TODO
+            // TODO
             // Vector2d relPosToMain = this.textpane.getRelativPositionToMainParent();
 
             // int mouseRelX = mouseX - relPosToMain.getX();
@@ -294,46 +296,51 @@ public class TextPaneV2 extends GuiGlyph implements TextUpdateableV2, ChangeList
 
             // LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
             // if (this.textpane.textSelectionFrom != null) {
-            //     TextPositionV2 textSelectionTo = this.textpane.textRepresentation
-            //             .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
+            // TextPositionV2 textSelectionTo = this.textpane.textRepresentation
+            // .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
 
-            //     if (textSelectionTo != null) {
-            //         LOGGER.trace("Selection from: {} to: {}", //
-            //                 this.textpane.textSelectionFrom.getTextElement(), //
-            //                 textSelectionTo.getTextElement() //
-            //         );
+            // if (textSelectionTo != null) {
+            // LOGGER.trace("Selection from: {} to: {}", //
+            // this.textpane.textSelectionFrom.getTextElement(), //
+            // textSelectionTo.getTextElement() //
+            // );
 
-            //         List<TextElementV2> selectedText = getSelectedText(//
-            //                 textSelectionFrom.getTextElement(), //
-            //                 textSelectionTo.getTextElement() //
-            //         );
+            // List<TextElementV2> selectedText = getSelectedText(//
+            // textSelectionFrom.getTextElement(), //
+            // textSelectionTo.getTextElement() //
+            // );
 
-            //         if (!selectedText.isEmpty()) {
-            //             this.textpane.mouseCursor.setTextSelection(selectedText);
-            //         }
+            // if (!selectedText.isEmpty()) {
+            // this.textpane.mouseCursor.setTextSelection(selectedText);
+            // }
 
-            //         this.textpane.mouseCursor.moveCursorTo(textSelectionTo);
-            //     }
+            // this.textpane.mouseCursor.moveCursorTo(textSelectionTo);
+            // }
             // }
         }
 
         private List<TextElement> getSelectedText(TextElement posA, TextElement posB) {
-            //TODO
+            // TODO
             return Collections.emptyList();
             // Optional<Boolean> aIsFirst = this.textpane.document.isABeforB(posA, posB);
 
             // if (aIsFirst.isEmpty()) {
-            //     LOGGER.trace("Empty selection");
-            //     return Collections.emptyList();
+            // LOGGER.trace("Empty selection");
+            // return Collections.emptyList();
             // }
 
             // if (aIsFirst.get().booleanValue()) {
-            //     LOGGER.trace("{} is first", posA);
-            //     return this.textpane.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
+            // LOGGER.trace("{} is first", posA);
+            // return this.textpane.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
             // }
 
             // LOGGER.trace("{} is first", posB);
             // return this.textpane.document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
         }
+    }
+
+    @Override
+    public void redrawDocument() {
+        redraw();
     }
 }

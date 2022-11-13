@@ -12,7 +12,7 @@ import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentati
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
 
-public class TextPaneDocument extends TextStructureOfStructure {
+public class TextPaneDocument extends TextStructureOfStructure{
 
     private ChangeListener parent;
     private ResourceManager storage;

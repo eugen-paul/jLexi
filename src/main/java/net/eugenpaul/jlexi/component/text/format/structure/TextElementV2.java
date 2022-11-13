@@ -65,6 +65,18 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
         notifyChangeUp();
     }
 
+    @Override
+    public void notifyChangeUp() {
+        this.cachedDrawable = null;
+        super.notifyChangeUp();
+    }
+
+    @Override
+    public void notifyChangeDown() {
+        this.cachedDrawable = null;
+        super.notifyChangeDown();
+    }
+
     protected void doEffects(DrawableSketch element) {
         this.effects.stream()//
                 .forEach(v -> v.addToDrawable(element));

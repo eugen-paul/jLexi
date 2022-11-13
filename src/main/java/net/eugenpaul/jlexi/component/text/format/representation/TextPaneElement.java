@@ -18,6 +18,7 @@ public class TextPaneElement extends TextRepresentationV2 implements CursorMovin
     public TextPaneElement(Glyph parent, TextElementV2 dataElement) {
         super(parent);
         this.dataElement = dataElement;
+        this.position = dataElement.getTextPosition();
     }
 
     @Override

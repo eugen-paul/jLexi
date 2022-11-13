@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentRoot;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
@@ -17,12 +18,15 @@ public class CursorEffectV2 implements GlyphEffect {
 
     private boolean showCursor;
 
-    private TextElementV2 glyph;
+    private TextElementV2 element;
 
-    public CursorEffectV2(TextElementV2 glyph) {
-        this.glyph = glyph;
+    private TextPaneDocumentRoot docRoot;
+
+    public CursorEffectV2(TextElementV2 element, TextPaneDocumentRoot docRoot) {
+        this.element = element;
         this.showCursor = false;
-        this.glyph.addEffect(this);
+        this.element.addEffect(this);
+        this.docRoot = docRoot;
     }
 
     @Override
@@ -39,24 +43,22 @@ public class CursorEffectV2 implements GlyphEffect {
     public void execute() {
         if (this.showCursor) {
             this.showCursor = false;
-            LOGGER.trace("hide Cursor on {}.", this.glyph);
+            LOGGER.trace("hide Cursor on {}.", this.element);
         } else {
             this.showCursor = true;
-            LOGGER.trace("show Cursor on {}.", this.glyph);
+            LOGGER.trace("show Cursor on {}.", this.element);
         }
 
-        this.glyph.updateEffect(this);
-        //TODO
-        // this.glyph.redraw();
+        this.element.updateEffect(this);
+        this.docRoot.redrawDocument();
     }
 
     @Override
     public void terminate() {
-        LOGGER.trace("terminate Cursor on {}.", this.glyph);
-        this.glyph.removeEffect(this);
-        this.glyph.updateEffect(null);
-        //TODO
-        // this.glyph.redraw();
+        LOGGER.trace("terminate Cursor on {}.", this.element);
+        this.element.removeEffect(this);
+        this.element.updateEffect(null);
+        this.docRoot.redrawDocument();
     }
 
     @Override

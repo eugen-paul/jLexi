@@ -4,16 +4,19 @@ import java.time.Duration;
 import java.util.List;
 
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentRoot;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 
 public class SelectedEffectV2 implements GlyphEffect {
 
-    List<TextElementV2> glyphs;
+    private List<TextElementV2> glyphs;
+    private TextPaneDocumentRoot docRoot;
 
-    public SelectedEffectV2(List<TextElementV2> glyphs) {
+    public SelectedEffectV2(List<TextElementV2> glyphs, TextPaneDocumentRoot docRoot) {
         this.glyphs = glyphs;
+        this.docRoot = docRoot;
         for (var glyph : glyphs) {
             glyph.addEffect(this);
         }
@@ -31,26 +34,27 @@ public class SelectedEffectV2 implements GlyphEffect {
 
     @Override
     public void execute() {
+        if (glyphs.isEmpty()) {
+            return;
+        }
+
         for (var glyph : glyphs) {
             glyph.updateEffect(this);
         }
-        if (!glyphs.isEmpty()) {
-            //TODO
-            // glyphs.get(0).redraw();
-        }
+        docRoot.redrawDocument();
     }
 
     @Override
     public void terminate() {
+        if (glyphs.isEmpty()) {
+            return;
+        }
+
         for (var glyph : glyphs) {
             glyph.removeEffect(this);
             glyph.updateEffect(null);
         }
-        // TODO: do it better
-        if (!glyphs.isEmpty()) {
-            //TODO
-            // glyphs.get(0).redraw();
-        }
+        docRoot.redrawDocument();
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentRoot;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.effect.CursorEffectV2;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
@@ -39,14 +40,17 @@ public class CursorV2 implements EventSubscriber {
     private List<TextElementV2> selectedText;
     private GlyphEffect selectedTextEffect;
 
+    private TextPaneDocumentRoot docRoot;
+
     public CursorV2(TextElementV2 glyphElement, EventManager eventManager, String name,
-            CommandsDeque<TextPositionV2, TextCommandV2> commandDeque) {
+            CommandsDeque<TextPositionV2, TextCommandV2> commandDeque, TextPaneDocumentRoot docRoot) {
         this.name = name;
         this.commandDeque = commandDeque;
         this.textElement = glyphElement;
         this.cursorEffect = null;
         this.eventManager = eventManager;
         this.eventManager.addSubscriber(this);
+        this.docRoot = docRoot;
 
         this.selectedText = null;
         this.selectedTextEffect = null;
@@ -73,8 +77,8 @@ public class CursorV2 implements EventSubscriber {
             return;
         }
 
-        this.selectedTextEffect = new SelectedEffectV2(this.selectedText);
-        this.eventManager.fireEvent(this, SchedulerSub.ADD_EVENT, selectedTextEffect);
+        this.selectedTextEffect = new SelectedEffectV2(this.selectedText, this.docRoot);
+        this.eventManager.fireEvent(this, SchedulerSub.ADD_EVENT, this.selectedTextEffect);
     }
 
     private void removeSelectedEffect() {
@@ -84,10 +88,10 @@ public class CursorV2 implements EventSubscriber {
         }
 
         for (var element : this.selectedText) {
-            element.removeEffect(selectedTextEffect);
+            element.removeEffect(this.selectedTextEffect);
         }
 
-        this.eventManager.fireEvent(this, SchedulerSub.REMOVE_EVENT, selectedTextEffect);
+        this.eventManager.fireEvent(this, SchedulerSub.REMOVE_EVENT, this.selectedTextEffect);
 
         this.selectedText = null;
         this.selectedTextEffect = null;
@@ -113,7 +117,7 @@ public class CursorV2 implements EventSubscriber {
         this.textFormat = this.textElement.getFormat();
         this.textFormatEffect = this.textElement.getFormatEffect();
 
-        this.cursorEffect = new CursorEffectV2(this.textElement);
+        this.cursorEffect = new CursorEffectV2(this.textElement, this.docRoot);
         this.eventManager.fireEvent(this, SchedulerSub.ADD_EVENT, cursorEffect);
         this.eventManager.fireEvent(this, GlobalSubscribeTypes.TEXT_CURSOR_MOVE, this.textElement);
     }
@@ -156,10 +160,7 @@ public class CursorV2 implements EventSubscriber {
         command.execute();
         commandDeque.addCommand(command);
 
-        TextElementV2 firstElement = this.selectedText.get(0);
-        // TODO
-        // TODO do redraw better
-        // firstElement.redraw();
+        docRoot.redrawDocument();
     }
 
     private void setItalic(Boolean isItalic) {
@@ -177,9 +178,6 @@ public class CursorV2 implements EventSubscriber {
         command.execute();
         commandDeque.addCommand(command);
 
-        TextElementV2 firstElement = this.selectedText.get(0);
-        // TODO
-        // TODO do redraw better
-        // firstElement.redraw();
+        docRoot.redrawDocument();
     }
 }
