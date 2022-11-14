@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import lombok.Builder;
+import lombok.Builder.Default;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneRowV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
 import net.eugenpaul.jlexi.utils.Size;
@@ -12,6 +13,9 @@ import net.eugenpaul.jlexi.utils.Vector2d;
 
 @Builder
 public class TextRepresentationToRowCompositorV2 implements TextCompositorV2<TextRepresentationV2> {
+
+    @Default
+    private boolean isTextRow = false;
 
     @Override
     public List<TextRepresentationV2> compose(ListIterator<TextRepresentationV2> iterator, Size maxSize) {
@@ -50,7 +54,7 @@ public class TextRepresentationToRowCompositorV2 implements TextCompositorV2<Tex
     }
 
     private TextPaneRowV2 createRow() {
-        return new TextPaneRowV2(null);
+        return new TextPaneRowV2(null, isTextRow);
     }
 
     private int addToRow(TextPaneRowV2 row, int currentLength, TextRepresentationV2 element) {

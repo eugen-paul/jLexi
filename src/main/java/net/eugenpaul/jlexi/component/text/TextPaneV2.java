@@ -14,12 +14,14 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateableV2;
+import net.eugenpaul.jlexi.component.text.action.TextPaneCursorActionV2;
 import net.eugenpaul.jlexi.component.text.converter.TextDataV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToRowCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePageV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
@@ -119,12 +121,12 @@ public class TextPaneV2 extends GuiGlyph
         // addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
         // addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
 
-        // addDefaultKeyBindings("cursorNext", new TextPaneCursorAction(this.keyHandler, MovePosition.NEXT));
-        // addDefaultKeyBindings("cursorPrevious", new TextPaneCursorAction(this.keyHandler, MovePosition.PREVIOUS));
-        // addDefaultKeyBindings("cursorUp", new TextPaneCursorAction(this.keyHandler, MovePosition.UP));
-        // addDefaultKeyBindings("cursorDown", new TextPaneCursorAction(this.keyHandler, MovePosition.DOWN));
-        // addDefaultKeyBindings("cursorBol", new TextPaneCursorAction(this.keyHandler, MovePosition.BENIG_OF_LINE));
-        // addDefaultKeyBindings("cursorEol", new TextPaneCursorAction(this.keyHandler, MovePosition.END_OF_LINE));
+        addDefaultKeyBindings("cursorNext", new TextPaneCursorActionV2(this.keyHandler, MovePosition.NEXT));
+        addDefaultKeyBindings("cursorPrevious", new TextPaneCursorActionV2(this.keyHandler, MovePosition.PREVIOUS));
+        addDefaultKeyBindings("cursorUp", new TextPaneCursorActionV2(this.keyHandler, MovePosition.UP));
+        addDefaultKeyBindings("cursorDown", new TextPaneCursorActionV2(this.keyHandler, MovePosition.DOWN));
+        addDefaultKeyBindings("cursorBol", new TextPaneCursorActionV2(this.keyHandler, MovePosition.BENIG_OF_LINE));
+        addDefaultKeyBindings("cursorEol", new TextPaneCursorActionV2(this.keyHandler, MovePosition.END_OF_LINE));
 
         // addDefaultKeyBindings("addNewLine",
         // new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));

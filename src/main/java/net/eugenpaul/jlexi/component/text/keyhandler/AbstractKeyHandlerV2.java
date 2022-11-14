@@ -94,7 +94,7 @@ public class AbstractKeyHandlerV2 {
             return;
         }
 
-        TextPositionV2 cursorNewPosition = cursor.getPosition().afterMove(moving);
+        var cursorNewPosition = cursor.getPosition().afterMove(moving);
 
         if (cursorNewPosition != null) {
             this.component.getMouseCursor().removeSelection();

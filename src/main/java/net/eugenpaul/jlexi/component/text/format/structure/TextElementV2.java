@@ -37,6 +37,9 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     @Getter
     private TextPositionV2 textPosition;
 
+    protected TextPaneElement elementRep;
+    protected List<TextRepresentationV2> elementRepList;
+
     protected DrawableSketch cachedDrawable;
 
     protected TextElementV2(ResourceManager storage, TextStructureV2 parentStructure, TextFormat format,
@@ -48,6 +51,8 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
         this.effects = new LinkedList<>();
         this.textPosition = new TextPositionV2(this);
         this.cachedDrawable = null;
+        this.elementRep = new TextPaneElement(null, this);
+        this.elementRepList = List.of(elementRep);
     }
 
     @Override
@@ -69,12 +74,14 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     public void notifyChangeUp() {
         this.cachedDrawable = null;
         super.notifyChangeUp();
+        setRepresentation(elementRepList);
     }
-
+    
     @Override
     public void notifyChangeDown() {
         this.cachedDrawable = null;
         super.notifyChangeDown();
+        setRepresentation(elementRepList);
     }
 
     protected void doEffects(DrawableSketch element) {
@@ -90,13 +97,7 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     @Override
     public List<TextRepresentationV2> getRepresentation(Size size) {
-        if (getRepresentation() != null) {
-            return getRepresentation();
-        }
-
-        var elementRep = new TextPaneElement(null, this);
-
-        return List.of(elementRep);
+        return elementRepList;
     }
 
     @Override

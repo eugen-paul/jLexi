@@ -3,12 +3,10 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 import java.util.List;
 
 import lombok.Getter;
-import net.eugenpaul.jlexi.component.text.format.CursorMoving;
-import net.eugenpaul.jlexi.component.text.format.element.TextElement;
+import net.eugenpaul.jlexi.component.text.format.CursorMovingV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponse;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponse;
-import net.eugenpaul.jlexi.component.text.format.structure.TextStructure;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 
 public class TextPositionV2 {
@@ -29,7 +27,7 @@ public class TextPositionV2 {
     }
 
     public TextAddResponse addBefore(TextElementV2 element) {
-        //TODO
+        // TODO
         // return this.textElement.addBefore(element);
         return TextAddResponse.EMPTY;
     }
@@ -43,21 +41,24 @@ public class TextPositionV2 {
     }
 
     public TextRemoveResponse removeElement() {
-        //TODO
+        // TODO
         // return this.textElement.removeElement();
         return TextRemoveResponse.EMPTY;
     }
 
     public TextPositionV2 afterMove(MovePosition moving) {
-        //TODO
-        // var parent = this.textElement.getParent();
-        // while (parent != null) {
-        //     if (parent instanceof CursorMovingV2) {
-        //         var representation = (CursorMovingV2) parent;
-        //         return representation.move(this, moving);
-        //     }
-        //     parent = parent.getParent();
-        // }
+        var textReplList = this.textElement.getRepresentation();
+
+        if (textReplList == null || textReplList.isEmpty()) {
+            return null;
+        }
+
+        var parent = textReplList.get(0);
+        if (parent instanceof CursorMovingV2) {
+            var representation = (CursorMovingV2) parent;
+            return representation.move(this, moving);
+        }
+
         return null;
     }
 }

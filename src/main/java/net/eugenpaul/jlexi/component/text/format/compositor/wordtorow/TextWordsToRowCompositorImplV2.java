@@ -70,7 +70,7 @@ public class TextWordsToRowCompositorImplV2 implements TextWordsToRowCompositorV
     }
 
     private TextPaneRowV2 createRow(List<TextRepresentationV2> rowData) {
-        var row = new TextPaneRowV2(null);
+        var row = new TextPaneRowV2(null, true);
         rowData.forEach(row::add);
         return row;
     }

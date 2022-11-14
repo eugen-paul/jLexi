@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.representation;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.TreeMap;
 
 import lombok.Getter;
@@ -17,14 +19,17 @@ public class TextPaneRowV2 extends TextRepresentationOfRepresentationV2 {
 
     private TreeMap<Integer, TextRepresentationV2> xPositionToColumn;
 
+    private boolean isTextRow;
+
     @Getter
     @Setter
     private Color background;
 
-    public TextPaneRowV2(Glyph parent) {
+    public TextPaneRowV2(Glyph parent, boolean isTextRow) {
         super(parent);
         this.xPositionToColumn = new TreeMap<>();
         this.background = Color.INVISIBLE;
+        this.isTextRow = isTextRow;
     }
 
     public void add(TextRepresentationV2 child) {
@@ -88,6 +93,110 @@ public class TextPaneRowV2 extends TextRepresentationOfRepresentationV2 {
     @Override
     protected TextPositionV2 getFirstText(int x) {
         return getCursorElementAt(new Vector2d(x, 0));
+    }
+
+    @Override
+    protected TextPositionV2 moveIn(MovePosition moving, TextFieldType fieldType, int xOffset) {
+        if (!isTextRow) {
+            return super.moveIn(moving, fieldType, xOffset);
+        }
+
+        if (!checkMove(fieldType, getFieldType())) {
+            return null;
+        }
+
+        Iterator<TextRepresentationV2> iterator = null;
+        switch (moving) {
+        case UP, DOWN:
+            return getCursorElementAt(new Vector2d(xOffset, 0));
+        case PREVIOUS:
+            iterator = this.children.descendingIterator();
+            break;
+        case NEXT:
+            iterator = this.children.iterator();
+            break;
+        default:
+            iterator = Collections.emptyIterator();
+            break;
+        }
+
+        while (iterator.hasNext()) {
+            var child = iterator.next();
+            var responsePosition = child.moveIn(moving, fieldType, xOffset);
+            if (responsePosition != null) {
+                return responsePosition;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    protected TextPositionV2 moveUp(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset) {
+        if (fieldType.isLocked()) {
+            return null;
+        }
+
+        if (fieldType == TextFieldType.UNKNOWN) {
+            fieldType = getFieldType();
+        }
+
+        if (!isTextRow) {
+            TextRepresentationV2 next = fromChild;
+            while (next != null) {
+                next = getPreviousRepresentation(next);
+                if (next == null) {
+                    break;
+                }
+
+                var responsePosition = next.moveIn(MovePosition.UP, fieldType, xOffset);
+                if (responsePosition != null) {
+                    return responsePosition;
+                }
+            }
+        } else {
+            xOffset = fromChild.getRelativPositionTo(this).getX();
+        }
+
+        if (getParent() instanceof TextRepresentationV2) {
+            var parentRepresentation = (TextRepresentationV2) getParent();
+            return parentRepresentation.moveUp(this, fieldType, xOffset);
+        }
+        return null;
+    }
+
+    @Override
+    protected TextPositionV2 moveDown(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset) {
+        if (fieldType.isLocked()) {
+            return null;
+        }
+
+        if (fieldType == TextFieldType.UNKNOWN) {
+            fieldType = getFieldType();
+        }
+
+        if (!isTextRow) {
+            TextRepresentationV2 next = fromChild;
+            while (next != null) {
+                next = getNextRepresentation(next);
+                if (next == null) {
+                    break;
+                }
+
+                var responsePosition = next.moveIn(MovePosition.DOWN, fieldType, xOffset);
+                if (responsePosition != null) {
+                    return responsePosition;
+                }
+            }
+        } else {
+            xOffset = fromChild.getRelativPositionTo(this).getX();
+        }
+
+        if (getParent() instanceof TextRepresentationV2) {
+            var parentRepresentation = (TextRepresentationV2) getParent();
+            return parentRepresentation.moveDown(this, fieldType, xOffset);
+        }
+        return null;
     }
 
 }

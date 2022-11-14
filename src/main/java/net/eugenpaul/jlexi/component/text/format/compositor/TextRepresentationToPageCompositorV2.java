@@ -80,7 +80,7 @@ public class TextRepresentationToPageCompositorV2 implements TextCompositorV2<Te
             }
 
             int maxColumnH = this.fullPageSize.getHeight() - paddingTop - paddingBottom - headerH - footerH;
-            TextPaneRowV2 body = new TextPaneRowV2(page);
+            TextPaneRowV2 body = new TextPaneRowV2(page, false);
             body.setRelativPosition(computeBodyPosition(headerH));
             for (int column = 0; column < columnPerPage; column++) {
                 var currentTextColumn = computeColumn(textRowsIterator, maxColumnH);
