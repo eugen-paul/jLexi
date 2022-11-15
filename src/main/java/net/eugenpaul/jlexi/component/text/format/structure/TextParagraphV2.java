@@ -2,6 +2,9 @@ package net.eugenpaul.jlexi.component.text.format.structure;
 
 import java.util.List;
 
+import net.eugenpaul.jlexi.component.text.format.element.TextElementFactoryV2;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
+import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
 import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Size;
@@ -20,7 +23,8 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         );
     }
 
-    public TextParagraphV2(TextStructureV2 parentStructure, TextParagraphConfigurationV2 config, ResourceManager storage) {
+    public TextParagraphV2(TextStructureV2 parentStructure, TextParagraphConfigurationV2 config,
+            ResourceManager storage) {
         super(parentStructure);
 
         this.config = config;
@@ -72,24 +76,23 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
             return;
         }
 
-        //TODO- don't use static class
-        // if (!children.isEmpty()) {
-        //     add(TextElementFactory.genNewLineChar(//
-        //             null, //
-        //             storage, //
-        //             null, //
-        //             children.getLast().getFormat(), //
-        //             children.getLast().getFormatEffect() //
-        //     ));
-        // } else {
-        //     add(TextElementFactory.genNewLineChar(//
-        //             null, //
-        //             storage, //
-        //             null, //
-        //             TextFormat.DEFAULT, //
-        //             TextFormatEffect.DEFAULT_FORMAT_EFFECT //
-        //     ));
-        // }
+        // TODO- don't use static class
+        if (!children.isEmpty() && children.getLast() instanceof TextElementV2) {
+            var lastElement = (TextElementV2) children.getLast();
+            add(TextElementFactoryV2.genNewLineChar(//
+                    storage, //
+                    null, //
+                    lastElement.getFormat(), //
+                    lastElement.getFormatEffect() //
+            ));
+        } else {
+            add(TextElementFactoryV2.genNewLineChar(//
+                    storage, //
+                    null, //
+                    TextFormat.DEFAULT, //
+                    TextFormatEffect.DEFAULT_FORMAT_EFFECT //
+            ));
+        }
     }
 
     public void setToEos(ResourceManager storage) {
@@ -101,29 +104,28 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
             children.removeLast();
         }
 
-        //TODO
-        // if (!children.isEmpty()) {
-        //     add(TextElementFactory.genNewSectionChar(//
-        //             null, //
-        //             storage, //
-        //             null, //
-        //             children.getLast().getFormat(), //
-        //             children.getLast().getFormatEffect() //
-        //     ));
-        // } else {
-        //     add(TextElementFactory.genNewSectionChar(//
-        //             null, //
-        //             storage, //
-        //             null, //
-        //             TextFormat.DEFAULT, //
-        //             TextFormatEffect.DEFAULT_FORMAT_EFFECT //
-        //     ));
-        // }
+        // TODO- don't use static class
+        if (!children.isEmpty() && children.getLast() instanceof TextElementV2) {
+            var lastElement = (TextElementV2) children.getLast();
+            add(TextElementFactoryV2.genNewSectionChar(//
+                    storage, //
+                    null, //
+                    lastElement.getFormat(), //
+                    lastElement.getFormatEffect() //
+            ));
+        } else {
+            add(TextElementFactoryV2.genNewSectionChar(//
+                    storage, //
+                    null, //
+                    TextFormat.DEFAULT, //
+                    TextFormatEffect.DEFAULT_FORMAT_EFFECT //
+            ));
+        }
     }
 
     public TextElementV2 removeEndOfSection() {
         if (isEndOfSection()) {
-            //TODO
+            // TODO
             // return this.children.pollLast();
         }
         throw new NullPointerException("Paragraph has no EndOfSection");
