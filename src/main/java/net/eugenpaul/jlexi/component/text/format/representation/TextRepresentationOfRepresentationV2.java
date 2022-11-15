@@ -231,14 +231,16 @@ public abstract class TextRepresentationOfRepresentationV2 extends TextRepresent
 
     @Override
     protected TextPositionV2 moveFirst(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset) {
-        // TODO
         return getFirstChild();
     }
 
     @Override
     protected TextPositionV2 moveLast(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset) {
-        // TODO
-        return getLastChild();
+        if (this.children.isEmpty()) {
+            return null;
+        }
+        var lastChild = this.children.getLast();
+        return lastChild.moveLast(fromChild, fieldType, xOffset);
     }
 
     @Override

@@ -14,8 +14,19 @@ public class TextPaneWordBreakElement extends TextPaneElement {
         switch (moving) {
         case NEXT, PREVIOUS:
             return null;
+        case UP, DOWN, END_OF_LINE:
+            if (parent instanceof TextRepresentationV2) {
+                return ((TextRepresentationV2) parent).moveIn(MovePosition.PREVIOUS, fieldType, xOffset);
+            }
+            return super.moveIn(MovePosition.PREVIOUS, fieldType, xOffset);
         default:
             return super.moveIn(moving, fieldType, xOffset);
         }
     }
+
+    @Override
+    protected TextPositionV2 moveLast(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset) {
+        return moveIn(MovePosition.END_OF_LINE, fieldType, xOffset);
+    }
+
 }
