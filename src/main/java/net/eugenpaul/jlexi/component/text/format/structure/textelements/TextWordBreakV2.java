@@ -1,8 +1,11 @@
 package net.eugenpaul.jlexi.component.text.format.structure.textelements;
 
+import java.util.List;
+
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
+import net.eugenpaul.jlexi.component.text.format.representation.TextPaneWordBreakElement;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 import net.eugenpaul.jlexi.draw.Drawable;
@@ -20,16 +23,15 @@ public class TextWordBreakV2 extends TextElementV2 {
     public TextWordBreakV2(ResourceManager storage, TextStructureV2 parentStructure, TextFormat format,
             TextFormatEffect formatEffect) {
         super(storage, parentStructure, format, formatEffect);
+        this.elementRep = new TextPaneWordBreakElement(null, this);
+        this.elementRepList = List.of(elementRep);
         this.c = WORD_BREAK;
 
         getDrawable();
     }
 
     public TextWordBreakV2(ResourceManager storage, TextStructureV2 parentStructure) {
-        super(storage, parentStructure, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
-        this.c = WORD_BREAK;
-
-        getDrawable();
+        this(storage, parentStructure, TextFormat.DEFAULT, TextFormatEffect.DEFAULT_FORMAT_EFFECT);
     }
 
     @Override
