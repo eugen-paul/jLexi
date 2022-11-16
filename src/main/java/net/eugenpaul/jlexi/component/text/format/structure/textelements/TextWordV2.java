@@ -21,4 +21,17 @@ public class TextWordV2 {
     public boolean isEmpty() {
         return this.syllables.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        var response = new StringBuilder();
+        var iterator = syllables.iterator();
+        while (iterator.hasNext()) {
+            response.append(iterator.next().toString());
+            if (iterator.hasNext()) {
+                response.append("-");
+            }
+        }
+        return response.toString();
+    }
 }

@@ -31,7 +31,7 @@ public class TextSyllableV2 {
 
     public int getHeight() {
         int maxHeight = 0;
-        for (var textElement : getElements()) {
+        for (var textElement : getAllElements()) {
             for (var r : textElement.getRepresentation(Size.MAX)) {
                 maxHeight = Math.max(maxHeight, r.getSize().getHeight());
             }
@@ -41,7 +41,7 @@ public class TextSyllableV2 {
 
     private int getLengthWithoutWordBreak() {
         int length = 0;
-        for (var textElement : getElements()) {
+        for (var textElement : this.elements) {
             for (var r : textElement.getRepresentation(Size.MAX)) {
                 length += r.getSize().getWidth();
             }
@@ -56,7 +56,10 @@ public class TextSyllableV2 {
         return getLengthWithoutWordBreak();
     }
 
-    public List<TextStructureV2> getElements() {
+    /**
+     * Returns all letters, plus separator, case contains.
+     */
+    public List<TextStructureV2> getAllElements() {
         List<TextStructureV2> response = new LinkedList<>(this.elements);
         if (this.wordBreakElement != null) {
             response.add(this.wordBreakElement);
@@ -66,5 +69,16 @@ public class TextSyllableV2 {
 
     public boolean isEmpty() {
         return this.elements.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        var response = new StringBuilder();
+        for (var syllable : elements) {
+            if (syllable instanceof TextCharV2) {
+                response.append(((TextCharV2) syllable).toString());
+            }
+        }
+        return response.toString();
     }
 }

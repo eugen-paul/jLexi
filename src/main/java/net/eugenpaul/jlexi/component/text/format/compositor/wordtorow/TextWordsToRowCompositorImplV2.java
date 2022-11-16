@@ -26,7 +26,7 @@ public class TextWordsToRowCompositorImplV2 implements TextWordsToRowCompositorV
 
         int currentLength = 0;
         int currentHeight = 0;
-        // TODO : do it with listiterator
+
         for (TextWordV2 word : words) {
             boolean lastSylableWithWordBreak = false;
             for (var syllable : word.getSyllables()) {
@@ -38,7 +38,7 @@ public class TextWordsToRowCompositorImplV2 implements TextWordsToRowCompositorV
                         TextRepresentationV2 lastwb = rowData.removeLast();
                         currentLength -= lastwb.getSize().getWidth();
                     }
-                    syllable.getElements().stream()//
+                    syllable.getAllElements().stream()//
                             .map(v -> v.getRepresentation(maxSize))//
                             .forEach(rowData::addAll);
                     currentLength += syllableLength;
@@ -49,7 +49,7 @@ public class TextWordsToRowCompositorImplV2 implements TextWordsToRowCompositorV
                     responseRows.add(row);
 
                     rowData.clear();
-                    syllable.getElements().stream()//
+                    syllable.getAllElements().stream()//
                             .map(v -> v.getRepresentation(maxSize))//
                             .forEach(rowData::addAll);
                     currentLength = syllableLength;

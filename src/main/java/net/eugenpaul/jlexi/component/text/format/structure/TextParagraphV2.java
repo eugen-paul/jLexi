@@ -34,7 +34,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     @Override
     public List<TextRepresentationV2> getRepresentation(Size size) {
         if (null == getRepresentation()) {
-            var words = this.config.getTextToWordCompositor().compose(this.children.iterator(), this.storage);
+            var words = this.config.getTextToWordCompositor().compose(this.children.listIterator(), this.storage);
             setRepresentation(this.config.getTextToRowsCompositor().compose(words, size));
         }
         return getRepresentation();

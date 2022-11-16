@@ -1,8 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.compositor.texttoword;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import lombok.Builder;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
@@ -19,7 +19,7 @@ public class TextElementToLetterWordV2 implements TextToWordsCompositorV2 {
     }
 
     @Override
-    public <T extends TextStructureV2> List<TextWordV2> compose(Iterator<T> iterator, ResourceManager storage) {
+    public <T extends TextStructureV2> List<TextWordV2> compose(ListIterator<T> iterator, ResourceManager storage) {
         List<TextWordV2> responseWords = new LinkedList<>();
 
         while (iterator.hasNext()) {

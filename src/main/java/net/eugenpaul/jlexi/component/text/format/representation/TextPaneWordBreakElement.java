@@ -2,6 +2,7 @@ package net.eugenpaul.jlexi.component.text.format.representation;
 
 import net.eugenpaul.jlexi.component.Glyph;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
+import net.eugenpaul.jlexi.utils.Vector2d;
 
 public class TextPaneWordBreakElement extends TextPaneElement {
 
@@ -27,6 +28,15 @@ public class TextPaneWordBreakElement extends TextPaneElement {
     @Override
     protected TextPositionV2 moveLast(TextRepresentationV2 fromChild, TextFieldType fieldType, int xOffset) {
         return moveIn(MovePosition.END_OF_LINE, fieldType, xOffset);
+    }
+
+    @Override
+    public TextPositionV2 getCursorElementAt(Vector2d pos) {
+        //TODO: Add the possibility to set the cursor to separator.
+        if (parent instanceof TextRepresentationV2) {
+            return ((TextRepresentationV2) parent).moveIn(MovePosition.PREVIOUS, TextFieldType.UNKNOWN, pos.getX());
+        }
+        return null;
     }
 
 }
