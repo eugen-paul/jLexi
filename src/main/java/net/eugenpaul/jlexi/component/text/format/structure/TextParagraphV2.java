@@ -46,7 +46,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    protected TextStructureOfStructureV2 createMergedStructute() {
+    protected TextStructureOfStructureV2 copyStructure() {
         return new TextParagraphV2(getParentStructure(), this.config, this.storage);
     }
 

@@ -98,7 +98,7 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
-    protected TextStructureOfStructureV2 createMergedStructute() {
+    protected TextStructureOfStructureV2 copyStructure() {
         // TODO Auto-generated method stub
         return null;
     }

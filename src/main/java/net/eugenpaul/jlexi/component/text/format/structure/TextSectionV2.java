@@ -132,7 +132,7 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     }
 
     @Override
-    protected TextStructureOfStructureV2 createMergedStructute() {
+    protected TextStructureOfStructureV2 copyStructure() {
         var responseSection = new TextSectionV2(getParentStructure(), this.configuration);
         responseSection.setHeaderCreater(this.headerCreater);
         responseSection.setFooterCreater(this.footerCreater);

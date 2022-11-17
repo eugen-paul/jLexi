@@ -45,23 +45,23 @@ public class TextEmptyV2 extends TextStructureV2 {
     }
 
     @Override
-    public List<TextElementV2> getAllTextElements() {
-        return Collections.emptyList();
+    public TextStructureV2 getSelectedAll() {
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to) {
-        return Collections.emptyList();
+    public TextStructureV2 getSelectedBetween(TextElementV2 from, TextElementV2 to) {
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsFrom(TextElementV2 from) {
-        return Collections.emptyList();
+    public TextStructureV2 getSelectedFrom(TextElementV2 from) {
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsTo(TextElementV2 to) {
-        return Collections.emptyList();
+    public TextStructureV2 getSelectedTo(TextElementV2 to) {
+        return this;
     }
 
     @Override

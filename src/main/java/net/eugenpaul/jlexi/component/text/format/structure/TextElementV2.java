@@ -76,7 +76,7 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
         super.notifyChangeUp();
         setRepresentation(elementRepList);
     }
-    
+
     @Override
     public void notifyChangeDown() {
         this.cachedDrawable = null;
@@ -138,28 +138,30 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     @Override
     public Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB) {
-        // TODO Auto-generated method stub
+        if (elemA == this || elemB == this) {
+            return Optional.of(Boolean.TRUE);
+        }
         return Optional.empty();
     }
 
     @Override
-    public List<TextElementV2> getAllTextElements() {
-        return List.of(this);
+    public TextStructureV2 getSelectedAll() {
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to) {
-        return List.of(this);
+    public TextStructureV2 getSelectedBetween(TextElementV2 from, TextElementV2 to) {
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsFrom(TextElementV2 from) {
-        return List.of(this);
+    public TextStructureV2 getSelectedFrom(TextElementV2 from) {
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsTo(TextElementV2 to) {
-        return List.of(this);
+    public TextStructureV2 getSelectedTo(TextElementV2 to) {
+        return this;
     }
 
     @Override

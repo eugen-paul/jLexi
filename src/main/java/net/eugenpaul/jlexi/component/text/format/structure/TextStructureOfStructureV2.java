@@ -18,7 +18,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         this.children = new LinkedList<>();
     }
 
-    protected abstract TextStructureOfStructureV2 createMergedStructute();
+    protected abstract TextStructureOfStructureV2 copyStructure();
 
     @Override
     protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
@@ -39,7 +39,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             return TextRemoveResponseV2.EMPTY;
         }
 
-        var responseSection = createMergedStructute();
+        var responseSection = copyStructure();
 
         // take over own child elements except the last
         var iteratorFirst = childListIterator();
@@ -203,8 +203,8 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     }
 
     private List<TextStructureV2> replaceAndSplit(TextStructureV2 position, List<TextStructureV2> to) {
-        var first = createMergedStructute();
-        var second = createMergedStructute();
+        var first = copyStructure();
+        var second = copyStructure();
 
         var current = first;
 
@@ -318,72 +318,71 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     }
 
     @Override
-    public List<TextElementV2> getAllTextElements() {
-        List<TextElementV2> response = new LinkedList<>();
+    public TextStructureV2 getSelectedAll() {
+        var root = copyStructure();
 
         for (var child : this.children) {
-            response.addAll(child.getAllTextElements());
+            root.children.add(child.getSelectedAll());
         }
 
-        return response;
+        return root;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsFrom(TextElementV2 from) {
-        TextStructureV2 childStructure = getChildWithElement(from);
+    public TextStructureV2 getSelectedFrom(TextElementV2 from) {
+        var root = copyStructure();
 
-        List<TextElementV2> response = new LinkedList<>();
+        var childStructure = getChildWithElement(from);
 
         boolean doAdd = false;
         for (var child : this.children) {
             if (childStructure == child) {
-                response.addAll(childStructure.getAllTextElementsFrom(from));
+                root.children.add(childStructure.getSelectedFrom(from));
                 doAdd = true;
             } else if (doAdd) {
-                response.addAll(child.getAllTextElements());
+                root.children.add(child.getSelectedAll());
             }
         }
 
-        return response;
+        return root;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsTo(TextElementV2 to) {
-        TextStructureV2 childStructure = getChildWithElement(to);
-
-        List<TextElementV2> response = new LinkedList<>();
+    public TextStructureV2 getSelectedTo(TextElementV2 to) {
+        var root = copyStructure();
+        var childStructure = getChildWithElement(to);
 
         for (var child : this.children) {
             if (childStructure == child) {
-                response.addAll(childStructure.getAllTextElementsTo(to));
+                root.children.add(childStructure.getSelectedTo(to));
                 break;
             } else {
-                response.addAll(child.getAllTextElements());
+                root.children.add(child.getSelectedAll());
             }
         }
 
-        return response;
+        return root;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to) {
-        TextStructureV2 childStructureFrom = getChildWithElement(from);
-        TextStructureV2 childStructureTo = getChildWithElement(to);
+    public TextStructureV2 getSelectedBetween(TextElementV2 from, TextElementV2 to) {
+        var root = copyStructure();
 
-        List<TextElementV2> response = new LinkedList<>();
+        var childStructureFrom = getChildWithElement(from);
+        var childStructureTo = getChildWithElement(to);
 
         boolean doAdd = false;
 
         for (var child : this.children) {
             if (childStructureFrom == child && childStructureTo == child) {
-                response.addAll(childStructureFrom.getAllTextElementsBetween(from, to));
+                root.children.add(childStructureFrom.getSelectedBetween(from, to));
             } else if (childStructureFrom == child) {
-                response.addAll(childStructureFrom.getAllTextElementsFrom(from));
+                root.children.add(childStructureFrom.getSelectedFrom(from));
                 doAdd = true;
             } else if (childStructureTo == child) {
-                response.addAll(childStructureTo.getAllTextElementsTo(to));
+                root.children.add(childStructureTo.getSelectedTo(to));
             } else if (doAdd) {
-                response.addAll(child.getAllTextElements());
+                root.children.add(child.getSelectedAll());
             }
 
             if (childStructureTo == child) {
@@ -391,7 +390,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             }
         }
 
-        return response;
+        return root;
     }
 
     protected void removeChild(TextStructureV2 elementToRemove) {

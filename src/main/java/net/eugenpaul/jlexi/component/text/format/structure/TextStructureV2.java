@@ -49,13 +49,13 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
 
     public abstract Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB);
 
-    public abstract List<TextElementV2> getAllTextElements();
+    public abstract TextStructureV2 getSelectedAll();
 
-    public abstract List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to);
+    public abstract TextStructureV2 getSelectedBetween(TextElementV2 from, TextElementV2 to);
 
-    public abstract List<TextElementV2> getAllTextElementsFrom(TextElementV2 from);
+    public abstract TextStructureV2 getSelectedFrom(TextElementV2 from);
 
-    public abstract List<TextElementV2> getAllTextElementsTo(TextElementV2 to);
+    public abstract TextStructureV2 getSelectedTo(TextElementV2 to);
 
     public boolean isEndOfLine() {
         return false;

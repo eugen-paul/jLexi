@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
@@ -58,27 +59,27 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
     }
 
     @Override
-    public List<TextElementV2> getAllTextElements() {
-        // TODO Auto-generated method stub
-        return null;
+    public TextStructureV2 getSelectedAll() {
+        //TODO
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsBetween(TextElementV2 from, TextElementV2 to) {
+    public TextStructureV2 getSelectedBetween(TextElementV2 from, TextElementV2 to) {
         // TODO Auto-generated method stub
-        return null;
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsFrom(TextElementV2 from) {
+    public TextStructureV2 getSelectedFrom(TextElementV2 from) {
         // TODO Auto-generated method stub
-        return null;
+        return this;
     }
 
     @Override
-    public List<TextElementV2> getAllTextElementsTo(TextElementV2 to) {
+    public TextStructureV2 getSelectedTo(TextElementV2 to) {
         // TODO Auto-generated method stub
-        return null;
+        return this;
     }
 
     @Override
