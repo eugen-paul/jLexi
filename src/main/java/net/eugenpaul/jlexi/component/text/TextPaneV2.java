@@ -3,6 +3,7 @@ package net.eugenpaul.jlexi.component.text;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +26,10 @@ import net.eugenpaul.jlexi.component.text.format.representation.MovePosition;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPanePageV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentRoot;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandlerV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerableV2;
@@ -95,7 +98,7 @@ public class TextPaneV2 extends GuiGlyph
 
         this.mouseEventAdapter = new MouseEventAdapterIntern(this);
         this.keyEventAdapter = new KeyEventAdapterIntern(this);
-        this.mouseDragAdapter = new MouseDraggedIntern(this);
+        this.mouseDragAdapter = new MouseDraggedIntern();
 
         this.backgroundColor = Color.INVISIBLE;
 
@@ -284,60 +287,55 @@ public class TextPaneV2 extends GuiGlyph
         }
     }
 
-    @AllArgsConstructor
     private class MouseDraggedIntern implements MouseDragAdapter {
-        private TextPaneV2 textpane;
 
         @Override
         public void mouseDragged(Integer mouseX, Integer mouseY, MouseButton button) {
-            // TODO
-            // Vector2d relPosToMain = this.textpane.getRelativPositionToMainParent();
+            Vector2d relPosToMain = getRelativPositionToMainParent();
 
-            // int mouseRelX = mouseX - relPosToMain.getX();
-            // int mouseRelY = mouseY - relPosToMain.getY();
+            int mouseRelX = mouseX - relPosToMain.getX();
+            int mouseRelY = mouseY - relPosToMain.getY();
 
-            // LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
-            // if (this.textpane.textSelectionFrom != null) {
-            // TextPositionV2 textSelectionTo = this.textpane.textRepresentation
-            // .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
+            LOGGER.trace("MouseDragged on TextPane. Position ({},{}).", mouseRelX, mouseRelY);
+            if (textSelectionFrom != null) {
+                TextPositionV2 textSelectionTo = textRepresentation
+                        .getCursorElementAt(new Vector2d(mouseRelX, mouseRelY));
 
-            // if (textSelectionTo != null) {
-            // LOGGER.trace("Selection from: {} to: {}", //
-            // this.textpane.textSelectionFrom.getTextElement(), //
-            // textSelectionTo.getTextElement() //
-            // );
+                if (textSelectionTo != null) {
+                    LOGGER.trace("Selection from: {} to: {}", //
+                            textSelectionFrom.getTextElement(), //
+                            textSelectionTo.getTextElement() //
+                    );
 
-            // List<TextElementV2> selectedText = getSelectedText(//
-            // textSelectionFrom.getTextElement(), //
-            // textSelectionTo.getTextElement() //
-            // );
+                    var selectedText = getSelectedText(//
+                            textSelectionFrom.getTextElement(), //
+                            textSelectionTo.getTextElement() //
+                    );
 
-            // if (!selectedText.isEmpty()) {
-            // this.textpane.mouseCursor.setTextSelection(selectedText);
-            // }
+                    if (selectedText != null && !selectedText.isEmpty()) {
+                        mouseCursor.setTextSelection(selectedText);
+                    }
 
-            // this.textpane.mouseCursor.moveCursorTo(textSelectionTo);
-            // }
-            // }
+                    mouseCursor.moveCursorTo(textSelectionTo);
+                }
+            }
         }
 
-        private List<TextElement> getSelectedText(TextElement posA, TextElement posB) {
-            // TODO
-            return Collections.emptyList();
-            // Optional<Boolean> aIsFirst = this.textpane.document.isABeforB(posA, posB);
+        private TextStructureV2 getSelectedText(TextElementV2 posA, TextElementV2 posB) {
+            Optional<Boolean> aIsFirst = document.isABeforB(posA, posB);
 
-            // if (aIsFirst.isEmpty()) {
-            // LOGGER.trace("Empty selection");
-            // return Collections.emptyList();
-            // }
+            if (aIsFirst.isEmpty()) {
+                LOGGER.trace("Empty selection");
+                return null;
+            }
 
-            // if (aIsFirst.get().booleanValue()) {
-            // LOGGER.trace("{} is first", posA);
-            // return this.textpane.document.getAllTextElementsBetween(posA.getTextElement(), posB.getTextElement());
-            // }
+            if (aIsFirst.get().booleanValue()) {
+                LOGGER.trace("{} is first", posA);
+                return document.getSelectedBetween(posA, posB);
+            }
 
-            // LOGGER.trace("{} is first", posB);
-            // return this.textpane.document.getAllTextElementsBetween(posB.getTextElement(), posA.getTextElement());
+            LOGGER.trace("{} is first", posB);
+            return document.getSelectedBetween(posB, posA);
         }
     }
 

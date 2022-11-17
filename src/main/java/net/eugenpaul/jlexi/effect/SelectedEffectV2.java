@@ -3,23 +3,35 @@ package net.eugenpaul.jlexi.effect;
 import java.time.Duration;
 import java.util.List;
 
-import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
+import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
+import net.eugenpaul.jlexi.component.iterator.PreOrderLeafIterator;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentRoot;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 import net.eugenpaul.jlexi.draw.Drawable;
 import net.eugenpaul.jlexi.draw.DrawablePixelsImpl;
 import net.eugenpaul.jlexi.draw.DrawableSketch;
 
 public class SelectedEffectV2 implements GlyphEffect {
 
-    private List<TextElementV2> glyphs;
+    private TextStructureV2 rootStructure;
     private TextPaneDocumentRoot docRoot;
 
-    public SelectedEffectV2(List<TextElementV2> glyphs, TextPaneDocumentRoot docRoot) {
-        this.glyphs = glyphs;
+    public SelectedEffectV2(TextStructureV2 rootStructure, TextPaneDocumentRoot docRoot) {
+        this.rootStructure = rootStructure;
         this.docRoot = docRoot;
-        for (var glyph : glyphs) {
-            glyph.addEffect(this);
+
+        var iterator = new PreOrderLeafIterator<TextStructureV2>(rootStructure);
+        while (iterator.hasNext()) {
+            var element = iterator.next();
+            if (element instanceof EffectHolder) {
+                var target = (EffectHolder) element;
+                target.addEffect(this);
+            }
         }
+        // TODO
+        // for (var glyph : glyphs) {
+        // glyph.addEffect(this);
+        // }
     }
 
     @Override
@@ -34,26 +46,47 @@ public class SelectedEffectV2 implements GlyphEffect {
 
     @Override
     public void execute() {
-        if (glyphs.isEmpty()) {
+        if (rootStructure.isEmpty()) {
             return;
         }
 
-        for (var glyph : glyphs) {
-            glyph.updateEffect(this);
+        var iterator = new PreOrderLeafIterator<TextStructureV2>(rootStructure);
+        while (iterator.hasNext()) {
+            var element = iterator.next();
+            if (element instanceof EffectHolder) {
+                var target = (EffectHolder) element;
+                target.updateEffect(this);
+            }
         }
+
+        // TODO
+        // for (var glyph : glyphs) {
+        // glyph.updateEffect(this);
+        // }
         docRoot.redrawDocument();
     }
 
     @Override
     public void terminate() {
-        if (glyphs.isEmpty()) {
+        if (rootStructure.isEmpty()) {
             return;
         }
 
-        for (var glyph : glyphs) {
-            glyph.removeEffect(this);
-            glyph.updateEffect(null);
+        var iterator = new PreOrderLeafIterator<TextStructureV2>(rootStructure);
+        while (iterator.hasNext()) {
+            var element = iterator.next();
+            if (element instanceof EffectHolder) {
+                var target = (EffectHolder) element;
+                target.removeEffect(this);
+                target.updateEffect(null);
+            }
         }
+
+        // TODO
+        // for (var glyph : glyphs) {
+        // glyph.removeEffect(this);
+        // glyph.updateEffect(null);
+        // }
         docRoot.redrawDocument();
     }
 

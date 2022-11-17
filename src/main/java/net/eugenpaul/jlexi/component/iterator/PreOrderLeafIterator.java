@@ -3,24 +3,21 @@ package net.eugenpaul.jlexi.component.iterator;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import net.eugenpaul.jlexi.component.Glyph;
+public class PreOrderLeafIterator<T extends Iterable<T>> implements Iterator<T> {
 
-public class PreOrderLeafIterator implements Iterator<Glyph> {
+    private LinkedList<Iterator<T>> iterators;
 
-    private LinkedList<Iterator<Glyph>> iterators;
-
-    public PreOrderLeafIterator(Glyph root) {
+    public PreOrderLeafIterator(T root) {
         iterators = new LinkedList<>();
-        iterators.clear();
 
-        Iterator<Glyph> childIterator = root.iterator();
+        Iterator<T> childIterator = root.iterator();
         iterators.addLast(childIterator);
     }
 
     @Override
-    public Glyph next() {
-        Iterator<Glyph> lastIterator = iterators.peekLast();
-        Glyph lastGlyph = null;
+    public T next() {
+        Iterator<T> lastIterator = iterators.peekLast();
+        T lastGlyph = null;
 
         while (!iterators.isEmpty() && lastIterator.hasNext()) {
             lastGlyph = lastIterator.next();
@@ -38,7 +35,7 @@ public class PreOrderLeafIterator implements Iterator<Glyph> {
 
     @Override
     public boolean hasNext() {
-        Iterator<Glyph> lastIterator = iterators.peekLast();
+        Iterator<T> lastIterator = iterators.peekLast();
         while (!iterators.isEmpty() && !lastIterator.hasNext()) {
             lastIterator = iterators.pollLast();
         }

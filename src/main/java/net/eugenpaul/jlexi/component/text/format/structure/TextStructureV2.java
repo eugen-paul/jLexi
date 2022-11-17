@@ -1,5 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -18,7 +20,7 @@ import net.eugenpaul.jlexi.utils.Size;
  * <code>TextStructure</code>. It provides the direct child objects with the functions to split, merge and access
  * previous/next objects.
  */
-public abstract class TextStructureV2 implements TextDocumentElement, Empty {
+public abstract class TextStructureV2 implements TextDocumentElement, Empty, Iterable<TextStructureV2> {
 
     @Getter
     @Setter
@@ -65,11 +67,12 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
         return false;
     }
 
-    protected List<TextStructureV2> getElementPath(TextElementV2 element) {
-        List<TextStructureV2> path = new LinkedList<>();
+    protected List<TextStructureV2> getPathToElement(TextElementV2 element) {
+        LinkedList<TextStructureV2> path = new LinkedList<>();
         TextStructureV2 currentStructure = element.getParentStructure();
-        while (currentStructure != null) {
-            path.add(0, currentStructure);
+
+        while (currentStructure != this) {
+            path.addFirst(currentStructure);
             currentStructure = currentStructure.getParentStructure();
         }
 
@@ -195,6 +198,11 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty {
             currentParent = currentParent.getParentStructure();
         }
         return false;
+    }
+
+    @Override
+    public Iterator<TextStructureV2> iterator() {
+        return childListIterator();
     }
 
     protected abstract ListIterator<TextStructureV2> childListIterator();

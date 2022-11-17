@@ -76,7 +76,7 @@ class PreOrderLeafIteratorTest {
 
     @Test
     void testIterator() {
-        PreOrderLeafIterator iterator = new PreOrderLeafIterator(rootGlyph);
+        PreOrderLeafIterator<Glyph> iterator = new PreOrderLeafIterator<>(rootGlyph);
 
         assertTrue(iterator.hasNext());
         assertEquals('1', ((DataGlyph) iterator.next()).getData());

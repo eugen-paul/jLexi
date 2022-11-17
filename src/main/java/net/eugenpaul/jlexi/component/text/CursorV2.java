@@ -13,6 +13,7 @@ import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextPaneDocumentRoot;
+import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.effect.CursorEffectV2;
 import net.eugenpaul.jlexi.effect.GlyphEffect;
@@ -37,7 +38,7 @@ public class CursorV2 implements EventSubscriber {
     private EventManager eventManager;
 
     @Getter
-    private List<TextElementV2> selectedText;
+    private TextStructureV2 selectedText;
     private GlyphEffect selectedTextEffect;
 
     private TextPaneDocumentRoot docRoot;
@@ -87,9 +88,10 @@ public class CursorV2 implements EventSubscriber {
             return;
         }
 
-        for (var element : this.selectedText) {
-            element.removeEffect(this.selectedTextEffect);
-        }
+        //TODO
+        // for (var element : this.selectedText) {
+        //     element.removeEffect(this.selectedTextEffect);
+        // }
 
         this.eventManager.fireEvent(this, SchedulerSub.REMOVE_EVENT, this.selectedTextEffect);
 
@@ -97,7 +99,7 @@ public class CursorV2 implements EventSubscriber {
         this.selectedTextEffect = null;
     }
 
-    public void setTextSelection(List<TextElementV2> selection) {
+    public void setTextSelection(TextStructureV2 selection) {
         removeSelectedEffect();
         this.selectedText = selection;
         addSelectedEffect();
@@ -152,13 +154,14 @@ public class CursorV2 implements EventSubscriber {
             return;
         }
 
-        List<TextFormat> newFormatList = this.selectedText.stream()//
-                .map(v -> v.getFormat().withBold(isBold))//
-                .collect(Collectors.toList());
+        //TODO
+        // List<TextFormat> newFormatList = this.selectedText.stream()//
+        //         .map(v -> v.getFormat().withBold(isBold))//
+        //         .collect(Collectors.toList());
 
-        var command = new TextElementChangeFormatCommandV2(selectedText, newFormatList);
-        command.execute();
-        commandDeque.addCommand(command);
+        // var command = new TextElementChangeFormatCommandV2(selectedText, newFormatList);
+        // command.execute();
+        // commandDeque.addCommand(command);
 
         docRoot.redrawDocument();
     }
@@ -170,13 +173,14 @@ public class CursorV2 implements EventSubscriber {
             return;
         }
 
-        List<TextFormat> newFormatList = this.selectedText.stream()//
-                .map(v -> v.getFormat().withItalic(isItalic))//
-                .collect(Collectors.toList());
+        //TODO
+        // List<TextFormat> newFormatList = this.selectedText.stream()//
+        //         .map(v -> v.getFormat().withItalic(isItalic))//
+        //         .collect(Collectors.toList());
 
-        var command = new TextElementChangeFormatCommandV2(selectedText, newFormatList);
-        command.execute();
-        commandDeque.addCommand(command);
+        // var command = new TextElementChangeFormatCommandV2(selectedText, newFormatList);
+        // command.execute();
+        // commandDeque.addCommand(command);
 
         docRoot.redrawDocument();
     }

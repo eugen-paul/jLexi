@@ -1,7 +1,5 @@
 package net.eugenpaul.jlexi.component;
 
-import java.util.Iterator;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +9,7 @@ import net.eugenpaul.jlexi.utils.Size;
 import net.eugenpaul.jlexi.utils.Vector2d;
 import net.eugenpaul.jlexi.visitor.Visitor;
 
-public abstract class Glyph {
+public abstract class Glyph implements Iterable<Glyph> {
 
     @Getter
     @Setter
@@ -47,13 +45,6 @@ public abstract class Glyph {
      * @return drawable data
      */
     public abstract Drawable getDrawable();
-
-    /**
-     * get a Iterator to iterate over children
-     * 
-     * @return Iterator
-     */
-    public abstract Iterator<Glyph> iterator();
 
     /**
      * Compute the relativposition of Element to given parentGlyph.
@@ -92,7 +83,6 @@ public abstract class Glyph {
     }
 
     /**
-     * 
      * @param checker
      */
     public abstract void visit(Visitor checker);
