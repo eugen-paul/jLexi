@@ -15,7 +15,11 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateableV2;
+import net.eugenpaul.jlexi.component.text.action.TextPaneBoldActionV2;
 import net.eugenpaul.jlexi.component.text.action.TextPaneCursorActionV2;
+import net.eugenpaul.jlexi.component.text.action.TextPaneItalicActionV2;
+import net.eugenpaul.jlexi.component.text.action.TextPaneRedoActionV2;
+import net.eugenpaul.jlexi.component.text.action.TextPaneUndoActionV2;
 import net.eugenpaul.jlexi.component.text.converter.TextDataV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.HorizontalAlignmentRepresentationCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositorV2;
@@ -117,12 +121,12 @@ public class TextPaneV2 extends GuiGlyph
 
     private void registerDefaultKeyBindings() {
         // TODO
-        // addDefaultKeyBindings("bold", new TextPaneBoldAction(this.mouseCursor));
-        // addDefaultKeyBindings("italic", new TextPaneItalicAction(this.mouseCursor));
+        addDefaultKeyBindings("bold", new TextPaneBoldActionV2(this.mouseCursor));
+        addDefaultKeyBindings("italic", new TextPaneItalicActionV2(this.mouseCursor));
         // addDefaultKeyBindings("copy", new TextPaneCopyAction(this.keyHandler));
         // addDefaultKeyBindings("paste", new TextPanePasteAction(this.keyHandler));
-        // addDefaultKeyBindings("undo", new TextPaneUndoAction(this.keyHandler));
-        // addDefaultKeyBindings("redo", new TextPaneRedoAction(this.keyHandler));
+        addDefaultKeyBindings("undo", new TextPaneUndoActionV2(this.keyHandler));
+        addDefaultKeyBindings("redo", new TextPaneRedoActionV2(this.keyHandler));
 
         addDefaultKeyBindings("cursorNext", new TextPaneCursorActionV2(this.keyHandler, MovePosition.NEXT));
         addDefaultKeyBindings("cursorPrevious", new TextPaneCursorActionV2(this.keyHandler, MovePosition.PREVIOUS));

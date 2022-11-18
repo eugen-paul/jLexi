@@ -1,13 +1,11 @@
 package net.eugenpaul.jlexi.component.text;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.Getter;
 import net.eugenpaul.jlexi.appl.subscriber.GlobalSubscribeTypes;
 import net.eugenpaul.jlexi.appl.subscriber.SchedulerSub;
 import net.eugenpaul.jlexi.command.TextCommandV2;
-import net.eugenpaul.jlexi.command.TextElementChangeFormatCommandV2;
+import net.eugenpaul.jlexi.command.TextElementChangeFormatToBoldCommandV2;
+import net.eugenpaul.jlexi.command.TextElementChangeFormatToItalicCommandV2;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPositionV2;
@@ -88,11 +86,6 @@ public class CursorV2 implements EventSubscriber {
             return;
         }
 
-        //TODO
-        // for (var element : this.selectedText) {
-        //     element.removeEffect(this.selectedTextEffect);
-        // }
-
         this.eventManager.fireEvent(this, SchedulerSub.REMOVE_EVENT, this.selectedTextEffect);
 
         this.selectedText = null;
@@ -154,14 +147,9 @@ public class CursorV2 implements EventSubscriber {
             return;
         }
 
-        //TODO
-        // List<TextFormat> newFormatList = this.selectedText.stream()//
-        //         .map(v -> v.getFormat().withBold(isBold))//
-        //         .collect(Collectors.toList());
-
-        // var command = new TextElementChangeFormatCommandV2(selectedText, newFormatList);
-        // command.execute();
-        // commandDeque.addCommand(command);
+        var command = new TextElementChangeFormatToBoldCommandV2(selectedText);
+        command.execute();
+        commandDeque.addCommand(command);
 
         docRoot.redrawDocument();
     }
@@ -173,14 +161,9 @@ public class CursorV2 implements EventSubscriber {
             return;
         }
 
-        //TODO
-        // List<TextFormat> newFormatList = this.selectedText.stream()//
-        //         .map(v -> v.getFormat().withItalic(isItalic))//
-        //         .collect(Collectors.toList());
-
-        // var command = new TextElementChangeFormatCommandV2(selectedText, newFormatList);
-        // command.execute();
-        // commandDeque.addCommand(command);
+        var command = new TextElementChangeFormatToItalicCommandV2(selectedText);
+        command.execute();
+        commandDeque.addCommand(command);
 
         docRoot.redrawDocument();
     }

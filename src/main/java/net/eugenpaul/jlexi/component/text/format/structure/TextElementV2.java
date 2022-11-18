@@ -9,7 +9,6 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
-import net.eugenpaul.jlexi.component.iterator.TextStructureV2ToListIterator;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormatEffect;
 import net.eugenpaul.jlexi.component.text.format.representation.TextPaneElement;
@@ -67,6 +66,11 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     @Override
     public void updateEffect(GlyphEffect effect) {
+        notifyChangeUp();
+    }
+
+    public void updateFormat(TextFormat newFormat) {
+        this.format = newFormat;
         notifyChangeUp();
     }
 

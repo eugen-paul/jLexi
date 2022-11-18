@@ -310,44 +310,6 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         }
 
         return Optional.empty();
-
-        // var pathToA = getPathToElement(elemB);
-        // var pathToB = getPathToElement(elemB);
-
-        // if (!pathToA.isEmpty() && !pathToB.isEmpty() && pathToA.get(0) == pathToB.get(0)) {
-        // return pathToA.get(0).isABeforB(elemA, elemB);
-        // }
-
-        // var parentA = elemA.getParentStructure();
-        // TextStructureV2 wayToA = null;
-        // if (parentA == this) {
-        // wayToA = elemA;
-        // } else if (!pathToA.isEmpty()) {
-        // wayToA = pathToA.get(0);
-        // } else {
-        // return Optional.empty();
-        // }
-
-        // var parentB = elemB.getParentStructure();
-        // TextStructureV2 wayToB = null;
-        // if (parentB == this) {
-        // wayToB = elemB;
-        // } else if (!pathToB.isEmpty()) {
-        // wayToB = pathToB.get(0);
-        // } else {
-        // return Optional.empty();
-        // }
-
-        // for (var child : this.children) {
-        // if (child == wayToA) {
-        // return Optional.of(Boolean.TRUE);
-        // }
-        // if (child == wayToB) {
-        // return Optional.of(Boolean.FALSE);
-        // }
-        // }
-
-        // return Optional.empty();
     }
 
     @Override

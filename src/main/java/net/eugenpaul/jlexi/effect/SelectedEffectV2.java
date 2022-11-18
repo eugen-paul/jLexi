@@ -1,7 +1,6 @@
 package net.eugenpaul.jlexi.effect;
 
 import java.time.Duration;
-import java.util.List;
 
 import net.eugenpaul.jlexi.component.interfaces.EffectHolder;
 import net.eugenpaul.jlexi.component.iterator.PreOrderLeafIterator;
@@ -28,10 +27,6 @@ public class SelectedEffectV2 implements GlyphEffect {
                 target.addEffect(this);
             }
         }
-        // TODO
-        // for (var glyph : glyphs) {
-        // glyph.addEffect(this);
-        // }
     }
 
     @Override
@@ -59,10 +54,6 @@ public class SelectedEffectV2 implements GlyphEffect {
             }
         }
 
-        // TODO
-        // for (var glyph : glyphs) {
-        // glyph.updateEffect(this);
-        // }
         docRoot.redrawDocument();
     }
 
@@ -82,11 +73,6 @@ public class SelectedEffectV2 implements GlyphEffect {
             }
         }
 
-        // TODO
-        // for (var glyph : glyphs) {
-        // glyph.removeEffect(this);
-        // glyph.updateEffect(null);
-        // }
         docRoot.redrawDocument();
     }
 
