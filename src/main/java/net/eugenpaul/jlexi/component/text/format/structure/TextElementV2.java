@@ -171,14 +171,11 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     @Override
     protected ListIterator<TextStructureV2> childListIterator() {
-        return new TextStructureV2ToListIterator<>(List.of(this));
+        return Collections.emptyListIterator();
     }
 
     @Override
     protected ListIterator<TextStructureV2> childListIterator(int index) {
-        if (index == 0) {
-            return childListIterator();
-        }
         return Collections.emptyListIterator();
     }
 

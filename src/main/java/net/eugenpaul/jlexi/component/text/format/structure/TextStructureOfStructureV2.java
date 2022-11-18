@@ -273,7 +273,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     @Override
     public Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB) {
-        var pathToA = getChildWithElement(elemB);
+        var pathToA = getChildWithElement(elemA);
         var pathToB = getChildWithElement(elemB);
 
         if (pathToA != null && pathToA == pathToB) {
@@ -365,12 +365,22 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     public TextStructureV2 getSelectedFrom(TextElementV2 from) {
         var root = copyStructure();
 
-        var childStructure = getChildWithElement(from);
+        var childStructureFrom = getChildWithElement(from);
+
+        var parentA = from.getParentStructure();
+        TextStructureV2 way = null;
+        if (parentA == this) {
+            way = from;
+        } else if (childStructureFrom != null) {
+            way = childStructureFrom;
+        } else {
+            return root;
+        }
 
         boolean doAdd = false;
         for (var child : this.children) {
-            if (childStructure == child) {
-                root.children.add(childStructure.getSelectedFrom(from));
+            if (way == child) {
+                root.children.add(way.getSelectedFrom(from));
                 doAdd = true;
             } else if (doAdd) {
                 root.children.add(child.getSelectedAll());
@@ -383,11 +393,22 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     @Override
     public TextStructureV2 getSelectedTo(TextElementV2 to) {
         var root = copyStructure();
-        var childStructure = getChildWithElement(to);
+
+        var childStructureTo = getChildWithElement(to);
+
+        var parentA = to.getParentStructure();
+        TextStructureV2 way = null;
+        if (parentA == this) {
+            way = to;
+        } else if (childStructureTo != null) {
+            way = childStructureTo;
+        } else {
+            return root;
+        }
 
         for (var child : this.children) {
-            if (childStructure == child) {
-                root.children.add(childStructure.getSelectedTo(to));
+            if (way == child) {
+                root.children.add(way.getSelectedTo(to));
                 break;
             } else {
                 root.children.add(child.getSelectedAll());
