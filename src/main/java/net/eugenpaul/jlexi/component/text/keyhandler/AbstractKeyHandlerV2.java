@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.command.TextCommandV2;
+import net.eugenpaul.jlexi.command.TextElementAddBeforeCommandV2;
 import net.eugenpaul.jlexi.component.text.CursorV2;
 import net.eugenpaul.jlexi.component.text.converter.ClipboardConverter;
 import net.eugenpaul.jlexi.component.text.converter.clipboard.ClipboardConverterImpl;
@@ -123,7 +124,7 @@ public class AbstractKeyHandlerV2 {
     public void copy() {
         LOGGER.trace("COPY");
         var cursor = this.component.getMouseCursor();
-        //TODO
+        // TODO
         LOGGER.trace("COPY - TODO");
         // clipboardConverter.write(cursor.getSelectedText());
     }
@@ -134,14 +135,14 @@ public class AbstractKeyHandlerV2 {
         var cursor = this.component.getMouseCursor();
         List<TextElement> textFromClipboard;
 
-        //TODO
+        // TODO
         LOGGER.trace("PASTE - TODO");
 
         // try {
-        //     textFromClipboard = clipboardConverter.read(cursor.getTextFormat(), cursor.getTextFormatEffect());
+        // textFromClipboard = clipboardConverter.read(cursor.getTextFormat(), cursor.getTextFormatEffect());
         // } catch (UnsupportedException e) {
-        //     LOGGER.error("Can't read data from clipboard. ", e);
-        //     return;
+        // LOGGER.error("Can't read data from clipboard. ", e);
+        // return;
         // }
 
         // cursor.removeSelection();
@@ -172,33 +173,35 @@ public class AbstractKeyHandlerV2 {
 
     private void addTextElement(CursorV2 cursor, TextElementV2 addedElement) {
         TextCommandV2 addCommand;
-        //TODO
-        // if (cursor.isTextSelected()) {
-        //     addCommand = new TextElementReplaceCommand(//
-        //             addedElement, //
-        //             cursor.getSelectedText());
-        //     cursor.removeSelection();
-        // } else {
-        //     addCommand = new TextElementAddBeforeCommand(//
-        //             addedElement, //
-        //             cursor.getPosition());
-        // }
+        if (cursor.isTextSelected()) {
+            // TODO
+            // addCommand = new TextElementReplaceCommand(//
+            //         addedElement, //
+            //         cursor.getSelectedText());
+            // cursor.removeSelection();
 
-        // doTextCommand(addCommand);
+            return;
+        } else {
+            addCommand = new TextElementAddBeforeCommandV2(//
+                    addedElement, //
+                    cursor.getPosition());
+        }
 
-        // cursor.moveCursorTo(addCommand.getData());
+        doTextCommand(addCommand);
+
+        cursor.moveCursorTo(addCommand.getData());
     }
 
     private void keyPressedBackSpace() {
         var cursor = this.component.getMouseCursor();
 
         TextCommandV2 deleteCommand;
-        //TODO
+        // TODO
         // if (cursor.isTextSelected()) {
-        //     deleteCommand = new TextElementRemoveSelectedCommand(cursor.getSelectedText());
-        //     cursor.removeSelection();
+        // deleteCommand = new TextElementRemoveSelectedCommand(cursor.getSelectedText());
+        // cursor.removeSelection();
         // } else {
-        //     deleteCommand = new TextRemoveBevorCommand(cursor.getPosition());
+        // deleteCommand = new TextRemoveBevorCommand(cursor.getPosition());
         // }
 
         // doTextCommand(deleteCommand);
@@ -210,12 +213,12 @@ public class AbstractKeyHandlerV2 {
         var cursor = this.component.getMouseCursor();
 
         TextCommandV2 deleteCommand;
-        //TODO
+        // TODO
         // if (cursor.isTextSelected()) {
-        //     deleteCommand = new TextElementRemoveSelectedCommand(cursor.getSelectedText());
-        //     cursor.removeSelection();
+        // deleteCommand = new TextElementRemoveSelectedCommand(cursor.getSelectedText());
+        // cursor.removeSelection();
         // } else {
-        //     deleteCommand = new TextElementRemoveCommand(cursor.getPosition());
+        // deleteCommand = new TextElementRemoveCommand(cursor.getPosition());
         // }
 
         // doTextCommand(deleteCommand);

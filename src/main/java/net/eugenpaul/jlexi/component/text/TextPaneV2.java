@@ -15,6 +15,7 @@ import net.eugenpaul.jlexi.component.GuiGlyph;
 import net.eugenpaul.jlexi.component.interfaces.ChangeListener;
 import net.eugenpaul.jlexi.component.interfaces.MouseDraggable;
 import net.eugenpaul.jlexi.component.interfaces.TextUpdateableV2;
+import net.eugenpaul.jlexi.component.text.action.TextPaneAddSpecialCharracterV2;
 import net.eugenpaul.jlexi.component.text.action.TextPaneBoldActionV2;
 import net.eugenpaul.jlexi.component.text.action.TextPaneCursorActionV2;
 import net.eugenpaul.jlexi.component.text.action.TextPaneItalicActionV2;
@@ -37,6 +38,7 @@ import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.AbstractKeyHandlerV2;
 import net.eugenpaul.jlexi.component.text.keyhandler.CommandsDeque;
 import net.eugenpaul.jlexi.component.text.keyhandler.KeyHandlerableV2;
+import net.eugenpaul.jlexi.component.text.keyhandler.SpecialCharacter;
 import net.eugenpaul.jlexi.component.text.keyhandler.TextPaneExtendedKeyHandlerV2;
 import net.eugenpaul.jlexi.design.listener.KeyEventAdapter;
 import net.eugenpaul.jlexi.design.listener.MouseDragAdapter;
@@ -135,10 +137,10 @@ public class TextPaneV2 extends GuiGlyph
         addDefaultKeyBindings("cursorBol", new TextPaneCursorActionV2(this.keyHandler, MovePosition.BENIG_OF_LINE));
         addDefaultKeyBindings("cursorEol", new TextPaneCursorActionV2(this.keyHandler, MovePosition.END_OF_LINE));
 
-        // addDefaultKeyBindings("addNewLine",
-        // new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.NEW_LINE));
-        // addDefaultKeyBindings("addSideBreak",
-        // new TextPaneAddSpecialCharracter(this.keyHandler, SpecialCharacter.SIDE_BREAK));
+        addDefaultKeyBindings("addNewLine",
+                new TextPaneAddSpecialCharracterV2(this.keyHandler, SpecialCharacter.NEW_LINE));
+        addDefaultKeyBindings("addSideBreak",
+                new TextPaneAddSpecialCharracterV2(this.keyHandler, SpecialCharacter.SIDE_BREAK));
     }
 
     public boolean registerKeyAction(String keys, String actionName) {
