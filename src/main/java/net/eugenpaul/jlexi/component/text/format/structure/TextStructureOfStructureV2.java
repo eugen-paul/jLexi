@@ -113,12 +113,13 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     @Override
     public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
-        var childToRemove = getChildWithElement(elementToRemove);
-        if (childToRemove == null) {
+        //TODO
+        var pathToRemove = getChildWithElement(elementToRemove);
+        if (pathToRemove == null) {
             return TextRemoveResponseV2.EMPTY;
         }
 
-        if (childToRemove == elementToRemove) {
+        if (pathToRemove == elementToRemove) {
             // delete own child node
             var nextElement = getNextChild(elementToRemove);
 
@@ -142,7 +143,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             );
         }
 
-        return childToRemove.removeElement(elementToRemove);
+        return pathToRemove.removeElement(elementToRemove);
     }
 
     /**
@@ -280,31 +281,19 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             return pathToA.isABeforB(elemA, elemB);
         }
 
-        var parentA = elemA.getParentStructure();
-        TextStructureV2 wayToA = null;
-        if (parentA == this) {
-            wayToA = elemA;
-        } else if (pathToA != null) {
-            wayToA = pathToA;
-        } else {
+        if (pathToA == null) {
             return Optional.empty();
         }
 
-        var parentB = elemB.getParentStructure();
-        TextStructureV2 wayToB = null;
-        if (parentB == this) {
-            wayToB = elemB;
-        } else if (pathToB != null) {
-            wayToB = pathToB;
-        } else {
+        if (pathToB == null) {
             return Optional.empty();
         }
 
         for (var child : this.children) {
-            if (child == wayToA) {
+            if (child == pathToA) {
                 return Optional.of(Boolean.TRUE);
             }
-            if (child == wayToB) {
+            if (child == pathToB) {
                 return Optional.of(Boolean.FALSE);
             }
         }
@@ -327,22 +316,16 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     public TextStructureV2 getSelectedFrom(TextElementV2 from) {
         var root = copyStructure();
 
-        var childStructureFrom = getChildWithElement(from);
+        var pathToFrom = getChildWithElement(from);
 
-        var parentA = from.getParentStructure();
-        TextStructureV2 way = null;
-        if (parentA == this) {
-            way = from;
-        } else if (childStructureFrom != null) {
-            way = childStructureFrom;
-        } else {
+        if (pathToFrom == null) {
             return root;
         }
 
         boolean doAdd = false;
         for (var child : this.children) {
-            if (way == child) {
-                root.children.add(way.getSelectedFrom(from));
+            if (pathToFrom == child) {
+                root.children.add(pathToFrom.getSelectedFrom(from));
                 doAdd = true;
             } else if (doAdd) {
                 root.children.add(child.getSelectedAll());
@@ -356,21 +339,15 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     public TextStructureV2 getSelectedTo(TextElementV2 to) {
         var root = copyStructure();
 
-        var childStructureTo = getChildWithElement(to);
+        var pathToTo = getChildWithElement(to);
 
-        var parentA = to.getParentStructure();
-        TextStructureV2 way = null;
-        if (parentA == this) {
-            way = to;
-        } else if (childStructureTo != null) {
-            way = childStructureTo;
-        } else {
+        if (pathToTo == null) {
             return root;
         }
 
         for (var child : this.children) {
-            if (way == child) {
-                root.children.add(way.getSelectedTo(to));
+            if (pathToTo == child) {
+                root.children.add(pathToTo.getSelectedTo(to));
                 break;
             } else {
                 root.children.add(child.getSelectedAll());
@@ -384,44 +361,28 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     public TextStructureV2 getSelectedBetween(TextElementV2 from, TextElementV2 to) {
         var root = copyStructure();
 
-        var childStructureFrom = getChildWithElement(from);
-        var childStructureTo = getChildWithElement(to);
+        var pathToA = getChildWithElement(from);
+        var pathToB = getChildWithElement(to);
 
-        var parentA = from.getParentStructure();
-        TextStructureV2 wayToA = null;
-        if (parentA == this) {
-            wayToA = from;
-        } else if (childStructureFrom != null) {
-            wayToA = childStructureFrom;
-        } else {
-            return root;
-        }
-
-        var parentB = to.getParentStructure();
-        TextStructureV2 wayToB = null;
-        if (parentB == this) {
-            wayToB = to;
-        } else if (childStructureTo != null) {
-            wayToB = childStructureTo;
-        } else {
+        if (pathToA == null || pathToB == null) {
             return root;
         }
 
         boolean doAdd = false;
 
         for (var child : this.children) {
-            if (wayToA == child && wayToB == child) {
-                root.children.add(wayToA.getSelectedBetween(from, to));
-            } else if (wayToA == child) {
-                root.children.add(wayToA.getSelectedFrom(from));
+            if (pathToA == child && pathToB == child) {
+                root.children.add(pathToA.getSelectedBetween(from, to));
+            } else if (pathToA == child) {
+                root.children.add(pathToA.getSelectedFrom(from));
                 doAdd = true;
-            } else if (wayToB == child) {
-                root.children.add(wayToB.getSelectedTo(to));
+            } else if (pathToB == child) {
+                root.children.add(pathToB.getSelectedTo(to));
             } else if (doAdd) {
                 root.children.add(child.getSelectedAll());
             }
 
-            if (wayToB == child) {
+            if (pathToB == child) {
                 break;
             }
         }
@@ -437,6 +398,12 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
                 break;
             }
         }
+    }
+
+    @Override
+    public TextAddResponseV2 addBefore(TextStructureV2 position, TextStructureV2 element) {
+        // TODO Auto-generated method stub
+        return super.addBefore(position, element);
     }
 
 }

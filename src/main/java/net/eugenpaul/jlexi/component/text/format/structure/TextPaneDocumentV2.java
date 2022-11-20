@@ -109,12 +109,4 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
         return false;
     }
 
-    public TextAddResponseV2 addBefore(TextStructureV2 position, TextStructureV2 element) {
-        return replaceChild(//
-                position, //
-                List.of(element, position) // TODO: Can I use the "position" here or do I need to create a copy of the
-                                           // position?
-        );
-    }
-
 }

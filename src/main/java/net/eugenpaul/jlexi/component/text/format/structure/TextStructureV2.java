@@ -136,6 +136,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
     public abstract void clear();
 
     public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
+        // TODO
         TextStructureV2 child = getChildWithElement(elementToRemove);
         if (null == child) {
             return TextRemoveResponseV2.EMPTY;
@@ -177,7 +178,18 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
         throw new IllegalArgumentException("Cann't restore child structure. Owner or child not found.");
     }
 
+    /**
+     * The method returns the child node that contains the target node, or the target node if the current node is the
+     * target node.
+     * 
+     * @param element
+     * @return
+     */
     protected TextStructureV2 getChildWithElement(TextStructureV2 element) {
+        if (element == this) {
+            return this;
+        }
+
         var childIterator = childListIterator();
         while (childIterator.hasNext()) {
             var child = childIterator.next();
@@ -211,4 +223,12 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
     protected abstract TextStructureV2 getFirstChild();
 
     protected abstract TextStructureV2 getLastChild();
+
+    public TextAddResponseV2 addBefore(TextStructureV2 position, TextStructureV2 element) {
+        var currentParent = getParentStructure();
+        if (currentParent != null) {
+            return currentParent.addBefore(position, element);
+        }
+        return TextAddResponseV2.EMPTY;
+    }
 }
