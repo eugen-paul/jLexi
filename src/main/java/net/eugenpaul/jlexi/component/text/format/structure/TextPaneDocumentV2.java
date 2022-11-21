@@ -109,4 +109,8 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
         return false;
     }
 
+    @Override
+    protected boolean isComplete() {
+        return true;
+    }
 }

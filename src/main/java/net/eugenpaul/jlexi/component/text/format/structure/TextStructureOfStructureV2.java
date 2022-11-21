@@ -113,7 +113,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     @Override
     public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
-        //TODO
+        // TODO
         var pathToRemove = getChildWithElement(elementToRemove);
         if (pathToRemove == null) {
             return TextRemoveResponseV2.EMPTY;
@@ -401,9 +401,86 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     }
 
     @Override
-    public TextAddResponseV2 addBefore(TextStructureV2 position, TextStructureV2 element) {
-        // TODO Auto-generated method stub
-        return super.addBefore(position, element);
+    public TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
+        var canBeProcessed = element.getElements().stream().allMatch(this::checkMergeWith);
+
+        if (!canBeProcessed) {
+            return super.addBefore(position, element);
+        }
+
+        var pathToPosition = getChildWithElement(position);
+        if (pathToPosition == position) {
+            return doInsertBefore(position, element.getElements().listIterator());
+        } else if (pathToPosition == null) {
+            return TextAddResponseV2.EMPTY;
+        }
+
+        return splitChildsBefore(position, element.getElements().listIterator());
+    }
+
+    private TextAddResponseV2 doInsertBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
+        if (getParentStructure() == null) {
+            return TextAddResponseV2.EMPTY;
+        }
+
+        var selfCopy = copyStructure();
+
+        var iterator = childListIterator();
+        while (iterator.hasNext()) {
+            var currentChild = iterator.next();
+            if (currentChild == position) {
+                while (data.hasNext()) {
+                    var dataElement = data.next();
+                    dataElement.setParentStructure(this);
+                    selfCopy.children.add(dataElement);
+                }
+            }
+            selfCopy.children.add(currentChild);
+        }
+
+        return new TextAddResponseV2(//
+                getParentStructure(), //
+                this, //
+                List.of(selfCopy) //
+        );
+    }
+
+    @Override
+    protected TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
+        var pathToPosition = getChildWithElement(position);
+
+        if (pathToPosition == position) {
+            return doInsertBefore(position, data);
+        }
+
+        var selfCopy = copyStructure();
+        var iterator = childListIterator();
+
+        while (iterator.hasNext()) {
+            var currentChild = iterator.next();
+            if (currentChild == pathToPosition) {
+                var first = true;
+                while (data.hasNext()) {
+                    var currentData = data.next();
+                    if (first) {
+                        var mergedChild = currentChild.splitChildsBefore(position, currentData.childListIterator());
+                        mergedChild.getNewStructures().forEach(v -> v.setParentStructure(selfCopy));
+                        selfCopy.children.addAll(mergedChild.getNewStructures());
+                        first = false;
+                    } else {
+                        selfCopy.children.add(currentData);
+                    }
+                }
+            } else {
+                selfCopy.children.add(currentChild);
+            }
+        }
+
+        return new TextAddResponseV2(//
+                getParentStructure(), //
+                this, //
+                List.of(selfCopy) //
+        );
     }
 
 }

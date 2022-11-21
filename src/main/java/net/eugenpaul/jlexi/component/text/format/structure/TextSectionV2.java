@@ -160,4 +160,9 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
         return children.isEmpty();
     }
 
+    @Override
+    protected boolean isComplete() {
+        return isEndOfSection();
+    }
+
 }

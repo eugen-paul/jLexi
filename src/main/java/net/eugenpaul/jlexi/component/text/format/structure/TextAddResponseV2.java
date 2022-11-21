@@ -27,7 +27,7 @@ public class TextAddResponseV2 {
     }
 
     public TextAddResponseV2(//
-    TextStructureV2 owner, //
+            TextStructureV2 owner, //
             TextStructureV2 removedStructures, //
             List<TextStructureV2> newStructures //
     ) {

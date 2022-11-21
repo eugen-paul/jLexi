@@ -41,7 +41,7 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
     public TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to) {
         return TextAddResponseV2.EMPTY;
     }
-    
+
     @Override
     protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
         return TextRemoveResponseV2.EMPTY;
@@ -60,7 +60,7 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
 
     @Override
     public TextStructureV2 getSelectedAll() {
-        //TODO
+        // TODO
         return this;
     }
 
@@ -165,4 +165,13 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
         return this.sharedElement.getRepresentation(size);
     }
 
+    @Override
+    protected TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
+        return TextAddResponseV2.EMPTY;
+    }
+
+    @Override
+    protected boolean isComplete() {
+        return true;
+    }
 }

@@ -48,6 +48,8 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     protected abstract TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child);
 
+    protected abstract TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data);
+
     public abstract Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB);
 
     public abstract TextStructureV2 getSelectedAll();
@@ -57,6 +59,8 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
     public abstract TextStructureV2 getSelectedFrom(TextElementV2 from);
 
     public abstract TextStructureV2 getSelectedTo(TextElementV2 to);
+
+    protected abstract boolean isComplete();
 
     public boolean isEndOfLine() {
         return false;
@@ -224,7 +228,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     protected abstract TextStructureV2 getLastChild();
 
-    public TextAddResponseV2 addBefore(TextStructureV2 position, TextStructureV2 element) {
+    public TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
         var currentParent = getParentStructure();
         if (currentParent != null) {
             return currentParent.addBefore(position, element);

@@ -130,4 +130,9 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         }
         throw new NullPointerException("Paragraph has no EndOfSection");
     }
+
+    @Override
+    protected boolean isComplete() {
+        return isEndOfLine();
+    }
 }
