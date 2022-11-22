@@ -132,6 +132,11 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     }
 
     @Override
+    protected boolean canContainChild(TextStructureV2 element) {
+        return element instanceof TextParagraphV2;
+    }
+
+    @Override
     protected TextStructureOfStructureV2 copyStructure() {
         var responseSection = new TextSectionV2(getParentStructure(), this.configuration);
         responseSection.setHeaderCreater(this.headerCreater);

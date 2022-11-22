@@ -402,7 +402,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     @Override
     public TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
-        var canBeProcessed = element.getElements().stream().allMatch(this::checkMergeWith);
+        var canBeProcessed = element.getElements().stream().allMatch(this::canContainChild);
 
         if (!canBeProcessed) {
             return super.addBefore(position, element);
@@ -415,10 +415,10 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             return TextAddResponseV2.EMPTY;
         }
 
-        return splitChildsBefore(position, element.getElements().listIterator());
+        return pathToPosition.splitChildsBefore(position, element.getElements().listIterator());
     }
 
-    private TextAddResponseV2 doInsertBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
+    private TextAddResponseV2 doInsertBefore(TextStructureV2 position, ListIterator<TextStructureV2> dataIterator) {
         if (getParentStructure() == null) {
             return TextAddResponseV2.EMPTY;
         }
@@ -429,8 +429,8 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         while (iterator.hasNext()) {
             var currentChild = iterator.next();
             if (currentChild == position) {
-                while (data.hasNext()) {
-                    var dataElement = data.next();
+                while (dataIterator.hasNext()) {
+                    var dataElement = dataIterator.next();
                     dataElement.setParentStructure(this);
                     selfCopy.children.add(dataElement);
                 }
@@ -443,6 +443,68 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
                 this, //
                 List.of(selfCopy) //
         );
+    }
+
+    @Override
+    protected TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
+        var pathToPosition = getChildWithElement(position);
+
+        List<TextStructureV2> newStructures = new LinkedList<>();
+
+        var currentStructure = copyStructure();
+        var iterator = childListIterator();
+
+        while (iterator.hasNext()) {
+            var currentChild = iterator.next();
+            if (pathToPosition != currentChild) {
+                currentStructure.children.add(currentChild);
+            } else {
+
+            }
+        }
+
+        return new TextAddResponseV2(//
+                getParentStructure(), //
+                this, //
+                newStructures //
+        );
+    }
+
+    protected List<TextStructureV2> splitBefore(TextStructureV2 position, TextStructureV2 first, TextStructureV2 last) {
+        var pathToPosition = getChildWithElement(position);
+
+        List<TextStructureV2> response = new LinkedList<>();
+
+        var currentStructure = copyStructure();
+        response.add(currentStructure);
+
+        var iterator = childListIterator();
+
+        while (iterator.hasNext()) {
+            var currentChild = iterator.next();
+            if (pathToPosition != currentChild) {
+                currentStructure.children.add(currentChild);
+            } else {
+                if (pathToPosition == position) {
+                    var firstIterator = first.childListIterator();
+                    while (firstIterator.hasNext()) {
+                        currentStructure.children.add(firstIterator.next());
+                    }
+
+                    currentStructure = copyStructure();
+                    response.add(currentStructure);
+
+                    var lastIterator = last.childListIterator();
+                    while (lastIterator.hasNext()) {
+                        currentStructure.children.add(lastIterator.next());
+                    }
+                } else {
+                    // TODO
+                }
+            }
+        }
+
+        return response;
     }
 
     @Override

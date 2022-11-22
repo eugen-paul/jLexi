@@ -25,6 +25,11 @@ public class TextEmptyV2 extends TextStructureV2 {
     }
 
     @Override
+    protected boolean canContainChild(TextStructureV2 element) {
+        return false;
+    }
+
+    @Override
     public TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to) {
         return TextAddResponseV2.EMPTY;
     }
@@ -97,6 +102,11 @@ public class TextEmptyV2 extends TextStructureV2 {
 
     @Override
     protected TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
+        return TextAddResponseV2.EMPTY;
+    }
+
+    @Override
+    protected TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
         return TextAddResponseV2.EMPTY;
     }
 

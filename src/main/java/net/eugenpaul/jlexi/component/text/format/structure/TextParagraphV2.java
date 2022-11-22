@@ -46,6 +46,11 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
+    protected boolean canContainChild(TextStructureV2 element) {
+        return element instanceof TextElementV2;
+    }
+
+    @Override
     protected TextStructureOfStructureV2 copyStructure() {
         return new TextParagraphV2(getParentStructure(), this.config, this.storage);
     }

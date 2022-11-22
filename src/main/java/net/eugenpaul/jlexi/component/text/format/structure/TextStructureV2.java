@@ -42,11 +42,15 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
      */
     protected abstract boolean checkMergeWith(TextStructureV2 element);
 
+    protected abstract boolean canContainChild(TextStructureV2 element);
+
     public abstract TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to);
 
     protected abstract TextRemoveResponseV2 mergeWith(TextStructureV2 nextElement);
 
     protected abstract TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child);
+
+    protected abstract TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data);
 
     protected abstract TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data);
 

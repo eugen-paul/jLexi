@@ -92,6 +92,11 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
+    protected boolean canContainChild(TextStructureV2 element) {
+        return element instanceof TextSectionV2;
+    }
+
+    @Override
     protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
         // Document ist the root class and cann't be merged with other elements
         return TextRemoveResponseV2.EMPTY;
