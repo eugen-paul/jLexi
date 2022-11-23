@@ -445,6 +445,9 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         );
     }
 
+    // A different approach is to be implemented here. It will be simple if documents can consist only of sections,
+    // sections only of paragraphs and paragraphs only of simple elements. If you want to have other elements (lists,
+    // tables, ...), then the class Paragraph should be extended. Each class should implement its own split method.
     @Override
     protected TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
         var pathToPosition = getChildWithElement(position);
