@@ -410,7 +410,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
         var pathToPosition = getChildWithElement(position);
         if (pathToPosition == position) {
-            return doInsertBefore(position, element.getElements().listIterator());
+            return doInsertBefore(position, element.getElements());
         } else if (pathToPosition == null) {
             return TextAddResponseV2.EMPTY;
         }
@@ -418,31 +418,31 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         return pathToPosition.splitChildsBefore(position, element.getElements().listIterator());
     }
 
-    private TextAddResponseV2 doInsertBefore(TextStructureV2 position, ListIterator<TextStructureV2> dataIterator) {
-        if (getParentStructure() == null) {
+    protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, List<TextStructureV2> dataIterator) {
+        // if (getParentStructure() == null) {
             return TextAddResponseV2.EMPTY;
-        }
+        // }
 
-        var selfCopy = copyStructure();
+        // var selfCopy = copyStructure();
 
-        var iterator = childListIterator();
-        while (iterator.hasNext()) {
-            var currentChild = iterator.next();
-            if (currentChild == position) {
-                while (dataIterator.hasNext()) {
-                    var dataElement = dataIterator.next();
-                    dataElement.setParentStructure(this);
-                    selfCopy.children.add(dataElement);
-                }
-            }
-            selfCopy.children.add(currentChild);
-        }
+        // var iterator = childListIterator();
+        // while (iterator.hasNext()) {
+        //     var currentChild = iterator.next();
+        //     if (currentChild == position) {
+        //         while (dataIterator.hasNext()) {
+        //             var dataElement = dataIterator.next();
+        //             dataElement.setParentStructure(this);
+        //             selfCopy.children.add(dataElement);
+        //         }
+        //     }
+        //     selfCopy.children.add(currentChild);
+        // }
 
-        return new TextAddResponseV2(//
-                getParentStructure(), //
-                this, //
-                List.of(selfCopy) //
-        );
+        // return new TextAddResponseV2(//
+        //         getParentStructure(), //
+        //         this, //
+        //         List.of(selfCopy) //
+        // );
     }
 
     // A different approach is to be implemented here. It will be simple if documents can consist only of sections,
@@ -515,7 +515,9 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         var pathToPosition = getChildWithElement(position);
 
         if (pathToPosition == position) {
-            return doInsertBefore(position, data);
+            // return doInsertBefore(position, data);
+            //TODO
+            return null;
         }
 
         var selfCopy = copyStructure();

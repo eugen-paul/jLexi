@@ -1,6 +1,8 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactoryV2;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
@@ -139,5 +141,49 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     @Override
     protected boolean isComplete() {
         return isEndOfLine();
+    }
+
+    @Override
+    protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, List<TextStructureV2> data) {
+        if (getParentStructure() == null) {
+            return TextAddResponseV2.EMPTY;
+        }
+
+        if (!data.stream().allMatch(this::canContainChild)) {
+            return TextAddResponseV2.EMPTY;
+        }
+
+        var pathToPosition = getChildWithElement(position);
+        if (pathToPosition != position) {
+            return TextAddResponseV2.EMPTY;
+        }
+
+        List<TextStructureV2> newParagraphs = new LinkedList<>();
+
+        var selfCopy = copyStructure();
+        newParagraphs.add(selfCopy);
+
+        var childIterator = childListIterator();
+        while (childIterator.hasNext()) {
+            var currentChild = childIterator.next();
+            if (currentChild == position) {
+                var dataIterator = data.iterator();
+                while (dataIterator.hasNext()) {
+                    var currentData = dataIterator.next();
+                    selfCopy.children.add(currentData);
+                    if (currentData.isEndOfLine()) {
+                        selfCopy = copyStructure();
+                        newParagraphs.add(selfCopy);
+                    }
+                }
+            }
+            selfCopy.children.add(currentChild);
+        }
+
+        return new TextAddResponseV2(//
+                getParentStructure(), //
+                position, //
+                newParagraphs //
+        );
     }
 }
