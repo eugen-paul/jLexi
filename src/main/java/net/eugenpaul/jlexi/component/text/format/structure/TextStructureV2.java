@@ -66,6 +66,8 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     protected abstract boolean isComplete();
 
+    protected abstract void setComplete();
+
     public boolean isEndOfLine() {
         return false;
     }

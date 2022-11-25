@@ -114,4 +114,9 @@ public class TextEmptyV2 extends TextStructureV2 {
     protected boolean isComplete() {
         return true;
     }
+
+    @Override
+    protected void setComplete() {
+        // nothing todo
+    }
 }

@@ -184,4 +184,9 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
     protected boolean isComplete() {
         return true;
     }
+
+    @Override
+    protected void setComplete() {
+        // nothing todo
+    }
 }
