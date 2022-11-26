@@ -233,6 +233,68 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         );
     }
 
+    protected TextSplitResponse doSplit(TextStructureV2 position) {
+        if (getChildWithElement(position) != position) {
+            return TextSplitResponse.EMPTY;
+        }
+
+        var first = copyStructure();
+        var childIterator = childListIterator();
+
+        while (childIterator.hasNext()) {
+            var child = childIterator.next();
+            if (child == position) {
+                var lastElement = (TextElementV2) children.getLast();
+                first.children.add(//
+                        TextElementFactoryV2.genNewLineChar(//
+                                storage, //
+                                null, //
+                                lastElement.getFormat(), //
+                                lastElement.getFormatEffect() //
+                        ));
+
+                var last = copyStructure();
+                last.children.add(child);
+                childIterator.forEachRemaining(last.children::add);
+                return new TextSplitResponse(first, last);
+            }
+            first.children.add(child);
+        }
+
+        return TextSplitResponse.EMPTY;
+    }
+
+    protected TextAddResponseV2 doMerge(TextStructureV2 next) {
+        if (!checkMergeWith(next)) {
+            var self = copyStructure();
+            var childIterator = childListIterator();
+            // TODO add copy of childs?
+            childIterator.forEachRemaining(self.children::add);
+
+            return new TextAddResponseV2(//
+                    getParentStructure(), //
+                    self.children.getLast(), //
+                    List.of(self, next) //
+            );
+        }
+
+        var self = copyStructure();
+        var childIterator = childListIterator();
+        childIterator.forEachRemaining(self.children::add);
+        if (children.getLast().isEndOfLine()) {
+            self.children.removeLast();
+        }
+
+        var nextChildIterator = childListIterator();
+        nextChildIterator.forEachRemaining(self.children::add);
+
+        return new TextAddResponseV2(//
+                getParentStructure(), //
+                self.children.getLast(), //
+                List.of(self) //
+        );
+    }
+
     protected TextAddResponseV2 doSplit(TextStructureV2 position, List<TextStructureV2> data) {
         if (getParentStructure() == null || data.isEmpty()) {
             return TextAddResponseV2.EMPTY;
