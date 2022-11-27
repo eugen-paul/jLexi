@@ -420,28 +420,28 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, List<TextStructureV2> dataIterator) {
         // if (getParentStructure() == null) {
-            return TextAddResponseV2.EMPTY;
+        return TextAddResponseV2.EMPTY;
         // }
 
         // var selfCopy = copyStructure();
 
         // var iterator = childListIterator();
         // while (iterator.hasNext()) {
-        //     var currentChild = iterator.next();
-        //     if (currentChild == position) {
-        //         while (dataIterator.hasNext()) {
-        //             var dataElement = dataIterator.next();
-        //             dataElement.setParentStructure(this);
-        //             selfCopy.children.add(dataElement);
-        //         }
-        //     }
-        //     selfCopy.children.add(currentChild);
+        // var currentChild = iterator.next();
+        // if (currentChild == position) {
+        // while (dataIterator.hasNext()) {
+        // var dataElement = dataIterator.next();
+        // dataElement.setParentStructure(this);
+        // selfCopy.children.add(dataElement);
+        // }
+        // }
+        // selfCopy.children.add(currentChild);
         // }
 
         // return new TextAddResponseV2(//
-        //         getParentStructure(), //
-        //         this, //
-        //         List.of(selfCopy) //
+        // getParentStructure(), //
+        // this, //
+        // List.of(selfCopy) //
         // );
     }
 
@@ -471,6 +471,20 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
                 this, //
                 newStructures //
         );
+    }
+
+    @Override
+    protected void removeEoS() {
+        if (isEndOfSection()) {
+            children.getLast().removeEoS();
+        }
+    }
+
+    @Override
+    protected void removeEoL() {
+        if (isEndOfLine()) {
+            children.getLast().removeEoL();
+        }
     }
 
     protected List<TextStructureV2> splitBefore(TextStructureV2 position, TextStructureV2 first, TextStructureV2 last) {
@@ -516,7 +530,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
         if (pathToPosition == position) {
             // return doInsertBefore(position, data);
-            //TODO
+            // TODO
             return null;
         }
 

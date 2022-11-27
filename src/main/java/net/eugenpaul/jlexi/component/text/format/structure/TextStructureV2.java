@@ -46,6 +46,8 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     public abstract TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to);
 
+    protected abstract TextMergeResponseV2 doMerge(TextStructureV2 next);
+
     protected abstract TextRemoveResponseV2 mergeWith(TextStructureV2 nextElement);
 
     protected abstract TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child);
@@ -75,6 +77,9 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
     public boolean isEndOfSection() {
         return false;
     }
+
+    protected abstract void removeEoS();
+    protected abstract void removeEoL();
 
     protected List<TextStructureV2> getPathToElement(TextElementV2 element) {
         LinkedList<TextStructureV2> path = new LinkedList<>();

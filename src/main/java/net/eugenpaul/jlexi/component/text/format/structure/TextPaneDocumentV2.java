@@ -123,4 +123,9 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
     protected void setComplete() {
         // nothing todo
     }
+
+    @Override
+    protected TextMergeResponseV2 doMerge(TextStructureV2 next) {
+        return TextMergeResponseV2.EMPTY;
+    }
 }

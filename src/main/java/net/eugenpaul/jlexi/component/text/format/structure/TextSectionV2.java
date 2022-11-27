@@ -174,4 +174,50 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     protected void setComplete() {
         children.getLast().setComplete();
     }
+
+    @Override
+    protected TextMergeResponseV2 doMerge(TextStructureV2 next) {
+        var self = copyStructure();
+
+        var childIterator = childListIterator();
+        childIterator.forEachRemaining(self.children::add);
+
+        LinkedList<TextStructureV2> newStructures = new LinkedList<>();
+
+        if (checkMergeWith(next)) {
+            var lastElement = self.children.removeLast();
+            var nextChildIterator = childListIterator();
+
+            if (nextChildIterator.hasNext()) {
+                var nextElement = nextChildIterator.next();
+                var mergeLast = lastElement.doMerge(nextElement);
+                self.children.addAll(mergeLast.getNewStructures());
+
+                //TODO remove EoS
+                nextChildIterator.forEachRemaining(self.children::add);
+            } else {
+                self.children.add(lastElement);
+            }
+
+            newStructures.add(self);
+        } else {
+            newStructures.add(self);
+            newStructures.add(next);
+        }
+
+        var last = newStructures.getLast().getLastChild();
+        if (!(last instanceof TextElementV2)) {
+            return new TextMergeResponseV2(//
+                    null, //
+                    List.of(self) //
+            );
+        }
+
+        var lastElement = (TextElementV2) last;
+
+        return new TextMergeResponseV2(//
+                lastElement.getTextPosition(), //
+                List.of(self) //
+        );
+    }
 }

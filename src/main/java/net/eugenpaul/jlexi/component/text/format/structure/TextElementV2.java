@@ -219,6 +219,21 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
 
     @Override
     protected void setComplete() {
-        // nothing todo
+        // nothing to do
+    }
+
+    @Override
+    protected TextMergeResponseV2 doMerge(TextStructureV2 next) {
+        return TextMergeResponseV2.EMPTY;
+    }
+
+    @Override
+    protected void removeEoS() {
+        // nothing to do
+    }
+
+    @Override
+    protected void removeEoL() {
+        // nothing to do
     }
 }
