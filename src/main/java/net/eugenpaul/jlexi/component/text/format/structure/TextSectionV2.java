@@ -176,6 +176,12 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     }
 
     @Override
+    protected TextSplitResponse doSplit(TextStructureV2 position) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     protected TextMergeResponseV2 doMerge(TextStructureV2 next) {
         var self = copyStructure();
 
@@ -193,7 +199,7 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
                 var mergeLast = lastElement.doMerge(nextElement);
                 self.children.addAll(mergeLast.getNewStructures());
 
-                //TODO remove EoS
+                //TODO remove EoS from project? Only EoL is needed.
                 nextChildIterator.forEachRemaining(self.children::add);
             } else {
                 self.children.add(lastElement);

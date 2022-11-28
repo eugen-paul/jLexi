@@ -128,4 +128,9 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
     protected TextMergeResponseV2 doMerge(TextStructureV2 next) {
         return TextMergeResponseV2.EMPTY;
     }
+
+    @Override
+    protected TextSplitResponse doSplit(TextStructureV2 position) {
+        return TextSplitResponse.EMPTY;
+    }
 }

@@ -473,6 +473,44 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         );
     }
 
+    protected TextAddResponseV2 doInsertBeforeV2(TextStructureV2 position, LinkedList<TextStructureV2> data) {
+        if (data.isEmpty()) {
+            return TextAddResponseV2.EMPTY;
+        }
+
+        if (data.size() == 1) {
+            return doInsertBeforeV2(position, data.get(0));
+        }
+        var pathToPosition = getChildWithElement(position);
+
+        var splitData = pathToPosition.doSplit(position);
+
+        List<TextStructureV2> responseStructures = new LinkedList<>();
+
+        responseStructures.addAll(splitData.getFirst().doMerge(data.get(0)).getNewStructures());
+
+        var dataIterator = data.listIterator(1);
+        while (dataIterator.hasNext()) {
+            var currentData = dataIterator.next();
+            if (dataIterator.hasNext()) {
+                responseStructures.add(currentData);
+            } else {
+                responseStructures.addAll(currentData.doMerge(splitData.getLast()).getNewStructures());
+            }
+        }
+
+        return new TextAddResponseV2( //
+                getParentStructure(), //
+                this, //
+                responseStructures //
+        );
+    }
+
+    protected TextAddResponseV2 doInsertBeforeV2(TextStructureV2 position, TextStructureV2 dataIterator) {
+        // TODO
+        return TextAddResponseV2.EMPTY;
+    }
+
     @Override
     protected void removeEoS() {
         if (isEndOfSection()) {

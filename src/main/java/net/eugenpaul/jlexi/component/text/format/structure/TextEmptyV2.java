@@ -126,6 +126,11 @@ public class TextEmptyV2 extends TextStructureV2 {
     }
 
     @Override
+    protected TextSplitResponse doSplit(TextStructureV2 position) {
+        return TextSplitResponse.EMPTY;
+    }
+
+    @Override
     protected void removeEoS() {
         // nothing to do
     }

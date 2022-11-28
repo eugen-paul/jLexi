@@ -46,6 +46,8 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     public abstract TextAddResponseV2 replaceChild(TextStructureV2 child, List<TextStructureV2> to);
 
+    protected abstract TextSplitResponse doSplit(TextStructureV2 position);
+
     protected abstract TextMergeResponseV2 doMerge(TextStructureV2 next);
 
     protected abstract TextRemoveResponseV2 mergeWith(TextStructureV2 nextElement);
@@ -54,7 +56,8 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     protected abstract TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data);
 
-    protected abstract TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data);
+    protected abstract TextAddResponseV2 splitChildsBefore(TextStructureV2 position,
+            ListIterator<TextStructureV2> data);
 
     public abstract Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB);
 
@@ -79,6 +82,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
     }
 
     protected abstract void removeEoS();
+
     protected abstract void removeEoL();
 
     protected List<TextStructureV2> getPathToElement(TextElementV2 element) {

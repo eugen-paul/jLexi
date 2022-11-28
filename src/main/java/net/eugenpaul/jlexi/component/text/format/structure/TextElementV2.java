@@ -228,6 +228,11 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     }
 
     @Override
+    protected TextSplitResponse doSplit(TextStructureV2 position) {
+        return TextSplitResponse.EMPTY;
+    }
+
+    @Override
     protected void removeEoS() {
         // nothing to do
     }

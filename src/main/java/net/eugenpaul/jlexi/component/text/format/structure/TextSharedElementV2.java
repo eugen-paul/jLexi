@@ -196,6 +196,11 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
     }
 
     @Override
+    protected TextSplitResponse doSplit(TextStructureV2 position) {
+        return TextSplitResponse.EMPTY;
+    }
+
+    @Override
     protected void removeEoS() {
         // nothing to do
     }
@@ -204,4 +209,5 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
     protected void removeEoL() {
         // nothing to do
     }
+
 }
