@@ -148,7 +148,6 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         setToEol(storage);
     }
 
-    @Override
     protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, List<TextStructureV2> data) {
         if (getParentStructure() == null) {
             return TextAddResponseV2.EMPTY;

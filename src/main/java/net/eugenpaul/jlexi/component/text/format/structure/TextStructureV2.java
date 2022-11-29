@@ -54,11 +54,6 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     protected abstract TextRemoveResponseV2 mergeChildsWithNext(TextStructureV2 child);
 
-    protected abstract TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data);
-
-    protected abstract TextAddResponseV2 splitChildsBefore(TextStructureV2 position,
-            ListIterator<TextStructureV2> data);
-
     public abstract Optional<Boolean> isABeforB(TextElementV2 elemA, TextElementV2 elemB);
 
     public abstract TextStructureV2 getSelectedAll();

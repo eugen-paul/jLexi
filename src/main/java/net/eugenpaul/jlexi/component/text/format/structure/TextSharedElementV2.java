@@ -171,16 +171,6 @@ public class TextSharedElementV2 extends TextStructureV2 implements EventSubscri
     }
 
     @Override
-    protected TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
-        return TextAddResponseV2.EMPTY;
-    }
-
-    @Override
-    protected TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
-        return TextAddResponseV2.EMPTY;
-    }
-
-    @Override
     protected boolean isComplete() {
         return true;
     }

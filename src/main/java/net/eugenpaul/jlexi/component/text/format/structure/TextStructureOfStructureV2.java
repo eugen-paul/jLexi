@@ -402,113 +402,42 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
     @Override
     public TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
-        var canBeProcessed = element.getElements().stream().allMatch(this::canContainChild);
+        var canContain = element.getElements().stream().allMatch(this::canContainChild);
 
-        if (!canBeProcessed) {
-            return super.addBefore(position, element);
-        }
-
-        var pathToPosition = getChildWithElement(position);
-        if (pathToPosition == position) {
+        if (canContain) {
             return doInsertBefore(position, element.getElements());
-        } else if (pathToPosition == null) {
-            return TextAddResponseV2.EMPTY;
         }
 
-        return pathToPosition.splitChildsBefore(position, element.getElements().listIterator());
+        return super.addBefore(position, element);
     }
 
-    protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, List<TextStructureV2> dataIterator) {
-        // if (getParentStructure() == null) {
-        return TextAddResponseV2.EMPTY;
-        // }
-
-        // var selfCopy = copyStructure();
-
-        // var iterator = childListIterator();
-        // while (iterator.hasNext()) {
-        // var currentChild = iterator.next();
-        // if (currentChild == position) {
-        // while (dataIterator.hasNext()) {
-        // var dataElement = dataIterator.next();
-        // dataElement.setParentStructure(this);
-        // selfCopy.children.add(dataElement);
-        // }
-        // }
-        // selfCopy.children.add(currentChild);
-        // }
-
-        // return new TextAddResponseV2(//
-        // getParentStructure(), //
-        // this, //
-        // List.of(selfCopy) //
-        // );
-    }
-
-    // A different approach is to be implemented here. It will be simple if documents can consist only of sections,
-    // sections only of paragraphs and paragraphs only of simple elements. If you want to have other elements (lists,
-    // tables, ...), then the class Paragraph should be extended. Each class should implement its own split method.
-    @Override
-    protected TextAddResponseV2 splitBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
-        var pathToPosition = getChildWithElement(position);
-
-        List<TextStructureV2> newStructures = new LinkedList<>();
-
-        var currentStructure = copyStructure();
-        var iterator = childListIterator();
-
-        while (iterator.hasNext()) {
-            var currentChild = iterator.next();
-            if (pathToPosition != currentChild) {
-                currentStructure.children.add(currentChild);
-            } else {
-
-            }
-        }
-
-        return new TextAddResponseV2(//
-                getParentStructure(), //
-                this, //
-                newStructures //
-        );
-    }
-
-    protected TextAddResponseV2 doInsertBeforeV2(TextStructureV2 position, LinkedList<TextStructureV2> data) {
+    protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, List<TextStructureV2> data) {
         if (data.isEmpty()) {
             return TextAddResponseV2.EMPTY;
         }
 
-        if (data.size() == 1) {
-            return doInsertBeforeV2(position, data.get(0));
-        }
         var pathToPosition = getChildWithElement(position);
 
         var splitData = pathToPosition.doSplit(position);
 
-        List<TextStructureV2> responseStructures = new LinkedList<>();
+        LinkedList<TextStructureV2> responseStructures = new LinkedList<>();
 
         responseStructures.addAll(splitData.getFirst().doMerge(data.get(0)).getNewStructures());
 
         var dataIterator = data.listIterator(1);
         while (dataIterator.hasNext()) {
             var currentData = dataIterator.next();
-            if (dataIterator.hasNext()) {
-                responseStructures.add(currentData);
-            } else {
-                responseStructures.addAll(currentData.doMerge(splitData.getLast()).getNewStructures());
-            }
+            responseStructures.add(currentData);
         }
+
+        var last = responseStructures.removeLast();
+        responseStructures.addAll(last.mergeWith(splitData.getLast()).getNewStructures());
 
         return new TextAddResponseV2( //
                 getParentStructure(), //
                 this, //
                 responseStructures //
         );
-    }
-
-    protected TextAddResponseV2 doInsertBeforeV2(TextStructureV2 position, TextStructureV2 dataIterator) {
-        // TODO
-        return TextAddResponseV2.EMPTY;
     }
 
     @Override
@@ -523,83 +452,6 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         if (isEndOfLine()) {
             children.getLast().removeEoL();
         }
-    }
-
-    protected List<TextStructureV2> splitBefore(TextStructureV2 position, TextStructureV2 first, TextStructureV2 last) {
-        var pathToPosition = getChildWithElement(position);
-
-        List<TextStructureV2> response = new LinkedList<>();
-
-        var currentStructure = copyStructure();
-        response.add(currentStructure);
-
-        var iterator = childListIterator();
-
-        while (iterator.hasNext()) {
-            var currentChild = iterator.next();
-            if (pathToPosition != currentChild) {
-                currentStructure.children.add(currentChild);
-            } else {
-                if (pathToPosition == position) {
-                    var firstIterator = first.childListIterator();
-                    while (firstIterator.hasNext()) {
-                        currentStructure.children.add(firstIterator.next());
-                    }
-
-                    currentStructure = copyStructure();
-                    response.add(currentStructure);
-
-                    var lastIterator = last.childListIterator();
-                    while (lastIterator.hasNext()) {
-                        currentStructure.children.add(lastIterator.next());
-                    }
-                } else {
-                    // TODO
-                }
-            }
-        }
-
-        return response;
-    }
-
-    @Override
-    protected TextAddResponseV2 splitChildsBefore(TextStructureV2 position, ListIterator<TextStructureV2> data) {
-        var pathToPosition = getChildWithElement(position);
-
-        if (pathToPosition == position) {
-            // return doInsertBefore(position, data);
-            // TODO
-            return null;
-        }
-
-        var selfCopy = copyStructure();
-        var iterator = childListIterator();
-
-        while (iterator.hasNext()) {
-            var currentChild = iterator.next();
-            if (currentChild == pathToPosition) {
-                var first = true;
-                while (data.hasNext()) {
-                    var currentData = data.next();
-                    if (first) {
-                        var mergedChild = currentChild.splitChildsBefore(position, currentData.childListIterator());
-                        mergedChild.getNewStructures().forEach(v -> v.setParentStructure(selfCopy));
-                        selfCopy.children.addAll(mergedChild.getNewStructures());
-                        first = false;
-                    } else {
-                        selfCopy.children.add(currentData);
-                    }
-                }
-            } else {
-                selfCopy.children.add(currentChild);
-            }
-        }
-
-        return new TextAddResponseV2(//
-                getParentStructure(), //
-                this, //
-                List.of(selfCopy) //
-        );
     }
 
 }
