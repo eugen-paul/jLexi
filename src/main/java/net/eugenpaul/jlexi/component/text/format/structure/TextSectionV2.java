@@ -11,6 +11,7 @@ import net.eugenpaul.jlexi.component.text.format.compositor.TextCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToColumnCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.compositor.TextRepresentationToPageCompositorV2;
 import net.eugenpaul.jlexi.component.text.format.representation.TextRepresentationV2;
+import net.eugenpaul.jlexi.resourcesmanager.ResourceManager;
 import net.eugenpaul.jlexi.utils.Color;
 import net.eugenpaul.jlexi.utils.Size;
 
@@ -19,6 +20,7 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     private TextCompositorV2<TextRepresentationV2> compositor;
 
     private final TextSectionConfiguration configuration;
+    private final ResourceManager storage;
 
     private int pagePaddingLeft = 20;
     private int pagePaddingRight = 20;
@@ -29,10 +31,16 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
     private TextHeaderCreaterV2 headerCreater;
     private TextFooterCreaterV2 footerCreater;
 
-    public TextSectionV2(TextStructureV2 parentStructure, TextSectionConfiguration configuration) {
+    public TextSectionV2(TextStructureV2 parentStructure, ResourceManager storage) {
+        this(parentStructure, TextSectionConfiguration.builder().build(), storage);
+    }
+
+    public TextSectionV2(TextStructureV2 parentStructure, TextSectionConfiguration configuration,
+            ResourceManager storage) {
         super(parentStructure);
 
         this.configuration = configuration;
+        this.storage = storage;
 
         if (!this.configuration.isBlock()) {
             this.compositor = new TextRepresentationToPageCompositorV2(//
@@ -138,7 +146,7 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
 
     @Override
     protected TextStructureOfStructureV2 copyStructure() {
-        var responseSection = new TextSectionV2(getParentStructure(), this.configuration);
+        var responseSection = new TextSectionV2(getParentStructure(), this.configuration, this.storage);
         responseSection.setHeaderCreater(this.headerCreater);
         responseSection.setFooterCreater(this.footerCreater);
         return responseSection;
@@ -172,13 +180,12 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
 
     @Override
     protected void setComplete() {
-        children.getLast().setComplete();
-    }
+        if (children.isEmpty()) {
+            var emptyParagrah = new TextParagraphV2(this, null);
+            children.add(emptyParagrah);
+        }
 
-    @Override
-    protected TextSplitResponse doSplit(TextStructureV2 position) {
-        // TODO Auto-generated method stub
-        return null;
+        children.getLast().setComplete();
     }
 
     @Override
@@ -199,7 +206,7 @@ public class TextSectionV2 extends TextStructureOfStructureV2 implements GlyphIt
                 var mergeLast = lastElement.doMerge(nextElement);
                 self.children.addAll(mergeLast.getNewStructures());
 
-                //TODO remove EoS from project? Only EoL is needed.
+                // TODO remove EoS from project? Only EoL is needed.
                 nextChildIterator.forEachRemaining(self.children::add);
             } else {
                 self.children.add(lastElement);

@@ -204,13 +204,16 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
             return this;
         }
 
-        var childIterator = childListIterator();
-        while (childIterator.hasNext()) {
-            var child = childIterator.next();
-            if (element.isChildOf(child)) {
-                return child;
+        var responsePath = element;
+        var parentToCheck = element.getParentStructure();
+        while (parentToCheck != null) {
+            if (parentToCheck == this) {
+                return responsePath;
             }
+            responsePath = parentToCheck;
+            parentToCheck = parentToCheck.getParentStructure();
         }
+
         return null;
     }
 

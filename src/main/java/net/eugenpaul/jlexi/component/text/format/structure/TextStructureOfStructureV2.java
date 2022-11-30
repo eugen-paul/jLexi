@@ -454,4 +454,39 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         }
     }
 
+    @Override
+    protected TextSplitResponse doSplit(TextStructureV2 position) {
+        var pathToPosition = getChildWithElement(position);
+
+        if (pathToPosition == null) {
+            return TextSplitResponse.EMPTY;
+        }
+
+        var first = copyStructure();
+        var last = copyStructure();
+        var current = first;
+
+        var childIterator = childListIterator();
+        while (childIterator.hasNext()) {
+            var currentChild = childIterator.next();
+            if (currentChild == pathToPosition) {
+                current = last;
+                var splitChild = currentChild.doSplit(position);
+
+                if (splitChild == TextSplitResponse.EMPTY) {
+                    return TextSplitResponse.EMPTY;
+                }
+
+                first.children.add(splitChild.getFirst());
+                first.setComplete();
+
+                last.children.add(splitChild.getLast());
+            } else {
+                current.children.add(currentChild);
+            }
+        }
+
+        return new TextSplitResponse(first, last);
+    }
+
 }

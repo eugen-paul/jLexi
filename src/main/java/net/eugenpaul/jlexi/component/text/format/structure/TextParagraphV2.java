@@ -148,6 +148,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         setToEol(storage);
     }
 
+    @Override
     protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, List<TextStructureV2> data) {
         if (getParentStructure() == null) {
             return TextAddResponseV2.EMPTY;
@@ -232,6 +233,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         );
     }
 
+    @Override
     protected TextSplitResponse doSplit(TextStructureV2 position) {
         if (getChildWithElement(position) != position) {
             return TextSplitResponse.EMPTY;
@@ -309,94 +311,4 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         }
     }
 
-    protected TextAddResponseV2 doSplit(TextStructureV2 position, List<TextStructureV2> data) {
-        if (getParentStructure() == null || data.isEmpty()) {
-            return TextAddResponseV2.EMPTY;
-        }
-
-        if (data.size() == 1) {
-            if (checkMergeWith(data.get(0))) {
-                return doInsertBefore(position, data.get(0).childListIterator());
-            } else {
-                List<TextStructureV2> responseParagraphs = new LinkedList<>();
-                var selfCopy = copyStructure();
-                responseParagraphs.add(selfCopy);
-
-                var childIterator = childListIterator();
-
-                while (childIterator.hasNext()) {
-                    var currentChild = childIterator.next();
-                    if (currentChild == position) {
-                        selfCopy.setComplete();
-
-                        responseParagraphs.add(data.get(0));
-
-                        selfCopy = copyStructure();
-                        responseParagraphs.add(selfCopy);
-                    }
-                    selfCopy.children.add(currentChild);
-                }
-
-                return new TextAddResponseV2(//
-                        getParentStructure(), //
-                        position, //
-                        responseParagraphs //
-                );
-            }
-        }
-
-        List<TextStructureV2> responseParagraphs = new LinkedList<>();
-
-        var selfCopy = copyStructure();
-        responseParagraphs.add(selfCopy);
-
-        var childIterator = childListIterator();
-        var first = true;
-        while (childIterator.hasNext()) {
-            var currentChild = childIterator.next();
-            if (currentChild == position) {
-                var dataIterator = data.iterator();
-
-                while (dataIterator.hasNext()) {
-                    var currentData = dataIterator.next();
-
-                    if (first) {
-                        first = false;
-                        if (selfCopy.checkMergeWith(currentData)) {
-                            var firstIterator = currentData.childListIterator();
-                            while (firstIterator.hasNext()) {
-                                selfCopy.children.add(firstIterator.next());
-                            }
-                        } else {
-                            responseParagraphs.add(currentData);
-                        }
-                        selfCopy = copyStructure();
-                        responseParagraphs.add(selfCopy);
-                    } else {
-                        if (!childIterator.hasNext()) {
-                            // last
-                        } else {
-                            responseParagraphs.add(currentData);
-                            selfCopy = copyStructure();
-                            responseParagraphs.add(selfCopy);
-                        }
-                    }
-                }
-
-                selfCopy.setComplete();
-
-                responseParagraphs.add(data.get(0));
-
-                selfCopy = copyStructure();
-                responseParagraphs.add(selfCopy);
-            }
-            selfCopy.children.add(currentChild);
-        }
-
-        return new TextAddResponseV2(//
-                getParentStructure(), //
-                position, //
-                responseParagraphs //
-        );
-    }
 }

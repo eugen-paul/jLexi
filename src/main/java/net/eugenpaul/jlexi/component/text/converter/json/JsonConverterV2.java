@@ -55,7 +55,7 @@ public class JsonConverterV2 implements TextConverterV2 {
     }
 
     private TextSectionV2 toSection(JsonSectionV2 input) {
-        TextSectionV2 response = new TextSectionV2(null, input.getTextSectionConfiguration());
+        TextSectionV2 response = new TextSectionV2(null, input.getTextSectionConfiguration(), resourceManager);
 
         TextParagraphV2 lastParagraph = null;
 
@@ -85,7 +85,8 @@ public class JsonConverterV2 implements TextConverterV2 {
             return null;
         }
 
-        var headerSection = new TextSectionV2(null, TextSectionConfiguration.builder().block(true).build());
+        var headerSection = new TextSectionV2(null, TextSectionConfiguration.builder().block(true).build(),
+                resourceManager);
         var responseHeader = new TextHeaderDataV2(headerSection, input.getConfiguration());
 
         TextParagraphV2 lastParagraph = null;
@@ -116,7 +117,8 @@ public class JsonConverterV2 implements TextConverterV2 {
             return null;
         }
 
-        var headerSection = new TextSectionV2(null, TextSectionConfiguration.builder().block(true).build());
+        var headerSection = new TextSectionV2(null, TextSectionConfiguration.builder().block(true).build(),
+                resourceManager);
         var responseHeader = new TextFooterDataV2(headerSection, input.getConfiguration());
 
         TextParagraphV2 lastParagraph = null;

@@ -70,7 +70,7 @@ public class TextPaneDocumentV2 extends TextStructureOfStructureV2 {
     }
 
     private void initEmptyDocument() {
-        TextSectionV2 section = new TextSectionV2(this, TextSectionConfiguration.builder().build());
+        TextSectionV2 section = new TextSectionV2(this, this.storage);
         TextParagraphV2 paragraph = new TextParagraphV2(section, this.storage);
 
         paragraph.add(new TextNewLineV2(storage, paragraph));
