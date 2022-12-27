@@ -1,0 +1,330 @@
+<diagram program="umletino" version="15.0.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>370</x><y>250</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>230</x><y>310</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>300</x><y>280</y><w>170</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>150;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>370</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>430</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>130</x><y>400</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>430</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>400</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>340</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>310</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>280</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;130;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>330</x><y>370</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>280</x><y>430</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>400</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>430</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>410</x><y>400</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>340</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;100;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>530</x><y>370</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>490</x><y>430</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>550</x><y>400</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>430</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>620</x><y>400</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>340</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>0</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>60</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>30</y><w>170</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>150;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>120</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>250</x><y>180</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>150</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>180</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>150</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>90</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>690</x><y>60</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>30</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;130;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>120</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>180</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>520</x><y>150</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>560</x><y>180</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>590</x><y>150</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>90</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;100;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>710</x><y>120</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>670</x><y>180</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>730</x><y>150</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>770</x><y>180</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>150</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>760</x><y>90</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>440</x><y>210</y><w>90</w><h>60</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter</panel_attributes><additional_attributes>70;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>750</x><y>260</y><w>100</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>210</y><w>100</w><h>70</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter</panel_attributes><additional_attributes>10;10;80;50</additional_attributes></element><element><id>UMLNote</id><coordinates><x>910</x><y>10</y><w>460</w><h>460</h></coordinates><panel_attributes>How to paste:
+Step 1:
+Go from the insertion point through the parent nodes. Abort when a node is found that can hold the root node from the inserted element as a child or can be merged with the root node.
+
+Step 2:
+Divide all child nodes on the way to the insertion point into two parts (left and right). All created nodes must be complete (for example, add an "end of line" character to all paragraphs).
+
+Step 3:
+Merge the left part with the insertion way.
+
+Step 4:
+Merge the result of step 3 right part.
+
+Step 5:
+Replace the child node leading to the insertion point with the data from step 4. 
+
+bg=blue
+style=wordwrap</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>700</x><y>320</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>760</x><y>290</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>320</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>830</x><y>290</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLNote</id><coordinates><x>700</x><y>240</y><w>200</w><h>140</h></coordinates><panel_attributes>Example A
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>60</x><y>240</y><w>630</w><h>250</h></coordinates><panel_attributes>Example B
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>550</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>610</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>580</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>200</x><y>670</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>730</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>700</y><w>70</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>50;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>260</x><y>730</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>700</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>250</x><y>640</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>810</y><w>100</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>700</y><w>110</w><h>130</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter
+fg=red</panel_attributes><additional_attributes>50;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>870</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>840</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>220</x><y>870</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>250</x><y>840</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLNote</id><coordinates><x>50</x><y>540</y><w>90</w><h>30</h></coordinates><panel_attributes>Example A
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>340</x><y>610</y><w>70</w><h>40</h></coordinates><panel_attributes>Step 1
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>640</y><w>100</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;80;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>500</x><y>550</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>610</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>580</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>540</x><y>670</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>490</x><y>730</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>550</x><y>700</y><w>40</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>20;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>620</x><y>730</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>700</y><w>50</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;30;30</additional_attributes></element><element><id>Relation</id><coordinates><x>590</x><y>640</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>560</x><y>810</y><w>100</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>590</x><y>700</y><w>90</w><h>130</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>870</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>840</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>610</x><y>870</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>640</x><y>840</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLNote</id><coordinates><x>390</x><y>680</y><w>100</w><h>40</h></coordinates><panel_attributes>Step 2
+nothig to split
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>710</y><w>90</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>70;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>830</x><y>550</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>850</x><y>610</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>910</x><y>580</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>890</x><y>670</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>810</x><y>740</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>870</x><y>700</y><w>70</w><h>60</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>50;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1000</x><y>730</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>980</x><y>700</y><w>80</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;60;30</additional_attributes></element><element><id>Relation</id><coordinates><x>920</x><y>640</y><w>50</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;30;30</additional_attributes></element><element><id>Relation</id><coordinates><x>940</x><y>700</y><w>90</w><h>140</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter</panel_attributes><additional_attributes>10;10;10;120</additional_attributes></element><element><id>UMLClass</id><coordinates><x>860</x><y>870</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>960</x><y>870</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>720</x><y>680</y><w>100</w><h>40</h></coordinates><panel_attributes>Step 3 &amp; 4
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>750</x><y>710</y><w>80</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>760</y><w>110</w><h>70</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter</panel_attributes><additional_attributes>10;10;50;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>870</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>820</y><w>210</w><h>30</h></coordinates><panel_attributes>MergeLeft &amp; MergeRight</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>840</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>890</x><y>840</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>990</x><y>840</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1250</x><y>550</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1270</x><y>610</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1330</x><y>580</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1310</x><y>670</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1440</x><y>750</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1400</x><y>700</y><w>100</w><h>70</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;80;50</additional_attributes></element><element><id>Relation</id><coordinates><x>1340</x><y>640</y><w>50</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;30;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1240</x><y>750</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1340</x><y>750</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>1110</x><y>620</y><w>100</w><h>40</h></coordinates><panel_attributes>Step 5
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1140</x><y>650</y><w>190</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>170;40;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1140</x><y>750</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1180</x><y>700</y><w>160</w><h>70</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>140;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>1270</x><y>700</y><w>90</w><h>70</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>70;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>1360</x><y>700</y><w>40</w><h>70</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;20;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>330</x><y>1230</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>190</x><y>1290</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection A
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>1260</y><w>170</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>150;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>80</x><y>1350</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 1
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>90</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>130</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>1320</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>1290</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection B
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>410</x><y>1260</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;130;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>290</x><y>1350</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 2
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>240</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>300</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>340</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>370</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>250</x><y>1320</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;100;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>490</x><y>1350</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 3
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>450</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>1320</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>960</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>200</x><y>1020</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>990</y><w>260</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>240;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>40</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>100</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>140</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>1050</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>1020</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>990</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;130;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>250</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>1050</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;100;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>610</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>680</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>640</x><y>1050</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>1170</y><w>140</w><h>80</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter</panel_attributes><additional_attributes>10;10;120;60</additional_attributes></element><element><id>UMLNote</id><coordinates><x>0</x><y>950</y><w>80</w><h>30</h></coordinates><panel_attributes>Example B
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>330</x><y>940</y><w>70</w><h>40</h></coordinates><panel_attributes>Step 1
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>390</x><y>950</y><w>60</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;30;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>990</y><w>130</w><h>260</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter
+fg=red</panel_attributes><additional_attributes>90;10;10;240</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1220</x><y>1230</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1080</x><y>1290</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection A
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1150</x><y>1260</y><w>170</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>150;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>970</x><y>1350</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 1
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>920</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>980</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1020</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1050</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1050</x><y>1320</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1360</x><y>1290</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection B
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1300</x><y>1260</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;130;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1180</x><y>1350</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 2
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1130</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1190</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1230</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1260</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1140</x><y>1320</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;100;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1380</x><y>1350</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 3
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1340</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1400</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1440</x><y>1410</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1470</x><y>1380</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1430</x><y>1320</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1210</x><y>960</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>980</x><y>1020</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection Left
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1050</x><y>990</y><w>260</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>240;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>870</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>820</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>880</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>920</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>950</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>950</x><y>1050</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1450</x><y>1020</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1290</x><y>990</y><w>250</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;230;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1060</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph Left
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1050</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1090</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1220</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1250</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1040</x><y>1050</y><w>100</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;80;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1470</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1430</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1490</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1530</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1560</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1520</x><y>1050</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLNote</id><coordinates><x>1110</x><y>940</y><w>70</w><h>40</h></coordinates><panel_attributes>Step 2
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1120</x><y>970</y><w>60</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;70;40;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1280</x><y>990</y><w>180</w><h>260</h></coordinates><panel_attributes>lt=&lt;.
+insertAfter
+fg=red</panel_attributes><additional_attributes>10;10;120;40;40;240</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1200</x><y>1020</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection Right
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1270</x><y>990</y><w>40</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>20;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1200</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph Right
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1150</x><y>970</y><w>70</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>50;70;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1150</x><y>970</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1150</x><y>970</y><w>70</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>50;110;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1940</x><y>1140</y><w>50</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1960</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2010</x><y>1140</y><w>60</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2020</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2100</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 2
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2080</x><y>1140</y><w>60</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2110</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2150</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2180</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1990</x><y>1050</y><w>190</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;170;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2270</x><y>1140</y><w>60</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2290</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2340</x><y>1140</y><w>70</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2360</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2030</x><y>960</y><w>150</w><h>40</h></coordinates><panel_attributes>TextDocument
+--
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1800</x><y>1020</y><w>210</w><h>40</h></coordinates><panel_attributes>TextSection Left + TextSection A
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1870</x><y>990</y><w>260</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>240;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1690</x><y>1080</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1640</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1700</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1740</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1770</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1770</x><y>1050</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2540</x><y>1020</y><w>100</w><h>40</h></coordinates><panel_attributes>TextSection
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2110</x><y>990</y><w>470</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;450;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1830</x><y>1080</y><w>230</w><h>40</h></coordinates><panel_attributes>TextParagraph Left + TextParagraph 1
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1840</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1870</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2420</x><y>1140</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2450</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1860</x><y>1050</y><w>40</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;20;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2540</x><y>1080</y><w>100</w><h>40</h></coordinates><panel_attributes>TextParagraph
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2540</x><y>1140</y><w>50</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2560</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2600</x><y>1140</y><w>40</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2610</x><y>1110</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>2590</x><y>1050</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLNote</id><coordinates><x>1850</x><y>920</y><w>70</w><h>40</h></coordinates><panel_attributes>Step 3,4,5
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2270</x><y>1020</y><w>200</w><h>40</h></coordinates><panel_attributes>TextSection B + TextSection Right
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2100</x><y>990</y><w>320</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;300;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2270</x><y>1080</y><w>240</w><h>40</h></coordinates><panel_attributes>TextParagraph 3 + TextParagraph Right
+--
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1260</x><y>1050</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>2380</x><y>1050</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1930</x><y>1270</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection A
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1820</x><y>1330</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 1
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1770</x><y>1390</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1830</x><y>1360</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1870</x><y>1390</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1900</x><y>1360</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1900</x><y>1300</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>90;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2210</x><y>1270</y><w>150</w><h>40</h></coordinates><panel_attributes>TextSection B
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2030</x><y>1330</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 2
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1980</x><y>1390</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2040</x><y>1360</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2080</x><y>1390</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2110</x><y>1360</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1990</x><y>1300</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;100;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2230</x><y>1330</y><w>120</w><h>40</h></coordinates><panel_attributes>TextParagraph 3
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2190</x><y>1390</y><w>90</w><h>40</h></coordinates><panel_attributes>TextElement
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2250</x><y>1360</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2290</x><y>1390</y><w>90</w><h>40</h></coordinates><panel_attributes>TextImage
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2320</x><y>1360</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>2280</x><y>1300</y><w>30</w><h>50</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>1970</x><y>1050</y><w>90</w><h>240</h></coordinates><panel_attributes>lt=&lt;.
+merge
+fg=red</panel_attributes><additional_attributes>10;10;50;220</additional_attributes></element><element><id>Relation</id><coordinates><x>2240</x><y>1050</y><w>70</w><h>240</h></coordinates><panel_attributes>lt=&lt;.
+merge
+fg=red</panel_attributes><additional_attributes>50;10;10;10;20;220</additional_attributes></element><element><id>Relation</id><coordinates><x>1880</x><y>1110</y><w>90</w><h>240</h></coordinates><panel_attributes>lt=&lt;.
+merge
+fg=red</panel_attributes><additional_attributes>50;10;10;220</additional_attributes></element><element><id>Relation</id><coordinates><x>2340</x><y>1110</y><w>120</w><h>250</h></coordinates><panel_attributes>lt=&lt;.
+merge
+fg=red</panel_attributes><additional_attributes>80;10;60;230;10;230</additional_attributes></element></diagram>
