@@ -13,6 +13,11 @@ public final class TextCopyData {
         this.elements = new LinkedList<>();
     }
 
+    public TextCopyData(TextStructureV2 data) {
+        this();
+        this.elements.add(data);
+    }
+
     public void add(TextStructureV2 data) {
         elements.add(data);
     }

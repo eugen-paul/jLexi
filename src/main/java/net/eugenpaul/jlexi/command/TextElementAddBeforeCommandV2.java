@@ -12,7 +12,7 @@ public class TextElementAddBeforeCommandV2 implements TextCommandV2 {
     private TextPositionV2 cursorPosition;
 
     private TextStructureV2 owner;
-    private TextStructureV2 removedStructures;
+    private List<TextStructureV2> removedStructures;
     private List<TextStructureV2> newStructures;
 
     public TextElementAddBeforeCommandV2(TextElementV2 addedElement, TextPositionV2 cursorPosition) {
@@ -25,15 +25,15 @@ public class TextElementAddBeforeCommandV2 implements TextCommandV2 {
 
     @Override
     public void execute() {
-        if (newStructures == null || removedStructures == null) {
+        if (this.owner == null) {
             var response = cursorPosition.addBefore(addedElement);
-            if (response.isStructureChanged()) {
-                this.owner = response.getOwner();
-                this.removedStructures = response.getRemovedStructures();
-                this.newStructures = response.getNewStructures();
-            }
-        } else {
-            cursorPosition.replaceStructure(owner, List.of(removedStructures), newStructures);
+            this.owner = response.getOwner();
+            this.removedStructures = response.getRemovedStructures();
+            this.newStructures = response.getNewStructures();
+        }
+
+        if (this.owner != null) {
+            this.owner.replaceStructure(this.owner, this.removedStructures, this.newStructures);
         }
     }
 
@@ -42,7 +42,7 @@ public class TextElementAddBeforeCommandV2 implements TextCommandV2 {
         if (newStructures == null || removedStructures == null) {
             addedElement.getTextPosition().removeElement();
         } else {
-            cursorPosition.replaceStructure(owner, newStructures, List.of(removedStructures));
+            cursorPosition.replaceStructure(owner, newStructures, removedStructures);
         }
     }
 

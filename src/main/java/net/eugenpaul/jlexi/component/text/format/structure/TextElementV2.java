@@ -231,4 +231,12 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     protected void removeEoL() {
         // nothing to do
     }
+
+    public TextAddResponseV2 addBefore(TextCopyData element) {
+        var currentParent = getParentStructure();
+        if (currentParent != null) {
+            return currentParent.addBefore(this, element);
+        }
+        return TextAddResponseV2.EMPTY;
+    }
 }

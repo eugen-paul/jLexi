@@ -194,7 +194,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
                 return new TextAddResponseV2(//
                         this, //
-                        child, //
+                        List.of(child), //
                         to //
                 );
             }
@@ -401,7 +401,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     }
 
     @Override
-    public TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
+    protected TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
         var canContain = element.getElements().stream().allMatch(this::canContainChild);
 
         if (canContain) {
@@ -435,7 +435,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
         return new TextAddResponseV2( //
                 getParentStructure(), //
-                this, //
+                List.of(this), //
                 responseStructures //
         );
     }

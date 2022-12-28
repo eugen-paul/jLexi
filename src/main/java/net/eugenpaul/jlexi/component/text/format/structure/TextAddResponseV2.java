@@ -16,19 +16,19 @@ public class TextAddResponseV2 {
     private TextPositionV2 newCursorPosition;
 
     private TextStructureV2 owner;
-    private TextStructureV2 removedStructures;
+    private List<TextStructureV2> removedStructures;
     private List<TextStructureV2> newStructures;
 
     public TextAddResponseV2(TextPositionV2 newCursorPosition) {
         this.newCursorPosition = newCursorPosition;
         this.owner = null;
-        this.removedStructures = null;
+        this.removedStructures = Collections.emptyList();
         this.newStructures = Collections.emptyList();
     }
 
     public TextAddResponseV2(//
             TextStructureV2 owner, //
-            TextStructureV2 removedStructures, //
+            List<TextStructureV2> removedStructures, //
             List<TextStructureV2> newStructures //
     ) {
         this.newCursorPosition = null;

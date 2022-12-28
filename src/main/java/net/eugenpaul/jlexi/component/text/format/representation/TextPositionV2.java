@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import net.eugenpaul.jlexi.component.text.format.CursorMovingV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextAddResponseV2;
+import net.eugenpaul.jlexi.component.text.format.structure.TextCopyData;
 import net.eugenpaul.jlexi.component.text.format.structure.TextElementV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextRemoveResponseV2;
 import net.eugenpaul.jlexi.component.text.format.structure.TextStructureV2;
@@ -27,9 +28,9 @@ public class TextPositionV2 {
     }
 
     public TextAddResponseV2 addBefore(TextElementV2 element) {
-        // TODO
-        // return this.textElement.addBefore(element);
-        return TextAddResponseV2.EMPTY;
+        return this.textElement.addBefore(//
+                new TextCopyData(element) //
+        );
     }
 
     public boolean replaceStructure(//

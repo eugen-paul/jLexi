@@ -241,7 +241,7 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     protected abstract TextStructureV2 getLastChild();
 
-    public TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
+    protected TextAddResponseV2 addBefore(TextStructureV2 position, TextCopyData element) {
         var currentParent = getParentStructure();
         if (currentParent != null) {
             return currentParent.addBefore(position, element);

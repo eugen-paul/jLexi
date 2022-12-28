@@ -174,9 +174,9 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
             if (currentChild == position) {
                 var dataIterator = data.iterator();
                 while (dataIterator.hasNext()) {
-                    var currentData = dataIterator.next();
-                    selfCopy.children.add(currentData);
-                    if (currentData.isEndOfLine()) {
+                    var insertData = dataIterator.next();
+                    selfCopy.children.add(insertData);
+                    if (insertData.isEndOfLine()) {
                         selfCopy = copyStructure();
                         newParagraphs.add(selfCopy);
                     }
@@ -185,9 +185,10 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
             selfCopy.children.add(currentChild);
         }
 
+        //Here you have to differentiate whether the paragraph was split into two parts when inserting it or not.
         return new TextAddResponseV2(//
                 getParentStructure(), //
-                position, //
+                List.of(this), //
                 newParagraphs //
         );
     }
@@ -228,7 +229,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
 
         return new TextAddResponseV2(//
                 getParentStructure(), //
-                position, //
+                List.of(this), //
                 newParagraphs //
         );
     }
