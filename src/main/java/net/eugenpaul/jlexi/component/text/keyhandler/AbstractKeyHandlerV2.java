@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.eugenpaul.jlexi.command.TextCommandV2;
 import net.eugenpaul.jlexi.command.TextElementAddBeforeCommandV2;
+import net.eugenpaul.jlexi.command.TextElementRemoveCommandV2;
 import net.eugenpaul.jlexi.component.text.CursorV2;
 import net.eugenpaul.jlexi.component.text.converter.ClipboardConverter;
 import net.eugenpaul.jlexi.component.text.converter.clipboard.ClipboardConverterImpl;
@@ -173,19 +174,17 @@ public class AbstractKeyHandlerV2 {
 
     private void addTextElement(CursorV2 cursor, TextElementV2 addedElement) {
         TextCommandV2 addCommand;
-        if (cursor.isTextSelected()) {
-            // TODO
-            // addCommand = new TextElementReplaceCommand(//
-            //         addedElement, //
-            //         cursor.getSelectedText());
-            // cursor.removeSelection();
-
-            return;
-        } else {
-            addCommand = new TextElementAddBeforeCommandV2(//
-                    addedElement, //
-                    cursor.getPosition());
-        }
+        // if (cursor.isTextSelected()) {
+        // TODO
+        // addCommand = new TextElementReplaceCommand(//
+        // addedElement, //
+        // cursor.getSelectedText());
+        // cursor.removeSelection();
+        // } else {
+        addCommand = new TextElementAddBeforeCommandV2(//
+                addedElement, //
+                cursor.getPosition());
+        // }
 
         doTextCommand(addCommand);
 
@@ -218,12 +217,12 @@ public class AbstractKeyHandlerV2 {
         // deleteCommand = new TextElementRemoveSelectedCommand(cursor.getSelectedText());
         // cursor.removeSelection();
         // } else {
-        // deleteCommand = new TextElementRemoveCommand(cursor.getPosition());
+        deleteCommand = new TextElementRemoveCommandV2(cursor.getPosition());
         // }
 
-        // doTextCommand(deleteCommand);
+        doTextCommand(deleteCommand);
 
-        // cursor.moveCursorTo(deleteCommand.getData());
+        cursor.moveCursorTo(deleteCommand.getData());
 
     }
 

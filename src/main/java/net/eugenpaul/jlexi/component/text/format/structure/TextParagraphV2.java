@@ -1,5 +1,6 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -163,6 +164,16 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
             return TextAddResponseV2.EMPTY;
         }
 
+        if (data.stream().allMatch(v -> !v.isEndOfLine())) {
+            LinkedList<TextStructureV2> newStructure = new LinkedList<>(data);
+            newStructure.add(position);
+            return new TextAddResponseV2(//
+                    this, //
+                    List.of(position), //
+                    newStructure //
+            );
+        }
+
         List<TextStructureV2> newParagraphs = new LinkedList<>();
 
         var selfCopy = copyStructure();
@@ -185,7 +196,6 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
             selfCopy.children.add(currentChild);
         }
 
-        //Here you have to differentiate whether the paragraph was split into two parts when inserting it or not.
         return new TextAddResponseV2(//
                 getParentStructure(), //
                 List.of(this), //
@@ -193,44 +203,38 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         );
     }
 
-    protected TextAddResponseV2 doInsertBefore(TextStructureV2 position, ListIterator<TextStructureV2> dataIterator) {
-        if (getParentStructure() == null) {
-            return TextAddResponseV2.EMPTY;
+    @Override
+    public TextRemoveResponseV2 removeElement(TextStructureV2 elementToRemove) {
+        var pathToPosition = getChildWithElement(elementToRemove);
+        if (pathToPosition != elementToRemove) {
+            return TextRemoveResponseV2.EMPTY;
         }
 
-        var pathToPosition = getChildWithElement(position);
-        if (pathToPosition != position) {
-            return TextAddResponseV2.EMPTY;
+        if (elementToRemove.isEndOfLine()) {
+            // TODO
         }
-
-        List<TextStructureV2> newParagraphs = new LinkedList<>();
-
-        var selfCopy = copyStructure();
-        newParagraphs.add(selfCopy);
 
         var childIterator = childListIterator();
+        TextElementV2 nextPos = null;
         while (childIterator.hasNext()) {
             var currentChild = childIterator.next();
-            if (currentChild == position) {
-                while (dataIterator.hasNext()) {
-                    var currentData = dataIterator.next();
-                    if (!canContainChild(currentData)) {
-                        return TextAddResponseV2.EMPTY;
-                    }
-                    selfCopy.children.add(currentData);
-                    if (currentData.isEndOfLine()) {
-                        selfCopy = copyStructure();
-                        newParagraphs.add(selfCopy);
-                    }
+            if (currentChild == elementToRemove) {
+                if (childIterator.hasNext()) {
+                    nextPos = (TextElementV2) childIterator.next();
                 }
+                break;
             }
-            selfCopy.children.add(currentChild);
         }
 
-        return new TextAddResponseV2(//
-                getParentStructure(), //
-                List.of(this), //
-                newParagraphs //
+        if (nextPos == null) {
+            return TextRemoveResponseV2.EMPTY;
+        }
+
+        return new TextRemoveResponseV2(//
+                nextPos.getTextPosition(), //
+                this, //
+                List.of(elementToRemove, nextPos), //
+                List.of(nextPos) //
         );
     }
 

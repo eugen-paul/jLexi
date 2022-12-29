@@ -42,8 +42,10 @@ public class TextPositionV2 {
     }
 
     public TextRemoveResponseV2 removeElement() {
-        // TODO
-        // return this.textElement.removeElement();
+        if (this.textElement.getParentStructure() != null) {
+            return this.textElement.getParentStructure().removeElement(textElement);
+        }
+
         return TextRemoveResponseV2.EMPTY;
     }
 
