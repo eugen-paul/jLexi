@@ -1,9 +1,7 @@
 package net.eugenpaul.jlexi.component.text.format.structure;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import net.eugenpaul.jlexi.component.text.format.element.TextElementFactoryV2;
 import net.eugenpaul.jlexi.component.text.format.element.TextFormat;
@@ -212,6 +210,10 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
 
         if (elementToRemove.isEndOfLine()) {
             // TODO
+            if (getParentStructure() != null) {
+                return getParentStructure().mergeChildsWithNext(this);
+            }
+            return TextRemoveResponseV2.EMPTY;
         }
 
         var childIterator = childListIterator();
@@ -220,6 +222,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
             var currentChild = childIterator.next();
             if (currentChild == elementToRemove) {
                 if (childIterator.hasNext()) {
+                    // TODO don't convert. Each TextStructureV2 should have a position.
                     nextPos = (TextElementV2) childIterator.next();
                 }
                 break;
@@ -271,10 +274,26 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
     }
 
     @Override
+    protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
+        var md = doMerge(element);
+        if (md == TextMergeResponseV2.EMPTY) {
+            return TextRemoveResponseV2.EMPTY;
+        }
+
+        return new TextRemoveResponseV2(//
+                md.getNewCursorPosition(), //
+                getParentStructure(), //
+                List.of(this, element), //
+                md.getNewStructures() //
+        );
+    }
+
+    @Override
     protected TextMergeResponseV2 doMerge(TextStructureV2 next) {
         var self = copyStructure();
 
         var childIterator = childListIterator();
+        //TODO: add copy of children
         childIterator.forEachRemaining(self.children::add);
 
         LinkedList<TextStructureV2> newStructures = new LinkedList<>();
@@ -284,7 +303,7 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
                 self.removeEoL();
             }
 
-            var nextChildIterator = childListIterator();
+            var nextChildIterator = next.childListIterator();
             nextChildIterator.forEachRemaining(self.children::add);
 
             newStructures.add(self);
@@ -296,8 +315,9 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
         var last = newStructures.getLast().getLastChild();
         if (!(last instanceof TextElementV2)) {
             return new TextMergeResponseV2(//
+                    // TODO set position.
                     null, //
-                    List.of(self) //
+                    newStructures //
             );
         }
 
@@ -305,13 +325,20 @@ public class TextParagraphV2 extends TextStructureOfStructureV2 {
 
         return new TextMergeResponseV2(//
                 lastElement.getTextPosition(), //
-                List.of(self) //
+                newStructures //
         );
     }
 
     @Override
     protected void removeEoS() {
         if (isEndOfSection()) {
+            children.removeLast();
+        }
+    }
+
+    @Override
+    protected void removeEoL() {
+        if (isEndOfLine()) {
             children.removeLast();
         }
     }

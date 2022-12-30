@@ -21,17 +21,15 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
     protected abstract TextStructureOfStructureV2 copyStructure();
 
     @Override
-    protected TextRemoveResponseV2 mergeWith(TextStructureV2 element) {
-        if (!checkMergeWith(element)) {
+    protected TextRemoveResponseV2 mergeWith(TextStructureV2 nextStructure) {
+        if (!checkMergeWith(nextStructure)) {
             return TextRemoveResponseV2.EMPTY;
         }
-
-        var nextSection = (TextSectionV2) element;
 
         // By merging of two Section we must remove the endOfSection-Element at the end of first section. To do this, we
         // must merge the last child with the first child of incomming element.
         var firstStructure = getLastChild();
-        var secondStructure = nextSection.getFirstChild();
+        var secondStructure = nextStructure.getFirstChild();
 
         var removedData = firstStructure.mergeWith(secondStructure);
         if (removedData == TextRemoveResponseV2.EMPTY) {
@@ -53,18 +51,15 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         responseSection.children.addAll(removedData.getNewStructures());
 
         // take over child elements from following structure except the first
-        var iteratorSecond = nextSection.childListIterator(1);
+        var iteratorSecond = nextStructure.childListIterator(1);
         while (iteratorSecond.hasNext()) {
             responseSection.children.add(iteratorSecond.next());
         }
 
-        responseSection.children.stream().forEach(v -> v.setParentStructure(responseSection));
-
         return new TextRemoveResponseV2(//
-                // removedData.getRemovedElement(), //
                 removedData.getNewCursorPosition(), //
-                this, //
-                List.of(this, nextSection), //
+                getParentStructure(), //
+                List.of(this, nextStructure), //
                 List.of(responseSection) //
         );
     }
@@ -76,36 +71,10 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
         if (nextChild.isPresent()) {
             var removedData = child.mergeWith(nextChild.get());
             if (removedData != TextRemoveResponseV2.EMPTY) {
-                var iterator = childListIterator();
-                while (iterator.hasNext()) {
-                    // TODO do it better
-                    var currentChild = iterator.next();
-                    if (currentChild == child) {
-                        iterator.remove();
-                        iterator.next();
-                        iterator.remove();
-
-                        removedData.getNewStructures().forEach(v -> {
-                            iterator.add(v);
-                            v.setParentStructure(this);
-                        });
-
-                        break;
-                    }
-                }
+                return removedData;
             }
-
-            notifyChangeDown();
-            notifyChangeUp();
-
-            return new TextRemoveResponseV2(//
-                    // removedData.getRemovedElement(), //
-                    removedData.getNewCursorPosition(), //
-                    this, //
-                    removedData.getRemovedStructures(), //
-                    removedData.getNewStructures() //
-            );
         } else if (getParentStructure() != null) {
+            //TODO: test and edit
             return getParentStructure().mergeChildsWithNext(this);
         }
         return TextRemoveResponseV2.EMPTY;
