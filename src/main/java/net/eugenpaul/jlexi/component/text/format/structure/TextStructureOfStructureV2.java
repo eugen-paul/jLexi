@@ -26,41 +26,37 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
             return TextRemoveResponseV2.EMPTY;
         }
 
-        // By merging of two Section we must remove the endOfSection-Element at the end of first section. To do this, we
-        // must merge the last child with the first child of incomming element.
-        var firstStructure = getLastChild();
-        var secondStructure = nextStructure.getFirstChild();
+        // By merging of two Structures we must remove the endOfSection-Element at the end of first section. To do this,
+        // we must merge the last child with the first child of incomming element.
+        var lastOfFirst = getLastChild();
+        var firstOfSecond = nextStructure.getFirstChild();
 
-        var removedData = firstStructure.mergeWith(secondStructure);
-        if (removedData == TextRemoveResponseV2.EMPTY) {
+        var mergedData = lastOfFirst.mergeWith(firstOfSecond);
+        if (mergedData == TextRemoveResponseV2.EMPTY) {
             // Structures cann't be merged
             return TextRemoveResponseV2.EMPTY;
         }
 
-        var responseSection = copyStructure();
+        var responseStructure = copyStructure();
 
         // take over own child elements except the last
         var iteratorFirst = childListIterator();
-        while (iteratorFirst.hasNext()) {
-            responseSection.children.add(iteratorFirst.next());
-        }
+        iteratorFirst.forEachRemaining(responseStructure.children::add);
 
-        responseSection.children.removeLast();
+        responseStructure.children.removeLast();
 
         // add new element created by mergeWith
-        responseSection.children.addAll(removedData.getNewStructures());
+        responseStructure.children.addAll(mergedData.getNewStructures());
 
         // take over child elements from following structure except the first
         var iteratorSecond = nextStructure.childListIterator(1);
-        while (iteratorSecond.hasNext()) {
-            responseSection.children.add(iteratorSecond.next());
-        }
+        iteratorSecond.forEachRemaining(responseStructure.children::add);
 
         return new TextRemoveResponseV2(//
-                removedData.getNewCursorPosition(), //
+                mergedData.getNewCursorPosition(), //
                 getParentStructure(), //
                 List.of(this, nextStructure), //
-                List.of(responseSection) //
+                List.of(responseStructure) //
         );
     }
 
@@ -74,7 +70,7 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
                 return removedData;
             }
         } else if (getParentStructure() != null) {
-            //TODO: test and edit
+            // TODO: test and edit
             return getParentStructure().mergeChildsWithNext(this);
         }
         return TextRemoveResponseV2.EMPTY;
@@ -353,6 +349,91 @@ public abstract class TextStructureOfStructureV2 extends TextStructureV2 {
 
             if (pathToB == child) {
                 break;
+            }
+        }
+
+        return root;
+    }
+
+    @Override
+    public TextStructureV2 removeFrom(TextElementV2 from) {
+        var root = copyStructure();
+
+        var pathToFrom = getChildWithElement(from);
+
+        if (pathToFrom == null) {
+            return root;
+        }
+
+        for (var child : this.children) {
+            if (pathToFrom == child) {
+                if (pathToFrom != from) {
+                    root.children.add(pathToFrom.removeFrom(from));
+                }
+                break;
+            } else {
+                root.children.add(child);
+            }
+        }
+
+        return root;
+    }
+
+    @Override
+    public TextStructureV2 removeTo(TextElementV2 to) {
+        var root = copyStructure();
+
+        var pathToTo = getChildWithElement(to);
+
+        if (pathToTo == null) {
+            return root;
+        }
+
+        boolean doAdd = false;
+        for (var child : this.children) {
+            if (pathToTo == child) {
+                if (pathToTo != to) {
+                    root.children.add(pathToTo.removeTo(to));
+                }
+                doAdd = true;
+            } else if (doAdd) {
+                root.children.add(child);
+            }
+        }
+
+        return root;
+    }
+
+    @Override
+    public TextStructureV2 removeBetween(TextElementV2 from, TextElementV2 to) {
+        var root = copyStructure();
+
+        var pathToA = getChildWithElement(from);
+        var pathToB = getChildWithElement(to);
+
+        if (pathToA == null || pathToB == null) {
+            return root;
+        }
+
+        boolean doAdd = true;
+
+        for (var child : this.children) {
+            if (pathToA == child && pathToB == child) {
+                if (pathToA != from && pathToB != to) {
+                    root.children.add(pathToA.removeBetween(from, to));
+                }
+            } else if (pathToA == child) {
+                if (pathToA != from) {
+                    root.children.add(pathToA.removeFrom(from));
+                }
+                doAdd = false;
+            } else if (pathToB == child) {
+                if (pathToB != to) {
+                    root.children.add(pathToB.removeTo(to));
+                }
+                doAdd = true;
+            } else if (doAdd) {
+                root.children.add(child);
             }
         }
 

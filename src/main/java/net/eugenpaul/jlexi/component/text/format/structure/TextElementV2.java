@@ -174,6 +174,21 @@ public abstract class TextElementV2 extends TextStructureV2 implements EffectHol
     }
 
     @Override
+    public TextStructureV2 removeBetween(TextElementV2 from, TextElementV2 to) {
+        return this;
+    }
+
+    @Override
+    public TextStructureV2 removeFrom(TextElementV2 from) {
+        return this;
+    }
+
+    @Override
+    public TextStructureV2 removeTo(TextElementV2 to) {
+        return this;
+    }
+
+    @Override
     public void clear() {
         // Nothing to do
     }

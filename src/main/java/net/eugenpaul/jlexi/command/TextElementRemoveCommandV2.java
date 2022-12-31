@@ -20,13 +20,7 @@ public class TextElementRemoveCommandV2 implements TextCommandV2 {
 
     @Override
     public void execute() {
-        if (this.removedData != TextRemoveResponseV2.EMPTY) {
-            this.cursorPosition.replaceStructure( //
-                    this.removedData.getOwner(), //
-                    this.removedData.getRemovedStructures(), //
-                    this.removedData.getNewStructures() //
-            );
-        } else {
+        if (this.removedData == TextRemoveResponseV2.EMPTY) {
             this.removedData = this.positionBeforeRemove.removeElement();
 
             if (this.removedData != TextRemoveResponseV2.EMPTY) {
@@ -66,7 +60,7 @@ public class TextElementRemoveCommandV2 implements TextCommandV2 {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.removedData != TextRemoveResponseV2.EMPTY;
     }
 
     @Override

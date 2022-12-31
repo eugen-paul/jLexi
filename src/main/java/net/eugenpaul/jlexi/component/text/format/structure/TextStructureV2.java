@@ -64,6 +64,12 @@ public abstract class TextStructureV2 implements TextDocumentElement, Empty, Ite
 
     public abstract TextStructureV2 getSelectedTo(TextElementV2 to);
 
+    public abstract TextStructureV2 removeBetween(TextElementV2 from, TextElementV2 to);
+
+    public abstract TextStructureV2 removeFrom(TextElementV2 from);
+
+    public abstract TextStructureV2 removeTo(TextElementV2 to);
+
     protected abstract boolean isComplete();
 
     protected abstract void setComplete();

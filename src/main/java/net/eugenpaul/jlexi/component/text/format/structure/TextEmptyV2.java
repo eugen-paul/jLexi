@@ -129,4 +129,19 @@ public class TextEmptyV2 extends TextStructureV2 {
     protected void removeEoL() {
         // nothing to do
     }
+
+    @Override
+    public TextStructureV2 removeBetween(TextElementV2 from, TextElementV2 to) {
+        return this;
+    }
+
+    @Override
+    public TextStructureV2 removeFrom(TextElementV2 from) {
+        return this;
+    }
+
+    @Override
+    public TextStructureV2 removeTo(TextElementV2 to) {
+        return this;
+    }
 }
