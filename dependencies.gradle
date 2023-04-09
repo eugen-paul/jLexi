@@ -1,8 +1,8 @@
 ext {
-    jackson_version = "2.13.3"
+    jackson_version = "2.15.0-rc2"
     junit_version = "5.9.0"
     logback_version = "1.2.11"
-    lombok_version = "1.18.24"
+    lombok_version = "1.18.26"
     mockito_version = "4.6.1"
     reactor_core_version = "3.4.21"
     slf4j_api_version = "1.7.36"
